@@ -1,0 +1,195 @@
+name: unit-tests
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.type }}
+  cancel-in-progress: true
+on:
+  pull_request:
+    paths:
+      - '**.py'
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+  workflow_dispatch:
+
+jobs:
+  style:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          architecture: 'x64'
+      - name: Install dependencies
+        run: |
+          python -m pip install --progress-bar off --upgrade pip setuptools wheel
+          python -m pip install --progress-bar off .[style]
+      - name: Run flake8
+        uses: py-actions/flake8@v2
+        with:
+          path: "dodiscover"
+      - name: Run isort
+        uses: isort/isort-action@master
+      - name: Run black
+        uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+      - name: Run codespell
+        uses: codespell-project/actions-codespell@master
+        with:
+          check_filenames: true
+          check_hidden: true
+          skip: './.git,./build,./.mypy_cache,./.pytest_cache'
+          ignore_words_file: ./.codespellignore
+      - name: Run pydocstyle
+        run: pydocstyle .
+      - name: Run mypy
+        uses: jpetrucciani/mypy-check@master
+        with:
+          path: './dodiscover'
+          mypy_flags: '--config-file pyproject.toml'
+
+  build:
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, macos, windows]
+        python-version: [3.8, 3.9, "3.10"]
+    name: build ${{ matrix.os }} - py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+      - name: Install dependencies
+        run: |
+          python -m pip install --progress-bar off git+https://github.com/py-why/graphs
+          python -m pip install --progress-bar off --upgrade pip setuptools wheel
+          python -m pip install --progress-bar off .[build]
+      - name: Test package install
+        run: python -c "import dodiscover; print(dodiscover.__version__)"
+      - name: Remove package install
+        run: python -m pip uninstall -yq dodiscover
+      - name: Build package
+        run: python -m build
+      - name: Upload package distribution files
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: dist
+      - name: Install sdist
+        run: pip install ./dist/*.tar.gz
+      - name: Test sdist install
+        run: python -c "import dodiscover; print(dodiscover.__version__)"
+      - name: Remove sdist install
+        run: python -m pip uninstall -yq dodiscover
+      - name: Install wheel
+        run: pip install ./dist/*.whl
+      - name: Test wheel install
+        run: python -c "import dodiscover; print(dodiscover.__version__)"
+      - name: Remove wheel install
+        run: python -m pip uninstall -yq dodiscover
+
+  test:
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, macos, windows]
+        python-version: [3.8, "3.10"]  # oldest and newest supported versions
+        networkx: [stable, main]
+    name: pytest ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
+    runs-on: ${{ matrix.os }}-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: main  # clone repository in a sub-directory
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+      - name: Install Qt dependencies
+        if: "matrix.os == 'ubuntu'"
+        run: |
+          sudo apt update
+          sudo apt install qt5-default
+      - name: Install package
+        run: |
+          python -m pip install --progress-bar off --upgrade pip setuptools wheel
+          python -m pip install --progress-bar off main/.[test]
+          # TODO: remove this eventually
+          python -m pip install --progress-bar off git+https://github.com/py-why/graphs
+      - name: Install Networkx (main)
+        if: "matrix.networkx == 'main'"
+        run: |
+          python -m pip uninstall -yq networkx
+      - name: Run pytest  # headless via Xvfb on linux
+        run: pytest main/dodiscover --cov=main/dodiscover --cov-report=xml --cov-config=main/pyproject.toml
+      - name: Upload coverage stats to codecov
+        if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.10' && matrix.networkx == 'stable' }}
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+
+  # release is ran when a release is made on Github
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [style, build, test]
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          architecture: 'x64'
+      - name: Install dependencies
+        run: |
+          python -m pip install --progress-bar off --upgrade pip setuptools wheel
+          python -m pip install --progress-bar off .[build]
+      - name: Prepare environment
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - name: Download package distribution files
+        uses: actions/download-artifact@v3
+        with:
+          name: package
+          path: dist
+      # TODO: refactor scripts to generate release notes from `whats_new.rst` file instead
+      # - name: Generate release notes
+      #   run: |
+      #     python scripts/release_notes.py > ${{ github.workspace }}-RELEASE_NOTES.md
+      - name: Publish package to PyPI
+        run: |
+          twine upload -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }} dist/*
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # body_path: ${{ github.workspace }}-RELEASE_NOTES.md
+          prerelease: ${{ contains(env.TAG, 'rc') }}
+          files: |
+            dist/*
