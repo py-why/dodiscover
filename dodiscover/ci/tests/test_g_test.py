@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from causal_networkx.ci import GSquareCITest
-from causal_networkx.ci.tests import testdata
+from dodiscover.ci import GSquareCITest
+from dodiscover.ci.tests import testdata
 
 
 def test_g_error():

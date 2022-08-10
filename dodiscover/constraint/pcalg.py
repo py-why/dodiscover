@@ -7,17 +7,18 @@ from typing import Any, Callable, Dict, List, Set, Tuple, Union
 import networkx as nx
 import numpy as np
 import pandas as pd
-
 from pywhy_graphs import CPDAG
-from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.utils import is_in_sep_set
 
-from ._classes import ConstraintDiscovery
+from dodiscover.ci.base import BaseConditionalIndependenceTest
+from dodiscover.constraint.utils import is_in_sep_set
+
+from ._classes import BaseConstraintDiscovery
+from ._protocol import EquivalenceClassProtocol
 
 logger = logging.getLogger()
 
 
-class PC(ConstraintDiscovery):
+class PC(BaseConstraintDiscovery):
     """Peter and Clarke (PC) algorithm for causal discovery.
 
     Assumes causal sufficiency, that is, all confounders in the
@@ -32,12 +33,6 @@ class PC(ConstraintDiscovery):
         keyword arguments.
     alpha : float, optional
         The significance level for the conditional independence test, by default 0.05.
-    init_graph : nx.Graph | ADMG, optional
-        An initialized graph. If ``None``, then will initialize PC using a
-        complete graph. By default None.
-    fixed_edges : nx.Graph, optional
-        An undirected graph with fixed edges. If ``None``, then will initialize PC using a
-        complete graph. By default None.
     min_cond_set_size : int, optional
         Minimum size of the conditioning set, by default None, which will be set to '0'.
         Used to constrain the computation spent on the algorithm.
@@ -74,12 +69,13 @@ class PC(ConstraintDiscovery):
     .. footbibliography::
     """
 
+    graph_: EquivalenceClassProtocol
+    separating_sets_: Dict[str, Dict[str, Set[Any]]]
+
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
         alpha: float = 0.05,
-        init_graph: Union[nx.Graph, CPDAG] = None,
-        fixed_edges: nx.Graph = None,
         min_cond_set_size: int = None,
         max_cond_set_size: int = None,
         max_iter: int = 1000,
@@ -90,8 +86,6 @@ class PC(ConstraintDiscovery):
         super().__init__(
             ci_estimator,
             alpha,
-            init_graph,
-            fixed_edges,
             min_cond_set_size=min_cond_set_size,
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
@@ -180,7 +174,7 @@ class PC(ConstraintDiscovery):
 
     def _orient_unshielded_triples(
         self, graph: CPDAG, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
-    ):
+    ) -> None:
         """Orient colliders given a graph and separation set.
 
         Parameters
@@ -192,27 +186,27 @@ class PC(ConstraintDiscovery):
         """
         # for every node in the PAG, evaluate neighbors that have any edge
         for u in graph.nodes:
-            for v_i, v_j in combinations(graph.adjacencies(u), 2):
+            for v_i, v_j in combinations(graph.neighbors(u), 2):
                 # Check that there is no edge of any type between
                 # v_i and v_j, else this is a "shielded" collider.
                 # Then check to see if 'u' is in "any" separating
                 # set. If it is not, then there is a collider.
-                if not graph.has_adjacency(v_i, v_j) and not is_in_sep_set(
+                if v_j not in graph.neighbors(v_i) and not is_in_sep_set(
                     u, sep_set, v_i, v_j, mode="any"
                 ):
                     self._orient_collider(graph, v_i, u, v_j)
 
-    def _orient_collider(self, graph, v_i, u, v_j):
+    def _orient_collider(self, graph: CPDAG, v_i, u, v_j) -> None:
         logger.info(
             f"orienting collider: {v_i} -> {u} and {v_j} -> {u} to make {v_i} -> {u} <- {v_j}."
         )
 
-        if graph.has_undirected_edge(v_i, u):
-            graph.orient_undirected_edge(v_i, u)
-        if graph.has_undirected_edge(v_j, u):
-            graph.orient_undirected_edge(v_j, u)
+        if graph.has_edge(v_i, u, graph.undirected_edge_name):
+            graph.orient_uncertain_edge(v_i, u)
+        if graph.has_edge(v_j, u, graph.undirected_edge_name):
+            graph.orient_uncertain_edge(v_j, u)
 
-    def _apply_meek_rule1(self, graph: CPDAG, i, j):
+    def _apply_meek_rule1(self, graph: CPDAG, i, j) -> bool:
         """Apply rule 1 of Meek's rules.
 
         Looks for i - j such that k -> i, such that (k,i,j)
@@ -221,11 +215,11 @@ class PC(ConstraintDiscovery):
         added_arrows = False
 
         # Check if i-j.
-        if graph.has_undirected_edge(i, j):
+        if graph.has_edge(i, j, graph.undirected_edge_name):
             for k in graph.predecessors(i):
                 # Skip if k and j are adjacent because then it is a
                 # shielded triple
-                if graph.has_adjacency(k, j):
+                if j in graph.neighbors(k):
                     continue
 
                 # check if the triple is in the graph's excluded triples
@@ -234,13 +228,13 @@ class PC(ConstraintDiscovery):
 
                 # Make i-j into i->j
                 logger.info(f"R1: Removing edge ({i}, {j}) and orienting as {k} -> {i} -> {j}.")
-                graph.orient_undirected_edge(i, j)
+                graph.orient_uncertain_edge(i, j)
 
                 added_arrows = True
                 break
         return added_arrows
 
-    def _apply_meek_rule2(self, graph: CPDAG, i, j):
+    def _apply_meek_rule2(self, graph: CPDAG, i, j) -> bool:
         """Apply rule 2 of Meek's rules.
 
         Check for i - j, and then looks for i -> k -> j
@@ -249,16 +243,16 @@ class PC(ConstraintDiscovery):
         added_arrows = False
 
         # Check if i-j.
-        if graph.has_undirected_edge(i, j):
+        if graph.has_edge(i, j, graph.undirected_edge_name):
             # Find nodes k where k is i->k
             succs_i = set()
             for k in graph.successors(i):
-                if not graph.has_edge(k, i):
+                if not graph.has_edge(k, i, graph.directed_edge_name):
                     succs_i.add(k)
             # Find nodes j where j is k->j.
             preds_j = set()
             for k in graph.predecessors(j):
-                if not graph.has_edge(j, k):
+                if not graph.has_edge(j, k, graph.directed_edge_name):
                     preds_j.add(k)
 
             # Check if there is any node k where i->k->j.
@@ -275,11 +269,11 @@ class PC(ConstraintDiscovery):
             if len(candidate_k) > 0:
                 # Make i-j into i->j
                 logger.info(f"R2: Removing edge {i}-{j} to form {i}->{j}.")
-                graph.orient_undirected_edge(i, j)
+                graph.orient_uncertain_edge(i, j)
                 added_arrows = True
         return added_arrows
 
-    def _apply_meek_rule3(self, graph: CPDAG, i, j):
+    def _apply_meek_rule3(self, graph: CPDAG, i, j) -> bool:
         """Apply rule 3 of Meek's rules.
 
         Check for i - j, and then looks for k -> j <- l
@@ -288,18 +282,22 @@ class PC(ConstraintDiscovery):
         added_arrows = False
 
         # Check if i-j first
-        if graph.has_undirected_edge(i, j):
+        if graph.has_edge(i, j, graph.undirected_edge_name):
             # For all the pairs of nodes adjacent to i,
             # look for (k, l), such that j -> l and k -> l
-            for (k, l) in combinations(graph.adjacencies(i), 2):
+            for (k, l) in combinations(graph.neighbors(i), 2):
                 # Skip if k and l are adjacent.
-                if graph.has_adjacency(k, l):
+                if l in graph.neighbors(k):
                     continue
                 # Skip if not k->j.
-                if graph.has_edge(j, k) or (not graph.has_edge(k, j)):
+                if graph.has_edge(j, k, graph.directed_edge_name) or (
+                    not graph.has_edge(k, j, graph.directed_edge_name)
+                ):
                     continue
                 # Skip if not l->j.
-                if graph.has_edge(j, l) or (not graph.has_edge(l, j)):
+                if graph.has_edge(j, l, graph.directed_edge_name) or (
+                    not graph.has_edge(l, j, graph.directed_edge_name)
+                ):
                     continue
 
                 # check if the triple is inside graph's excluded triples
@@ -308,9 +306,11 @@ class PC(ConstraintDiscovery):
 
                 # if i - k and i - l, then  at this point, we have a valid path
                 # to orient
-                if graph.has_undirected_edge(k, i) and graph.has_undirected_edge(l, i):
+                if graph.has_edge(k, i, graph.undirected_edge_name) and graph.has_edge(
+                    l, i, graph.undirected_edge_name
+                ):
                     logger.info(f"R3: Removing edge {i}-{j} to form {i}->{j}")
-                    graph.orient_undirected_edge(i, j)
+                    graph.orient_uncertain_edge(i, j)
                     added_arrows = True
                     break
         return added_arrows

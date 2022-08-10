@@ -2,8 +2,8 @@ from math import frexp
 
 import numpy as np
 
-from causal_networkx.ci import g_square_binary, g_square_discrete
-from causal_networkx.ci.tests import testdata
+from dodiscover.ci import g_square_binary, g_square_discrete
+from dodiscover.ci.tests import testdata
 
 if __name__ == "__main__":
 

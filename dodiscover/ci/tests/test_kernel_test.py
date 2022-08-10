@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from causal_networkx.ci import KernelCITest
+from dodiscover.ci import KernelCITest
 
 seed = 12345
 ci_params = {

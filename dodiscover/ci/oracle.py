@@ -1,9 +1,10 @@
 from typing import Union
 
+import networkx as nx
 import numpy as np
-
-from causal_networkx import ADMG, DAG
-from causal_networkx.algorithms.d_separation import d_separated
+from graphs.algorithms import m_separated
+from networkx.algorithms import d_separated
+from pywhy_graphs import ADMG
 
 from .base import BaseConditionalIndependenceTest
 
@@ -15,11 +16,11 @@ class Oracle(BaseConditionalIndependenceTest):
 
     Parameters
     ----------
-    graph : DAG | ADMG
+    graph : nx.DiGraph | pywhy_graphs.ADMG
         The ground-truth causal graph.
     """
 
-    def __init__(self, graph: Union[ADMG, DAG]) -> None:
+    def __init__(self, graph: Union[ADMG, nx.DiGraph]) -> None:
         self.graph = graph
 
     def test(self, df, x_var, y_var, z_covariates):
@@ -53,7 +54,10 @@ class Oracle(BaseConditionalIndependenceTest):
 
         # just check for d-separation between x and y
         # given sep_set
-        is_sep = d_separated(self.graph, x_var, y_var, z_covariates)
+        if isinstance(self.graph, nx.DiGraph):
+            is_sep = d_separated(self.graph, {x_var}, {y_var}, z_covariates)
+        else:
+            is_sep = m_separated(self.graph, {x_var}, {y_var}, z_covariates)
 
         if is_sep:
             pvalue = 1
@@ -85,7 +89,7 @@ class MarkovBlanketOracle(ParentChildOracle):
     An oracle that knows the definite Markov Blanket of every node.
     """
 
-    def __init__(self, graph: Union[ADMG, DAG]) -> None:
+    def __init__(self, graph: Union[ADMG, nx.DiGraph]) -> None:
         super().__init__(graph)
 
     def get_markov_blanket(self, x):

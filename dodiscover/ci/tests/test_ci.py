@@ -1,15 +1,8 @@
 import numpy as np
 import pytest
+from pywhy_graphs import StructuralCausalModel
 
-from causal_networkx import StructuralCausalModel
-from causal_networkx.ci import (
-    FisherZCITest,
-    GSquareCITest,
-    KernelCITest,
-    Oracle,
-    ParentChildOracle,
-    PartialCorrelation,
-)
+from dodiscover.ci import FisherZCITest, GSquareCITest, KernelCITest, Oracle, ParentChildOracle
 
 seed = 12345
 rng = np.random.RandomState(seed=seed)
@@ -38,7 +31,6 @@ ground_truth_graph = scm.get_causal_graph()
         KernelCITest(),
         GSquareCITest(),
         FisherZCITest(),
-        PartialCorrelation(),
         Oracle(ground_truth_graph),
         ParentChildOracle(ground_truth_graph),
     ],

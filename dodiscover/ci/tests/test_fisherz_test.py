@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from causal_networkx.ci import FisherZCITest
+from dodiscover.ci import FisherZCITest
 
 seed = 12345
 

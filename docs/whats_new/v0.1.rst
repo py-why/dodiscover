@@ -26,7 +26,7 @@ Version 0.1
 Changelog
 ---------
 
-- |Feature| Implement and test the :class:`dodiscover.CPDAG` for CPDAGs, by `Adam Li`_ (:gh:`6`)
+- |Feature| Implement and test the :class:`dodiscover.PC` for PC algorithm, by `Adam Li`_ (:pr:`1`)
 
 Code and Documentation Contributors
 -----------------------------------

@@ -1,5 +1,21 @@
 from typing import Any, Dict, Set
 
+import pandas as pd
+
+
+def dummy_sample(G):
+    """Sample an empty dataframe with columns as the nodes.
+
+    Used for oracle testing.
+    """
+    df_values = dict()
+    for node in G.nodes:
+        df_values[node] = []
+
+    df = pd.DataFrame.from_dict(df_values)
+    return df
+
+
 def is_in_sep_set(
     check_var, sep_set: Dict[str, Dict[str, Set[Set[Any]]]], x_var, y_var, mode="any"
 ):
@@ -33,4 +49,3 @@ def is_in_sep_set(
             check_var in _sep_set for _sep_set in sep_set[x_var][y_var]
         )
     return func(check_var in _sep_set for _sep_set in sep_set[x_var][y_var])
-

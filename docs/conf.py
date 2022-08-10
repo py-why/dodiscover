@@ -25,7 +25,6 @@ from dodiscover.version import VERSION, VERSION_SHORT  # noqa: E402
 curdir = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(curdir, "..")))
 sys.path.append(os.path.abspath(os.path.join(curdir, "..", "dodiscover")))
-sys.path.append(os.path.abspath(os.path.join(curdir, "sphinxext")))
 
 # -- Project information -----------------------------------------------------
 
@@ -49,7 +48,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
-    "sphinx_autodoc_typehints",
+    "sphinx_issues",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
     "sphinx_gallery.gen_gallery",
@@ -58,7 +57,6 @@ extensions = [
     "numpydoc",
     'IPython.sphinxext.ipython_console_highlighting',
     "nbsphinx",
-    "gh_substitutions",
 ]
 
 # configure sphinx-copybutton
