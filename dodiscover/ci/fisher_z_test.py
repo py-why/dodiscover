@@ -3,7 +3,6 @@ from typing import Any, Set, Tuple, Union
 
 import numpy as np
 import pandas as pd
-from numpy.typing import NDArray
 from scipy.stats import norm
 
 from .base import BaseConditionalIndependenceTest

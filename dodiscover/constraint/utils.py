@@ -1,4 +1,4 @@
-from typing import Any, Dict, Set
+from typing import Any, Dict, List, Set
 
 import pandas as pd
 
@@ -17,7 +17,7 @@ def dummy_sample(G):
 
 
 def is_in_sep_set(
-    check_var, sep_set: Dict[str, Dict[str, Set[Set[Any]]]], x_var, y_var, mode="any"
+    check_var, sep_set: Dict[str, Dict[str, List[Set[Any]]]], x_var, y_var, mode: str = "any"
 ):
     """Check that a variable is not in any separating set between 'X' and 'Y'.
 
@@ -25,7 +25,7 @@ def is_in_sep_set(
     ----------
     check_var : node
         The variable to check.
-    sep_set : Dict[str, Dict[str, Set[Set[Any]]]]
+    sep_set : Dict[str, Dict[str, List[Set[Any]]]]
         The separating sets between any two variables 'X' and 'Y'.
     x_var : node
         The 'X' variable.

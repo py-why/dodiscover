@@ -118,7 +118,7 @@ def _calculate_highdim_contingency(
     n_samples, _ = data.shape
 
     # keep track of all variables in the separating set
-    sep_set = list(sep_set)
+    sep_set = list(sep_set)  # type: ignore
     k = data[:, sep_set]
 
     # count number of value combinations for sepset variables
@@ -255,7 +255,8 @@ def g_square_binary(
 
     if any(xy not in data.columns for xy in [x, y]):
         raise ValueError(
-            f'Variables "x" ({x}) and "y" ({y}) are not in the columns of "data": {data.columns.values}.'
+            f'Variables "x" ({x}) and "y" ({y}) are not in the columns of "data": '
+            f"{data.columns.values}."
         )
 
     n_samples = data.shape[0]
@@ -318,7 +319,8 @@ def g_square_discrete(
 
     if any(xy not in data.columns for xy in [x, y]):
         raise ValueError(
-            f'Variables "x" ({x}) and "y" ({y}) are not in the columns of "data": {data.columns.values}.'
+            f'Variables "x" ({x}) and "y" ({y}) are not in the columns of "data": '
+            f"{data.columns.values}."
         )
 
     if levels is None:

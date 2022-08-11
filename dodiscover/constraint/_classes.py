@@ -1,6 +1,6 @@
 import itertools
 from collections import defaultdict
-from typing import Any, Dict, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import networkx as nx
 import numpy as np
@@ -60,7 +60,7 @@ class BaseConstraintDiscovery:
     """
 
     graph_: Optional[EquivalenceClassProtocol]
-    separating_sets_: Optional[Dict[str, Dict[str, Set[Any]]]]
+    separating_sets_: Optional[Dict[str, Dict[str, List[Set[Any]]]]]
 
     def __init__(
         self,
@@ -98,36 +98,33 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = None
         self.graph_ = None
 
-    def _initialize_sep_sets(self, init_graph: nx.Graph) -> Dict[str, Dict[str, Set]]:
+    def _initialize_sep_sets(self, init_graph: nx.Graph) -> Dict[str, Dict[str, List[Set[Any]]]]:
         # keep track of separating sets
-        sep_set: Dict[str, Dict[str, Set]] = defaultdict(lambda: defaultdict(list))
+        sep_set: Dict[str, Dict[str, List[Set[Any]]]] = defaultdict(lambda: defaultdict(list))
 
-        # since we are not starting from a complete graph,
-        # find the separating sets
-        for (node_i, node_j) in itertools.combinations(*init_graph.nodes):
+        # since we are not starting from a complete graph, find the separating sets
+        for (node_i, node_j) in itertools.combinations(init_graph.nodes, 2):
             if not init_graph.has_edge(node_i, node_j):
-                del sep_set[node_i][node_j]
-                del sep_set[node_j][node_i]
+                sep_set[node_i][node_j] = []
+                sep_set[node_j][node_i] = []
 
         return sep_set
-
-    def orient_edges(
-        self, graph: EquivalenceClassProtocol, sep_set: Dict[str, Dict[str, Set]]
-    ) -> None:
-        raise NotImplementedError(
-            "All constraint discovery algorithms need to implement a function to orient the "
-            "skeleton graph given a separating set."
-        )
-
-    def _orient_unshielded_triples(
-        self, graph: EquivalenceClassProtocol, sep_set: Dict[str, Dict[str, Set]]
-    ) -> None:
-        raise NotImplementedError()
 
     def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClassProtocol:
         raise NotImplementedError(
             "All constraint discovery algorithms need to implement a function to convert "
             "the skeleton graph to a causal graph."
+        )
+
+    def orient_unshielded_triples(
+        self, graph: EquivalenceClassProtocol, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
+    ) -> None:
+        raise NotImplementedError()
+
+    def orient_edges(self, graph: EquivalenceClassProtocol) -> None:
+        raise NotImplementedError(
+            "All constraint discovery algorithms need to implement a function to orient the "
+            "skeleton graph given a separating set."
         )
 
     def fit(self, context: Context) -> None:
@@ -137,18 +134,22 @@ class BaseConstraintDiscovery:
         ----------
         X : Union[pd.DataFrame, Dict[Set, pd.DataFrame]]
             Either a pandas dataframe constituting the endogenous (observed) variables
-            as columns and samples as rows, or a dictionary of different sampled distributions
-            with keys as the distribution names and values as the dataset as a pandas dataframe.
+            as columns and samples as rows, or a dictionary of different sampled
+            distributions with keys as the distribution names and values as the dataset
+            as a pandas dataframe.
 
         Raises
         ------
         RuntimeError
-            If 'X' is a dictionary, then all datasets should have the same set of column names (nodes).
+            If 'X' is a dictionary, then all datasets should have the same set of column
+            names (nodes).
 
         Notes
         -----
-        Control over the constraints imposed by the algorithm can be passed into the class constructor.
+        Control over the constraints imposed by the algorithm can be passed into the class
+        constructor.
         """
+        self.context_ = context
         graph = context.init_graph
         self.init_graph_ = graph
         self.fixed_edges_ = context.included_edges
@@ -167,7 +168,10 @@ class BaseConstraintDiscovery:
 
         # orient edges on the causal graph object
         if self.apply_orientations:
-            graph = self.orient_edges(graph, sep_set)
+            # for all pairs of non-adjacent variables with a common neighbor
+            # check if we can orient the edge as a collider
+            self.orient_unshielded_triples(graph, sep_set)
+            self.orient_edges(graph)
 
         # store resulting data structures
         self.separating_sets_ = sep_set
@@ -195,15 +199,15 @@ class BaseConstraintDiscovery:
             The pvalue.
         """
         if Z is None:
-            Z = []
-        test_stat, pvalue = self.ci_estimator.test(data, X, Y, set(Z), **self.ci_estimator_kwargs)
+            Z = set()
+        test_stat, pvalue = self.ci_estimator.test(data, X, Y, Z, **self.ci_estimator_kwargs)
         return test_stat, pvalue
 
     def learn_skeleton(
         self,
         context: Context,
-        sep_set: Optional[Dict[str, Dict[str, Set[Any]]]] = None,
-    ) -> Tuple[nx.Graph, Dict[str, Dict[str, Set[Any]]]]:
+        sep_set: Optional[Dict[str, Dict[str, List[Set[Any]]]]] = None,
+    ) -> Tuple[nx.Graph, Dict[str, Dict[str, List[Set[Any]]]]]:
         """Learns the skeleton of a causal DAG using pairwise independence testing.
 
         Encodes the skeleton via an undirected graph, `networkx.Graph`. Only
@@ -213,14 +217,14 @@ class BaseConstraintDiscovery:
         ----------
         context : Context
             A context object.
-        sep_set : set
+        sep_set : dict of dict of list of sets
             The separating set.
 
         Returns
         -------
         skel_graph : nx.Graph
             The undirected graph of the causal graph's skeleton.
-        sep_set : dict of dict of set
+        sep_set : dict of dict of list of sets
             The separating set per pairs of variables.
 
         Raises

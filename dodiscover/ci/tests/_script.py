@@ -1,3 +1,5 @@
+# type: ignore
+
 from math import frexp
 
 import numpy as np

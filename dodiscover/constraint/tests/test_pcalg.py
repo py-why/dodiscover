@@ -3,13 +3,14 @@ import numpy as np
 import pandas as pd
 import pytest
 from numpy.testing import assert_array_equal
-from pywhy_graphs import CPDAG, StructuralCausalModel
+from pywhy_graphs import ADMG, CPDAG, StructuralCausalModel
 
+from dodiscover import Context
 from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.ci.tests.testdata import bin_data, dis_data
 from dodiscover.constraint import PC
 from dodiscover.constraint.utils import dummy_sample
-from dodiscover.metrics import confusion_matrix_networks, structure_hamming_dist
+from dodiscover.metrics import confusion_matrix_networks
 
 
 @pytest.mark.parametrize(
@@ -48,12 +49,13 @@ from dodiscover.metrics import confusion_matrix_networks, structure_hamming_dist
 def test_estimate_cpdag(indep_test_func, data_matrix, g_answer, alpha):
     """Test PC algorithm for estimating the causal DAG."""
     data_df = pd.DataFrame(data_matrix)
+    context = Context(data=data_df)
     alg = PC(ci_estimator=indep_test_func, alpha=alpha)
-    alg.fit(data_df)
+    alg.fit(context)
     graph = alg.graph_
 
-    error_msg = "True edges should be: %s" % (g_answer.edges(),)
-    assert nx.is_isomorphic(graph.dag, g_answer), error_msg
+    error_msg = "True edges should be: %s" % (g_answer.edges,)
+    assert nx.is_isomorphic(graph.sub_directed_graph(), g_answer), error_msg
 
     # Test confusion matrix
     cm = confusion_matrix_networks(graph, g_answer)
@@ -63,24 +65,22 @@ def test_estimate_cpdag(indep_test_func, data_matrix, g_answer, alpha):
 
     # now construct expected confusion matrix
     expected_cm = np.diag(
-        [ub_num_edges - len(graph.edges) - len(graph.undirected_edges), len(graph.edges)]
+        [
+            ub_num_edges - len(graph.directed_edges) - len(graph.undirected_edges),
+            len(graph.directed_edges),
+        ]
     )
     expected_cm[1, 0] = len(graph.undirected_edges)
     assert_array_equal(cm, expected_cm)
 
-    # structure hamming distance is equal to the number of edges we could not get rid of
-    # in our case, because all other orientations were correct
-    assert structure_hamming_dist(graph, g_answer, double_for_anticausal=False) == len(
-        graph.undirected_edges
-    )
-
     # test what happens if fixed edges are present
     fixed_edges = nx.complete_graph(data_df.columns.values)
-    alg = PC(fixed_edges=fixed_edges, ci_estimator=indep_test_func, alpha=alpha)
-    alg.fit(data_df)
+    context = Context(data=data_df, included_edges=fixed_edges)
+    alg = PC(ci_estimator=indep_test_func, alpha=alpha)
+    alg.fit(context)
     complete_graph = alg.graph_
-    assert nx.is_isomorphic(complete_graph.undirected_edge_graph, fixed_edges)
-    assert not nx.is_isomorphic(complete_graph.dag, g_answer)
+    assert nx.is_isomorphic(complete_graph.sub_undirected_graph(), fixed_edges)
+    assert not nx.is_isomorphic(complete_graph.sub_directed_graph(), g_answer)
 
 
 def test_common_cause_and_collider():
@@ -94,16 +94,18 @@ def test_common_cause_and_collider():
     incoming_graph_data = {0: {1: ed1, 2: ed2}, 3: {2: ed2}}
     G = nx.DiGraph(incoming_graph_data)
     df = dummy_sample(G)
+    context = Context(data=df)
 
     pc = PC(ci_estimator=Oracle(G), apply_orientations=True)
-    pc.fit(df)
+    pc.fit(context)
     cpdag = pc.graph_
 
     # compare with the expected CPDAG
-    expected_cpdag = CPDAG(incoming_uncertain_data=G.dag)
+    expected_cpdag = CPDAG(incoming_undirected_edges=G)
     expected_cpdag.orient_uncertain_edge(3, 2)
     expected_cpdag.orient_uncertain_edge(0, 2)
-    assert_array_equal(expected_cpdag.to_numpy(), cpdag.to_numpy())
+    assert nx.is_isomorphic(cpdag.sub_directed_graph(), expected_cpdag.sub_directed_graph())
+    assert nx.is_isomorphic(cpdag.sub_undirected_graph(), expected_cpdag.sub_undirected_graph())
 
 
 def test_collider():
@@ -128,15 +130,98 @@ def test_collider():
     )
     G = scm.get_causal_graph()
     oracle = Oracle(G)
-    ci_estimator = oracle
-    pc = PC(ci_estimator=ci_estimator)
-
+    pc = PC(ci_estimator=oracle)
     sample = scm.sample(n=1, include_latents=False)
-    pc.fit(sample)
+    context = Context(data=sample)
+    pc.fit(context)
     graph = pc.graph_
 
-    assert graph.has_edge("x", "y")
-    assert graph.has_edge("z", "y")
+    assert graph.has_edge("x", "y", graph.directed_edge_name)
+    assert graph.has_edge("z", "y", graph.directed_edge_name)
+
+
+def test_pc_rule1():
+    edges = [
+        ("x", "y"),
+        ("z", "y"),
+    ]
+    G = ADMG(edges)
+    oracle = Oracle(G)
+    pc = PC(ci_estimator=oracle)
+
+    # If C -> A - B, such that the triple is unshielded,
+    # then orient A - B as A -> B
+
+    G = CPDAG()
+    G.add_edge("A", "B", G.undirected_edge_name)
+    G.add_edge("C", "A", G.directed_edge_name)
+    G_copy = G.copy()
+
+    # First test:
+    # C -> A -> B
+    pc._apply_meek_rule1(G, "A", "B")
+    assert G.has_edge("A", "B", G.directed_edge_name)
+    assert not G.has_edge("A", "B", G.undirected_edge_name)
+    assert G.has_edge("C", "A", G.directed_edge_name)
+
+    # Next, test that nothing occurs
+    # if it is a shielded triple
+    G = G_copy.copy()
+    G.add_edge("C", "B")
+    added_arrows = pc._apply_meek_rule1(G, "A", "B")
+    assert not added_arrows
+
+
+def test_pc_rule2():
+    edges = [
+        ("x", "y"),
+        ("z", "y"),
+    ]
+    G = ADMG(edges)
+    oracle = Oracle(G)
+    pc = PC(ci_estimator=oracle)
+
+    # If C -> A -> B, with C - B
+    # then orient C - B as C -> B
+    G = CPDAG()
+    G.add_edge("C", "B", G.undirected_edge_name)
+    G.add_edge("C", "A", G.directed_edge_name)
+    G.add_edge("A", "B", G.directed_edge_name)
+
+    # First test:
+    # C -> B
+    added_arrows = pc._apply_meek_rule2(G, "C", "B")
+    assert G.has_edge("A", "B", G.directed_edge_name)
+    assert G.has_edge("C", "A", G.directed_edge_name)
+    assert G.has_edge("C", "B", G.directed_edge_name)
+    assert added_arrows
+
+
+def test_pc_rule3():
+    G = ADMG()
+    oracle = Oracle(G)
+    pc = PC(ci_estimator=oracle)
+
+    # If C - A, with C - B and C - D
+    # and B -> A <- D, then orient C - A as C -> A.
+    G = CPDAG()
+    G.add_edge("C", "B", G.undirected_edge_name)
+    G.add_edge("C", "D", G.undirected_edge_name)
+    G.add_edge("C", "A", G.undirected_edge_name)
+    G.add_edge("B", "A", G.directed_edge_name)
+    G.add_edge("D", "A", G.directed_edge_name)
+    G_copy = G.copy()
+
+    added_arrows = pc._apply_meek_rule3(G, "C", "A")
+    assert added_arrows
+    assert G.has_edge("C", "A", G.directed_edge_name)
+
+    # if 'B' and 'D' are adjacent, then it will
+    # not be added
+    G = G_copy.copy()
+    G.add_edge("B", "D", G.directed_edge_name)
+    added_arrows = pc._apply_meek_rule3(G, "C", "A")
+    assert not added_arrows
 
 
 class Test_PC:
@@ -171,83 +256,26 @@ class Test_PC:
 
     def test_pc_skel_graph(self):
         sample = self.scm.sample(n=1, include_latents=False)
+        context = Context(data=sample)
         pc = PC(ci_estimator=self.ci_estimator, apply_orientations=False)
-        pc.fit(sample)
+        pc.fit(context)
         skel_graph = pc.graph_
-        assert list(skel_graph.undirected_edges) == [("x", "y"), ("z", "y")]
+        assert all(edge in skel_graph.undirected_edges for edge in {("x", "y"), ("y", "z")})
+
+        for edge in skel_graph.undirected_edges:
+            sorted_edge = set(sorted(list(edge)))
+            assert sorted_edge in [{"x", "y"}, {"y", "z"}]
 
     def test_pc_basic_collider(self):
         sample = self.scm.sample(n=1, include_latents=False)
+        context = Context(data=sample)
         pc = PC(ci_estimator=self.ci_estimator, apply_orientations=False)
-        pc.fit(sample)
+        pc.fit(context)
         skel_graph = pc.graph_
         sep_set = pc.separating_sets_
-        self.alg._orient_unshielded_triples(skel_graph, sep_set)
+        self.alg.orient_unshielded_triples(skel_graph, sep_set)
 
         # the CPDAG learned should be a fully oriented DAG
         assert len(skel_graph.undirected_edges) == 0
-        assert skel_graph.has_edge("x", "y")
-        assert skel_graph.has_edge("z", "y")
-
-    def test_pc_rule1(self):
-        # If C -> A - B, such that the triple is unshielded,
-        # then orient A - B as A -> B
-
-        G = CPDAG()
-        G.add_undirected_edge("A", "B")
-        G.add_edge("C", "A")
-        G_copy = G.copy()
-
-        # First test:
-        # C -> A -> B
-        self.alg._apply_meek_rule1(G, "A", "B")
-        assert G.has_edge("A", "B")
-        assert not G.has_undirected_edge("A", "B")
-        assert G.has_edge("C", "A")
-
-        # Next, test that nothing occurs
-        # if it is a shielded triple
-        G = G_copy.copy()
-        G.add_edge("C", "B")
-        added_arrows = self.alg._apply_meek_rule1(G, "A", "B")
-        assert not added_arrows
-
-    def test_pc_rule2(self):
-        # If C -> A -> B, with C - B
-        # then orient C - B as C -> B
-
-        G = CPDAG()
-        G.add_undirected_edge("C", "B")
-        G.add_edge("C", "A")
-        G.add_edge("A", "B")
-
-        # First test:
-        # C -> B
-        added_arrows = self.alg._apply_meek_rule2(G, "C", "B")
-        assert G.has_edge("A", "B")
-        assert G.has_edge("C", "A")
-        assert G.has_edge("C", "B")
-        assert added_arrows
-
-    def test_pc_rule3(self):
-        # If C - A, with C - B and C - D
-        # and B -> A <- D, then orient C - A as C -> A.
-
-        G = CPDAG()
-        G.add_undirected_edge("C", "B")
-        G.add_undirected_edge("C", "D")
-        G.add_undirected_edge("C", "A")
-        G.add_edge("B", "A")
-        G.add_edge("D", "A")
-        G_copy = G.copy()
-
-        added_arrows = self.alg._apply_meek_rule3(G, "C", "A")
-        assert added_arrows
-        assert G.has_edge("C", "A")
-
-        # if 'B' and 'D' are adjacent, then it will
-        # not be added
-        G = G_copy.copy()
-        G.add_edge("B", "D")
-        added_arrows = self.alg._apply_meek_rule3(G, "C", "A")
-        assert not added_arrows
+        assert skel_graph.has_edge("x", "y", skel_graph.directed_edge_name)
+        assert skel_graph.has_edge("z", "y", skel_graph.directed_edge_name)

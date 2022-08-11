@@ -1,11 +1,10 @@
 import logging
 from collections import defaultdict
 from itertools import combinations
-from typing import Any, Dict, Iterable, List, Set, Union
+from typing import Any, Dict, Iterable, List, Set
 
 import networkx as nx
 import numpy as np
-import pandas as pd
 
 from dodiscover import Context
 from dodiscover.ci import BaseConditionalIndependenceTest
@@ -162,14 +161,15 @@ class LearnSkeleton:
 
         - 'complete': This exhaustively conditions on all combinations of variables in
           the graph. This essentially refers to the SGS algorithm :footcite:`Spirtes1993`
-        - 'neighbors': This only conditions on adjacent variables to that of 'x_var' and 'y_var'. This
-          refers to the traditional PC algorithm :footcite:`Meek1995`
+        - 'neighbors': This only conditions on adjacent variables to that of 'x_var' and 'y_var'.
+          This refers to the traditional PC algorithm :footcite:`Meek1995`
         - 'neighbors_path': This is 'neighbors', but restricts to variables with an adjacency path
           from 'x_var' to 'y_var'. This is a variant from the RFCI paper :footcite:`Colombo2012`
     """
 
     adj_graph_: nx.Graph
-    sep_set: Dict[str, Dict[str, List[Set[Any]]]]
+    sep_set_: Dict[str, Dict[str, List[Set[Any]]]]
+    remove_edges: Set
 
     def __init__(
         self,
@@ -249,7 +249,7 @@ class LearnSkeleton:
         X = context.data
 
         # track progress of the algorithm for which edges to remove to ensure stability
-        self.remove_edges_ = set()
+        self.remove_edges = set()
 
         # initialize learning parameters
         self._initialize_params()
@@ -287,7 +287,7 @@ class LearnSkeleton:
         while 1:
             cont = False
             # initialize set of edges to remove at the end of every loop
-            self.remove_edges_ = set()
+            self.remove_edges = set()
 
             # loop through every node
             for x_var in adj_graph.nodes:
@@ -316,8 +316,9 @@ class LearnSkeleton:
                     )
 
                     logger.debug(
-                        f"Adj({x_var}) without {y_var} with size={size_adjacencies_x} with p={size_cond_set}. "
-                        f"The possible variables to condition on are: {possible_variables}."
+                        f"Adj({x_var}) without {y_var} with size={size_adjacencies_x} with "
+                        f"p={size_cond_set}. The possible variables to condition on are: "
+                        f"{possible_variables}."
                     )
 
                     # check that number of adjacencies is greater then the
@@ -370,12 +371,12 @@ class LearnSkeleton:
 
             # finally remove edges after performing
             # conditional independence tests
-            logger.info(f"For p = {size_cond_set}, removing all edges: {self.remove_edges_}")
+            logger.info(f"For p = {size_cond_set}, removing all edges: {self.remove_edges}")
 
             # Remove non-significant links
             # Note: Removing edges at the end ensures "stability" of the algorithm
             # with respect to the randomness choice of pairs of edges considered in the inner loop
-            adj_graph.remove_edges_from(self.remove_edges_)
+            adj_graph.remove_edges_from(self.remove_edges)
 
             # increment the conditioning set size
             size_cond_set += 1
@@ -461,7 +462,7 @@ class LearnSkeleton:
 
         # two variables found to be independent given a separating set
         if pvalue > self.alpha:
-            self.remove_edges_.add((x_var, y_var))
+            self.remove_edges.add((x_var, y_var))
             self.sep_set_[x_var][y_var].append(set(cond_set))
             self.sep_set_[y_var][x_var].append(set(cond_set))
             return True
