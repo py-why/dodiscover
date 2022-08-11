@@ -33,7 +33,7 @@ jobs:
       run: pip install poetry-dynamic-versioning
 
     - name: Install dependencies
-      run: poetry install -E plotting -E causalml
+      run: poetry install
 
     - name: Verify
       run: poetry run poe verify
