@@ -1,4 +1,4 @@
-name: unit-tests
+name: gh-ci-checks
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.type }}
   cancel-in-progress: true
@@ -10,6 +10,8 @@ on:
     branches: [main]
     paths:
       - '**.py'
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
 jobs:
