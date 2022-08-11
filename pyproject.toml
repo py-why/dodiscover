@@ -1,0 +1,69 @@
+[tool.poetry]
+name = "dodiscover"
+#
+# 0.0.0 is standard placeholder for poetry-dynamic-versioning
+# any changes to this should not be checked in
+#
+version = "0.0.0"
+description = "Causal Discovery for Python"
+authors = ["PyWhy Community <robertness@microsoft.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+beartype = "^0.10.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
+mypy = "^0.971"
+poethepoet = "^0.16.0"
+black = "^22.6.0"
+isort = "^5.10.1"
+pylint = "^2.14.5"
+flake8 = "^5.0.4"
+bandit = "^1.7.4"
+portray = "^1.7.0"
+semversioner = "^1.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.portray]
+output_dir = ['site']
+modules = ['dodiscover']
+
+[tool.poe.tasks]
+_flake8 = 'flake8'
+_pylint = 'pylint --recursive=y ./dodiscover'
+_bandit = 'bandit -r dodiscover'
+_black = 'black .'
+_isort = 'isort .'
+_changelog = 'semversioner changelog > CHANGELOG.md'
+_apply_version = 'semversioner release'
+
+start_docs = 'portray in_browser'
+build_docs = 'portray as_html --overwrite'
+typecheck = 'mypy -p dodiscover'
+unit_test = 'pytest tests/unit_tests'
+integration_test = 'pytest tests/integration_tests'
+
+[[tool.poe.tasks.lint]]
+sequence = ['_pylint', '_flake8', '_bandit']
+ignore_fail = 'return_non_zero'
+
+[[tool.poe.tasks.format]]
+sequence = ['_black', '_isort']
+ignore_fail = 'return_non_zero'
+
+#
+# a standard verification sequence for use in pull requests
+#
+[[tool.poe.tasks.verify]]
+sequence = ['format', 'lint', 'typecheck', 'unit_test']
+ignore_fail = "return_non_zero"
+
+[[tool.poe.tasks.release]]
+sequence = ['_changelog', '_apply_version']
