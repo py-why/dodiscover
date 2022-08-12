@@ -18,6 +18,9 @@ jobs:
   style:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+          poetry-version: [1.1.14]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -58,6 +61,7 @@ jobs:
       matrix:
         os: [ubuntu, macos, windows]
         python-version: [3.8, 3.9, "3.10"]
+        poetry-version: [1.1.14]
     name: build ${{ matrix.os }} - py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}-latest
     defaults:
@@ -113,6 +117,7 @@ jobs:
       matrix:
         os: [ubuntu, macos, windows]
         python-version: [3.8, "3.10"]  # oldest and newest supported versions
+        poetry-version: [1.1.14]
         networkx: [stable, main]
     name: pytest ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
     runs-on: ${{ matrix.os }}-latest
