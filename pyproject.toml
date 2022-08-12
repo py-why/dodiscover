@@ -18,7 +18,7 @@ include = ['dodiscover*']
 exclude = ['dodiscover*tests']
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.11"
 beartype = "^0.10.4"
 numpy = "^1.16.0"
 scipy = "^1.2.0"
