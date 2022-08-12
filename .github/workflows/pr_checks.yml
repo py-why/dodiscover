@@ -37,14 +37,14 @@ jobs:
           then
             exit 0
           fi
-          all_changelogs=$(cat ./docs/whats_new/v*.rst)
+          all_changelogs=$(cat ./doc/whats_new/v*.rst)
           if [[ "$all_changelogs" =~ :pr:\`$PR_NUMBER\` ]]
           then
             echo "Changelog has been updated."
             # If the pull request is milestoned check the correspondent changelog
-            if exist -f ./docs/whats_new/v${TAGGED_MILESTONE:0:4}.rst
+            if exist -f ./doc/whats_new/v${TAGGED_MILESTONE:0:4}.rst
             then
-              expected_changelog=$(cat ./docs/whats_new/v${TAGGED_MILESTONE:0:4}.rst)
+              expected_changelog=$(cat ./doc/whats_new/v${TAGGED_MILESTONE:0:4}.rst)
               if [[ "$expected_changelog" =~ :pr:\`$PR_NUMBER\` ]]
               then
                 echo "Changelog and milestone correspond."
@@ -58,7 +58,7 @@ jobs:
           else
             echo "A Changelog entry is missing."
             echo ""
-            echo "Please add an entry to the changelog at 'docs/whats_new/v*.rst'"
+            echo "Please add an entry to the changelog at 'doc/whats_new/v*.rst'"
             echo "to docsument your change assuming that the PR will be merged"
             echo "in time for the next release of dodiscover."
             echo ""
