@@ -1,4 +1,4 @@
-from ...dodiscover import __version__
+from dodiscover import __version__
 
 
 def test_version():

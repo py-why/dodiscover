@@ -10,7 +10,8 @@ There are a series of top-level tasks available through Poetry. These can each b
  `poetry run poe <taskname>`
 
 ### Basic Verification
-* **format** - runs the suite of formatting tools
+* **apply_format** - runs the suite of formatting tools applying tools to make code compliant
+* **check_format** - runs the suite of formatting tools checking for compliance
 * **lint** - runs the suite of linting tools
 * **unit_test** - executes fast unit tests
 * **typecheck** - performs static typechecking of the codebase using mypy
