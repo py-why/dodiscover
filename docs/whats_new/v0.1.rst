@@ -26,7 +26,7 @@ Version 0.1
 Changelog
 ---------
 
-- |Feature| Implement and test the :class:`dodiscover.PC` for PC algorithm, by `Adam Li`_ (:pr:`1`)
+- |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
 
 Code and Documentation Contributors
 -----------------------------------

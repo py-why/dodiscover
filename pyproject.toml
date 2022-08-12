@@ -29,7 +29,6 @@ importlib-resources = { version = "*", python = "<3.9" }
 # graphs = { git = "https://github.com/py-why/graphs.git" }
 
 [tool.poetry.dev-dependencies]
-matplotlib = "^3.5"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 mypy = "^0.971"
@@ -42,6 +41,7 @@ bandit = "^1.7.4"
 portray = "^1.7.0"
 semversioner = "^1.1.0"
 pydocstyle = "^6.1.1"
+matplotlib = {version = "^3.5",  optional = true }
 memory_profiler = { version = "*", optional = true }
 numpydoc = { version = "*", optional = true }
 pydata-sphinx-theme = { version = "*", optional = true }
@@ -53,7 +53,6 @@ sphinx-gallery = { version = "*", optional = true }
 sphinx_rtd_theme = { version = "*", optional = true }
 typing-extensions = { version = "*", optional = true }
 pandas = { version = "*", optional = true }
-matplotlib = { version = "*", optional = true }
 graphviz = { version = "*", optional = true }
 dowhy = { version = "*", optional = true }
 

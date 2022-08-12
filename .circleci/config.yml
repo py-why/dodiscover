@@ -72,7 +72,7 @@ jobs:
             name: Get Python running and install dependencies
             command: |
               python -m pip install --progress-bar off --upgrade pip setuptools wheel poetry
-              poetry install
+              python -m poetry install
         - save_cache:
             name: Save pip cache
             key: pip-cache
