@@ -38,14 +38,14 @@ jobs:
             exit 0
           fi
           all_changelogs=$(cat ./docs/whats_new/v*.rst)
-          if [[ "$all_changelogs" =~ :gh:\`$PR_NUMBER\` ]]
+          if [[ "$all_changelogs" =~ :pr:\`$PR_NUMBER\` ]]
           then
             echo "Changelog has been updated."
             # If the pull request is milestoned check the correspondent changelog
             if exist -f ./docs/whats_new/v${TAGGED_MILESTONE:0:4}.rst
             then
               expected_changelog=$(cat ./docs/whats_new/v${TAGGED_MILESTONE:0:4}.rst)
-              if [[ "$expected_changelog" =~ :gh:\`$PR_NUMBER\` ]]
+              if [[ "$expected_changelog" =~ :pr:\`$PR_NUMBER\` ]]
               then
                 echo "Changelog and milestone correspond."
               else
@@ -63,7 +63,7 @@ jobs:
             echo "in time for the next release of dodiscover."
             echo ""
             echo "Look at other entries in that file for inspiration and please"
-            echo "reference this pull request using the ':gh:' directive and"
+            echo "reference this pull request using the ':pr:' directive and"
             echo "credit yourself (and other contributors if applicable) with"
             echo "the ':user:' directive."
             echo ""
