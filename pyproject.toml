@@ -136,6 +136,10 @@ extend-exclude = '''
 )
 '''
 
+[tool.pylint]
+max-line-length = 120
+disable = ["W0511"]
+
 [tool.isort]
 profile = 'black'
 multi_line_output = 3

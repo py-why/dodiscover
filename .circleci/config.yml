@@ -85,8 +85,10 @@ jobs:
               - ~/.local/lib/python3.8/site-packages
               - ~/.local/bin
         - run:
-            name: Check pip package versions
-            command: pip freeze
+            name: Check poetry package versions
+            command: |
+               poetry --version
+               poetry show
         - run:
             name: Check installation
             command: |
