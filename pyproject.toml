@@ -29,6 +29,7 @@ importlib-resources = { version = "*", python = "<3.9" }
 # graphs = { git = "https://github.com/py-why/graphs.git" }
 
 [tool.poetry.dev-dependencies]
+matplotlib = "^3.5"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 mypy = "^0.971"
