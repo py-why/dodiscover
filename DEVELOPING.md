@@ -2,6 +2,8 @@
 * Python 3.8+
 * Poetry (`curl -sSL https://install.python-poetry.org | python`)
 
+For the other requirements, inspect the ``pyproject.toml`` file. If you are updated the dependencies, please run `poetry update` to update the
+
 # Development Tasks
 There are a series of top-level tasks available through Poetry. These can each be run via
 
@@ -15,7 +17,7 @@ There are a series of top-level tasks available through Poetry. These can each b
 * **verify** - executes the basic PR verification suite, which includes all the tasks listed above
 
 ### Longer Verification
-* **integration_test** - runs slower tests and end-to-end tests are run thorugh this task
+* **integration_test** - runs slower tests and end-to-end tests are run through this task
 
 ### Docsite
 * **start_docs** - start the API documentation site locally
