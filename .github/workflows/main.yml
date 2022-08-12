@@ -84,8 +84,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --progress-bar off git+https://github.com/py-why/graphs
-          python -m pip install --progress-bar off --upgrade pip setuptools wheel
-          python -m pip install --progress-bar off build twine
+          python -m pip install --progress-bar off --upgrade pip setuptools wheel build twine
+          poetry install
       - name: Test package install
         run: python -c "import dodiscover; print(dodiscover.__version__)"
       - name: Remove package install
