@@ -72,6 +72,7 @@ jobs:
             name: Get Python running and install dependencies
             command: |
               pip install --progress-bar off --upgrade pip setuptools wheel poetry
+              pip install --progress-bar off --upgrade poetry-dynamic-versioning
               poetry install
               poetry install --extras docs
         - save_cache:
@@ -95,7 +96,7 @@ jobs:
             command: |
                poetry run python -c "import dodiscover;"
                poetry run python -c "import numpy; numpy.show_config()"
-        # LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
+               LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
         - run:
             name: Build documentation
             command: |
