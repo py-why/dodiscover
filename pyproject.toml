@@ -97,7 +97,7 @@ _apply_version = 'semversioner release'
 start_docs = 'portray in_browser'
 build_docs = 'portray as_html --overwrite'
 typecheck = 'mypy -p dodiscover --config-file pyproject.toml'
-unit_test = 'pytest tests/unit_tests --cov=main/dodiscover --cov-report=xml --cov-config=pyproject.toml'
+unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 
 [[tool.poe.tasks.lint]]
