@@ -41,7 +41,7 @@ jobs:
 
       # TODO: once poetry v1.2 is release, we want to only install dev dependencies
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --dev-only
       
       # check formatting of the code style
       - name: Check code formatting
@@ -88,6 +88,8 @@ jobs:
         run: python -c "import dodiscover; print(dodiscover.__version__)"
       - name: Remove package install
         run: python -m pip uninstall -yq dodiscover
+      - name: Check poetry lock file
+        run: poetry update --dry-run
       - name: Build package
         run: poetry build
       - name: Upload package distribution files

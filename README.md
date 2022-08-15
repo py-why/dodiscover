@@ -6,7 +6,7 @@
 
 # dodiscover
 
-dodiscover is a Python library for causal discovery, or structure learning. This is generally considered a "first step" in the causal inference pipeline, if one does not have access to a hypothesized causal graph for their situation.
+DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a hypothesized causal graph for their situation, then they may use dodiscover to learn causal structure from their data (e.g. in the form of a graph).
 
 # Documentation
 
@@ -36,18 +36,11 @@ If you already have a working installation of numpy, scipy and networkx, the eas
     pip install -U dodiscover
 
     # If you are a developer and would like to install the developer dependencies
-    pip install dodiscover[doc,style,test]
-
-    # If you would like full functionality, which installs all of the above
-    pip install dodiscover[all]
+    pip install -e .
 
 To install the package from github, clone the repository and then `cd` into the directory:
 
+    poetry install --with docs
+
+    # if you would like an editable install of dodiscover for dev purposes
     pip install -e .
-
-    # One can also add the different identifiers, such as '[doc]' to install
-    # extra dependencies
-
-# Current Limitations and Current Roadmap
-
-Currently, selection bias representation is not implemented in the corresponding algorithms. However, I believe it is technically feasible based on the design of how we use networkx.
