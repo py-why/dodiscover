@@ -71,8 +71,8 @@ jobs:
         - run:
             name: Get Python running and install dependencies
             command: |
-              python -m pip install --progress-bar off --upgrade pip setuptools wheel poetry
-              python -m poetry install --extras docs --quiet
+              pip install --progress-bar off --upgrade pip setuptools wheel poetry
+              poetry install --extras docs --quiet
         - save_cache:
             name: Save pip cache
             key: pip-cache
@@ -92,14 +92,14 @@ jobs:
         - run:
             name: Check installation
             command: |
-               LIBGL_DEBUG=verbose python -c "import matplotlib.pyplot as plt; plt.figure()"
-               python -c "import dodiscover;"
-               python -c "import numpy; numpy.show_config()"
+               LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
+               poetry run python -c "import dodiscover;"
+               poetry run python -c "import numpy; numpy.show_config()"
         - run:
             name: Build documentation
             command: |
               cd doc
-              make html
+              poetry run make html
         # Save the example test results
         - store_test_results:
             path: doc/_build/test-results
@@ -154,10 +154,10 @@ jobs:
             keys:
               - pip-cache
         - run:
-            name: Get Python running
+            name: Get Python running and install dependencies
             command: |
-              python -m pip install --progress-bar off --upgrade pip setuptools wheel
-              python -m pip install --progress-bar off .[doc]
+              pip install --progress-bar off --upgrade pip setuptools wheel poetry
+              poetry install --extras docs --quiet
         - run:
             name: make linkcheck
             command: |

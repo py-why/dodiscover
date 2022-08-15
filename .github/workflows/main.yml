@@ -41,7 +41,7 @@ jobs:
 
       # TODO: once poetry v1.2 is release, we want to only install dev dependencies
       - name: Install dependencies
-        run: poetry install --dev-only
+        run: poetry install
       
       # check formatting of the code style
       - name: Check code formatting
