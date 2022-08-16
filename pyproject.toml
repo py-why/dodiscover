@@ -60,7 +60,7 @@ pandas = { version = "^1.1" }
 graphviz = { version = "^0.20.1" }
 dowhy = { version = "^0.8" }
 ipython = { version = "^7.4.0" }
-
+nbsphinx = { version = "^0.8" }
 # [tool.poetry.extras]
 # docs = [
 #     "sphinx",

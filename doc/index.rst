@@ -3,7 +3,7 @@
 
 dodiscover is a Python package for representing causal graphs. For example, Acyclic
 Directed Mixed Graphs (ADMG), also known as causal DAGs and Partial Ancestral Graphs (PAGs).
-We build on top of ``networkx's`` `MixedEdgeGraph` such that we maintain all the well-tested and efficient
+We build on top of ``networkx's`` ``MixedEdgeGraph`` such that we maintain all the well-tested and efficient
 algorithms and data structures of ``networkx``.
 
 We encourage you to use the package for your causal inference research and also build on top
