@@ -1,6 +1,6 @@
 version: 2.1
 
-orbs: 
+orbs:
   python: circleci/python@2.0.3
 
 jobs:
@@ -50,13 +50,13 @@ jobs:
             curl -sSL https://install.python-poetry.org | python3 -
       - python/install-packages:
           pkg-manager: poetry
-          args: '--extras docs'
-          version: '3.8'
+          args: "--extras docs"
+          cache-version: "v1" # change to clear cache
       - run:
           name: Check poetry package versions
           command: |
-              poetry --version
-              poetry show
+            poetry --version
+            poetry show
       - run:
           name: Set BASH_ENV
           command: |
@@ -88,9 +88,9 @@ jobs:
       - run:
           name: Check installation
           command: |
-              poetry run python -c "import dodiscover;"
-              poetry run python -c "import numpy; numpy.show_config()"
-              LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
+            poetry run python -c "import dodiscover;"
+            poetry run python -c "import numpy; numpy.show_config()"
+            LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
       - run:
           name: Build documentation
           command: |
@@ -168,48 +168,48 @@ jobs:
           destination: linkcheck
 
   deploy:
-      docker:
-        - image: cimg/node:lts
-      steps:
-        - checkout
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - checkout
 
-        - attach_workspace:
-            at: doc/_build
-        - run:
-            name: Set BASH_ENV
-            command: |
-              set -e
-              echo "set -e" >> $BASH_ENV
-        # Don't try to deploy if nothing is there or not on the right branch
-        - run:
-            name: Check docs
-            command: |
-              if [ ! -f doc/_build/html/index.html ] && [ ! -f doc/_build/html_stable/index.html ]; then
-                echo "No files found to upload (build: ${CIRCLE_BRANCH}).";
-                circleci-agent step halt;
-              fi;
-        - run:
-            name: Install and configure dependencies
-            # do not update gh-pages above 3.0.0
-            # see: https://github.com/tschaub/gh-pages/issues/354
-            command: |
-              npm install gh-pages@3.0
-              git config --global user.email "circle@pywhy.com"
-              git config --global user.name "Circle Ci"
-        - add_ssh_keys:
-            fingerprints:
-              - "b5:1e:a1:6d:8d:48:f2:8f:dd:bd:2d:66:a9:30:fe:b9"
-        - run:
-            # push built doc into the `dev` directory on the `gh-pages` branch
-            name: Deploy doc to gh-pages branch
-            command: |
-              if [ "${CIRCLE_BRANCH}" == "main" ]; then
-                echo "Deploying dev doc for ${CIRCLE_BRANCH}.";
-                node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html --dest ./dev
-              else
-                echo "Deploying stable doc for ${CIRCLE_BRANCH}.";
-                node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html_stable --dest ./stable
-              fi;
+      - attach_workspace:
+          at: doc/_build
+      - run:
+          name: Set BASH_ENV
+          command: |
+            set -e
+            echo "set -e" >> $BASH_ENV
+      # Don't try to deploy if nothing is there or not on the right branch
+      - run:
+          name: Check docs
+          command: |
+            if [ ! -f doc/_build/html/index.html ] && [ ! -f doc/_build/html_stable/index.html ]; then
+              echo "No files found to upload (build: ${CIRCLE_BRANCH}).";
+              circleci-agent step halt;
+            fi;
+      - run:
+          name: Install and configure dependencies
+          # do not update gh-pages above 3.0.0
+          # see: https://github.com/tschaub/gh-pages/issues/354
+          command: |
+            npm install gh-pages@3.0
+            git config --global user.email "circle@pywhy.com"
+            git config --global user.name "Circle Ci"
+      - add_ssh_keys:
+          fingerprints:
+            - "b5:1e:a1:6d:8d:48:f2:8f:dd:bd:2d:66:a9:30:fe:b9"
+      - run:
+          # push built doc into the `dev` directory on the `gh-pages` branch
+          name: Deploy doc to gh-pages branch
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+              echo "Deploying dev doc for ${CIRCLE_BRANCH}.";
+              node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html --dest ./dev
+            else
+              echo "Deploying stable doc for ${CIRCLE_BRANCH}.";
+              node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html_stable --dest ./stable
+            fi;
 
 workflows:
   default:
