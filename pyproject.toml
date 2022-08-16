@@ -28,6 +28,10 @@ importlib-resources = { version = "*", python = "<3.9" }
 # pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git" }
 # graphs = { git = "https://github.com/py-why/graphs.git" }
 
+# TODO: the below needs to be refactored into separate dev-dependencies
+# https://github.com/python-poetry/poetry/is
+# it is inefficient to have to install every single dependencey to run
+# e.g. a style check.
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
@@ -42,36 +46,49 @@ portray = "^1.7.0"
 semversioner = "^1.1.0"
 pydocstyle = "^6.1.1"
 codespell = "^2.1.0"
-matplotlib = {version = "^3.5",  optional = true }
-memory_profiler = { version = "^0.60.0", optional = true }
-numpydoc = { version = "^1.4", optional = true }
-pydata-sphinx-theme = { version = "^0.9.0", optional = true }
-sphinx = { version = "^5.1.1", optional = true }
-sphinxcontrib-bibtex = { version = "^2.4.2", optional = true }
-sphinx-issues = { version = "^3.0.1", optional = true }
-sphinx-copybutton = { version = "^0.5.0", optional = true }
-sphinx-gallery = { version = "^0.11.0", optional = true }
-sphinx_rtd_theme = { version = "^1.0.0", optional = true }
-pandas = { version = "^1.1", optional = true }
-graphviz = { version = "^0.20.1", optional = true }
-dowhy = { version = "^0.8", optional = true }
+matplotlib = { version = "^3.5" }
+memory_profiler = { version = "^0.60.0" }
+numpydoc = { version = "^1.4" }
+pydata-sphinx-theme = { version = "^0.9.0" }
+sphinx = { version = "^5.1.1" }
+sphinxcontrib-bibtex = { version = "^2.4.2" }
+sphinx-issues = { version = "^3.0.1" }
+sphinx-copybutton = { version = "^0.5.0" }
+sphinx-gallery = { version = "^0.11.0" }
+sphinx_rtd_theme = { version = "^1.0.0" }
+pandas = { version = "^1.1" }
+graphviz = { version = "^0.20.1" }
+dowhy = { version = "^0.8" }
 
-[tool.poetry.extras]
-docs = [
-    "sphinx^5.1.1",
-    "memory_profiler^0.60.0",
-    "pydata-sphinx-theme^0.9.0",
-    "sphinxcontrib-bibtex^2.4.2",
-    "sphinx-issues^3.0.1",
-    "sphinx-copybutton^0.5.0",
-    "sphinx-gallery^0.11.0",
-    "sphinx_rtd_theme^1.0.0",
-    "numpydoc^1.4",
-    "pandas^1.1",
-    "matplotlib^3.5",
-    "graphviz^0.20.1",
-    "dowhy^0.8",
-]
+# [tool.poetry.extras]
+# docs = [
+#     "sphinx",
+#     "memory_profiler",
+#     "pydata-sphinx-theme",
+#     "sphinxcontrib-bibtex",
+#     "sphinx-issues",
+#     "sphinx-copybutton",
+#     "sphinx-gallery",
+#     "sphinx_rtd_theme",
+#     "numpydoc",
+#     "pandas",
+#     "matplotlib",
+#     "graphviz",
+#     "dowhy",
+#     # "sphinx^5.1.1",
+#     # "memory_profiler^0.60.0",
+#     # "pydata-sphinx-theme^0.9.0",
+#     # "sphinxcontrib-bibtex^2.4.2",
+#     # "sphinx-issues^3.0.1",
+#     # "sphinx-copybutton^0.5.0",
+#     # "sphinx-gallery^0.11.0",
+#     # "sphinx_rtd_theme^1.0.0",
+#     # "numpydoc^1.4",
+#     # "pandas^1.1",
+#     # "matplotlib^3.5",
+#     # "graphviz^0.20.1",
+#     # "dowhy^0.8",
+# ]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

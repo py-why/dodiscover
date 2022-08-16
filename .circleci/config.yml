@@ -73,18 +73,6 @@ jobs:
       - run:
           name: Setup pandoc
           command: sudo apt update && sudo apt install -y pandoc optipng
-      - save_cache:
-          name: Save pip cache
-          key: pip-cache
-          paths:
-            - ~/.cache/pip
-      - save_cache:
-          name: Save install-bin-cache
-          key: user-install-bin-cache
-          paths:
-            - ~/.local/lib/python3.8/site-packages
-            - ~/.local/bin
-
       - run:
           name: Check installation
           command: |
