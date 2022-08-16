@@ -5,7 +5,7 @@ from math import frexp
 import numpy as np
 
 from dodiscover.ci import g_square_binary, g_square_discrete
-from dodiscover.ci.tests import testdata
+from . import testdata
 
 if __name__ == "__main__":
 

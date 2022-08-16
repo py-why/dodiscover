@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from dodiscover.ci import GSquareCITest
-from dodiscover.ci.tests import testdata
+from . import testdata
 
 
 def test_g_error():
