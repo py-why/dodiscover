@@ -27,6 +27,8 @@ Changelog
 ---------
 
 - |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
+- |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
+
 
 Code and Documentation Contributors
 -----------------------------------
