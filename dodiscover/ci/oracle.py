@@ -1,11 +1,7 @@
-from typing import Union
-
 import networkx as nx
 import numpy as np
-from graphs.algorithms import m_separated
-from networkx.algorithms import d_separated
-from pywhy_graphs import ADMG
 
+from .._protocol import GraphProtocol
 from .base import BaseConditionalIndependenceTest
 
 
@@ -20,7 +16,7 @@ class Oracle(BaseConditionalIndependenceTest):
         The ground-truth causal graph.
     """
 
-    def __init__(self, graph: Union[ADMG, nx.DiGraph]) -> None:
+    def __init__(self, graph: GraphProtocol) -> None:
         self.graph = graph
 
     def test(self, df, x_var, y_var, z_covariates):
@@ -55,8 +51,10 @@ class Oracle(BaseConditionalIndependenceTest):
         # just check for d-separation between x and y
         # given sep_set
         if isinstance(self.graph, nx.DiGraph):
-            is_sep = d_separated(self.graph, {x_var}, {y_var}, z_covariates)
+            is_sep = nx.d_separated(self.graph, {x_var}, {y_var}, z_covariates)
         else:
+            from graphs import m_separated
+
             is_sep = m_separated(self.graph, {x_var}, {y_var}, z_covariates)
 
         if is_sep:
@@ -66,39 +64,3 @@ class Oracle(BaseConditionalIndependenceTest):
             pvalue = 0
             test_stat = np.inf
         return test_stat, pvalue
-
-
-class ParentChildOracle(Oracle):
-    """Parent and children oracle for conditional independence testing.
-
-    An oracle that knows the definite parents and children of every node.
-    """
-
-    def get_children(self, x):
-        """Return the definite children of node 'x'."""
-        return self.graph.successors(x)
-
-    def get_parents(self, x):
-        """Return the definite parents of node 'x'."""
-        return self.graph.predecessors(x)
-
-
-class MarkovBlanketOracle(ParentChildOracle):
-    """MB oracle for conditional independence testing.
-
-    An oracle that knows the definite Markov Blanket of every node.
-    """
-
-    def __init__(self, graph: Union[ADMG, nx.DiGraph]) -> None:
-        super().__init__(graph)
-
-    def get_markov_blanket(self, x):
-        """Return the markov blanket of node 'x'."""
-        return self.graph.markov_blanket_of(x)
-
-
-class AncestralOracle(ParentChildOracle):
-    """Oracle with access to ancestors of any specific node."""
-
-    def get_ancestors(self, x):
-        return self.graph.ancestors(x)

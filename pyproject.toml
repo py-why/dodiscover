@@ -77,7 +77,7 @@ _isort = 'isort .'
 _black_check = 'black --check dodiscover examples'
 _isort_check = 'isort --check .'
 _pydocstyle = 'pydocstyle .'
-_codespell = 'codespell . --ignore-words=.codespellignore --skip "**/_build/*"'
+_codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespellignore --skip "**/_build/*"'
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 

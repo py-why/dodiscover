@@ -95,17 +95,8 @@ def fisherz(
 
     # compute the correlation matrix within the specified data
     sub_corr_matrix = correlation_matrix[np.ix_(var_idx, var_idx)]
-    # try:
     inv = np.linalg.inv(sub_corr_matrix)
     r = -inv[0, 1] / sqrt(inv[0, 0] * inv[1, 1])
-    # except Exception as e:
-    #     print('inside errors...')
-    #     print(var)
-    #     print(correlation_matrix.shape)
-    #     print(sub_corr_matrix)
-    #     print(sub_corr_matrix.shape)
-    #     print(var_idx)
-    #     raise Exception(e)
 
     # apply the Fisher Z-transformation
     Z = 0.5 * log((1 + r) / (1 - r))
