@@ -7,11 +7,11 @@ jobs:
   build_doc:
     executor: python/default
     steps:
-      - checkout
       - restore_cache:
           name: Restore .git
           keys:
             - source-cache-graphs
+      - checkout
       - run:
           name: Complete checkout
           command: |
@@ -222,7 +222,6 @@ workflows:
             branches:
               only:
                 - main
-                - maint/0.2
 
   main:
     jobs:
