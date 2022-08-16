@@ -20,7 +20,7 @@ from sphinx_gallery.sorting import ExampleTitleSortKey
 
 sys.path.insert(0, os.path.abspath("../"))
 
-from dodiscover.version import VERSION, VERSION_SHORT  # noqa: E402
+import dodiscover  # noqa: E402
 
 curdir = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(curdir, "..")))
@@ -31,8 +31,7 @@ sys.path.append(os.path.abspath(os.path.join(curdir, "..", "dodiscover")))
 project = "dodiscover"
 copyright = f"{datetime.today().year}, Adam Li"
 author = "Adam Li"
-version = VERSION_SHORT
-release = VERSION
+version = dodiscover.__version__
 
 # -- General configuration ---------------------------------------------------
 
@@ -195,7 +194,7 @@ master_doc = "index"
 
 html_theme = "pydata_sphinx_theme"
 
-html_title = f"dodiscover v{VERSION}"
+html_title = f"dodiscover v{version}"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
