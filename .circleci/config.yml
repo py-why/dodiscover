@@ -45,7 +45,7 @@ jobs:
             fi
       - python/install-packages:
           pkg-manager: poetry
-          args: '-- extras docs'
+          args: '--extras docs'
       - run:
           name: Check poetry package versions
           command: |
