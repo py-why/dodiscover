@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.077" timestamp="2022-08-15T12:29:46.262085" hostname="adams-mbp.lan"><testcase classname="tests.unit_tests.test_init" name="test_version" time="0.001" /></testsuite></testsuites>

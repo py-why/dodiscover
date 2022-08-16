@@ -1,0 +1,37 @@
+:orphan:
+
+.. include:: _contributors.rst
+
+.. _changes_0_1:
+
+What's new?
+===========
+
+Here we list a changelog of dodiscover.
+
+.. contents:: Contents
+   :local:
+   :depth: 3
+
+.. currentmodule:: dodiscover
+
+.. _current:
+
+Version 0.1
+===========
+
+**In Development**
+
+
+Changelog
+---------
+
+- |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
+
+Code and Documentation Contributors
+-----------------------------------
+
+Thanks to everyone who has contributed to the maintenance and improvement of
+the project since version inception, including:
+
+* `Adam Li`_
