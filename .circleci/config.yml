@@ -45,10 +45,17 @@ jobs:
             fi
       - python/install-packages:
           pkg-manager: poetry
+          args: '-- extras docs'
+      - run:
+          name: Check poetry package versions
+          command: |
+              poetry --version
+              poetry show
       - run:
           name: Set BASH_ENV
           command: |
             set -e
+            sudo apt update
             sudo apt install -qq graphviz optipng libxft2
             echo "set -e" >> $BASH_ENV
             echo "export OPENBLAS_NUM_THREADS=4" >> $BASH_ENV
@@ -60,12 +67,6 @@ jobs:
       - run:
           name: Setup pandoc
           command: sudo apt update && sudo apt install -y pandoc optipng
-      - run:
-          name: Get Python running and install dependencies
-          command: |
-            pip install --progress-bar off --upgrade poetry-dynamic-versioning
-            poetry install
-            poetry install --extras docs
       - save_cache:
           name: Save pip cache
           key: pip-cache
@@ -77,11 +78,7 @@ jobs:
           paths:
             - ~/.local/lib/python3.8/site-packages
             - ~/.local/bin
-      - run:
-          name: Check poetry package versions
-          command: |
-              poetry --version
-              poetry show
+
       - run:
           name: Check installation
           command: |
