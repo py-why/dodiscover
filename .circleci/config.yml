@@ -1,221 +1,212 @@
 version: 2.1
 
+orbs: 
+  python: circleci/python@2.0.3
+
 jobs:
-    build_doc:
+  build_doc:
+    executor: python/default
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore .git
+          keys:
+            - source-cache-graphs
+      - run:
+          name: Complete checkout
+          command: |
+            if ! git remote -v | grep upstream; then
+              git remote add upstream https://github.com/py-why/dodiscover.git
+            fi
+            git remote set-url upstream https://github.com/py-why/dodiscover.git
+            git fetch upstream
+      - save_cache:
+          name: Save .git
+          key: source-cache-graphs
+          paths:
+            - ".git"
+      - run:
+          name: Check-skip
+          command: |
+            set -e
+            export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
+            if [[ -v CIRCLE_PULL_REQUEST ]] && ([[ "$COMMIT_MESSAGE" == *"[skip circle]"* ]] || [[ "$COMMIT_MESSAGE" == *"[circle skip]"* ]]); then
+              echo "Skip detected, exiting job ${CIRCLE_JOB} for PR ${CIRCLE_PULL_REQUEST}."
+              circleci-agent step halt;
+            fi
+      - run:
+          name: Merge with upstream
+          command: |
+            echo $(git log -1 --pretty=%B) | tee gitlog.txt
+            echo ${CI_PULL_REQUEST//*pull\//} | tee merge.txt
+            if [[ $(cat merge.txt) != "" ]]; then
+              echo "Merging $(cat merge.txt)";
+              git pull --ff-only upstream "refs/pull/$(cat merge.txt)/merge";
+            fi
+      - python/install-packages:
+          pkg-manager: poetry
+      - run:
+          name: Set BASH_ENV
+          command: |
+            set -e
+            sudo apt install -qq graphviz optipng libxft2
+            echo "set -e" >> $BASH_ENV
+            echo "export OPENBLAS_NUM_THREADS=4" >> $BASH_ENV
+            echo "export XDG_RUNTIME_DIR=/tmp/runtime-circleci" >> $BASH_ENV
+            echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
+            echo "export DISPLAY=:99" >> $BASH_ENV
+            echo "BASH_ENV:"
+            cat $BASH_ENV
+      - run:
+          name: Setup pandoc
+          command: sudo apt update && sudo apt install -y pandoc optipng
+      - run:
+          name: Get Python running and install dependencies
+          command: |
+            pip install --progress-bar off --upgrade poetry-dynamic-versioning
+            poetry install
+            poetry install --extras docs
+      - save_cache:
+          name: Save pip cache
+          key: pip-cache
+          paths:
+            - ~/.cache/pip
+      - save_cache:
+          name: Save install-bin-cache
+          key: user-install-bin-cache
+          paths:
+            - ~/.local/lib/python3.8/site-packages
+            - ~/.local/bin
+      - run:
+          name: Check poetry package versions
+          command: |
+              poetry --version
+              poetry show
+      - run:
+          name: Check installation
+          command: |
+              poetry run python -c "import dodiscover;"
+              poetry run python -c "import numpy; numpy.show_config()"
+              LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
+      - run:
+          name: Build documentation
+          command: |
+            cd doc
+            poetry run make html
+      # Save the example test results
+      - store_test_results:
+          path: doc/_build/test-results
+      - store_artifacts:
+          path: doc/_build/test-results
+          destination: test-results
+      # Save the SG RST
+      - store_artifacts:
+          path: doc/auto_examples.zip
+      - store_artifacts:
+          path: doc/generated.zip
+      # Save the outputs
+      - store_artifacts:
+          path: doc/_build/html/
+          destination: dev
+      - store_artifacts:
+          path: doc/_build/html_stable/
+          destination: stable
+      - persist_to_workspace:
+          root: doc/_build
+          paths:
+            - html
+            - html_stable
+
+  linkcheck:
+    parameters:
+      scheduled:
+        type: string
+        default: "false"
+    docker:
+      - image: cimg/python:3.9.2
+    steps:
+      - restore_cache:
+          keys:
+            - source-cache-graphs
+      - checkout
+      - run:
+          name: Check-skip
+          command: |
+            export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
+            if [[ "$COMMIT_MESSAGE" != *"[circle linkcheck]"* ]] && [ "<< parameters.scheduled >>" != "true" ]; then
+              echo "Skip detected, exiting job ${CIRCLE_JOB}."
+              circleci-agent step halt;
+            fi
+      - run:
+          name: Set BASH_ENV
+          command: |
+            set -e
+            echo "set -e" >> $BASH_ENV
+            echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
+      - restore_cache:
+          keys:
+            - pip-cache
+      - run:
+          name: Get Python running and install dependencies
+          command: |
+            pip install --progress-bar off --upgrade pip setuptools wheel poetry
+            poetry install --extras docs --quiet
+      - run:
+          name: make linkcheck
+          command: |
+            make -C doc linkcheck
+      - run:
+          name: make linkcheck-grep
+          when: always
+          command: |
+            make -C doc linkcheck-grep
+      - store_artifacts:
+          path: doc/_build/linkcheck
+          destination: linkcheck
+
+  deploy:
       docker:
-        - image: cimg/base:stable-20.04
+        - image: cimg/node:lts
       steps:
-        - restore_cache:
-            name: Restore .git
-            keys:
-              - source-cache-graphs
         - checkout
-        - run:
-            name: Complete checkout
-            command: |
-              if ! git remote -v | grep upstream; then
-                git remote add upstream https://github.com/py-why/dodiscover.git
-              fi
-              git remote set-url upstream https://github.com/py-why/dodiscover.git
-              git fetch upstream
-        - save_cache:
-            name: Save .git
-            key: source-cache-graphs
-            paths:
-              - ".git"
-        - run:
-            name: Check-skip
-            command: |
-              set -e
-              export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
-              if [[ -v CIRCLE_PULL_REQUEST ]] && ([[ "$COMMIT_MESSAGE" == *"[skip circle]"* ]] || [[ "$COMMIT_MESSAGE" == *"[circle skip]"* ]]); then
-                echo "Skip detected, exiting job ${CIRCLE_JOB} for PR ${CIRCLE_PULL_REQUEST}."
-                circleci-agent step halt;
-              fi
-        - run:
-            name: Merge with upstream
-            command: |
-              echo $(git log -1 --pretty=%B) | tee gitlog.txt
-              echo ${CI_PULL_REQUEST//*pull\//} | tee merge.txt
-              if [[ $(cat merge.txt) != "" ]]; then
-                echo "Merging $(cat merge.txt)";
-                git pull --ff-only upstream "refs/pull/$(cat merge.txt)/merge";
-              fi
+
+        - attach_workspace:
+            at: doc/_build
         - run:
             name: Set BASH_ENV
             command: |
               set -e
-              sudo apt install -qq graphviz optipng python3.8-venv python3-venv libxft2
-              python3.8 -m venv ~/python_env
               echo "set -e" >> $BASH_ENV
-              echo "export OPENBLAS_NUM_THREADS=4" >> $BASH_ENV
-              echo "export XDG_RUNTIME_DIR=/tmp/runtime-circleci" >> $BASH_ENV
-              echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
-              echo "export DISPLAY=:99" >> $BASH_ENV
-              echo "source ~/python_env/bin/activate" >> $BASH_ENV
-              mkdir -p ~/.local/bin
-              ln -s ~/python_env/bin/python ~/.local/bin/python
-              echo "BASH_ENV:"
-              cat $BASH_ENV
+        # Don't try to deploy if nothing is there or not on the right branch
         - run:
-            name: Setup pandoc
-            command: sudo apt update && sudo apt install -y pandoc optipng
-        - restore_cache:
-            name: Restore pip cache
-            keys:
-              - pip-cache
-        - restore_cache:
-            name: Restore install-bin-cache
-            keys:
-              - user-install-bin-cache
-        - run:
-            name: Get Python running and install dependencies
+            name: Check docs
             command: |
-              pip install --progress-bar off --upgrade pip setuptools wheel poetry
-              pip install --progress-bar off --upgrade poetry-dynamic-versioning
-              poetry install
-              poetry install --extras docs
-        - save_cache:
-            name: Save pip cache
-            key: pip-cache
-            paths:
-              - ~/.cache/pip
-        - save_cache:
-            name: Save install-bin-cache
-            key: user-install-bin-cache
-            paths:
-              - ~/.local/lib/python3.8/site-packages
-              - ~/.local/bin
-        - run:
-            name: Check poetry package versions
-            command: |
-               poetry --version
-               poetry show
-        - run:
-            name: Check installation
-            command: |
-               poetry run python -c "import dodiscover;"
-               poetry run python -c "import numpy; numpy.show_config()"
-               LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
-        - run:
-            name: Build documentation
-            command: |
-              cd doc
-              poetry run make html
-        # Save the example test results
-        - store_test_results:
-            path: doc/_build/test-results
-        - store_artifacts:
-            path: doc/_build/test-results
-            destination: test-results
-        # Save the SG RST
-        - store_artifacts:
-            path: doc/auto_examples.zip
-        - store_artifacts:
-            path: doc/generated.zip
-        # Save the outputs
-        - store_artifacts:
-            path: doc/_build/html/
-            destination: dev
-        - store_artifacts:
-            path: doc/_build/html_stable/
-            destination: stable
-        - persist_to_workspace:
-            root: doc/_build
-            paths:
-              - html
-              - html_stable
-
-    linkcheck:
-      parameters:
-        scheduled:
-          type: string
-          default: "false"
-      docker:
-        - image: cimg/python:3.9.2
-      steps:
-        - restore_cache:
-            keys:
-              - source-cache-graphs
-        - checkout
-        - run:
-            name: Check-skip
-            command: |
-              export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
-              if [[ "$COMMIT_MESSAGE" != *"[circle linkcheck]"* ]] && [ "<< parameters.scheduled >>" != "true" ]; then
-                echo "Skip detected, exiting job ${CIRCLE_JOB}."
+              if [ ! -f doc/_build/html/index.html ] && [ ! -f doc/_build/html_stable/index.html ]; then
+                echo "No files found to upload (build: ${CIRCLE_BRANCH}).";
                 circleci-agent step halt;
-              fi
+              fi;
         - run:
-            name: Set BASH_ENV
+            name: Install and configure dependencies
+            # do not update gh-pages above 3.0.0
+            # see: https://github.com/tschaub/gh-pages/issues/354
             command: |
-              set -e
-              echo "set -e" >> $BASH_ENV
-              echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
-        - restore_cache:
-            keys:
-              - pip-cache
+              npm install gh-pages@3.0
+              git config --global user.email "circle@pywhy.com"
+              git config --global user.name "Circle Ci"
+        - add_ssh_keys:
+            fingerprints:
+              - "b5:1e:a1:6d:8d:48:f2:8f:dd:bd:2d:66:a9:30:fe:b9"
         - run:
-            name: Get Python running and install dependencies
+            # push built doc into the `dev` directory on the `gh-pages` branch
+            name: Deploy doc to gh-pages branch
             command: |
-              pip install --progress-bar off --upgrade pip setuptools wheel poetry
-              poetry install --extras docs --quiet
-        - run:
-            name: make linkcheck
-            command: |
-              make -C doc linkcheck
-        - run:
-            name: make linkcheck-grep
-            when: always
-            command: |
-              make -C doc linkcheck-grep
-        - store_artifacts:
-            path: doc/_build/linkcheck
-            destination: linkcheck
-
-    deploy:
-        docker:
-          - image: cimg/node:lts
-        steps:
-          - checkout
-
-          - attach_workspace:
-              at: doc/_build
-          - run:
-              name: Set BASH_ENV
-              command: |
-                set -e
-                echo "set -e" >> $BASH_ENV
-          # Don't try to deploy if nothing is there or not on the right branch
-          - run:
-              name: Check docs
-              command: |
-                if [ ! -f doc/_build/html/index.html ] && [ ! -f doc/_build/html_stable/index.html ]; then
-                  echo "No files found to upload (build: ${CIRCLE_BRANCH}).";
-                  circleci-agent step halt;
-                fi;
-          - run:
-              name: Install and configure dependencies
-              # do not update gh-pages above 3.0.0
-              # see: https://github.com/tschaub/gh-pages/issues/354
-              command: |
-                npm install gh-pages@3.0
-                git config --global user.email "circle@pywhy.com"
-                git config --global user.name "Circle Ci"
-          - add_ssh_keys:
-              fingerprints:
-                - "b5:1e:a1:6d:8d:48:f2:8f:dd:bd:2d:66:a9:30:fe:b9"
-          - run:
-              # push built doc into the `dev` directory on the `gh-pages` branch
-              name: Deploy doc to gh-pages branch
-              command: |
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-                  echo "Deploying dev doc for ${CIRCLE_BRANCH}.";
-                  node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html --dest ./dev
-                else
-                  echo "Deploying stable doc for ${CIRCLE_BRANCH}.";
-                  node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html_stable --dest ./stable
-                fi;
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                echo "Deploying dev doc for ${CIRCLE_BRANCH}.";
+                node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html --dest ./dev
+              else
+                echo "Deploying stable doc for ${CIRCLE_BRANCH}.";
+                node_modules/gh-pages/bin/gh-pages.js --dotfiles --message "doc updates [skip ci]" --dist doc/_build/html_stable --dest ./stable
+              fi;
 
 workflows:
   default:
