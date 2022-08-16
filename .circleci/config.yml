@@ -43,9 +43,15 @@ jobs:
               echo "Merging $(cat merge.txt)";
               git pull --ff-only upstream "refs/pull/$(cat merge.txt)/merge";
             fi
+      - run:
+          name: Install the latest version of Poetry
+          command: |
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python -
+            curl -sSL https://install.python-poetry.org | python3 -
       - python/install-packages:
           pkg-manager: poetry
           args: '--extras docs'
+          version: '3.8'
       - run:
           name: Check poetry package versions
           command: |
