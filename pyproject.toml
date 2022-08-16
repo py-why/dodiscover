@@ -59,6 +59,7 @@ sphinx_rtd_theme = { version = "^1.0.0" }
 pandas = { version = "^1.1" }
 graphviz = { version = "^0.20.1" }
 dowhy = { version = "^0.8" }
+ipython = { version = "^7.4.0" }
 
 # [tool.poetry.extras]
 # docs = [
