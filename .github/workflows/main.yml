@@ -83,9 +83,9 @@ jobs:
         run: pip install poetry-dynamic-versioning
       - name: Install from source
         run: |
-          python -m pip install -e .
+          poetry install
       - name: Test package install
-        run: python -c "import dodiscover; print(dodiscover.__version__)"
+        run: poetry run python -c "import dodiscover; print(dodiscover.__version__)"
       - name: Remove package install
         run: python -m pip uninstall -yq dodiscover
       - name: Check poetry lock file
@@ -141,12 +141,12 @@ jobs:
         run: pip install poetry-dynamic-versioning
       - name: Install packages via poetry
         run: |
-          python -m poetry install
+          poetry install --extras graph_func
       - name: Install Networkx (main)
         if: "matrix.networkx == 'main'"
         run: |
-          python -m pip uninstall -yq networkx
-          python -m pip install --progress-bar off git+https://github.com/networkx/networkx
+          pip uninstall -yq networkx
+          pip install --progress-bar off git+https://github.com/networkx/networkx
       - name: Run pytest  # headless via Xvfb on linux
         run: poetry run poe unit_test
       - name: Upload coverage stats to codecov

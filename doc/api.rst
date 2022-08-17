@@ -25,3 +25,13 @@ Conditional Independence Testing
    KernelCITest
    GSquareCITest
    FisherZCITest
+
+Graph Protocols
+===============
+
+.. currentmodule:: dodiscover
+.. autosummary::
+   :toctree: generated/
+
+   GraphProtocol
+   EquivalenceClassProtocol
