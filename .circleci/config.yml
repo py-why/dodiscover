@@ -113,8 +113,7 @@ jobs:
       scheduled:
         type: string
         default: "false"
-    docker:
-      - image: cimg/python:3.9.2
+    executor: python/default
     steps:
       - restore_cache:
           keys:
@@ -134,14 +133,9 @@ jobs:
             set -e
             echo "set -e" >> $BASH_ENV
             echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
-      - restore_cache:
-          keys:
-            - pip-cache
-      - run:
-          name: Get Python running and install dependencies
-          command: |
-            pip install --progress-bar off --upgrade pip setuptools wheel poetry
-            poetry install --extras docs --quiet
+      - python/install-packages:
+          pkg-manager: poetry
+          cache-version: "v1" # change to clear cache
       - run:
           name: make linkcheck
           command: |

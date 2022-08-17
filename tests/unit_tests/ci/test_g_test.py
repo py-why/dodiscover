@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from dodiscover.ci import GSquareCITest
+
 from . import testdata
 
 

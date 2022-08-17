@@ -12,7 +12,7 @@ class Oracle(BaseConditionalIndependenceTest):
 
     Parameters
     ----------
-    graph : nx.DiGraph | pywhy_graphs.ADMG
+    graph : nx.DiGraph | GraphProtocol
         The ground-truth causal graph.
     """
 

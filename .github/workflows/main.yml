@@ -93,6 +93,7 @@ jobs:
       - name: Build package
         run: poetry build
       - name: Upload package distribution files
+        if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.10' }}
         uses: actions/upload-artifact@v3
         with:
           name: package
@@ -145,6 +146,7 @@ jobs:
         if: "matrix.networkx == 'main'"
         run: |
           python -m pip uninstall -yq networkx
+          python -m pip install --progress-bar off git+https://github.com/networkx/networkx
       - name: Run pytest  # headless via Xvfb on linux
         run: poetry run poe unit_test
       - name: Upload coverage stats to codecov
