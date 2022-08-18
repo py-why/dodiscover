@@ -68,7 +68,7 @@ jobs:
       - run:
           name: Check poetry package versions
           command: |
-            pip install --upgrade --progress-bar off pygraphviz
+            poetry run pip install --upgrade --progress-bar off pygraphviz
             poetry --version
             poetry show
       - run:
