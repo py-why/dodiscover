@@ -13,8 +13,21 @@ for classes (``CamelCase`` names) and functions
 (``underscore_case`` names) of dodiscover, grouped thematically by analysis
 stage.
 
+Constraint-Based Structure Learning
+===================================
+
+.. currentmodule:: dodiscover.ci
+.. autosummary::
+   :toctree: generated/
+
+   PC
+
 Conditional Independence Testing
 ================================
+
+Testing for conditional independence among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.
 
 .. currentmodule:: dodiscover.ci
 .. autosummary::
