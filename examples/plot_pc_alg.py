@@ -106,14 +106,14 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # that may be used in downstream structure learning algorithms.
 context = Context(data=data)
 
-# Alternatively, one could say specify some fixed edges. 
+# Alternatively, one could say specify some fixed edges.
 # Note that when specifying fixed edges, the resulting graph that is
 # learned is not necessarily a "pure CPDAG". In that, there are more
 # constraints than just the conditional independences. Therefore, one
 # should use caution when specifying fixed edges if they are interested
 # in leveraging ID or estimation algorithms that assume the learned
 # structure is a "pure CPDAG".
-#
+
 # .. code-block::Python
 #   included_edges = nx.Graph([('x', 'y')])
 #   context = Context(data=data, included_edges=included_edges)
@@ -149,4 +149,4 @@ pc.fit(context)
 graph = pc.graph_
 
 dot_graph = draw(graph)
-dot_graph.render(outfile="cpdag.png", view=True)
+dot_graph.render(filename="cpdag.png", view=True)

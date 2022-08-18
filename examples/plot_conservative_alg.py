@@ -1,9 +1,9 @@
 """
 .. _ex-conservative-algorithm:
 
-=======================================================================================
-Conservative structure learning algorithms for causal discovery from observational data
-=======================================================================================
+============================================================================
+Conservative structure learning for causal discovery from observational data
+============================================================================
 
 TBD
 
