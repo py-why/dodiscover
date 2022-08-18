@@ -109,7 +109,8 @@ numpydoc_xref_ignore = {
     "causal",
     "CPDAG",
     "PAG",
-    "ADMG", "GraphProtocol",
+    "ADMG",
+    "GraphProtocol",
     # networkx
     "node",
     "nodes",

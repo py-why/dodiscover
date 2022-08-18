@@ -1,4 +1,4 @@
-from typing import Dict, FrozenSet, Iterable, Protocol
+from typing import Dict, FrozenSet, Iterable, Mapping, Protocol
 
 import networkx as nx
 
@@ -6,11 +6,13 @@ import networkx as nx
 class GraphProtocol(Protocol):
     """Protocol for graphs to work with dodiscover algorithms."""
 
-    def nodes(self) -> Iterable:
+    @property
+    def nodes(self) -> Mapping:
         """Return an iterable over nodes in graph."""
         pass
 
-    def edges(self) -> Iterable:
+    @property
+    def edges(self) -> Mapping:
         """Return an iterable over edge tuples in graph."""
         pass
 

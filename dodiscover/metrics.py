@@ -2,15 +2,16 @@ from typing import Union
 
 import networkx as nx
 import numpy as np
-
 from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
+
 from ._protocol import GraphProtocol
 
+
 def confusion_matrix_networks(
-    true_graph: Union[GraphProtocol, NDArray],
-    pred_graph: Union[GraphProtocol, NDArray],
+    true_graph: GraphProtocol,
+    pred_graph: GraphProtocol,
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
 
@@ -33,13 +34,12 @@ def confusion_matrix_networks(
     --------
     sklearn.metrics.confusion_matrix
     """
-    assert set(true_graph.nodes) == set(pred_graph.nodes)
+    if set(true_graph.nodes) != set(pred_graph.nodes):
+        raise RuntimeError("Both nodes should match.")
 
     # convert graphs to adjacency graph in networkx
-    if not isinstance(true_graph, np.ndarray):
-        true_graph = true_graph.to_undirected()
-    if not isinstance(pred_graph, np.ndarray):
-        pred_graph = pred_graph.to_undirected()
+    true_graph = true_graph.to_undirected()
+    pred_graph = pred_graph.to_undirected()
 
     # get the order of the nodes
     idx = np.argsort(true_graph.nodes)

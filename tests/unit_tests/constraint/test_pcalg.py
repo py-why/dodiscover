@@ -10,6 +10,7 @@ from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint import PC
 from dodiscover.constraint.utils import dummy_sample
 from dodiscover.metrics import confusion_matrix_networks
+
 from ..ci.testdata import bin_data, dis_data
 
 
