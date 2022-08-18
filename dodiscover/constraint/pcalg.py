@@ -53,9 +53,9 @@ class PC(BaseConstraintDiscovery):
 
     Attributes
     ----------
-    graph_ : CPDAG
-        The graph discovered.
-    separating_sets_ : dict of dict of list of sets
+    graph_ : EquivalenceClassProtocol
+        The equivalence class of graphs discovered.
+    separating_sets_ : dict of dict of list of set
         The dictionary of separating sets, where it is a nested dictionary from
         the variable name to the variable it is being compared to the set of
         variables in the graph that separate the two.
@@ -101,7 +101,7 @@ class PC(BaseConstraintDiscovery):
 
         Returns
         -------
-        graph : CPDAG
+        graph : EquivalenceClassProtocol
             The CPDAG class.
         """
         from pywhy_graphs import CPDAG
@@ -120,7 +120,7 @@ class PC(BaseConstraintDiscovery):
 
         Parameters
         ----------
-        graph : causal_networkx.CPDAG
+        graph : EquivalenceClassProtocol
             A skeleton graph. If ``None``, then will initialize PC using a
             complete graph. By default None.
         """
@@ -168,7 +168,7 @@ class PC(BaseConstraintDiscovery):
 
         Parameters
         ----------
-        graph : CPDAG
+        graph : EquivalenceClassProtocol
             The CPDAG.
         sep_set : Dict[Dict[Set[Set[Any]]]]
             The separating set between any two nodes.
@@ -348,8 +348,8 @@ class ConservativeVotingPC(PC):
 
     Attributes
     ----------
-    graph_ : CPDAG
-        The graph discovered.
+    graph_ : EquivalenceClassProtocol
+        The equivalence class of graphs discovered.
     separating_sets_ : dict
         The dictionary of separating sets, where it is a nested dictionary from
         the variable name to the variable it is being compared to the set of

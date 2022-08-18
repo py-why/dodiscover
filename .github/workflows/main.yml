@@ -79,11 +79,9 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ matrix.poetry-version }}
-      - name: Install Poetry Dynamic Versioning Plugin
-        run: pip install poetry-dynamic-versioning
       - name: Install from source
         run: |
-          poetry install
+          pip install -e .
       - name: Test package install
         run: poetry run python -c "import dodiscover; print(dodiscover.__version__)"
       - name: Remove package install

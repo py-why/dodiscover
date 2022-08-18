@@ -12,6 +12,8 @@ The PC algorithm works on observational data when there are no unobserved latent
 confounders. That means for any observed set of variables, there is no common causes
 that are unobserved. In other words, all exogenous variables then are assumed to be
 independent.
+
+.. currentmodule:: dodiscover
 """
 # %%
 # Authors: Adam Li <adam2392@gmail.com>

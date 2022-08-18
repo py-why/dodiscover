@@ -80,7 +80,7 @@ class LearnSkeleton:
     ----------
     ci_estimator : BaseConditionalIndependenceTest
         The conditional independence test function.
-    sep_set : dictionary of dictionary of list of sets
+    sep_set : dictionary of dictionary of list of set
         Mapping node to other nodes to separating sets of variables.
         If ``None``, then an empty dictionary of dictionary of list of sets
         will be initialized.
@@ -114,7 +114,7 @@ class LearnSkeleton:
         graph. The graph contains edge attributes for the smallest absolute value of the
         test statistic encountered (key name 'test_stat_abs'), the largest pvalue seen in
         testing 'x' || 'y' given some conditioning set (key name 'pvalue').
-    sep_set_ : dictionary of dictionary of list of sets
+    sep_set_ : dictionary of dictionary of list of set
         Mapping node to other nodes to separating sets of variables.
 
     Notes

@@ -14,14 +14,14 @@ class Context:
     data : pd.DataFrame
         A dataset, consisting of samples as rows and columns as variables.
     variables : Optional[Set], optional
-        Set of observed variables, by default None. If neither `latents`,
-        nor `variables` is set, then it is presumed that `variables` consists
-        of the columns of `data` and `latents` is the empty set.
+        Set of observed variables, by default None. If neither ``latents``,
+        nor ``variables`` is set, then it is presumed that ``variables`` consists
+        of the columns of ``data`` and ``latents`` is the empty set.
     latents : Optional[Set], optional
-        Set of latent "unobserved" variables, by default None. If neither `latents`,
-        nor `variables` is set, then it is presumed that `variables` consists
-        of the columns of `data` and `latents` is the empty set.
-    init_graph : Optional[MixedEdgeGraph], optional
+        Set of latent "unobserved" variables, by default None. If neither ``latents``,
+        nor ``variables`` is set, then it is presumed that ``variables`` consists
+        of the columns of ``data`` and ``latents`` is the empty set.
+    init_graph : Optional[GraphProtocol], optional
         The graph to start with, by default None.
     included_edges : Optional[nx.Graph], optional
         Included edges without direction, by default None.
@@ -31,8 +31,8 @@ class Context:
     Raises
     ------
     ValueError
-        `variables` and `latents` if both set, should contain the set of
-        all columns in `data`.
+        ``variables`` and ``latents`` if both set, should contain the set of
+        all columns in ``data``.
 
     Notes
     -----

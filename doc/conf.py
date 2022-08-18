@@ -105,12 +105,11 @@ numpydoc_xref_ignore = {
     "arguments",
     "no",
     "attributes",
-    "DAG",
     "causal",
+    "DAG",
     "CPDAG",
     "PAG",
     "ADMG",
-    "GraphProtocol",
     # networkx
     "node",
     "nodes",
@@ -126,6 +125,12 @@ numpydoc_xref_ignore = {
     "n_samples",
     "n_variables",
 }
+
+# For variable types in docstrings, these will link with the necessary package
+# For example:
+#   parameter : nx.Graph
+# will link the 'nx.Graph' to explicitly 'networkx.Graph', so sphinx can find
+# the intersphinx link
 numpydoc_xref_aliases = {
     # Networkx
     "nx.Graph": "networkx.Graph",
@@ -133,10 +138,9 @@ numpydoc_xref_aliases = {
     "nx.MultiDiGraph": "networkx.MultiDiGraph",
     "pgmpy.models.BayesianNetwork": "pgmpy.models.BayesianNetwork",
     # dodiscover
-    "ADMG": "dodiscover.ADMG",
-    "PAG": "dodiscover.PAG",
-    "CPDAG": "dodiscover.CPDAG",
-    "DAG": "dodiscover.DAG",
+    "EquivalenceClassProtocol": "dodiscover.EquivalenceClassProtocol",
+    "GraphProtocol": "dodiscover.GraphProtocol",
+    "Context": "dodiscover.Context",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # pandas
@@ -174,9 +178,9 @@ intersphinx_mapping = {
     "scipy": ("https://scipy.github.io/devdocs", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
     "networkx": ("https://networkx.org/documentation/latest/", None),
-    "pgmpy": ("https://pgmpy.org", None),
     "sklearn": ("https://scikit-learn.org/stable", None),
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
+    "pgmpy": ("https://pgmpy.org", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
 }
 intersphinx_timeout = 5

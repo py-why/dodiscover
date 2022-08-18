@@ -217,14 +217,14 @@ class BaseConstraintDiscovery:
         ----------
         context : Context
             A context object.
-        sep_set : dict of dict of list of sets
+        sep_set : dict of dict of list of set
             The separating set.
 
         Returns
         -------
         skel_graph : nx.Graph
             The undirected graph of the causal graph's skeleton.
-        sep_set : dict of dict of list of sets
+        sep_set : dict of dict of list of set
             The separating set per pairs of variables.
 
         Raises

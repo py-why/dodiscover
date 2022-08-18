@@ -29,10 +29,20 @@ object rather than just data. See docs for ``Context`` for more information.
    Context
    
 
+Graph Protocols
+===============
+
+.. currentmodule:: dodiscover
+.. autosummary::
+   :toctree: generated/
+
+   GraphProtocol
+   EquivalenceClassProtocol
+   
 Constraint-Based Structure Learning
 ===================================
 
-.. currentmodule:: dodiscover.ci
+.. currentmodule:: dodiscover.constraint
 .. autosummary::
    :toctree: generated/
 
@@ -54,13 +64,3 @@ learning.
    KernelCITest
    GSquareCITest
    FisherZCITest
-
-Graph Protocols
-===============
-
-.. currentmodule:: dodiscover
-.. autosummary::
-   :toctree: generated/
-
-   GraphProtocol
-   EquivalenceClassProtocol
