@@ -8,6 +8,8 @@ __pycache__/
 # C extensions
 *.so
 
+junit-results.xml
+
 # Distribution / packaging
 .Python
 build/

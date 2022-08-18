@@ -13,55 +13,50 @@ There are a series of top-level tasks available through Poetry. These can each b
 * **apply_format** - runs the suite of formatting tools applying tools to make code compliant
 * **check_format** - runs the suite of formatting tools checking for compliance
 * **lint** - runs the suite of linting tools
-* **unit_test** - executes fast unit tests
 * **typecheck** - performs static typechecking of the codebase using mypy
+* **unit_test** - executes fast unit tests
 * **verify** - executes the basic PR verification suite, which includes all the tasks listed above
 
 ### Longer Verification
 * **integration_test** - runs slower tests and end-to-end tests are run through this task
 
 ### Docsite
-* **start_docs** - start the API documentation site locally
 * **build_docs** - build the API documentation site
 
-For convenience you can run a check for all style components necessary:
+## Details
 
-        make run-checks
+Here we provide some details to understand the development process.
 
-    This will run isort, black, flake8, mypy, check-manifest, and pydocstyle on the entire repository. Please fix your errors if you see any.
+### Coding Style
 
-    First, you should run [`isort`](https://github.com/PyCQA/isort) and [`black`](https://github.com/psf/black) to make sure you code is formatted consistently.
-    Many IDEs support code formatters as plugins, so you may be able to setup isort and black to run automatically every time you save.
-    For example, [`black.vim`](https://github.com/psf/black/tree/master/plugin) will give you this functionality in Vim. But both `isort` and `black` are also easy to run directly from the command line.
-    Just run this from the root of your clone:
+For convenience ``poetry`` provides a command line interface for running all the necessary development commands:
 
-        isort .
-        black .
+    poetry run poe apply_format
 
-    Our CI also uses [`flake8`](https://github.com/py-why/dodiscover/tree/main/tests) to lint the code base and [`mypy`](http://mypy-lang.org/) for type-checking. You should run both of these next with
+This will run isort and black on the entire repository. This will auto-format the code to comply with our coding style.
 
-        flake8 .
+### Lint
 
-    and
+We use linting services to check for common errors in the code.
 
-        mypy .
+    poetry run poe lint
 
-    We also strive to maintain high test coverage, so most contributions should include additions to [the unit tests](https://github.com/py-why/dodiscover/tree/main/tests). These tests are run with [`pytest`](https://docs.pytest.org/en/latest/), which you can use to locally run any test modules that you've added or changed.
+We use flake8, bandit, codespell and pydocstyle to check for code smells, which are lines of code that can lead to unintended errors.
 
-    For example, if you've fixed a bug in `mne_icalabel/a/b.py`, you can run the tests specific to that module with
+### Type checking
 
-        pytest -v tests/a/b_test.py
+We use type checking to check for possible runtime errors due to mismatched types. Python is dynamically typed, so this helps us and the user catch errors that would otherwise then occur during runtime. We use mypy to perform type checking.
 
-    Our CI will automatically check that test coverage stays above a certain threshold (around 90%). To check the coverage locally in this example, you could run
+    poetry run poe typecheck
 
-        pytest -v --cov mne_icalabel.a.b tests/a/b_test.py
+### Unit tests
 
-    If your contribution involves additions to any public part of the API, we require that you write docstrings
-    for each function, method, class, or module that you add.
-    See the [Writing docstrings](#writing-docstrings) section below for details on the syntax.
-    You should test to make sure the API documentation can build without errors by running
+In order for any code to be added to the repository, we require unit tests to pass. Any new code should be accompanied by unit tests.
 
-        cd doc
-        make html
+    poetry run poe unit_test
 
-    If the build fails, it's most likely due to small formatting issues. If the error message isn't clear, feel free to comment on this in your pull request.
+### Integration tests
+
+Dodiscover is part of pywhy's larger ecosystem of causal inference in Python. Because of this tight integration, we also have integration tests, which make sure that any changes in dodiscover do not break or change intended workflows.
+
+    poetry run poe integration_test

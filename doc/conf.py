@@ -54,7 +54,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "sphinx_copybutton",
     "numpydoc",
-    'IPython.sphinxext.ipython_console_highlighting',
+    "IPython.sphinxext.ipython_console_highlighting",
     "nbsphinx",
 ]
 
@@ -105,7 +105,11 @@ numpydoc_xref_ignore = {
     "arguments",
     "no",
     "attributes",
-    "DAG", "causal", "CPDAG", "PAG", "ADMG",
+    "DAG",
+    "causal",
+    "CPDAG",
+    "PAG",
+    "ADMG", "GraphProtocol",
     # networkx
     "node",
     "nodes",
@@ -152,8 +156,14 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['auto_examples/index.rst', '_build', 'Thumbs.db',
-                    '.DS_Store', "**.ipynb_checkpoints", 'auto_examples/*.rst']
+exclude_patterns = [
+    "auto_examples/index.rst",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "**.ipynb_checkpoints",
+    "auto_examples/*.rst",
+]
 
 source_suffix = [".rst", ".md"]
 
@@ -162,15 +172,11 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/devdocs", None),
     "scipy": ("https://scipy.github.io/devdocs", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
+    "networkx": ("https://networkx.org/documentation/latest/", None),
     "pgmpy": ("https://pgmpy.org", None),
     "sklearn": ("https://scikit-learn.org/stable", None),
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
-    "networkx": ("https://networkx.org/documentation/latest/", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
-    # Uncomment these if you use them in your codebase:
-    #  "torch": ("https://pytorch.org/docs/stable", None),
-    #  "datasets": ("https://huggingface.co/docs/datasets/master/en", None),
-    #  "transformers": ("https://huggingface.co/docs/transformers/master/en", None),
 }
 intersphinx_timeout = 5
 
@@ -221,19 +227,19 @@ html_theme_options = {
 scrapers = ("matplotlib",)
 
 sphinx_gallery_conf = {
-    'doc_module': 'dodiscover',
-    'reference_url': {
-        'dodiscover': None,
+    "doc_module": "dodiscover",
+    "reference_url": {
+        "dodiscover": None,
     },
-    'backreferences_dir': 'generated',
-    'plot_gallery': 'True',  # Avoid annoying Unicode/bool default warning
-    'within_subsection_order': ExampleTitleSortKey,
-    'examples_dirs': ['../examples'],
-    'gallery_dirs': ['auto_examples'],
-    'filename_pattern': '^((?!sgskip).)*$',
-    'matplotlib_animations': True,
-    'compress_images': ('images', 'thumbnails'),
-    'image_scrapers': scrapers,
+    "backreferences_dir": "generated",
+    "plot_gallery": "True",  # Avoid annoying Unicode/bool default warning
+    "within_subsection_order": ExampleTitleSortKey,
+    "examples_dirs": ["../examples"],
+    "gallery_dirs": ["auto_examples"],
+    "filename_pattern": "^((?!sgskip).)*$",
+    "matplotlib_animations": True,
+    "compress_images": ("images", "thumbnails"),
+    "image_scrapers": scrapers,
 }
 
 # Custom sidebar templates, maps document names to template names.
