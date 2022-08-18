@@ -29,11 +29,11 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         df : pd.DataFrame
             The dataframe containing the dataset.
         x_var : Any
-            A column in `df`.
+            A column in ``df``.
         y_var : Any
-            A column in `df`.
+            A column in ``df``.
         z_covariates : Any, optional
-            A set of columns in `df`, by default None. If None, then
+            A set of columns in ``df``, by default None. If None, then
             the test should run a standard independence test.
 
         Returns
