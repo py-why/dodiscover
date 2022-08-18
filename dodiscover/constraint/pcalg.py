@@ -7,9 +7,9 @@ import networkx as nx
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.utils import is_in_sep_set
 
+from .._protocol import EquivalenceClassProtocol
 from ..context import Context
 from ._classes import BaseConstraintDiscovery
-from ._protocol import EquivalenceClassProtocol
 
 logger = logging.getLogger()
 

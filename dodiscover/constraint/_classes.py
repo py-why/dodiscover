@@ -9,7 +9,7 @@ import pandas as pd
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.context import Context
 
-from ._protocol import EquivalenceClassProtocol
+from .._protocol import EquivalenceClassProtocol
 
 
 class BaseConstraintDiscovery:

@@ -13,6 +13,22 @@ for classes (``CamelCase`` names) and functions
 (``underscore_case`` names) of dodiscover, grouped thematically by analysis
 stage.
 
+Context for causal inference
+============================
+
+Rather than just data, in many cases structure learning
+has additional "context", in the form of apriori knowledge of
+the structure, or additional datasets from different environments.
+All structure learning algorithms in ``dodiscover`` pass in a ``Context``
+object rather than just data. See docs for ``Context`` for more information.
+
+.. currentmodule:: dodiscover
+.. autosummary::
+   :toctree: generated/
+
+   Context
+   
+
 Constraint-Based Structure Learning
 ===================================
 
