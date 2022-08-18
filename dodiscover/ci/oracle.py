@@ -24,7 +24,10 @@ class Oracle(BaseConditionalIndependenceTest):
 
         Checks conditional independence between 'x_var' and 'y_var'
         given 'z_covariates' of variables using the causal graph
-        as an oracle.
+        as an oracle. The oracle uses d-separation statements given
+        the graph to query conditional independences. This is known
+        as the Markov property for graphs
+        :footcite:`Pearl_causality_2009,Spirtes1993`.
 
         Parameters
         ----------
@@ -45,6 +48,10 @@ class Oracle(BaseConditionalIndependenceTest):
         pvalue : float
             The pvalue. Return '1.0' if not independent and '0.0'
             if they are.
+
+        References
+        ----------
+        .. footbibliography::
         """
         self._check_test_input(df, x_var, y_var, z_covariates)
 

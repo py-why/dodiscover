@@ -1,6 +1,3 @@
-# This code was originally adapted from https://github.com/keiichishima/gsq
-# and heavily refactored and modified.
-
 from typing import Any, List, Set, Tuple, Union
 
 import numpy as np
@@ -29,13 +26,13 @@ def _calculate_contingency_tble(
     Parameters
     ----------
     x : int | str
-        the first node variable. If ``data`` is a DataFrame, then
+        The first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
     y : int | str
-        the second node variable. If ``data`` is a DataFrame, then
+        The second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
-        the set of neibouring nodes of x and y (as a set()).
+        The set of neighboring nodes of x and y (as a set()).
     dof : int
         The degrees of freedom.
     data : np.ndarray of shape (n_samples, n_variables)
@@ -95,13 +92,13 @@ def _calculate_highdim_contingency(
     Parameters
     ----------
     x : int | str
-        the first node variable. If ``data`` is a DataFrame, then
+        The first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
     y : int | str
-        the second node variable. If ``data`` is a DataFrame, then
+        The second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
-        the set of neibouring nodes of x and y (as a set()).
+        The set of neighboring nodes of x and y (as a set()).
     data : np.ndarray of shape (n_samples, n_variables)
         The input data matrix.
     nlevel_x : int
@@ -226,7 +223,7 @@ def g_square_binary(
         the second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
-        the set of neibouring nodes of x and y (as a set()).
+        the set of neighboring nodes of x and y (as a set()).
 
     Returns
     -------
@@ -249,7 +246,6 @@ def g_square_binary(
     ----------
     .. footbibliography::
     """
-    # rng = np.random.RandomState(random_state)
     if isinstance(data, np.ndarray):
         data = pd.DataFrame(data)
 
@@ -292,6 +288,8 @@ def g_square_discrete(
 ) -> Tuple[float, float]:
     """G square test for discrete data.
 
+    The discrete version of the G^2 test :footcite:`Neapolitan2003`.
+
     Parameters
     ----------
     data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)
@@ -303,7 +301,7 @@ def g_square_discrete(
         the second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
-        the set of neibouring nodes of x and y (as a set()).
+        the set of neighboring nodes of x and y (as a set()).
     levels : list
         Levels of each column in the data matrix (as a list()).
 
@@ -313,6 +311,10 @@ def g_square_discrete(
         The G^2 test statistic.
     p_val : float
         the p-value of conditional independence.
+
+    References
+    ----------
+    .. footbibliography::
     """
     if isinstance(data, np.ndarray):
         data = pd.DataFrame(data)
@@ -370,6 +372,20 @@ def g_square_discrete(
 
 class GSquareCITest(BaseConditionalIndependenceTest):
     def __init__(self, data_type: str = "binary"):
+        """G squared CI test for discrete or binary data.
+
+        For details of the test see :footcite:`Neapolitan2003`.
+
+        Parameters
+        ----------
+        data_type : str, optional
+            The type of data, which can be "binary", or "discrete".
+            By default "binary".
+
+        References
+        ----------
+        .. footbibliography::
+        """
         self.data_type = data_type
 
     def test(

@@ -41,6 +41,7 @@ numpy = "^1.23.0"
 scipy = "^1.9.0"
 networkx = "^2.8.3"
 scikit-learn = "^1.1.0"
+pandas = "^1.1"
 importlib-resources = { version = "*", python = "<3.9" }
 graphs = { git = "https://github.com/py-why/graphs.git", branch = 'main', optional = true }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
@@ -72,7 +73,6 @@ sphinx-issues = { version = "^3.0.1" }
 sphinx-copybutton = { version = "^0.5.0" }
 sphinx-gallery = { version = "^0.11.0" }
 sphinx_rtd_theme = { version = "^1.0.0" }
-pandas = { version = "^1.1" }
 graphviz = { version = "^0.20.1" }
 dowhy = { version = "^0.8" }
 ipython = { version = "^7.4.0" }

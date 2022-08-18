@@ -27,17 +27,18 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         Parameters
         ----------
         df : pd.DataFrame
-            _description_
+            The dataframe containing the dataset.
         x_var : Any
-            _description_
+            A column in `df`.
         y_var : Any
-            _description_
+            A column in `df`.
         z_covariates : Any, optional
-            _description_, by default None
+            A set of columns in `df`, by default None. If None, then
+            the test should run a standard independence test.
 
         Returns
         -------
         Tuple[float, float]
-            _description_
+            Test statistic and pvalue.
         """
         pass

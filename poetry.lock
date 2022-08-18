@@ -1947,7 +1947,7 @@ graph_func = ["pywhy-graphs", "graphs"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "c29636ac725f1b448d1cee2a4ee15e7df1d9a9a5e3a369a9883e35c2a38fbd46"
+content-hash = "af9286a173fa023dcaaa65c3e6401cdde9c5427706319ed4e0ab7d28994ff4e8"
 
 [metadata.files]
 alabaster = [
