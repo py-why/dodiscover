@@ -1342,6 +1342,14 @@ python-versions = ">=3.6"
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "pygraphviz"
+version = "1.9"
+description = "Python interface to Graphviz"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "pymdown-extensions"
 version = "7.1"
 description = "Extension pack for Python Markdown."
@@ -1947,7 +1955,7 @@ graph_func = ["pywhy-graphs", "graphs"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "af9286a173fa023dcaaa65c3e6401cdde9c5427706319ed4e0ab7d28994ff4e8"
+content-hash = "0e89c7a2219caec3dd309c56ebfa4933a030702739e327735c1379e4adcc5a71"
 
 [metadata.files]
 alabaster = [
@@ -2841,6 +2849,9 @@ pyflakes = [
 pygments = [
     {file = "Pygments-2.13.0-py3-none-any.whl", hash = "sha256:f643f331ab57ba3c9d89212ee4a2dabc6e94f117cf4eefde99a0574720d14c42"},
     {file = "Pygments-2.13.0.tar.gz", hash = "sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"},
+]
+pygraphviz = [
+    {file = "pygraphviz-1.9.zip", hash = "sha256:fa18f7c6cea28341a4e466ed0cf05682b0a68288afe8dd7c9426782f7c1ae01c"},
 ]
 pymdown-extensions = [
     {file = "pymdown-extensions-7.1.tar.gz", hash = "sha256:5bf93d1ccd8281948cd7c559eb363e59b179b5373478e8a7195cf4b78e3c11b6"},

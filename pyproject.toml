@@ -64,6 +64,7 @@ portray = "^1.7.0"
 semversioner = "^1.1.0"
 pydocstyle = "^6.1.1"
 codespell = "^2.1.0"
+pygraphviz = "^1.9"
 matplotlib = { version = "^3.5" }
 memory_profiler = { version = "^0.60.0" }
 numpydoc = { version = "^1.4" }

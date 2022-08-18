@@ -97,7 +97,7 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # "data-first causal discovery," where users provide data as the primary input to a
 # discovery algorithm. This problem with this approach is that it encourages novice
 # users to see the algorithm as a philosopher's stone that converts data to causal
-# relationships. With this mindset, users tend surrender the task of providing
+# relationships. With this mindset, users tend to surrender the task of providing
 # domain-specific assumptions that enable identifiability to the algorithm. In
 # contrast, PyWhy's key strength is how it guides users to specifying domain
 # assumptions up front (in the form of a DAG) before the data is added, and
@@ -105,6 +105,18 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # the Context class houses both data, apriori assumptions and other relevant data
 # that may be used in downstream structure learning algorithms.
 context = Context(data=data)
+
+# Alternatively, one could say specify some fixed edges. 
+# Note that when specifying fixed edges, the resulting graph that is
+# learned is not necessarily a "pure CPDAG". In that, there are more
+# constraints than just the conditional independences. Therefore, one
+# should use caution when specifying fixed edges if they are interested
+# in leveraging ID or estimation algorithms that assume the learned
+# structure is a "pure CPDAG".
+#
+# .. code-block::Python
+#   included_edges = nx.Graph([('x', 'y')])
+#   context = Context(data=data, included_edges=included_edges)
 
 # %%
 # Run structure learning algorithm
@@ -122,8 +134,7 @@ pc.fit(context)
 graph = pc.graph_
 
 dot_graph = draw(graph)
-dot_graph
-# dot_graph.render(view=True)
+dot_graph.render(outfile="cpdag.png", view=True)
 
 # %%
 # Now, we will show the output given a real CI test, which performs CI hypothesis testing
@@ -138,5 +149,4 @@ pc.fit(context)
 graph = pc.graph_
 
 dot_graph = draw(graph)
-dot_graph
-# dot_graph.render(view=True)
+dot_graph.render(outfile="cpdag.png", view=True)

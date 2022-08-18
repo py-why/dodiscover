@@ -33,6 +33,17 @@ copyright = f"{datetime.today().year}, Adam Li"
 author = "Adam Li"
 version = dodiscover.__version__
 
+# Custom sidebar templates, maps document names to template names.
+html_sidebars = {
+    "index": ["search-field.html"],
+}
+
+html_context = {
+    "versions_dropdown": {
+        "dev": "v0.1 (devel)",
+    },
+}
+
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -247,16 +258,13 @@ sphinx_gallery_conf = {
     "image_scrapers": scrapers,
 }
 
-# Custom sidebar templates, maps document names to template names.
-html_sidebars = {
-    "index": ["search-field.html"],
-}
+# Add pygraphviz png scraper, if available
+try:
+    from pygraphviz.scraper import PNGScraper
 
-html_context = {
-    "versions_dropdown": {
-        "dev": "v0.1 (devel)",
-    },
-}
+    sphinx_gallery_conf["image_scrapers"] += (PNGScraper(),)
+except ImportError:
+    pass
 
 # Enable nitpicky mode - which ensures that all references in the docs
 # resolve.
