@@ -309,7 +309,7 @@ class ConservativeVotingPC(PC):
     """Conservative/MajorityVote-PC algorithm with causal discovery.
 
     Assumes causal sufficiency, that is, all confounders in the
-    causal graph are observed variables. See :footcite:`ramsey2012adjacency` for
+    causal graph are observed variables. See :footcite:`Ramsey2012adjacency` for
     full details on the algorithm for conservative orientation. See :footcite:`Colombo2012_MPC`
     for full details on the algorithm for Majority Voting orientation.
 
@@ -428,7 +428,7 @@ class ConservativeVotingPC(PC):
 
         Parameters
         ----------
-        graph : CPDAG
+        graph : EquivalenceClassProtocol
             The CPDAG.
         context : Context
             The context to fit the graph.
@@ -485,8 +485,8 @@ class ConservativeVotingPC(PC):
 
         Parameters
         ----------
-        graph : _type_
-            _description_
+        graph : EquivalenceClassProtocol
+            The equivalence class of graphs.
         v_i : node
             First node.
         u : node
