@@ -61,6 +61,10 @@ jobs:
             echo "export DISPLAY=:99" >> $BASH_ENV
             echo "BASH_ENV:"
             cat $BASH_ENV
+      - run:
+          name: Install pysal dependencies
+          command: |
+            sudo apt install libspatialindex-dev xdg-utils
       - python/install-packages:
           pkg-manager: poetry
           args: "--extras graph_func"
