@@ -6,8 +6,9 @@ from typing import Any, Dict, Iterable, List, Set
 import networkx as nx
 import numpy as np
 
-from dodiscover import Context
 from dodiscover.ci import BaseConditionalIndependenceTest
+
+from ..context import Context
 
 logger = logging.getLogger()
 

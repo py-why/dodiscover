@@ -3,12 +3,11 @@ from itertools import combinations, permutations
 from typing import Any, Dict, List, Optional, Set
 
 import networkx as nx
-from pywhy_graphs import CPDAG
 
-from dodiscover import Context
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.utils import is_in_sep_set
 
+from ..context import Context
 from ._classes import BaseConstraintDiscovery
 from ._protocol import EquivalenceClassProtocol
 
@@ -91,7 +90,7 @@ class PC(BaseConstraintDiscovery):
         self.max_iter = max_iter
         self.apply_orientations = apply_orientations
 
-    def convert_skeleton_graph(self, graph: nx.Graph) -> CPDAG:
+    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClassProtocol:
         """Convert skeleton graph as undirected networkx Graph to CPDAG.
 
         Parameters
@@ -105,12 +104,14 @@ class PC(BaseConstraintDiscovery):
         graph : CPDAG
             The CPDAG class.
         """
+        from pywhy_graphs import CPDAG
+
         # convert Graph object to a CPDAG object with
         # all undirected edges
         graph = CPDAG(incoming_undirected_edges=graph)
         return graph
 
-    def orient_edges(self, graph: CPDAG) -> None:
+    def orient_edges(self, graph: EquivalenceClassProtocol) -> None:
         """Orient edges in a skeleton graph to estimate the causal DAG, or CPDAG.
 
         These are known as the Meek rules :footcite:`Meek1995`. They are deterministic
@@ -161,7 +162,7 @@ class PC(BaseConstraintDiscovery):
             idx += 1
 
     def orient_unshielded_triples(
-        self, graph: CPDAG, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
+        self, graph: EquivalenceClassProtocol, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
     ) -> None:
         """Orient colliders given a graph and separation set.
 
@@ -184,7 +185,7 @@ class PC(BaseConstraintDiscovery):
                 ):
                     self._orient_collider(graph, v_i, u, v_j)
 
-    def _orient_collider(self, graph: CPDAG, v_i, u, v_j) -> None:
+    def _orient_collider(self, graph: EquivalenceClassProtocol, v_i, u, v_j) -> None:
         logger.info(
             f"orienting collider: {v_i} -> {u} and {v_j} -> {u} to make {v_i} -> {u} <- {v_j}."
         )
@@ -194,7 +195,7 @@ class PC(BaseConstraintDiscovery):
         if graph.has_edge(v_j, u, graph.undirected_edge_name):
             graph.orient_uncertain_edge(v_j, u)
 
-    def _apply_meek_rule1(self, graph: CPDAG, i, j) -> bool:
+    def _apply_meek_rule1(self, graph: EquivalenceClassProtocol, i, j) -> bool:
         """Apply rule 1 of Meek's rules.
 
         Looks for i - j such that k -> i, such that (k,i,j)
@@ -222,7 +223,7 @@ class PC(BaseConstraintDiscovery):
                 break
         return added_arrows
 
-    def _apply_meek_rule2(self, graph: CPDAG, i, j) -> bool:
+    def _apply_meek_rule2(self, graph: EquivalenceClassProtocol, i, j) -> bool:
         """Apply rule 2 of Meek's rules.
 
         Check for i - j, and then looks for i -> k -> j
@@ -261,7 +262,7 @@ class PC(BaseConstraintDiscovery):
                 added_arrows = True
         return added_arrows
 
-    def _apply_meek_rule3(self, graph: CPDAG, i, j) -> bool:
+    def _apply_meek_rule3(self, graph: EquivalenceClassProtocol, i, j) -> bool:
         """Apply rule 3 of Meek's rules.
 
         Check for i - j, and then looks for k -> j <- l
@@ -400,7 +401,7 @@ class ConservativeVotingPC(PC):
         self.vote_threshold = vote_threshold
 
     def orient_unshielded_triples(
-        self, graph: CPDAG, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
+        self, graph: EquivalenceClassProtocol, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
     ) -> None:
         """Orient unshielded triples conservatively."""
         context = self.context_
@@ -416,7 +417,7 @@ class ConservativeVotingPC(PC):
 
     def _check_triple(
         self,
-        graph: CPDAG,
+        graph: EquivalenceClassProtocol,
         context: Context,
         v_i,
         u,
@@ -479,7 +480,7 @@ class ConservativeVotingPC(PC):
             # it is unfaithful triple
             self._mark_unfaithful_triple(graph, v_i, u, v_j)
 
-    def _mark_unfaithful_triple(self, graph: CPDAG, v_i, u, v_j):
+    def _mark_unfaithful_triple(self, graph: EquivalenceClassProtocol, v_i, u, v_j):
         """Mark an unshielded triple as unfaithful.
 
         Parameters

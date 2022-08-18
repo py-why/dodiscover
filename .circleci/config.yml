@@ -50,7 +50,7 @@ jobs:
             curl -sSL https://install.python-poetry.org | python3 -
       - python/install-packages:
           pkg-manager: poetry
-          # args: "--extras docs"
+          args: "--extras graph_func"
           cache-version: "v1" # change to clear cache
       - run:
           name: Check poetry package versions

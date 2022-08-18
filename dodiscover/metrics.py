@@ -1,8 +1,5 @@
-from typing import Union
-
 import networkx as nx
 import numpy as np
-from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 

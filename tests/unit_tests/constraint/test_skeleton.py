@@ -5,9 +5,9 @@ import pytest
 
 from dodiscover import Context
 from dodiscover.ci import GSquareCITest, Oracle
-from dodiscover.ci.tests.testdata import bin_data, dis_data
 from dodiscover.constraint import LearnSkeleton
 from dodiscover.constraint.utils import dummy_sample
+from tests.unit_tests.ci.testdata import bin_data, dis_data
 
 
 def common_cause_and_collider():

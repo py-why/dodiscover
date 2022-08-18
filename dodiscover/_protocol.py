@@ -52,3 +52,13 @@ class EquivalenceClassProtocol(GraphProtocol, Protocol):
     def excluded_triples(self) -> Dict[FrozenSet, None]:
         """A set of triples that are excluded from orientation."""
         pass
+
+    def mark_unfaithful_triple(self, v_i, u, v_j) -> None:
+        """Mark a triple as unfaithful, and put it in the excluded triple set."""
+        pass
+
+    def directed_edge_name(self):
+        """The name of the directed edges."""
+
+    def undirected_edge_name(self):
+        """The name of the undirected edges."""

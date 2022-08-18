@@ -45,6 +45,7 @@ pandas = "^1.1"
 importlib-resources = { version = "*", python = "<3.9" }
 graphs = { git = "https://github.com/py-why/graphs.git", branch = 'main', optional = true }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
+# pywhy-graphs = { path = "../pywhy-graphs", develop = true }
 
 # TODO: the below needs to be refactored into separate dev-dependencies
 # https://github.com/python-poetry/poetry/is
