@@ -55,7 +55,8 @@ jobs:
         run: poetry run poe typecheck
 
   build:
-    timeout-minutes: 10
+    # TODO: modify back to 10 mins after we improve poetry install
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
