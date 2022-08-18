@@ -43,7 +43,7 @@ class EquivalenceClassProtocol(GraphProtocol, Protocol):
     """Protocol for equivalence class of graphs."""
 
     def orient_uncertain_edge(self, u, v) -> None:
-        """Orients an uncertain edge in the equivalence class to directed 'u'*->'v'."""
+        """Orients an uncertain edge in the equivalence class to directed ``'u'*->'v'``."""
         pass
 
     @property
