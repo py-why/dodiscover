@@ -67,12 +67,11 @@ jobs:
             sudo apt install libspatialindex-dev xdg-utils
       - python/install-packages:
           pkg-manager: poetry
-          args: "--extras graph_func"
+          args: "--extras 'graph_func, viz'"
           cache-version: "v1" # change to clear cache
       - run:
           name: Check poetry package versions
           command: |
-            poetry run pip install --upgrade --progress-bar off pygraphviz
             poetry --version
             poetry show
       - run:
