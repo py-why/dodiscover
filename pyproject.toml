@@ -45,6 +45,7 @@ pandas = "^1.1"
 importlib-resources = { version = "*", python = "<3.9" }
 graphs = { git = "https://github.com/py-why/graphs.git", branch = 'main', optional = true }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
+# pywhy-graphs = { path = "../pywhy-graphs", develop = true }
 
 # TODO: the below needs to be refactored into separate dev-dependencies
 # https://github.com/python-poetry/poetry/is
@@ -97,7 +98,7 @@ _isort = 'isort .'
 _black_check = 'black --check dodiscover examples'
 _isort_check = 'isort --check .'
 _pydocstyle = 'pydocstyle .'
-_codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespellignore --skip "**/_build/*"'
+_codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespellignore --skip "**/_build/*,**/auto_examples/*"'
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 

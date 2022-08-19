@@ -48,21 +48,12 @@ jobs:
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python -
             curl -sSL https://install.python-poetry.org | python3 -
-      - python/install-packages:
-          pkg-manager: poetry
-          # args: "--extras docs"
-          cache-version: "v1" # change to clear cache
-      - run:
-          name: Check poetry package versions
-          command: |
-            poetry --version
-            poetry show
       - run:
           name: Set BASH_ENV
           command: |
             set -e
             sudo apt update
-            sudo apt install -qq graphviz optipng libxft2
+            sudo apt install -qq graphviz optipng libxft2 graphviz-dev
             echo "set -e" >> $BASH_ENV
             echo "export OPENBLAS_NUM_THREADS=4" >> $BASH_ENV
             echo "export XDG_RUNTIME_DIR=/tmp/runtime-circleci" >> $BASH_ENV
@@ -70,6 +61,20 @@ jobs:
             echo "export DISPLAY=:99" >> $BASH_ENV
             echo "BASH_ENV:"
             cat $BASH_ENV
+      - run:
+          name: Install pysal dependencies
+          command: |
+            sudo apt install libspatialindex-dev xdg-utils
+      - python/install-packages:
+          pkg-manager: poetry
+          args: "--extras graph_func"
+          cache-version: "v1" # change to clear cache
+      - run:
+          name: Check poetry package versions
+          command: |
+            poetry run pip install --upgrade --progress-bar off pygraphviz
+            poetry --version
+            poetry show
       - run:
           name: Setup pandoc
           command: sudo apt update && sudo apt install -y pandoc optipng
