@@ -45,6 +45,8 @@ pandas = "^1.1"
 importlib-resources = { version = "*", python = "<3.9" }
 graphs = { git = "https://github.com/py-why/graphs.git", branch = 'main', optional = true }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
+# pywhy-graphs = { path = "../pywhy-graphs", develop = true }
+pygraphviz = { version = "*", optional = true }
 
 # TODO: the below needs to be refactored into separate dev-dependencies
 # https://github.com/python-poetry/poetry/is
@@ -80,6 +82,8 @@ nbsphinx = { version = "^0.8" }
 
 [tool.poetry.extras]
 graph_func = ['pywhy-graphs', 'graphs']
+viz = ['pygraphviz']
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

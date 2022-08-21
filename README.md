@@ -26,7 +26,12 @@ Minimally, dodiscover requires:
     * numpy
     * scipy
     * networkx
+    * pandas
+
+For explicit graph functionality for representing various causal graphs, such as ADMG, or CPDAGs, you will also need:
+
     * pywhy-graphs
+    * graphs  # this is a development version for PRable MixedEdgeGraph to networkx
 
 For explicitly representing causal graphs, we recommend using `pywhy-graphs` package, but if you have a graph library that adheres to the graph protocols we require, then you can in principle use those graphs.
 
@@ -40,6 +45,9 @@ If you already have a working installation of numpy, scipy and networkx, the eas
 To install the package from github, clone the repository and then `cd` into the directory. You can then use `poetry` to install:
 
     poetry install
+
+    # for graph functionality
+    poetry install --extras graph_func
 
     # if you would like an editable install of dodiscover for dev purposes
     pip install -e .
