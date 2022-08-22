@@ -67,7 +67,7 @@ class CMITest(BaseConditionalIndependenceTest):
             random_state = np.random.BitGenerator()
         self.random_state=random_state
 
-    def test(self, df: pd.DataFrame, x_var: Any, y_var: Any, z_covariates: Any = None) -> Tuple[float, float]:
+    def test(self, df: pd.DataFrame, x_var, y_var, z_covariates = None) -> Tuple[float, float]:
         n_samples, _ = df.shape
 
         if self.k < 1:
@@ -125,7 +125,7 @@ class CMITest(BaseConditionalIndependenceTest):
         return data
 
 
-    def _get_knn(self, data: pd.DataFrame, x_var: Any, y_var: Any, z_covariates: Any) -> Tuple[NDArray, NDArray, NDArray]:
+    def _get_knn(self, data: pd.DataFrame, x_var, y_var, z_covariates) -> Tuple[NDArray, NDArray, NDArray]:
         """Compute the nearest neighbor in the variable subspaces.
 
         Parameters
@@ -186,7 +186,7 @@ class CMITest(BaseConditionalIndependenceTest):
         return k_xz, k_yz, k_z
 
 
-    def _estimate_null_dist(self, data: pd.DataFrame, x_var: Any, y_var: Any, z_covariates: Any, value: float) -> float:
+    def _estimate_null_dist(self, data: pd.DataFrame, x_var, y_var, z_covariates, value: float) -> float:
         """Compute pvalue by performing a nearest-neighbor shuffle test.
 
         Parameters
