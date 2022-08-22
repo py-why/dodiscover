@@ -177,7 +177,7 @@ filterwarnings = []
 branch = true
 cover_pylib = false
 source = ['dodiscover']
-omit = ['**/__init__.py', '**/tests/**']
+omit = ['**/__init__.py', '**/tests/**', '**/testdata/**']
 
 [tool.coverage.report]
 exclude_lines = ['pragma: no cover', 'if __name__ == .__main__.:']
