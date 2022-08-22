@@ -26,6 +26,10 @@ class GraphProtocol(Protocol):
         """Remove a node from the graph."""
         pass
 
+    def remove_edges_from(self, edges) -> None:
+        """Remove a set of edges from the graph."""
+        pass
+
     def neighbors(self, node) -> Iterable:
         """Iterate over all nodes that have any edge connection with 'node'."""
         pass

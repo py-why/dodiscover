@@ -5,9 +5,9 @@ import pytest
 
 from dodiscover import Context
 from dodiscover.ci import GSquareCITest, Oracle
-from dodiscover.constraint import LearnSkeleton
+from dodiscover.constraint.skeleton import LearnSkeleton
 from dodiscover.constraint.utils import dummy_sample
-from tests.unit_tests.ci.testdata import bin_data, dis_data
+from dodiscover.testdata.testdata import bin_data, dis_data
 
 
 def common_cause_and_collider():
@@ -87,8 +87,10 @@ def complex_graph():
         ),
     ],
 )
-def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer, alpha=0.01):
+def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer):
     """Test PC algorithm for estimating the causal DAG."""
+    # the tests get the correct independences when alpha is at 0.01
+    alpha = 0.01
     data_df = pd.DataFrame(data_matrix)
     alg = LearnSkeleton(ci_estimator=indep_test_func, alpha=alpha)
     context = Context(data=data_df)

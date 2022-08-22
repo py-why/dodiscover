@@ -1,7 +1,8 @@
 import logging
 from collections import defaultdict
-from itertools import combinations
-from typing import Any, Dict, Iterable, List, Set
+from enum import Enum, EnumMeta
+from itertools import chain, combinations
+from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Union
 
 import networkx as nx
 import numpy as np
@@ -12,15 +13,28 @@ from ..context import Context
 
 logger = logging.getLogger()
 
-ACCEPTED_MARKOVIAN_SKELETON_METHODS = ["complete", "neighbors", "neighbors_path"]
+
+class MetaEnum(EnumMeta):
+    def __contains__(cls, item):
+        try:
+            cls(item)
+        except ValueError:
+            return False
+        return True
+
+
+class SkeletonMethods(Enum, metaclass=MetaEnum):
+    complete = "complete"
+    neighbors = "neighbors"
+    neighbors_path = "neighbors_path"
 
 
 def _iter_conditioning_set(
     possible_variables: Iterable,
-    x_var: Any,
-    y_var: Any,
+    x_var: Union[SupportsFloat, str],
+    y_var: Union[SupportsFloat, str],
     size_cond_set: int,
-):
+) -> Iterable[Set]:
     """Iterate function to generate the conditioning set.
 
     Parameters
@@ -111,8 +125,8 @@ class LearnSkeleton:
     ----------
     adj_graph_ : nx.Graph
         The discovered graph from data. Stored using an undirected
-        graph. The graph contains edge attributes for the smallest absolute value of the
-        test statistic encountered (key name 'test_stat_abs'), the largest pvalue seen in
+        graph. The graph contains edge attributes for the smallest value of the
+        test statistic encountered (key name 'test_stat'), the largest pvalue seen in
         testing 'x' || 'y' given some conditioning set (key name 'pvalue').
     sep_set_ : dictionary of dictionary of list of set
         Mapping node to other nodes to separating sets of variables.
@@ -175,11 +189,11 @@ class LearnSkeleton:
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        sep_set: Dict[str, Dict[str, List[Set[Any]]]] = None,
+        sep_set: Optional[Dict[str, Dict[str, List[Set[Any]]]]] = None,
         alpha: float = 0.05,
         min_cond_set_size: int = 0,
-        max_cond_set_size: int = None,
-        max_combinations: int = None,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
         skeleton_method: str = "neighbors",
         keep_sorted: bool = False,
         **ci_estimator_kwargs,
@@ -198,7 +212,7 @@ class LearnSkeleton:
         # for tracking strength of dependencies
         self.keep_sorted = keep_sorted
 
-    def _initialize_params(self):
+    def _initialize_params(self) -> None:
         """Initialize parameters for learning skeleton.
 
         Parameters
@@ -210,10 +224,9 @@ class LearnSkeleton:
         if self.max_combinations is not None and self.max_combinations <= 0:
             raise RuntimeError(f"Max combinations must be at least 1, not {self.max_combinations}")
 
-        if self.skeleton_method not in ACCEPTED_MARKOVIAN_SKELETON_METHODS:
+        if self.skeleton_method not in SkeletonMethods:
             raise ValueError(
-                f"Skeleton method must be one of {ACCEPTED_MARKOVIAN_SKELETON_METHODS}, "
-                f"not {self.skeleton_method}."
+                f"Skeleton method must be one of {SkeletonMethods}, " f"not {self.skeleton_method}."
             )
 
         if self.sep_set is None:
@@ -236,7 +249,7 @@ class LearnSkeleton:
         else:
             self.max_combinations_ = self.max_combinations
 
-    def fit(self, context: Context):
+    def fit(self, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
 
         Parameters
@@ -258,14 +271,17 @@ class LearnSkeleton:
         # the size of the conditioning set will start off at the minimum
         size_cond_set = self.min_cond_set_size_
 
-        # store the absolute value of test-statistic values for every single
-        # candidate parent-child edge (X -> Y)
-        nx.set_edge_attributes(adj_graph, np.inf, "test_stat_abs")
+        edge_attrs = set(chain.from_iterable(d.keys() for *_, d in adj_graph.edges(data=True)))
+        if "test_stat" in edge_attrs or "pvalue" in edge_attrs:
+            raise RuntimeError(
+                "Running skeleton discovery with adjacency graph "
+                "with 'test_stat' or 'pvalue' is not supported yet."
+            )
 
-        # store the actual minimum test-statistic/pvalue value for every
-        # single candidate parent-child edge
+        # store the absolute value of test-statistic values and pvalue for
+        # every single candidate parent-child edge (X -> Y)
+        nx.set_edge_attributes(adj_graph, np.inf, "test_stat")
         nx.set_edge_attributes(adj_graph, -1e-5, "pvalue")
-        nx.set_edge_attributes(adj_graph, np.inf, "test_stat_min")
 
         # store the list of potential adjacencies for every node
         # which is tracked and updated in the algorithm
@@ -388,7 +404,7 @@ class LearnSkeleton:
 
         self.adj_graph_ = adj_graph
 
-    def _summarize_xy_comparison(self, x_var, y_var, removed_edge, pvalue):
+    def _summarize_xy_comparison(self, x_var, y_var, removed_edge: bool, pvalue: float) -> None:
         # exit loop if we have found an independency and removed the edge
         if removed_edge:
             remove_edge_str = "Removing edge"
@@ -403,7 +419,7 @@ class LearnSkeleton:
 
     def _compute_candidate_conditioning_sets(
         self, adj_graph: nx.Graph, x_var, y_var, skeleton_method: str
-    ) -> Set[Any]:
+    ) -> Set:
         """Compute candidate conditioning sets.
 
         Parameters
@@ -436,7 +452,7 @@ class LearnSkeleton:
         if self.keep_sorted:
             possible_variables = sorted(
                 possible_variables,
-                key=lambda n: adj_graph.edges[x_var, n]["test_stat_abs"],
+                key=lambda n: adj_graph.edges[x_var, n]["test_stat"],
                 reverse=True,
             )  # type: ignore
 
@@ -451,15 +467,11 @@ class LearnSkeleton:
         self, adj_graph: nx.Graph, x_var, y_var, cond_set: Set, test_stat: float, pvalue: float
     ) -> bool:
         # keep track of the smallest test statistic, meaning the highest pvalue
-        # meaning the "most" independent
-        if np.abs(test_stat) <= adj_graph.edges[x_var, y_var]["test_stat_abs"]:
-            logger.debug(f"Adding {y_var} to possible adjacency of node {x_var}")
-            adj_graph.edges[x_var, y_var]["test_stat_abs"] = np.abs(test_stat)
-
-        # keep track of the maximum pvalue as well
+        # meaning the "most" independent. keep track of the maximum pvalue as well
         if pvalue > adj_graph.edges[x_var, y_var]["pvalue"]:
             adj_graph.edges[x_var, y_var]["pvalue"] = pvalue
-            adj_graph.edges[x_var, y_var]["test_stat_min"] = test_stat
+        if test_stat < adj_graph.edges[x_var, y_var]["test_stat"]:
+            adj_graph.edges[x_var, y_var]["test_stat"] = test_stat
 
         # two variables found to be independent given a separating set
         if pvalue > self.alpha:

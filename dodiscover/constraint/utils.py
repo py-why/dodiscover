@@ -2,18 +2,15 @@ from typing import Any, Dict, List, Set
 
 import pandas as pd
 
+from dodiscover import GraphProtocol
 
-def dummy_sample(G):
+
+def dummy_sample(G: GraphProtocol):
     """Sample an empty dataframe with columns as the nodes.
 
     Used for oracle testing.
     """
-    df_values = dict()
-    for node in G.nodes:
-        df_values[node] = []
-
-    df = pd.DataFrame.from_dict(df_values)
-    return df
+    return pd.DataFrame({column: [] for column in G.nodes})
 
 
 def is_in_sep_set(
