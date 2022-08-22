@@ -105,7 +105,7 @@ _codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespelligno
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 
-typecheck = 'mypy -p dodiscover --config-file pyproject.toml'
+type_check = 'mypy -p dodiscover --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 build_docs = 'make build-docs'

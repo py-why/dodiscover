@@ -450,6 +450,8 @@ class LearnSkeleton:
             possible_variables = _find_neighbors_along_path(adj_graph, start=x_var, end=y_var)
 
         if self.keep_sorted:
+            # Note it is assumed in public API that 'test_stat' is set
+            # inside the adj_graph
             possible_variables = sorted(
                 possible_variables,
                 key=lambda n: adj_graph.edges[x_var, n]["test_stat"],
