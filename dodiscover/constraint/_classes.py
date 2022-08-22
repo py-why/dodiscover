@@ -8,6 +8,7 @@ import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.context import Context
+from dodiscover.constraint.skeleton import LearnSkeleton
 
 from .._protocol import EquivalenceClassProtocol
 
@@ -177,7 +178,7 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = sep_set
         self.graph_ = graph
 
-    def test_edge(self, data: pd.DataFrame, X, Y, Z: Optional[Set] = None) -> Tuple[float, float]:
+    def evaluate_edge(self, data: pd.DataFrame, X, Y, Z: Optional[Set] = None) -> Tuple[float, float]:
         """Test any specific edge for X || Y | Z.
 
         Parameters
@@ -242,8 +243,6 @@ class BaseConstraintDiscovery:
         to determine which variables are (in)dependent. This specific algorithm
         compares exhaustively pairs of adjacent variables.
         """
-        from dodiscover.constraint.skeleton import LearnSkeleton
-
         skel_alg = LearnSkeleton(
             self.ci_estimator,
             sep_set=sep_set,
