@@ -73,7 +73,7 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
         else:
             return 1
 
-    nghbrs = set()
+    nbrs = set()
     for node in G.neighbors(start):
         if not G.has_edge(start, node):
             raise RuntimeError(f"{start} and {node} are not connected, but they are assumed to be.")
@@ -83,8 +83,8 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
         if len(path) > 0:
             if start in path:
                 raise RuntimeError("wtf?")
-            nghbrs.add(node)
-    return nghbrs
+            nbrs.add(node)
+    return nbrs
 
 
 class LearnSkeleton:
