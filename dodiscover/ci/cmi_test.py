@@ -28,6 +28,8 @@ class CMITest(BaseConditionalIndependenceTest):
     transform : str, optional
         Transform the data by standardizing the data, by default 'rank', which converts
         data to ranks.
+    n_shuffle : int
+        The number of samples to shuffle for a significance test.
     n_jobs : int, optional
         The number of CPUs to use, by default -1, which corrresponds to
         using all CPUs available.
@@ -57,11 +59,12 @@ class CMITest(BaseConditionalIndependenceTest):
     .. footbibliography::
     """
     def __init__(self, k: float=0.2, n_shuffle_nghbrs: int=5, transform: str='rank', n_jobs: int=-1,
-        random_state=None) -> None:
+        n_shuffle:int=1000, random_state=None) -> None:
         self.k=k
         self.n_shuffle_nghbrs = n_shuffle_nghbrs
         self.transform = transform
         self.n_jobs = n_jobs
+        self.n_shuffle = n_shuffle
 
         if random_state is None:
             random_state = np.random.BitGenerator()
@@ -124,7 +127,6 @@ class CMITest(BaseConditionalIndependenceTest):
 
         return data
 
-
     def _get_knn(self, data: pd.DataFrame, x_var, y_var, z_covariates) -> Tuple[NDArray, NDArray, NDArray]:
         """Compute the nearest neighbor in the variable subspaces.
 
@@ -185,20 +187,19 @@ class CMITest(BaseConditionalIndependenceTest):
 
         return k_xz, k_yz, k_z
 
-
     def _estimate_null_dist(self, data: pd.DataFrame, x_var, y_var, z_covariates, value: float) -> float:
         """Compute pvalue by performing a nearest-neighbor shuffle test.
 
         Parameters
         ----------
-        data : _type_
-            _description_
-        x_var : _type_
-            _description_
-        y_var : _type_
-            _description_
-        z_covariates : _type_
-            _description_
+        data : pd.DataFrame
+            The dataset.
+        x_var : column
+            The X variable column.
+        y_var : column
+            The Y variable column.
+        z_covariates : column
+            The Z variable column(s).
         value : float
             The estimated CMI test statistic.
         
@@ -221,8 +222,8 @@ class CMITest(BaseConditionalIndependenceTest):
                                        p=np.inf,
                                        eps=0.)[1].astype(np.int32)
 
-            null_dist = np.zeros(self.sig_samples)
-            for sam in range(self.sig_samples):
+            null_dist = np.zeros(self.n_shuffle)
+            for sam in range(self.n_shuffle):
 
                 # Generate random order in which to go through indices loop in
                 # next step
@@ -236,21 +237,21 @@ class CMITest(BaseConditionalIndependenceTest):
                 # Select a series of neighbor indices that contains as few as
                 # possible duplicates
                 restricted_permutation = self.get_restricted_permutation(
-                        T=T,
+                        T=n_samples,
                         n_shuffle_nghbrs=self.n_shuffle_nghbrs,
                         neighbors=neighbors,
                         order=order)
 
-                array_shuffled = np.copy(array)
+                array_shuffled = np.copy(data)
                 for i in x_indices:
-                    array_shuffled[i] = array[i, restricted_permutation]
+                    array_shuffled[i] = data[i, restricted_permutation]
 
                 null_dist[sam] = self.get_dependence_measure(array_shuffled,
-                                                             xyz)
+                                                             data)
 
         else:
             null_dist = \
-                    self._get_shuffle_dist(array, xyz,
+                    self._get_shuffle_dist(data, xyz,
                                            self.get_dependence_measure,
                                            sig_samples=self.sig_samples,
                                            sig_blocklength=self.sig_blocklength,
