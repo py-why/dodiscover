@@ -126,7 +126,7 @@ ignore_fail = 'return_non_zero'
 # a standard verification sequence for use in pull requests
 #
 [[tool.poe.tasks.verify]]
-sequence = ['apply_format', 'lint', 'typecheck', 'unit_test']
+sequence = ['apply_format', 'lint', 'type_check', 'unit_test']
 ignore_fail = "return_non_zero"
 
 [[tool.poe.tasks.release]]
