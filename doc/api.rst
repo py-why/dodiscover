@@ -24,8 +24,8 @@ learning.
 .. autosummary::
    :toctree: generated/
 
-   Oracle
    BaseConditionalIndependenceTest
+   Oracle
    KernelCITest
    GSquareCITest
    FisherZCITest
