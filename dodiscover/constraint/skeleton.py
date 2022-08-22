@@ -185,6 +185,9 @@ class LearnSkeleton:
     adj_graph_: nx.Graph
     sep_set_: Dict[str, Dict[str, List[Set[Any]]]]
     remove_edges: Set
+    min_cond_set_size_: int
+    max_cond_set_size_: int
+    max_combinations_: int
 
     def __init__(
         self,

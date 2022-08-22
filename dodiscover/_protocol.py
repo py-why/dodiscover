@@ -6,11 +6,12 @@ import networkx as nx
 class GraphProtocol(Protocol):
     """Protocol for graphs to work with dodiscover algorithms."""
 
+    @property
     def nodes(self) -> Iterable:
         """Return an iterable over nodes in graph."""
         pass
 
-    def edges(self) -> Iterable:
+    def edges(self, data=None) -> Iterable:
         """Return an iterable over edge tuples in graph."""
         pass
 

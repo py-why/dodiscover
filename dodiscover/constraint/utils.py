@@ -10,7 +10,7 @@ def dummy_sample(G: GraphProtocol):
 
     Used for oracle testing.
     """
-    return pd.DataFrame({column: [] for column in G.nodes})
+    return pd.DataFrame({column: [] for column in G.nodes})  # type: ignore
 
 
 def is_in_sep_set(
