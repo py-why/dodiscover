@@ -38,7 +38,7 @@ def test_ci_tests(ci_estimator):
     x = "x"
     y = "y"
     with pytest.raises(ValueError, match="The z conditioning set variables are not all"):
-        ci_estimator.test(sample_df, x, y, z_covariates=["blah"])
+        ci_estimator.test(sample_df, {x}, {y}, z_covariates=["blah"])
 
     with pytest.raises(ValueError, match="The x and y variables are not both"):
-        ci_estimator.test(sample_df, x, y_var="blah", z_covariates=["z"])
+        ci_estimator.test(sample_df, {x}, y_var={"blah"}, z_covariates=["z"])

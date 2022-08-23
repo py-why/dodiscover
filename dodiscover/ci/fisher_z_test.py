@@ -25,8 +25,8 @@ class FisherZCITest(BaseConditionalIndependenceTest):
     def test(
         self,
         df: pd.DataFrame,
-        x_var: Column,
-        y_var: Column,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
         """Abstract method for all conditional independence tests.
@@ -35,9 +35,9 @@ class FisherZCITest(BaseConditionalIndependenceTest):
         ----------
         df : pd.DataFrame
             The dataframe containing the dataset.
-        x_var : column
+        x_vars : Set of column
             A column in ``df``.
-        y_var : column
+        y_vars : Set of column
             A column in ``df``.
         z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
@@ -50,10 +50,12 @@ class FisherZCITest(BaseConditionalIndependenceTest):
         pvalue : float
             The p-value of the test.
         """
-        self._check_test_input(df, x_var, y_var, z_covariates)
-
+        self._check_test_input(df, x_vars, y_vars, z_covariates)
         if z_covariates is None:
             z_covariates = set()
+        x_var = x_vars.pop()
+        y_var = y_vars.pop()
+
         stat, pvalue = fisherz(df, x_var, y_var, z_covariates, self.correlation_matrix)
         return stat, pvalue
 
@@ -73,10 +75,10 @@ def fisherz(
     ----------
     data : pd.DataFrame
         The data.
-    x : int | str
+    x : Column
         the first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
-    y : int | str
+    y : Column
         the second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
