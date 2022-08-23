@@ -14,9 +14,17 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
     a function for CI testing into a class, which has a specific API.
     """
 
-    def _check_test_input(self, df: pd.DataFrame, x_var, y_var, z_covariates):
-        if any(col not in df.columns for col in [x_var, y_var]):
-            raise ValueError("The x and y variables are not both in the DataFrame.")
+    def _check_test_input(
+        self,
+        df: pd.DataFrame,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
+        z_covariates: Optional[Set[Column]],
+    ):
+        if any(col not in df.columns for col in x_vars):
+            raise ValueError("The x variables are not all in the DataFrame.")
+        if any(col not in df.columns for col in y_vars):
+            raise ValueError("The y variables are not all in the DataFrame.")
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
             raise ValueError("The z conditioning set variables are not all in the DataFrame.")
 
