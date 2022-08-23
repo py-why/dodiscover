@@ -1,28 +1,24 @@
+import dowhy.gcm as gcm
+import networkx as nx
 import numpy as np
+import pandas as pd
 import pytest
-from pywhy_graphs import StructuralCausalModel
 
 from dodiscover.ci import FisherZCITest, GSquareCITest, KernelCITest, Oracle
 
 seed = 12345
 rng = np.random.RandomState(seed=seed)
-func_uz = lambda: rng.negative_binomial(n=1, p=0.25)
-func_uxy = lambda: rng.binomial(n=1, p=0.4)
-func_x = lambda u_xy: 2 * u_xy
-func_y = lambda x, u_xy, z: x + u_xy + z
-func_z = lambda u_z: u_z
+func_z = rng.negative_binomial(n=1, p=0.25)
+func_x = rng.binomial(n=1, p=0.4)
+func_y = rng.binomial(n=1, p=0.2)
+data = pd.DataFrame(data=dict(x=func_x, y=func_y, z=func_z))
 
 # construct the SCM and the corresponding causal graph
-scm = StructuralCausalModel(
-    exogenous={
-        "u_xy": func_uxy,
-        "u_z": func_uz,
-    },
-    endogenous={"x": func_x, "y": func_y, "z": func_z},
-)
-
-sample_df = scm.sample(n=100)
-ground_truth_graph = scm.get_causal_graph()
+graph = nx.DiGraph([("x", "y"), ("z", "y")])
+causal_model = gcm.StructuralCausalModel(graph=graph)
+gcm.auto.assign_causal_mechanisms(causal_model, data)
+gcm.fit(causal_model, data)
+sample_df = gcm.draw_samples(causal_model, num_samples=10)
 
 
 @pytest.mark.parametrize(
@@ -31,7 +27,7 @@ ground_truth_graph = scm.get_causal_graph()
         KernelCITest(),
         GSquareCITest(),
         FisherZCITest(),
-        Oracle(ground_truth_graph),
+        Oracle(graph),
     ],
 )
 def test_ci_tests(ci_estimator):
