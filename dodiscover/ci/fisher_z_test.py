@@ -1,5 +1,5 @@
 from math import log, sqrt
-from typing import Optional, Set, Tuple, Union
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
