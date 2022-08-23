@@ -17,9 +17,17 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
     # default CI tests do not allow multivariate input
     _allow_multivariate_input: bool = False
 
-    def _check_test_input(self, df: pd.DataFrame, x_vars, y_vars, z_covariates):
-        if any(col not in df.columns for col in [x_vars, y_vars]):
-            raise ValueError("The x and y variables are not both in the DataFrame.")
+    def _check_test_input(
+        self,
+        df: pd.DataFrame,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
+        z_covariates: Optional[Set[Column]],
+    ):
+        if any(col not in df.columns for col in x_vars):
+            raise ValueError("The x variables are not all in the DataFrame.")
+        if any(col not in df.columns for col in y_vars):
+            raise ValueError("The y variables are not all in the DataFrame.")
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
             raise ValueError("The z conditioning set variables are not all in the DataFrame.")
 
