@@ -1,5 +1,10 @@
+from typing import Optional, Set
+
 import networkx as nx
 import numpy as np
+import pandas as pd
+
+from dodiscover.typing import Column
 
 from .._protocol import GraphProtocol
 from .base import BaseConditionalIndependenceTest
@@ -19,7 +24,13 @@ class Oracle(BaseConditionalIndependenceTest):
     def __init__(self, graph: GraphProtocol) -> None:
         self.graph = graph
 
-    def test(self, df, x_var, y_var, z_covariates):
+    def test(
+        self,
+        df: pd.DataFrame,
+        x_var: Column,
+        y_var: Column,
+        z_covariates: Optional[Set[Column]] = None,
+    ):
         """Conditional independence test given an oracle.
 
         Checks conditional independence between 'x_var' and 'y_var'
