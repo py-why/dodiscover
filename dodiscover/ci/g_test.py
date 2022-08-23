@@ -11,8 +11,8 @@ from .base import BaseConditionalIndependenceTest
 
 
 def _calculate_contingency_tble(
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Union[List, Set],
     dof: int,
     data: NDArray,
@@ -79,8 +79,8 @@ def _calculate_contingency_tble(
 
 
 def _calculate_highdim_contingency(
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
     data: NDArray,
     nlevel_x: int,
@@ -204,8 +204,8 @@ def _calculate_g_statistic(contingency_tble):
 
 def g_square_binary(
     data: Union[NDArray, pd.DataFrame],
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
 ) -> Tuple[float, float]:
     """G square test for a binary data.
@@ -283,8 +283,8 @@ def g_square_binary(
 
 def g_square_discrete(
     data: Union[NDArray, pd.DataFrame],
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
     levels=None,
 ) -> Tuple[float, float]:

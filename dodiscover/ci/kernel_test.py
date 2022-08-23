@@ -129,7 +129,6 @@ class KernelCITest(BaseConditionalIndependenceTest):
         if z_covariates is None or len(z_covariates) == 0:
             Z = None
         else:
-            z_covariates = list(z_covariates)
             Z = df[z_covariates].to_numpy().reshape((-1, len(z_covariates)))
         X = df[x_var].to_numpy()[:, np.newaxis]
         Y = df[y_var].to_numpy()[:, np.newaxis]

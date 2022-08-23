@@ -60,8 +60,8 @@ class FisherZCITest(BaseConditionalIndependenceTest):
 
 def fisherz(
     data: pd.DataFrame,
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
     correlation_matrix=None,
 ):
