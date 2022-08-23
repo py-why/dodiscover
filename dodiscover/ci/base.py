@@ -1,7 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any, Tuple
+from typing import Optional, Set, Tuple
 
 import pandas as pd
+
+from dodiscover.typing import Column
 
 
 class BaseConditionalIndependenceTest(metaclass=ABCMeta):
@@ -20,7 +22,11 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
 
     @abstractmethod
     def test(
-        self, df: pd.DataFrame, x_var: Any, y_var: Any, z_covariates: Any = None
+        self,
+        df: pd.DataFrame,
+        x_var: Column,
+        y_var: Column,
+        z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
         """Abstract method for all conditional independence tests.
 
@@ -28,11 +34,11 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         ----------
         df : pd.DataFrame
             The dataframe containing the dataset.
-        x_var : Any
+        x_var : column
             A column in ``df``.
-        y_var : Any
+        y_var : column
             A column in ``df``.
-        z_covariates : Any, optional
+        z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
             the test should run a standard independence test.
 

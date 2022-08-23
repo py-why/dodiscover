@@ -1,7 +1,12 @@
+from typing import Optional, Set, Tuple
+
 import numpy as np
+import pandas as pd
 from scipy import stats
 from sklearn.metrics import pairwise_distances, pairwise_kernels
 from sklearn.metrics.pairwise import PAIRWISE_KERNEL_FUNCTIONS
+
+from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
 
@@ -92,7 +97,34 @@ class KernelCITest(BaseConditionalIndependenceTest):
         self.kwidth_y = kwidth_y
         self.kwidth_z = kwidth_z
 
-    def test(self, df, x_var, y_var, z_covariates=None):
+    def test(
+        self,
+        df: pd.DataFrame,
+        x_var: Column,
+        y_var: Column,
+        z_covariates: Optional[Set[Column]] = None,
+    ) -> Tuple[float, float]:
+        """Abstract method for all conditional independence tests.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The dataframe containing the dataset.
+        x_var : column
+            A column in ``df``.
+        y_var : column
+            A column in ``df``.
+        z_covariates : Set, optional
+            A set of columns in ``df``, by default None. If None, then
+            the test should run a standard independence test.
+
+        Returns
+        -------
+        stat : float
+            The test statistic.
+        pvalue : float
+            The p-value of the test.
+        """
         self._check_test_input(df, x_var, y_var, z_covariates)
         if z_covariates is None or len(z_covariates) == 0:
             Z = None

@@ -1,9 +1,11 @@
-from typing import Any, List, Set, Tuple, Union
+from typing import List, Optional, Set, Tuple, Union
 
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 from scipy.stats import chi2
+
+from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
 
@@ -391,11 +393,32 @@ class GSquareCITest(BaseConditionalIndependenceTest):
     def test(
         self,
         df: pd.DataFrame,
-        x_var: Any,
-        y_var: Any,
-        z_covariates: Any = None,
-        levels: List = None,
+        x_var: Column,
+        y_var: Column,
+        z_covariates: Optional[Set[Column]] = None,
+        levels: Optional[List] = None,
     ) -> Tuple[float, float]:
+        """Abstract method for all conditional independence tests.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The dataframe containing the dataset.
+        x_var : column
+            A column in ``df``.
+        y_var : column
+            A column in ``df``.
+        z_covariates : Set, optional
+            A set of columns in ``df``, by default None. If None, then
+            the test should run a standard independence test.
+
+        Returns
+        -------
+        stat : float
+            The test statistic.
+        pvalue : float
+            The p-value of the test.
+        """
         self._check_test_input(df, x_var, y_var, z_covariates)
         if z_covariates is None:
             z_covariates = set()

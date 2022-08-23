@@ -1,9 +1,11 @@
 from math import log, sqrt
-from typing import Any, Set, Tuple, Union
+from typing import Optional, Set, Tuple, Union
 
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
+
+from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
 
@@ -21,20 +23,25 @@ class FisherZCITest(BaseConditionalIndependenceTest):
         self.correlation_matrix = correlation_matrix
 
     def test(
-        self, df: pd.DataFrame, x_var: Any, y_var: Any, z_covariates: Any = None
+        self,
+        df: pd.DataFrame,
+        x_var: Column,
+        y_var: Column,
+        z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
-        """Run conditional independence test.
+        """Abstract method for all conditional independence tests.
 
         Parameters
         ----------
         df : pd.DataFrame
-            _description_
-        x : Any
-            _description_
-        y : Any
-            _description_
-        z : Any, optional
-            _description_, by default None
+            The dataframe containing the dataset.
+        x_var : column
+            A column in ``df``.
+        y_var : column
+            A column in ``df``.
+        z_covariates : Set, optional
+            A set of columns in ``df``, by default None. If None, then
+            the test should run a standard independence test.
 
         Returns
         -------
