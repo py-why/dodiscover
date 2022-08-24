@@ -1,12 +1,19 @@
+from typing import Optional, Set, Tuple
+
 import numpy as np
+import pandas as pd
 from scipy import stats
 from sklearn.metrics import pairwise_distances, pairwise_kernels
 from sklearn.metrics.pairwise import PAIRWISE_KERNEL_FUNCTIONS
+
+from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
 
 
 class KernelCITest(BaseConditionalIndependenceTest):
+    _allow_multivariate_input: bool = True
+
     def __init__(
         self,
         kernel_x: str = "rbf",
@@ -40,11 +47,11 @@ class KernelCITest(BaseConditionalIndependenceTest):
             Whether to use the Gamma distribution approximation for the pvalue,
             by default True.
         kwidth_x : _type_, optional
-            _description_, by default None
+            The width of the kernel to be applied to the X variable, by default None.
         kwidth_y : _type_, optional
-            _description_, by default None
+            The width of the kernel to be applied to the Y variable, by default None.
         kwidth_z : _type_, optional
-            _description_, by default None
+            The width of the kernel to be applied to the Z variable, by default None.
         threshold : float, optional
             The threshold set on the value of eigenvalues, by default 1e-5. Used
             to regularize the method.
@@ -92,15 +99,45 @@ class KernelCITest(BaseConditionalIndependenceTest):
         self.kwidth_y = kwidth_y
         self.kwidth_z = kwidth_z
 
-    def test(self, df, x_var, y_var, z_covariates=None):
-        self._check_test_input(df, x_var, y_var, z_covariates)
+    def test(
+        self,
+        df: pd.DataFrame,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
+        z_covariates: Optional[Set[Column]] = None,
+    ) -> Tuple[float, float]:
+        """Abstract method for all conditional independence tests.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The dataframe containing the dataset.
+        x_vars : Set of column
+            A column in ``df``.
+        y_vars : Set of column
+            A column in ``df``.
+        z_covariates : Set, optional
+            A set of columns in ``df``, by default None. If None, then
+            the test should run a standard independence test.
+
+        Returns
+        -------
+        stat : float
+            The test statistic.
+        pvalue : float
+            The p-value of the test.
+        """
+        self._check_test_input(df, x_vars, y_vars, z_covariates)
         if z_covariates is None or len(z_covariates) == 0:
             Z = None
         else:
-            z_covariates = list(z_covariates)
             Z = df[z_covariates].to_numpy().reshape((-1, len(z_covariates)))
-        X = df[x_var].to_numpy()[:, np.newaxis]
-        Y = df[y_var].to_numpy()[:, np.newaxis]
+        X = df[x_vars].to_numpy()
+        Y = df[y_vars].to_numpy()
+        if X.ndim == 1:
+            X = X[:, np.newaxis]
+        if Y.ndim == 1:
+            Y = Y[:, np.newaxis]
 
         # first normalize the data to have zero mean and unit variance
         # along the columns of the data
