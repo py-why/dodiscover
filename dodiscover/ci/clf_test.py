@@ -18,7 +18,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
     def __init__(
         self,
         clf: sklearn.base.BaseEstimator,
-        metric: Callable = sklearn.metrics.roc_auc_score,
+        metric: Callable = sklearn.metrics.accuracy_score,
         bootstrap: bool = False,
         n_iter: int = 20,
         correct_bias: bool = True,

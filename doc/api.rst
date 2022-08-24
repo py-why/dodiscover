@@ -29,6 +29,7 @@ learning.
    KernelCITest
    GSquareCITest
    FisherZCITest
+   ClassifierCITest
 
 Graph protocols
 ===============

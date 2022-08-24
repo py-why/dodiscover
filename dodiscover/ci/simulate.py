@@ -2,6 +2,7 @@ from typing import Tuple
 
 import numpy as np
 from numpy.typing import NDArray
+from sklearn.utils import check_random_state
 
 
 def cos_additive_gaussian(
@@ -50,7 +51,7 @@ def cos_additive_gaussian(
     Z : NDArray of shape (n_samples, dims_z)
         The Z array.
     """
-    rng = np.random.RandomState(random_state)
+    rng = check_random_state(random_state)
 
     cov = np.eye(dims_z)
     mu = np.ones(dims_z)
