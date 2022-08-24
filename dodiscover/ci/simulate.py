@@ -53,7 +53,7 @@ def cos_additive_gaussian(
         The Y array.
     Z : NDArray of shape (n_samples, dims_z)
         The Z array.
-    
+
     References
     ----------
     .. footbibliography::
