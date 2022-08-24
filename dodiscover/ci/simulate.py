@@ -22,6 +22,9 @@ def cos_additive_gaussian(
     - all X, Y, Z are independent
     - ``X -> Y <- Z``, where :math:`X \perp Z`, but :math:`X \not\perp Z | Y`
 
+    Follows simulation setup of :footcite:`Lopez2016revisiting` for
+    "post-nonlinear noise" model.
+
     Parameters
     ----------
     model_type : str
