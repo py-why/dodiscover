@@ -71,11 +71,11 @@ class Oracle(BaseConditionalIndependenceTest):
         # just check for d-separation between x and y
         # given sep_set
         if isinstance(self.graph, nx.DiGraph):
-            is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates)
+            is_sep = nx.d_separated(self.graph, {x_vars}, {y_vars}, z_covariates)
         else:
             from graphs import m_separated
 
-            is_sep = m_separated(self.graph, x_vars, y_vars, z_covariates)
+            is_sep = m_separated(self.graph, {x_vars}, {y_vars}, z_covariates)
 
         if is_sep:
             pvalue = 1
