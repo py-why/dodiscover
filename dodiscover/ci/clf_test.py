@@ -265,7 +265,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         x_vars: Set[Column],
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
-    ) -> Tuple[NDArray, NDArray, NDArray, NDArray]:
+    ) -> Tuple:
         """Generate a training and testing dataset for CCIT.
 
         This takes a conditional independence problem given a dataset
@@ -274,25 +274,22 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         Parameters
         ----------
         df : pd.DataFrame
-            _description_
-        x_vars : Set[Column]
-            _description_
-        y_vars : Set[Column]
-            _description_
-        z_covariates : Optional[Set[Column]], optional
-            _description_, by default None
+            The dataframe containing the dataset.
+        x_vars : Set of column
+            A column in ``df``.
+        y_vars : Set of column
+            A column in ``df``.
+        z_covariates : Set, optional
+            A set of columns in ``df``, by default None. If None, then
+            the test should run a standard independence test.
 
         Returns
         -------
         Tuple[NDArray, NDArray, NDArray, NDArray]
-            _description_
-
-        Raises
-        ------
-        ValueError
-            _description_
-        ValueError
-            _description_
+            The X_train, y_train, X_test, y_test to be used in
+            binary classification, where each dataset comprises
+            of samples from the joint and conditionally independent
+            distributions.
         """
         if z_covariates is None:
             z_covariates = set()
