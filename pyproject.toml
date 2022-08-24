@@ -32,7 +32,7 @@ include-package-data = false
 
 [tool.setuptools.packages.find]
 include = ['dodiscover*']
-exclude = ['*tests']
+exclude = ['*tests', '*testdata']
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
@@ -105,7 +105,7 @@ _codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespelligno
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 
-typecheck = 'mypy -p dodiscover --config-file pyproject.toml'
+type_check = 'mypy -p dodiscover --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 build_docs = 'make build-docs'
@@ -126,7 +126,7 @@ ignore_fail = 'return_non_zero'
 # a standard verification sequence for use in pull requests
 #
 [[tool.poe.tasks.verify]]
-sequence = ['apply_format', 'lint', 'typecheck', 'unit_test']
+sequence = ['apply_format', 'lint', 'type_check', 'unit_test']
 ignore_fail = "return_non_zero"
 
 [[tool.poe.tasks.release]]
@@ -177,7 +177,7 @@ filterwarnings = []
 branch = true
 cover_pylib = false
 source = ['dodiscover']
-omit = ['**/__init__.py', '**/tests/**']
+omit = ['**/__init__.py', '**/tests/**', '**/testdata/**']
 
 [tool.coverage.report]
 exclude_lines = ['pragma: no cover', 'if __name__ == .__main__.:']
