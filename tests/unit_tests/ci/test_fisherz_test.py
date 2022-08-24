@@ -23,13 +23,13 @@ def test_fisher_z():
     # create input for the CI test
     df = pd.DataFrame(np.hstack((X, X1, Y, Z)), columns=["x", "x1", "y", "z"])
 
-    _, pvalue = ci_estimator.test(df, "x", "x1")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"})
     assert pvalue > 0.05
-    _, pvalue = ci_estimator.test(df, "x", "x1", "z")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"}, {"z"})
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "x1", "y")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"}, {"y"})
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z", "y")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
     assert pvalue > 0.05

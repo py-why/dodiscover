@@ -11,8 +11,8 @@ from .base import BaseConditionalIndependenceTest
 
 
 def _calculate_contingency_tble(
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Union[List, Set],
     dof: int,
     data: NDArray,
@@ -27,10 +27,10 @@ def _calculate_contingency_tble(
 
     Parameters
     ----------
-    x : int | str
+    x : Column
         The first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
-    y : int | str
+    y : Column
         The second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
@@ -79,8 +79,8 @@ def _calculate_contingency_tble(
 
 
 def _calculate_highdim_contingency(
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
     data: NDArray,
     nlevel_x: int,
@@ -93,10 +93,10 @@ def _calculate_highdim_contingency(
 
     Parameters
     ----------
-    x : int | str
+    x : Column
         The first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
-    y : int | str
+    y : Column
         The second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
@@ -204,8 +204,8 @@ def _calculate_g_statistic(contingency_tble):
 
 def g_square_binary(
     data: Union[NDArray, pd.DataFrame],
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
 ) -> Tuple[float, float]:
     """G square test for a binary data.
@@ -218,10 +218,10 @@ def g_square_binary(
     ----------
     data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)
         The data matrix to be used.
-    x : int | str
+    x : Column
         the first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
-    y : int | str
+    y : Column
         the second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
@@ -283,8 +283,8 @@ def g_square_binary(
 
 def g_square_discrete(
     data: Union[NDArray, pd.DataFrame],
-    x: Union[int, str],
-    y: Union[int, str],
+    x: Column,
+    y: Column,
     sep_set: Set,
     levels=None,
 ) -> Tuple[float, float]:
@@ -296,10 +296,10 @@ def g_square_discrete(
     ----------
     data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)
         The data matrix to be used.
-    x : int | str
+    x : Column
         the first node variable. If ``data`` is a DataFrame, then
         'x' must be in the columns of ``data``.
-    y : int | str
+    y : Column
         the second node variable. If ``data`` is a DataFrame, then
         'y' must be in the columns of ``data``.
     sep_set : set
@@ -393,8 +393,8 @@ class GSquareCITest(BaseConditionalIndependenceTest):
     def test(
         self,
         df: pd.DataFrame,
-        x_var: Column,
-        y_var: Column,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
         levels: Optional[List] = None,
     ) -> Tuple[float, float]:
@@ -404,9 +404,9 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         ----------
         df : pd.DataFrame
             The dataframe containing the dataset.
-        x_var : column
+        x_vars : Set of column
             A column in ``df``.
-        y_var : column
+        y_vars : Set of column
             A column in ``df``.
         z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
@@ -419,9 +419,11 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         pvalue : float
             The p-value of the test.
         """
-        self._check_test_input(df, x_var, y_var, z_covariates)
+        self._check_test_input(df, x_vars, y_vars, z_covariates)
         if z_covariates is None:
             z_covariates = set()
+        x_var = x_vars.pop()
+        y_var = y_vars.pop()
 
         if self.data_type == "binary":
             stat, pvalue = g_square_binary(df, x_var, y_var, z_covariates)
