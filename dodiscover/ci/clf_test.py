@@ -25,7 +25,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         test_size: Union[int, float] = 0.3,
         random_state: Optional[int] = None,
     ) -> None:
-        """CCIT.
+        """Classifier conditional independence test (CCIT).
 
         Implements the classifier conditional independence test in :footcite:`Sen2017model`.
         If a Z variable is not passed in, then will run a standard independence test
@@ -33,10 +33,10 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
 
         Parameters
         ----------
-        clf : sklearn.base.BaseEstimator
-            _description_
-        metrics : Callable of sklearn metrics
-
+        clf : instance of sklearn.base.BaseEstimator
+            An instance of a classification model.
+        metric : Callable of sklearn metric
+            A metric function to measure the performance of the classification model.
         bootstrap : bool, optional
             Whether or not to repeat runs, by default False.
         n_iter : int, optional
@@ -260,6 +260,34 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[NDArray, NDArray, NDArray, NDArray]:
+        """Generate a training and testing dataset for CCIT.
+
+        This takes a conditional independence problem given a dataset
+        and converts it to a binary classification problem.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            _description_
+        x_vars : Set[Column]
+            _description_
+        y_vars : Set[Column]
+            _description_
+        z_covariates : Optional[Set[Column]], optional
+            _description_, by default None
+
+        Returns
+        -------
+        Tuple[NDArray, NDArray, NDArray, NDArray]
+            _description_
+
+        Raises
+        ------
+        ValueError
+            _description_
+        ValueError
+            _description_
+        """
         if z_covariates is None:
             z_covariates = set()
 
