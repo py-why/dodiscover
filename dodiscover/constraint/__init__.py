@@ -1,1 +1,1 @@
-from .skeleton import LearnSkeleton
+from .skeleton import LearnSkeleton, SkeletonMethods

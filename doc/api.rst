@@ -64,3 +64,4 @@ Constraint-based structure learning
    :toctree: generated/
 
    LearnSkeleton
+   SkeletonMethods
