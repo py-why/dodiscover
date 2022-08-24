@@ -7,8 +7,9 @@ import numpy as np
 import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
+from dodiscover.constraint.skeleton import LearnSkeleton, SkeletonMethods
 from dodiscover.context import Context
-from dodiscover.constraint.skeleton import LearnSkeleton
+from dodiscover.typing import Column
 
 from .._protocol import EquivalenceClassProtocol
 
@@ -37,7 +38,7 @@ class BaseConstraintDiscovery:
         parents still, by default None. If None, then will not be used. If set, then
         the conditioning set will be chosen lexographically based on the sorted
         test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
-    skeleton_method : str
+    skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     max_path_length : int
@@ -61,7 +62,7 @@ class BaseConstraintDiscovery:
     """
 
     graph_: Optional[EquivalenceClassProtocol]
-    separating_sets_: Optional[Dict[str, Dict[str, List[Set[Any]]]]]
+    separating_sets_: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]]
 
     def __init__(
         self,
@@ -70,7 +71,7 @@ class BaseConstraintDiscovery:
         min_cond_set_size: int = None,
         max_cond_set_size: int = None,
         max_combinations: int = None,
-        skeleton_method: str = "neighbors",
+        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
         max_path_length: int = np.inf,
         apply_orientations: bool = True,
         **ci_estimator_kwargs,
@@ -99,9 +100,13 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = None
         self.graph_ = None
 
-    def _initialize_sep_sets(self, init_graph: nx.Graph) -> Dict[str, Dict[str, List[Set[Any]]]]:
+    def _initialize_sep_sets(
+        self, init_graph: nx.Graph
+    ) -> Dict[Column, Dict[Column, List[Set[Column]]]]:
         # keep track of separating sets
-        sep_set: Dict[str, Dict[str, List[Set[Any]]]] = defaultdict(lambda: defaultdict(list))
+        sep_set: Dict[Column, Dict[Column, List[Set[Column]]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
 
         # since we are not starting from a complete graph, find the separating sets
         for (node_i, node_j) in itertools.combinations(init_graph.nodes, 2):
@@ -118,7 +123,9 @@ class BaseConstraintDiscovery:
         )
 
     def orient_unshielded_triples(
-        self, graph: EquivalenceClassProtocol, sep_set: Dict[str, Dict[str, List[Set[Any]]]]
+        self,
+        graph: EquivalenceClassProtocol,
+        sep_set: Dict[Column, Dict[Column, List[Set[Column]]]],
     ) -> None:
         raise NotImplementedError()
 
@@ -178,7 +185,9 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = sep_set
         self.graph_ = graph
 
-    def evaluate_edge(self, data: pd.DataFrame, X, Y, Z: Optional[Set] = None) -> Tuple[float, float]:
+    def evaluate_edge(
+        self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
+    ) -> Tuple[float, float]:
         """Test any specific edge for X || Y | Z.
 
         Parameters
@@ -201,14 +210,14 @@ class BaseConstraintDiscovery:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = self.ci_estimator.test(data, X, Y, Z, **self.ci_estimator_kwargs)
+        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
         return test_stat, pvalue
 
     def learn_skeleton(
         self,
         context: Context,
-        sep_set: Optional[Dict[str, Dict[str, List[Set[Any]]]]] = None,
-    ) -> Tuple[nx.Graph, Dict[str, Dict[str, List[Set[Any]]]]]:
+        sep_set: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]] = None,
+    ) -> Tuple[nx.Graph, Dict[Column, Dict[Column, List[Set[Column]]]]]:
         """Learns the skeleton of a causal DAG using pairwise independence testing.
 
         Encodes the skeleton via an undirected graph, `networkx.Graph`. Only

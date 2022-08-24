@@ -25,6 +25,8 @@ class MetaEnum(EnumMeta):
 
 
 class SkeletonMethods(Enum, metaclass=MetaEnum):
+    """Available methods for learning a skeleton from data."""
+
     COMPLETE = "complete"
     NBRS = "neighbors"
     NBRS_PATH = "neighbors_path"
@@ -107,7 +109,7 @@ class LearnSkeleton:
     max_cond_set_size : int, optional
         Maximum size of the conditioning set, by default None. Used to limit
         the computation spent on the algorithm.
-    max_combinations : int,optional
+    max_combinations : int, optional
         Maximum number of tries with a conditioning set chosen from the set of possible
         parents still, by default None. If None, then will not be used. If set, then
         the conditioning set will be chosen lexographically based on the sorted
@@ -230,7 +232,7 @@ class LearnSkeleton:
 
         if self.skeleton_method not in SkeletonMethods:
             raise ValueError(
-                f"Skeleton method must be one of {SkeletonMethods}, " f"not {self.skeleton_method}."
+                f"Skeleton method must be one of {SkeletonMethods}, not {self.skeleton_method}."
             )
 
         if self.sep_set is None:
