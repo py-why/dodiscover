@@ -1,0 +1,742 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dodiscover.constraint.skeleton &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../api.html">
+  API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../use.html">
+  Using dodiscover
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../tutorials.html">
+  Tutorial
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <h1>Source code for dodiscover.constraint.skeleton</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">dodiscover.ci</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
+
+<span class="kn">from</span> <span class="nn">..context</span> <span class="kn">import</span> <span class="n">Context</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">MetaEnum</span><span class="p">(</span><span class="n">EnumMeta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="SkeletonMethods"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods">[docs]</a><span class="k">class</span> <span class="nc">SkeletonMethods</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaEnum</span><span class="p">):</span>
+    <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+    <span class="n">NBRS</span> <span class="o">=</span> <span class="s2">&quot;neighbors&quot;</span>
+    <span class="n">NBRS_PATH</span> <span class="o">=</span> <span class="s2">&quot;neighbors_path&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">_iter_conditioning_set</span><span class="p">(</span>
+    <span class="n">possible_variables</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">x_var</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">y_var</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">size_cond_set</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Set</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Iterate function to generate the conditioning set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    possible_variables : iterable</span>
+<span class="sd">        A set/list/dict of possible variables to consider for the conditioning set.</span>
+<span class="sd">        This can be for example, the current adjacencies.</span>
+<span class="sd">    x_var : node</span>
+<span class="sd">        The node for the &#39;x&#39; variable.</span>
+<span class="sd">    y_var : node</span>
+<span class="sd">        The node for the &#39;y&#39; variable.</span>
+<span class="sd">    size_cond_set : int</span>
+<span class="sd">        The size of the conditioning set to consider. If there are</span>
+<span class="sd">        less adjacent variables than this number, then all variables will be in the</span>
+<span class="sd">        conditioning set.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    Z : set</span>
+<span class="sd">        The set of variables for the conditioning set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exclusion_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">}</span>
+
+    <span class="n">all_adj_excl_current</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">possible_variables</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclusion_set</span><span class="p">]</span>
+
+    <span class="c1"># loop through all possible combinations of the conditioning set size</span>
+    <span class="k">for</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">all_adj_excl_current</span><span class="p">,</span> <span class="n">size_cond_set</span><span class="p">):</span>
+        <span class="n">cond_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">cond_set</span>
+
+
+<span class="k">def</span> <span class="nf">_find_neighbors_along_path</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_assign_weight</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">edge_attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="n">node</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">==</span> <span class="n">node</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="n">nbrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">start</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">G</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2"> are not connected, but they are assumed to be.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># find a path from start node to end</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">_assign_weight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;There is an error with the input. This is not possible.&quot;</span><span class="p">)</span>
+            <span class="n">nbrs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nbrs</span>
+
+
+<div class="viewcode-block" id="LearnSkeleton"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton">[docs]</a><span class="k">class</span> <span class="nc">LearnSkeleton</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Learn a skeleton graph from context.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ci_estimator : BaseConditionalIndependenceTest</span>
+<span class="sd">        The conditional independence test function.</span>
+<span class="sd">    sep_set : dictionary of dictionary of list of set</span>
+<span class="sd">        Mapping node to other nodes to separating sets of variables.</span>
+<span class="sd">        If ``None``, then an empty dictionary of dictionary of list of sets</span>
+<span class="sd">        will be initialized.</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        The significance level for the conditional independence test, by default 0.05.</span>
+<span class="sd">    min_cond_set_size : int</span>
+<span class="sd">        The minimum size of the conditioning set, by default 0. The number of variables</span>
+<span class="sd">        used in the conditioning set.</span>
+<span class="sd">    max_cond_set_size : int, optional</span>
+<span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
+<span class="sd">        the computation spent on the algorithm.</span>
+<span class="sd">    max_combinations : int,optional</span>
+<span class="sd">        Maximum number of tries with a conditioning set chosen from the set of possible</span>
+<span class="sd">        parents still, by default None. If None, then will not be used. If set, then</span>
+<span class="sd">        the conditioning set will be chosen lexographically based on the sorted</span>
+<span class="sd">        test statistic values of &#39;ith Pa(X) -&gt; X&#39;, for each possible parent node of &#39;X&#39;.</span>
+<span class="sd">    skeleton_method : SkeletonMethods</span>
+<span class="sd">        The method to use for testing conditional independence. Must be one of</span>
+<span class="sd">        (&#39;complete&#39;, &#39;neighbors&#39;, &#39;neighbors_path&#39;). See Notes for more details.</span>
+<span class="sd">    keep_sorted : bool</span>
+<span class="sd">        Whether or not to keep the considered adjacencies in sorted dependency order.</span>
+<span class="sd">        If True (default) will sort the existing adjacencies of each variable by its</span>
+<span class="sd">        dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).</span>
+<span class="sd">    ci_estimator_kwargs : dict</span>
+<span class="sd">        Keyword arguments for the ``ci_estimator`` function.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adj_graph_ : nx.Graph</span>
+<span class="sd">        The discovered graph from data. Stored using an undirected</span>
+<span class="sd">        graph. The graph contains edge attributes for the smallest value of the</span>
+<span class="sd">        test statistic encountered (key name &#39;test_stat&#39;), the largest pvalue seen in</span>
+<span class="sd">        testing &#39;x&#39; || &#39;y&#39; given some conditioning set (key name &#39;pvalue&#39;).</span>
+<span class="sd">    sep_set_ : dictionary of dictionary of list of set</span>
+<span class="sd">        Mapping node to other nodes to separating sets of variables.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Proceed by testing neighboring nodes, while keeping track of test</span>
+<span class="sd">    statistic values (these are the ones that are</span>
+<span class="sd">    the &quot;most dependent&quot;). Remember we are testing the null hypothesis</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        H_0: X \\perp Y | Z</span>
+
+<span class="sd">    where the alternative hypothesis is that they are dependent and hence</span>
+<span class="sd">    require a causal edge linking the two variables.</span>
+
+<span class="sd">    Overview of learning causal skeleton from data:</span>
+
+<span class="sd">        This algorithm consists of four general loops through the data.</span>
+
+<span class="sd">        - &quot;infinite&quot; loop through size of the conditioning set, &#39;size_cond_set&#39;. The</span>
+<span class="sd">          minimum size is set by ``min_cond_set_size``, whereas the maximum is controlled</span>
+<span class="sd">          by ``max_cond_set_size`` hyperparameter.</span>
+<span class="sd">        - loop through nodes of the graph, &#39;x_var&#39;</span>
+<span class="sd">        - loop through variables adjacent to selected node, &#39;y_var&#39;</span>
+<span class="sd">        - loop through combinations of the conditioning set of size p, &#39;cond_set&#39;.</span>
+<span class="sd">          The ``max_combinations`` parameter allows one to limit the fourth loop through</span>
+<span class="sd">          combinations of the conditioning set.</span>
+
+<span class="sd">        At each iteration of the outer infinite loop, the edges that were deemed</span>
+<span class="sd">        independent for a specific &#39;size_cond_set&#39; are removed and &#39;size_cond_set&#39; is incremented.</span>
+
+<span class="sd">        Furthermore, the maximum pvalue is stored for existing</span>
+<span class="sd">        dependencies among variables (i.e. any two nodes with an edge still).</span>
+<span class="sd">        The ``keep_sorted`` hyperparameter keeps the considered neighbors in</span>
+<span class="sd">        a sorted order.</span>
+
+<span class="sd">        The stopping condition is when the size of the conditioning variables for all (X, Y)</span>
+<span class="sd">        pairs is less than the size of &#39;size_cond_set&#39;, or if the &#39;max_cond_set_size&#39; is</span>
+<span class="sd">        reached.</span>
+
+<span class="sd">    Different methods for learning the skeleton:</span>
+
+<span class="sd">        There are different ways to learn the skeleton that are valid under various</span>
+<span class="sd">        assumptions. The value of ``skeleton_method`` completely defines how one</span>
+<span class="sd">        selects the conditioning set.</span>
+
+<span class="sd">        - &#39;complete&#39;: This exhaustively conditions on all combinations of variables in</span>
+<span class="sd">          the graph. This essentially refers to the SGS algorithm :footcite:`Spirtes1993`</span>
+<span class="sd">        - &#39;neighbors&#39;: This only conditions on adjacent variables to that of &#39;x_var&#39; and &#39;y_var&#39;.</span>
+<span class="sd">          This refers to the traditional PC algorithm :footcite:`Meek1995`</span>
+<span class="sd">        - &#39;neighbors_path&#39;: This is &#39;neighbors&#39;, but restricts to variables with an adjacency path</span>
+<span class="sd">          from &#39;x_var&#39; to &#39;y_var&#39;. This is a variant from the RFCI paper :footcite:`Colombo2012`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">adj_graph_</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span>
+    <span class="n">sep_set_</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]]]</span>
+    <span class="n">remove_edges</span><span class="p">:</span> <span class="n">Set</span>
+    <span class="n">min_cond_set_size_</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">max_cond_set_size_</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">max_combinations_</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ci_estimator</span><span class="p">:</span> <span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span>
+        <span class="n">sep_set</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">min_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_cond_set_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_combinations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span> <span class="o">=</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">NBRS</span><span class="p">,</span>
+        <span class="n">keep_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator</span> <span class="o">=</span> <span class="n">ci_estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sep_set</span> <span class="o">=</span> <span class="n">sep_set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator_kwargs</span> <span class="o">=</span> <span class="n">ci_estimator_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span> <span class="o">=</span> <span class="n">skeleton_method</span>
+
+        <span class="c1"># control of the conditioning set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size</span> <span class="o">=</span> <span class="n">min_cond_set_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size</span> <span class="o">=</span> <span class="n">max_cond_set_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span> <span class="o">=</span> <span class="n">max_combinations</span>
+
+        <span class="c1"># for tracking strength of dependencies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep_sorted</span> <span class="o">=</span> <span class="n">keep_sorted</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize parameters for learning skeleton.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nodes : list of nodes</span>
+<span class="sd">            The list of nodes that will be present in the learned skeleton graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># error checks of passed in arguments</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max combinations must be at least 1, not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SkeletonMethods</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Skeleton method must be one of </span><span class="si">{</span><span class="n">SkeletonMethods</span><span class="si">}</span><span class="s2">, &quot;</span> <span class="sa">f</span><span class="s2">&quot;not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># keep track of separating sets</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sep_set_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sep_set_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep_set</span>
+
+        <span class="c1"># control of the conditioning set</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size_</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span>
+
+<div class="viewcode-block" id="LearnSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Run structure learning to learn the skeleton of the causal graph.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        context : Context</span>
+<span class="sd">            A context object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get the initialized graph</span>
+        <span class="n">adj_graph</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">init_graph</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="c1"># track progress of the algorithm for which edges to remove to ensure stability</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># initialize learning parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_params</span><span class="p">()</span>
+
+        <span class="c1"># the size of the conditioning set will start off at the minimum</span>
+        <span class="n">size_cond_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size_</span>
+
+        <span class="n">edge_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="s2">&quot;test_stat&quot;</span> <span class="ow">in</span> <span class="n">edge_attrs</span> <span class="ow">or</span> <span class="s2">&quot;pvalue&quot;</span> <span class="ow">in</span> <span class="n">edge_attrs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Running skeleton discovery with adjacency graph &quot;</span>
+                <span class="s2">&quot;with &#39;test_stat&#39; or &#39;pvalue&#39; is not supported yet.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># store the absolute value of test-statistic values and pvalue for</span>
+        <span class="c1"># every single candidate parent-child edge (X -&gt; Y)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">set_edge_attributes</span><span class="p">(</span><span class="n">adj_graph</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="s2">&quot;test_stat&quot;</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">set_edge_attributes</span><span class="p">(</span><span class="n">adj_graph</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s2">&quot;pvalue&quot;</span><span class="p">)</span>
+
+        <span class="c1"># store the list of potential adjacencies for every node</span>
+        <span class="c1"># which is tracked and updated in the algorithm</span>
+        <span class="n">adjacency_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="n">adjacency_mapping</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">other_node</span> <span class="k">for</span> <span class="n">other_node</span> <span class="ow">in</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">if</span> <span class="n">other_node</span> <span class="o">!=</span> <span class="n">node</span>
+            <span class="p">]</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Running skeleton phase with: </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;max_combinations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;min_cond_set_size: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_cond_set_size_</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;max_cond_set_size: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size_</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Outer loop: iterate over &#39;size_cond_set&#39; until stopping criterion is met</span>
+        <span class="c1"># - &#39;size_cond_set&#39; &gt; &#39;max_cond_set_size&#39; or</span>
+        <span class="c1"># - All (X, Y) pairs have candidate conditioning sets of size &lt; &#39;size_cond_set&#39;</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">cont</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># initialize set of edges to remove at the end of every loop</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+            <span class="c1"># loop through every node</span>
+            <span class="k">for</span> <span class="n">x_var</span> <span class="ow">in</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="n">possible_adjacencies</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adj_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">x_var</span><span class="p">))</span>
+
+                <span class="c1"># keep track of the size of the adjacency set of &#39;X&#39; without &#39;Y&#39;</span>
+                <span class="n">size_adjacencies_x</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_adjacencies</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;On node </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">y_var</span> <span class="ow">in</span> <span class="n">possible_adjacencies</span><span class="p">:</span>
+                    <span class="c1"># a node cannot be a parent to itself in DAGs</span>
+                    <span class="k">if</span> <span class="n">y_var</span> <span class="o">==</span> <span class="n">x_var</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># ignore fixed edges</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">)</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">included_edges</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># compute the possible variables used in the conditioning set</span>
+                    <span class="n">possible_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_candidate_conditioning_sets</span><span class="p">(</span>
+                        <span class="n">adj_graph</span><span class="p">,</span>
+                        <span class="n">x_var</span><span class="p">,</span>
+                        <span class="n">y_var</span><span class="p">,</span>
+                        <span class="n">skeleton_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Adj(</span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">) without </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2"> with size=</span><span class="si">{</span><span class="n">size_adjacencies_x</span><span class="si">}</span><span class="s2"> with &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;p=</span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">. The possible variables to condition on are: &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">possible_variables</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># check that number of adjacencies is greater then the</span>
+                    <span class="c1"># cardinality of the conditioning set</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_variables</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size_cond_set</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Breaking for </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">size_adjacencies_x</span><span class="si">}</span><span class="s2">, &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">possible_variables</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="c1"># generate iterator through the conditioning sets</span>
+                    <span class="n">conditioning_sets</span> <span class="o">=</span> <span class="n">_iter_conditioning_set</span><span class="p">(</span>
+                        <span class="n">possible_variables</span><span class="o">=</span><span class="n">possible_variables</span><span class="p">,</span>
+                        <span class="n">x_var</span><span class="o">=</span><span class="n">x_var</span><span class="p">,</span>
+                        <span class="n">y_var</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span>
+                        <span class="n">size_cond_set</span><span class="o">=</span><span class="n">size_cond_set</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># now iterate through the possible parents</span>
+                    <span class="k">for</span> <span class="n">comb_idx</span><span class="p">,</span> <span class="n">cond_set</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conditioning_sets</span><span class="p">):</span>
+                        <span class="c1"># check the number of combinations of possible parents we have tried</span>
+                        <span class="c1"># to use as a separating set</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                            <span class="ow">and</span> <span class="n">comb_idx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span>
+                        <span class="p">):</span>
+                            <span class="k">break</span>
+
+                        <span class="c1"># compute conditional independence test</span>
+                        <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
+                            <span class="n">X</span><span class="p">,</span> <span class="p">{</span><span class="n">x_var</span><span class="p">},</span> <span class="p">{</span><span class="n">y_var</span><span class="p">},</span> <span class="nb">set</span><span class="p">(</span><span class="n">cond_set</span><span class="p">),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator_kwargs</span>
+                        <span class="p">)</span>
+
+                        <span class="c1"># if any &quot;independence&quot; is found through inability to reject</span>
+                        <span class="c1"># the null hypothesis, then we will break the loop comparing X and Y</span>
+                        <span class="c1"># and say X and Y are conditionally independent given &#39;cond_set&#39;</span>
+                        <span class="k">if</span> <span class="n">pvalue</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">:</span>
+                            <span class="k">break</span>
+
+                    <span class="c1"># post-process the CI test results</span>
+                    <span class="n">removed_edge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_postprocess_ci_test</span><span class="p">(</span>
+                        <span class="n">adj_graph</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">cond_set</span><span class="p">,</span> <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># summarize the comparison of XY</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_summarize_xy_comparison</span><span class="p">(</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">removed_edge</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">)</span>
+
+            <span class="c1"># finally remove edges after performing</span>
+            <span class="c1"># conditional independence tests</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;For p = </span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">, removing all edges: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Remove non-significant links</span>
+            <span class="c1"># Note: Removing edges at the end ensures &quot;stability&quot; of the algorithm</span>
+            <span class="c1"># with respect to the randomness choice of pairs of edges considered in the inner loop</span>
+            <span class="n">adj_graph</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span><span class="p">)</span>
+
+            <span class="c1"># increment the conditioning set size</span>
+            <span class="n">size_cond_set</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># only allow conditioning set sizes up to maximum set number</span>
+            <span class="k">if</span> <span class="n">size_cond_set</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cond_set_size_</span> <span class="ow">or</span> <span class="n">cont</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adj_graph_</span> <span class="o">=</span> <span class="n">adj_graph</span></div>
+
+    <span class="k">def</span> <span class="nf">_summarize_xy_comparison</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">y_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">removed_edge</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># exit loop if we have found an independency and removed the edge</span>
+        <span class="k">if</span> <span class="n">removed_edge</span><span class="p">:</span>
+            <span class="n">remove_edge_str</span> <span class="o">=</span> <span class="s2">&quot;Removing edge&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remove_edge_str</span> <span class="o">=</span> <span class="s2">&quot;Did not remove edge&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">remove_edge_str</span><span class="si">}</span><span class="s2"> between </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2">... </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Statistical summary:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;- PValue=</span><span class="si">{</span><span class="n">pvalue</span><span class="si">}</span><span class="s2"> at alpha=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_candidate_conditioning_sets</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">adj_graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">x_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">y_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Compute candidate conditioning sets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adj_graph : nx.Graph</span>
+<span class="sd">            The current adjacency graph.</span>
+<span class="sd">        x_var : node</span>
+<span class="sd">            The &#39;X&#39; node.</span>
+<span class="sd">        y_var : node</span>
+<span class="sd">            The &#39;Y&#39; node.</span>
+<span class="sd">        skeleton_method : SkeletonMethods</span>
+<span class="sd">            The skeleton method, which dictates how we choose the corresponding</span>
+<span class="sd">            conditioning sets.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        possible_variables : Set</span>
+<span class="sd">            The set of nodes in &#39;adj_graph&#39; that are candidates for the</span>
+<span class="sd">            conditioning set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">skeleton_method</span> <span class="o">==</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">:</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">skeleton_method</span> <span class="o">==</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">NBRS</span><span class="p">:</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adj_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">x_var</span><span class="p">))</span>
+            <span class="c1"># possible_adjacencies.copy()</span>
+        <span class="k">elif</span> <span class="n">skeleton_method</span> <span class="o">==</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">NBRS_PATH</span><span class="p">:</span>
+            <span class="c1"># constrain adjacency set to ones with a path from x_var to y_var</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="n">_find_neighbors_along_path</span><span class="p">(</span><span class="n">adj_graph</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">x_var</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">y_var</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_sorted</span><span class="p">:</span>
+            <span class="c1"># Note it is assumed in public API that &#39;test_stat&#39; is set</span>
+            <span class="c1"># inside the adj_graph</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">possible_variables</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">x_var</span><span class="p">,</span> <span class="n">n</span><span class="p">][</span><span class="s2">&quot;test_stat&quot;</span><span class="p">],</span>
+                <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">if</span> <span class="n">x_var</span> <span class="ow">in</span> <span class="n">possible_variables</span><span class="p">:</span>
+            <span class="n">possible_variables</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">x_var</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y_var</span> <span class="ow">in</span> <span class="n">possible_variables</span><span class="p">:</span>
+            <span class="n">possible_variables</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">possible_variables</span>
+
+    <span class="k">def</span> <span class="nf">_postprocess_ci_test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">adj_graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span>
+        <span class="n">x_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span>
+        <span class="n">y_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span>
+        <span class="n">cond_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">test_stat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">pvalue</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># keep track of the smallest test statistic, meaning the highest pvalue</span>
+        <span class="c1"># meaning the &quot;most&quot; independent. keep track of the maximum pvalue as well</span>
+        <span class="k">if</span> <span class="n">pvalue</span> <span class="o">&gt;</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">][</span><span class="s2">&quot;pvalue&quot;</span><span class="p">]:</span>
+            <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">][</span><span class="s2">&quot;pvalue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pvalue</span>
+        <span class="k">if</span> <span class="n">test_stat</span> <span class="o">&lt;</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">][</span><span class="s2">&quot;test_stat&quot;</span><span class="p">]:</span>
+            <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">][</span><span class="s2">&quot;test_stat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_stat</span>
+
+        <span class="c1"># two variables found to be independent given a separating set</span>
+        <span class="k">if</span> <span class="n">pvalue</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sep_set_</span><span class="p">[</span><span class="n">x_var</span><span class="p">][</span><span class="n">y_var</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cond_set</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sep_set_</span><span class="p">[</span><span class="n">y_var</span><span class="p">][</span><span class="n">x_var</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cond_set</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2022, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

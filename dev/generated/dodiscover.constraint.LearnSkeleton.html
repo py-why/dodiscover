@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>dodiscover.constraint.LearnSkeleton &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dodiscover.constraint.SkeletonMethods" href="dodiscover.constraint.SkeletonMethods.html" />
+    <link rel="prev" title="dodiscover.Context" href="dodiscover.Context.html" />
+    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Using dodiscover
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials.html">
+  Tutorial
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
+   dodiscover.ci.BaseConditionalIndependenceTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.Oracle.html">
+   dodiscover.ci.Oracle
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
+   dodiscover.ci.KernelCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.GSquareCITest.html">
+   dodiscover.ci.GSquareCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
+   dodiscover.ci.FisherZCITest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.GraphProtocol.html">
+   dodiscover.GraphProtocol
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.EquivalenceClassProtocol.html">
+   dodiscover.EquivalenceClassProtocol
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.Context.html">
+   dodiscover.Context
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   dodiscover.constraint.LearnSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.SkeletonMethods.html">
+   dodiscover.constraint.SkeletonMethods
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+
+<nav id="bd-toc-nav">
+    
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="dodiscover-constraint-learnskeleton">
+<h1>dodiscover.constraint.LearnSkeleton<a class="headerlink" href="#dodiscover-constraint-learnskeleton" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dodiscover.constraint.LearnSkeleton">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">LearnSkeleton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ci_estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.base.BaseConditionalIndependenceTest"><span class="pre">BaseConditionalIndependenceTest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.10)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cond_set_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cond_set_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_combinations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skeleton_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods" title="dodiscover.constraint.skeleton.SkeletonMethods"><span class="pre">SkeletonMethods</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SkeletonMethods.NBRS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_sorted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">ci_estimator_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/skeleton.html#LearnSkeleton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.LearnSkeleton" title="Permalink to this definition">#</a></dt>
+<dd><p>Learn a skeleton graph from context.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ci_estimator</strong> : <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a></p>
+<blockquote>
+<div><p>The conditional independence test function.</p>
+</div></blockquote>
+<p><strong>sep_set</strong> : dictionary of dictionary of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></p>
+<blockquote>
+<div><p>Mapping node to other nodes to separating sets of variables.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then an empty dictionary of dictionary of list of sets
+will be initialized.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</p>
+<blockquote>
+<div><p>The significance level for the conditional independence test, by default 0.05.</p>
+</div></blockquote>
+<p><strong>min_cond_set_size</strong> : <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></p>
+<blockquote>
+<div><p>The minimum size of the conditioning set, by default 0. The number of variables
+used in the conditioning set.</p>
+</div></blockquote>
+<p><strong>max_cond_set_size</strong> : <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</p>
+<blockquote>
+<div><p>Maximum size of the conditioning set, by default None. Used to limit
+the computation spent on the algorithm.</p>
+</div></blockquote>
+<p><strong>max_combinations</strong> : int,optional</p>
+<blockquote>
+<div><p>Maximum number of tries with a conditioning set chosen from the set of possible
+parents still, by default None. If None, then will not be used. If set, then
+the conditioning set will be chosen lexographically based on the sorted
+test statistic values of ‘ith Pa(X) -&gt; X’, for each possible parent node of ‘X’.</p>
+</div></blockquote>
+<p><strong>skeleton_method</strong> : <a class="reference internal" href="dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods" title="dodiscover.constraint.SkeletonMethods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SkeletonMethods</span></code></a></p>
+<blockquote>
+<div><p>The method to use for testing conditional independence. Must be one of
+(‘complete’, ‘neighbors’, ‘neighbors_path’). See Notes for more details.</p>
+</div></blockquote>
+<p><strong>keep_sorted</strong> : <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.10)"><span class="xref std std-ref">bool</span></a></p>
+<blockquote>
+<div><p>Whether or not to keep the considered adjacencies in sorted dependency order.
+If True (default) will sort the existing adjacencies of each variable by its
+dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).</p>
+</div></blockquote>
+<p><strong>ci_estimator_kwargs</strong> : <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+<blockquote>
+<div><p>Keyword arguments for the <code class="docutils literal notranslate"><span class="pre">ci_estimator</span></code> function.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Proceed by testing neighboring nodes, while keeping track of test
+statistic values (these are the ones that are
+the “most dependent”). Remember we are testing the null hypothesis</p>
+<div class="math notranslate nohighlight">
+\[H_0: X \perp Y | Z\]</div>
+<p>where the alternative hypothesis is that they are dependent and hence
+require a causal edge linking the two variables.</p>
+<p>Overview of learning causal skeleton from data:</p>
+<blockquote>
+<div><p>This algorithm consists of four general loops through the data.</p>
+<ul class="simple">
+<li><p>“infinite” loop through size of the conditioning set, ‘size_cond_set’. The
+minimum size is set by <code class="docutils literal notranslate"><span class="pre">min_cond_set_size</span></code>, whereas the maximum is controlled
+by <code class="docutils literal notranslate"><span class="pre">max_cond_set_size</span></code> hyperparameter.</p></li>
+<li><p>loop through nodes of the graph, ‘x_var’</p></li>
+<li><p>loop through variables adjacent to selected node, ‘y_var’</p></li>
+<li><p>loop through combinations of the conditioning set of size p, ‘cond_set’.
+The <code class="docutils literal notranslate"><span class="pre">max_combinations</span></code> parameter allows one to limit the fourth loop through
+combinations of the conditioning set.</p></li>
+</ul>
+<p>At each iteration of the outer infinite loop, the edges that were deemed
+independent for a specific ‘size_cond_set’ are removed and ‘size_cond_set’ is incremented.</p>
+<p>Furthermore, the maximum pvalue is stored for existing
+dependencies among variables (i.e. any two nodes with an edge still).
+The <code class="docutils literal notranslate"><span class="pre">keep_sorted</span></code> hyperparameter keeps the considered neighbors in
+a sorted order.</p>
+<p>The stopping condition is when the size of the conditioning variables for all (X, Y)
+pairs is less than the size of ‘size_cond_set’, or if the ‘max_cond_set_size’ is
+reached.</p>
+</div></blockquote>
+<p>Different methods for learning the skeleton:</p>
+<blockquote>
+<div><p>There are different ways to learn the skeleton that are valid under various
+assumptions. The value of <code class="docutils literal notranslate"><span class="pre">skeleton_method</span></code> completely defines how one
+selects the conditioning set.</p>
+<ul class="simple">
+<li><p>‘complete’: This exhaustively conditions on all combinations of variables in
+the graph. This essentially refers to the SGS algorithm <a class="footnote-reference brackets" href="#footcite-spirtes1993" id="id1">1</a></p></li>
+<li><p>‘neighbors’: This only conditions on adjacent variables to that of ‘x_var’ and ‘y_var’.
+This refers to the traditional PC algorithm <a class="footnote-reference brackets" href="#footcite-meek1995" id="id2">2</a></p></li>
+<li><p>‘neighbors_path’: This is ‘neighbors’, but restricts to variables with an adjacency path
+from ‘x_var’ to ‘y_var’. This is a variant from the RFCI paper <a class="footnote-reference brackets" href="#footcite-colombo2012" id="id3">3</a></p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><p><strong>adj_graph_</strong> : <a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0b1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></p>
+<blockquote>
+<div><p>The discovered graph from data. Stored using an undirected
+graph. The graph contains edge attributes for the smallest value of the
+test statistic encountered (key name ‘test_stat’), the largest pvalue seen in
+testing ‘x’ || ‘y’ given some conditioning set (key name ‘pvalue’).</p>
+</div></blockquote>
+<p><strong>sep_set_</strong> : dictionary of dictionary of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></p>
+<blockquote>
+<div><p>Mapping node to other nodes to separating sets of variables.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.constraint.LearnSkeleton.fit" title="dodiscover.constraint.LearnSkeleton.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(context)</p></td>
+<td><p>Run structure learning to learn the skeleton of the causal graph.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.LearnSkeleton.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.Context.html#dodiscover.Context" title="dodiscover.context.Context"><span class="pre">Context</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/constraint/skeleton.html#LearnSkeleton.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.LearnSkeleton.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Run structure learning to learn the skeleton of the causal graph.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> : <a class="reference internal" href="dodiscover.Context.html#dodiscover.Context" title="dodiscover.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Context</span></code></a></p>
+<blockquote>
+<div><p>A context object.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="dodiscover.Context.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">dodiscover.Context</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="dodiscover.constraint.SkeletonMethods.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">dodiscover.constraint.SkeletonMethods</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2022, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
