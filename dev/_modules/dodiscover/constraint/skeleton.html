@@ -231,6 +231,8 @@
 
 
 <div class="viewcode-block" id="SkeletonMethods"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods">[docs]</a><span class="k">class</span> <span class="nc">SkeletonMethods</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Available methods for learning a skeleton from data.&quot;&quot;&quot;</span>
+
     <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
     <span class="n">NBRS</span> <span class="o">=</span> <span class="s2">&quot;neighbors&quot;</span>
     <span class="n">NBRS_PATH</span> <span class="o">=</span> <span class="s2">&quot;neighbors_path&quot;</span></div>
@@ -313,7 +315,7 @@
 <span class="sd">    max_cond_set_size : int, optional</span>
 <span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
 <span class="sd">        the computation spent on the algorithm.</span>
-<span class="sd">    max_combinations : int,optional</span>
+<span class="sd">    max_combinations : int, optional</span>
 <span class="sd">        Maximum number of tries with a conditioning set chosen from the set of possible</span>
 <span class="sd">        parents still, by default None. If None, then will not be used. If set, then</span>
 <span class="sd">        the conditioning set will be chosen lexographically based on the sorted</span>
@@ -436,7 +438,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SkeletonMethods</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Skeleton method must be one of </span><span class="si">{</span><span class="n">SkeletonMethods</span><span class="si">}</span><span class="s2">, &quot;</span> <span class="sa">f</span><span class="s2">&quot;not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Skeleton method must be one of </span><span class="si">{</span><span class="n">SkeletonMethods</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">skeleton_method</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
