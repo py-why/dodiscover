@@ -1,0 +1,78 @@
+import numpy as np
+import pandas as pd
+from flaky import flaky
+from sklearn.ensemble import RandomForestClassifier
+
+from dodiscover.ci import ClassifierCITest
+from dodiscover.ci.simulate import cos_additive_gaussian
+
+seed = 12345
+
+
+@flaky
+def test_clf_with_gaussian_data():
+    rng = np.random.RandomState(seed)
+    n_samples = 2000
+    X = rng.randn(n_samples, 1)
+    X1 = rng.randn(n_samples, 1)
+    Y = X + X1 + 0.5 * rng.randn(n_samples, 1)
+    Z = Y + 0.5 * rng.randn(n_samples, 1)
+
+    # create input for the CI test
+    df = pd.DataFrame(np.hstack((X, X1, Y, Z)), columns=["x", "x1", "y", "z"])
+    clf = RandomForestClassifier(random_state=rng)
+    ci_estimator = ClassifierCITest(clf, random_state=rng)
+
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"})
+    assert pvalue > 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
+    assert pvalue < 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
+    assert pvalue > 0.05
+
+
+@flaky
+def test_clf_with_nonlinear_cos_additive():
+    rng = np.random.RandomState(seed)
+    n_samples = 2000
+
+    # create input for the CI test
+    X, Y, Z = cos_additive_gaussian(model_type="ci", n_samples=n_samples, random_state=seed)
+    df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
+
+    clf = RandomForestClassifier(random_state=seed)
+    ci_estimator = ClassifierCITest(clf, random_state=rng)
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
+    assert pvalue < 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"y"})
+    assert pvalue < 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"y"}, {"z"})
+    assert pvalue > 0.05
+
+    # create input for the ind test
+    X, Y, Z = cos_additive_gaussian(model_type="ind", n_samples=n_samples, random_state=seed)
+    df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
+
+    clf = RandomForestClassifier(random_state=seed)
+    ci_estimator = ClassifierCITest(clf, random_state=rng)
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
+    assert pvalue > 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"y"})
+    assert pvalue > 0.05
+    _, pvalue = ci_estimator.test(df, {"z"}, {"y"})
+    assert pvalue > 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
+    assert pvalue > 0.05
+
+    # create input for the dep test
+    X, Y, Z = cos_additive_gaussian(model_type="dep", n_samples=n_samples, random_state=seed)
+    df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
+
+    clf = RandomForestClassifier(random_state=seed)
+    ci_estimator = ClassifierCITest(clf, random_state=rng)
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
+    assert pvalue > 0.05
+    _, pvalue = ci_estimator.test(df, {"z"}, {"y"})
+    assert pvalue < 0.05
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
+    assert pvalue < 0.05

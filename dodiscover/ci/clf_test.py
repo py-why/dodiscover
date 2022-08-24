@@ -7,6 +7,7 @@ import sklearn
 import sklearn.metrics
 from numpy.typing import NDArray
 from sklearn.neighbors import NearestNeighbors
+from sklearn.utils import check_random_state
 
 from dodiscover.typing import Column
 
@@ -55,7 +56,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         self.n_iter = n_iter
         self.threshold = threshold
         self.test_size = test_size
-        self.random_state = np.random.RandomState(random_state)
+        self.random_state = check_random_state(random_state)
 
     def _unconditional_shuffle(
         self, x_arr: NDArray, y_arr: NDArray
@@ -175,6 +176,8 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         X_train, Y_train, X_test, Y_test = self.generate_train_test_data(
             df, x_vars, y_vars, z_covariates
         )
+        Y_train = Y_train.ravel()
+        Y_test = Y_test.ravel()
 
         # fit the classifier on training data
         self.clf.fit(X_train, Y_train)
@@ -291,14 +294,14 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         if z_covariates is None:
             z_covariates = set()
 
-        x_arr = df[x_vars].to_numpy()
-        y_arr = df[y_vars].to_numpy()
+        x_arr = df[list(x_vars)].to_numpy()
+        y_arr = df[list(y_vars)].to_numpy()
 
         n_samples_x, _ = x_arr.shape
         test_size = self.test_size
         if test_size <= 1.0:
-            test_size = test_size * n_samples_x
-        train_size = n_samples_x - test_size
+            test_size = int(test_size * n_samples_x)
+        train_size = int(n_samples_x - test_size)
 
         # now slice the arrays to produce a training and testing dataset
         x_arr_train = x_arr[:train_size, :]
@@ -326,7 +329,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         else:
             # TODO: consider permuting data rows randomly first since
             # conditional_shuffle does not do that
-            z_arr = df[z_covariates].to_numpy()
+            z_arr = df[list(z_covariates)].to_numpy()
             z_arr_train = z_arr[:train_size, :]
             z_arr_test = z_arr[train_size:, :]
 
