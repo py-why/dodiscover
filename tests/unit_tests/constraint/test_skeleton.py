@@ -89,10 +89,8 @@ def complex_graph():
 )
 def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer):
     """Test PC algorithm for estimating the causal DAG."""
-    # the tests get the correct independences when alpha is at 0.01
-    alpha = 0.01
     data_df = pd.DataFrame(data_matrix)
-    alg = LearnSkeleton(ci_estimator=indep_test_func, alpha=alpha)
+    alg = LearnSkeleton(ci_estimator=indep_test_func)
     context = Context(data=data_df)
     alg.fit(context)
 

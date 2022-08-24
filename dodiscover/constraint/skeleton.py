@@ -372,7 +372,7 @@ class LearnSkeleton:
 
                         # compute conditional independence test
                         test_stat, pvalue = self.ci_estimator.test(
-                            X, x_var, y_var, set(cond_set), **self.ci_estimator_kwargs
+                            X, {x_var}, {y_var}, set(cond_set), **self.ci_estimator_kwargs
                         )
 
                         # if any "independence" is found through inability to reject
