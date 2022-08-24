@@ -48,6 +48,9 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
             The size of the teset set, by default 0.25. If less than 1, then
             will take a fraction of ``n_samples``.
 
+        References
+        ----------
+        .. footbibliography::
         """
         self.clf = clf
         self.metric = metric

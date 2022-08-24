@@ -22,7 +22,7 @@ def cos_additive_gaussian(
     - all X, Y, Z are independent
     - ``X -> Y <- Z``, where :math:`X \perp Z`, but :math:`X \not\perp Z | Y`
 
-    Follows simulation setup of :footcite:`Lopez2016revisiting` for
+    Follows simulation setup of :footcite:`Sen2017model` for
     "post-nonlinear noise" model.
 
     Parameters
@@ -53,6 +53,10 @@ def cos_additive_gaussian(
         The Y array.
     Z : NDArray of shape (n_samples, dims_z)
         The Z array.
+    
+    References
+    ----------
+    .. footbibliography::
     """
     rng = check_random_state(random_state)
 
