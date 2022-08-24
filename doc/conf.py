@@ -103,6 +103,7 @@ numpydoc_xref_ignore = {
     "iterator",
     "keyword",
     "arguments",
+    "dictionary",
     "no",
     "attributes",
     "DAG",
@@ -137,6 +138,8 @@ numpydoc_xref_aliases = {
     "PAG": "dodiscover.PAG",
     "CPDAG": "dodiscover.CPDAG",
     "DAG": "dodiscover.DAG",
+    "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
+    "Context": "dodiscover.Context",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # pandas

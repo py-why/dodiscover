@@ -6,11 +6,12 @@ import networkx as nx
 class GraphProtocol(Protocol):
     """Protocol for graphs to work with dodiscover algorithms."""
 
+    @property
     def nodes(self) -> Iterable:
         """Return an iterable over nodes in graph."""
         pass
 
-    def edges(self) -> Iterable:
+    def edges(self, data=None) -> Iterable:
         """Return an iterable over edge tuples in graph."""
         pass
 
@@ -24,6 +25,10 @@ class GraphProtocol(Protocol):
 
     def remove_node(self, u) -> None:
         """Remove a node from the graph."""
+        pass
+
+    def remove_edges_from(self, edges) -> None:
+        """Remove a set of edges from the graph."""
         pass
 
     def neighbors(self, node) -> Iterable:
