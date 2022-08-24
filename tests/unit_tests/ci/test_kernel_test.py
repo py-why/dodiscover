@@ -38,11 +38,11 @@ def test_kci_with_gaussian_data(ci_estimator):
     # create input for the CI test
     df = pd.DataFrame(np.hstack((X, X1, Y, Z)), columns=["x", "x1", "y", "z"])
 
-    _, pvalue = ci_estimator.test(df, "x", "x1")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"})
     assert pvalue > 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z", "y")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
     assert pvalue > 0.05
 
 
