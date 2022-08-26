@@ -111,7 +111,6 @@ numpydoc_xref_ignore = {
     "CPDAG",
     "PAG",
     "ADMG",
-    "GraphProtocol",
     # networkx
     "node",
     "nodes",
@@ -140,6 +139,9 @@ numpydoc_xref_aliases = {
     "DAG": "dodiscover.DAG",
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
     "Context": "dodiscover.Context",
+    "PC": "dodiscover.PC",
+    "EquivalenceClassProtocol": "dodiscover.EquivalenceClassProtocol",
+    "GraphProtocol": "dodiscover.GraphProtocol",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # pandas
