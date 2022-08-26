@@ -29,7 +29,7 @@ Changelog
 - |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
 - |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
 - |Feature| Implement skeleton learning method, :class:`dodiscover.constraint.LearnSkeleton` under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`20`)
-
+- |Feature| Implement PC algorithm, :class:`dodiscover.PC` for learning causal structure from observational data under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`30`)
 
 Code and Documentation Contributors
 -----------------------------------
