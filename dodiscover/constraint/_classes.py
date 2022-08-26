@@ -1,5 +1,6 @@
 import itertools
 from collections import defaultdict
+from copy import copy
 from typing import Dict, List, Optional, Set, Tuple
 
 import networkx as nx
@@ -157,19 +158,19 @@ class BaseConstraintDiscovery:
         Control over the constraints imposed by the algorithm can be passed into the class
         constructor.
         """
-        self.context_ = context
-        graph = context.init_graph
+        self.context_ = context.copy()
+        graph = self.context_.init_graph
         self.init_graph_ = graph
-        self.fixed_edges_ = context.included_edges
+        self.fixed_edges_ = self.context_.included_edges
 
         # create a reference to the underlying data to be used
-        self.X_ = context.data
+        self.X_ = self.context_.data
 
         # initialize graph object to apply learning
         sep_set = self._initialize_sep_sets(self.init_graph_)
 
         # learn skeleton graph and the separating sets per variable
-        graph, sep_set = self.learn_skeleton(context, sep_set)
+        graph, sep_set = self.learn_skeleton(self.context_, sep_set)
 
         # convert networkx.Graph to relevant causal graph object
         graph = self.convert_skeleton_graph(graph)
