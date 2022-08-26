@@ -65,3 +65,4 @@ Constraint-based structure learning
 
    LearnSkeleton
    SkeletonMethods
+   PC
