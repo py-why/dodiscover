@@ -195,6 +195,14 @@ class CMITest(BaseConditionalIndependenceTest):
             knn = max(1, int(self.k*n_samples))
         else:
             knn = max(1, int(self.k))
+        xz_cols = [x_var]
+        for z_var in z_covariates:
+            xz_cols.append(z_var)
+        yz_cols = [y_var]
+        for z_var in z_covariates:
+            yz_cols.append(z_var)
+        columns = list(set(xz_cols).union(set(yz_cols)))
+        data = data[columns]
 
         tree_xyz = scipy.spatial.cKDTree(data.to_numpy())
         epsarray = tree_xyz.query(
@@ -205,9 +213,6 @@ class CMITest(BaseConditionalIndependenceTest):
         epsarray = np.multiply(epsarray, 0.99999)
 
         # Find nearest neighbors in subspaces of X and Z
-        xz_cols = [x_var]
-        for z_var in z_covariates:
-            xz_cols.append(z_var)
         xz = data[xz_cols]
         tree_xz = scipy.spatial.cKDTree(xz)
         k_xz = tree_xz.query_ball_point(
@@ -215,9 +220,6 @@ class CMITest(BaseConditionalIndependenceTest):
         )
 
         # Find nearest neighbors in subspaces of Y and Z
-        yz_cols = [y_var]
-        for z_var in z_covariates:
-            yz_cols.append(z_var)
         yz = data[yz_cols]
         tree_yz = scipy.spatial.cKDTree(yz)
         k_yz = tree_yz.query_ball_point(
