@@ -1,11 +1,11 @@
-from typing import Tuple
+from typing import Tuple, Callable
 
 import numpy as np
 from numpy.typing import NDArray
 from sklearn.utils import check_random_state
 
 
-def cos_additive_gaussian(
+def nonlinear_additive_gaussian(
     model_type: str,
     n_samples: int = 1000,
     dims_x: int = 1,
@@ -13,6 +13,8 @@ def cos_additive_gaussian(
     dims_z: int = 1,
     std: float = 0.5,
     freq: float = 1.0,
+    cause_var: NDArray=None,
+    nonlinear_func: Callable= np.cos,
     random_state=None,
 ) -> Tuple[NDArray, NDArray, NDArray]:
     """Generate samples from a cosine nonlinear model with additive noise.
@@ -86,15 +88,18 @@ def cos_additive_gaussian(
     X_noise = rng.multivariate_normal(np.zeros(dims_x), np.eye(dims_x), n_samples)
     Y_noise = rng.multivariate_normal(np.zeros(dims_y), np.eye(dims_y), n_samples)
 
+    if cause_var is None:
+        cause_var = 0
+
     # compute nonlinear model
     if model_type == "ci":
-        X = np.cos(freq * (Z * Azx + std * X_noise))
-        Y = np.cos(freq * (Z * Azy + std * Y_noise))
+        X = nonlinear_func(freq * (Z * Azx + std * X_noise + cause_var))
+        Y = nonlinear_func(freq * (Z * Azy + std * Y_noise + cause_var))
     elif model_type == "ind":
-        X = np.cos(freq * (std * X_noise))
-        Y = np.cos(freq * (std * Y_noise))
+        X = nonlinear_func(freq * (std * X_noise + cause_var))
+        Y = nonlinear_func(freq * (std * Y_noise + cause_var))
     elif model_type == "dep":
-        X = np.cos(freq * (std * X_noise))
-        Y = np.cos(freq * (2 * Axy * X + Z * Azy + std * Y_noise))
+        X = nonlinear_func(freq * (std * X_noise + cause_var))
+        Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var))
 
     return X, Y, Z
