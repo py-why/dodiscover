@@ -143,7 +143,6 @@ extend-exclude = '''
     | \.github
     | setup.py
     | docs/
-    | examples/
 )
 '''
 

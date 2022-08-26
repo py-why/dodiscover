@@ -1,9 +1,10 @@
-from typing import Any, Dict, List, Set
+from typing import Dict, List, Set
 
 import pandas as pd
 
 from dodiscover import GraphProtocol
 from dodiscover.typing import Column
+
 
 def dummy_sample(G: GraphProtocol):
     """Sample an empty dataframe with columns as the nodes.
@@ -14,7 +15,11 @@ def dummy_sample(G: GraphProtocol):
 
 
 def is_in_sep_set(
-    check_var, sep_set: Dict[Column, Dict[Column, List[Set[Column]]]], x_var, y_var, mode: str = "any"
+    check_var,
+    sep_set: Dict[Column, Dict[Column, List[Set[Column]]]],
+    x_var,
+    y_var,
+    mode: str = "any",
 ):
     """Check that a variable is not in any separating set between 'X' and 'Y'.
 

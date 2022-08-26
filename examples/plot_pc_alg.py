@@ -30,7 +30,7 @@ import pandas as pd
 from dowhy import gcm
 from dowhy.gcm.util.general import set_random_seed
 
-    
+
 # %%
 # Simulate some data
 # ------------------
@@ -43,8 +43,8 @@ from dowhy.gcm.util.general import set_random_seed
 seed = 12345
 rng = np.random.RandomState(seed=seed)
 
-class MyCustomModel(gcm.PredictionModel):
 
+class MyCustomModel(gcm.PredictionModel):
     def __init__(self, coefficient):
         self.coefficient = coefficient
 
@@ -65,29 +65,38 @@ set_random_seed(1234)
 
 # construct a causal graph that will result in
 # x -> y <- z -> w
-G = nx.DiGraph([('x', 'y'), ('z', 'y'), ('z', 'w')])
+G = nx.DiGraph([("x", "y"), ("z", "y"), ("z", "w")])
 
 causal_model = gcm.ProbabilisticCausalModel(G)
-causal_model.set_causal_mechanism('x', gcm.ScipyDistribution(stats.binom, p=0.5, n=1))
-causal_model.set_causal_mechanism('z', gcm.ScipyDistribution(stats.binom, p=0.9, n=1))
-causal_model.set_causal_mechanism('y',
-                                  gcm.AdditiveNoiseModel(prediction_model=MyCustomModel(1),
-                                                         noise_model=gcm.ScipyDistribution(stats.binom, p=0.8, n=1)))
-causal_model.set_causal_mechanism('w',
-                                  gcm.AdditiveNoiseModel(prediction_model=MyCustomModel(1),
-                                                         noise_model=gcm.ScipyDistribution(stats.binom, p=0.5, n=1)))
+causal_model.set_causal_mechanism("x", gcm.ScipyDistribution(stats.binom, p=0.5, n=1))
+causal_model.set_causal_mechanism("z", gcm.ScipyDistribution(stats.binom, p=0.9, n=1))
+causal_model.set_causal_mechanism(
+    "y",
+    gcm.AdditiveNoiseModel(
+        prediction_model=MyCustomModel(1),
+        noise_model=gcm.ScipyDistribution(stats.binom, p=0.8, n=1),
+    ),
+)
+causal_model.set_causal_mechanism(
+    "w",
+    gcm.AdditiveNoiseModel(
+        prediction_model=MyCustomModel(1),
+        noise_model=gcm.ScipyDistribution(stats.binom, p=0.5, n=1),
+    ),
+)
 
-# Fit here would not really fit parameters, since we don't do anything in the fit method. Here, we only need this to
-# ensure that each FCM has the correct local hash (i.e., we get an inconsistency error if we would modify the graph
-# afterwards without updating the FCMs). Having an empty data set is a small workaround, since all models are 
+# Fit here would not really fit parameters, since we don't do anything in the fit method.
+# Here, we only need this to ensure that each FCM has the correct local hash (i.e., we
+# get an inconsistency error if we would modify the graph afterwards without updating
+# the FCMs). Having an empty data set is a small workaround, since all models are
 # pre-defined.
-gcm.fit(causal_model, pd.DataFrame(columns=['x', 'y', 'z', 'w']))
+gcm.fit(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
 
 # sample the observational data
 data = gcm.draw_samples(causal_model, num_samples=500)
 
 print(data.head())
-print(pd.Series({col:data[col].unique() for col in data}))
+print(pd.Series({col: data[col].unique() for col in data}))
 draw(G)
 # %%
 # Instantiate some conditional independence tests

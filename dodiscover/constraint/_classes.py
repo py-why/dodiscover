@@ -1,6 +1,5 @@
 import itertools
 from collections import defaultdict
-from copy import copy
 from typing import Dict, List, Optional, Set, Tuple
 
 import networkx as nx
