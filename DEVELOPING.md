@@ -47,7 +47,7 @@ We use flake8, bandit, codespell and pydocstyle to check for code smells, which 
 
 We use type checking to check for possible runtime errors due to mismatched types. Python is dynamically typed, so this helps us and the user catch errors that would otherwise then occur during runtime. We use mypy to perform type checking.
 
-    poetry run poe typecheck
+    poetry run poe type_check
 
 ### Unit tests
 

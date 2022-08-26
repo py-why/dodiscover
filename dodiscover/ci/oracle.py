@@ -1,5 +1,10 @@
+from typing import Optional, Set
+
 import networkx as nx
 import numpy as np
+import pandas as pd
+
+from dodiscover.typing import Column
 
 from .._protocol import GraphProtocol
 from .base import BaseConditionalIndependenceTest
@@ -16,13 +21,21 @@ class Oracle(BaseConditionalIndependenceTest):
         The ground-truth causal graph.
     """
 
+    _allow_multivariate_input: bool = True
+
     def __init__(self, graph: GraphProtocol) -> None:
         self.graph = graph
 
-    def test(self, df, x_var, y_var, z_covariates):
+    def test(
+        self,
+        df: pd.DataFrame,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
+        z_covariates: Optional[Set[Column]] = None,
+    ):
         """Conditional independence test given an oracle.
 
-        Checks conditional independence between 'x_var' and 'y_var'
+        Checks conditional independence between 'x_vars' and 'y_vars'
         given 'z_covariates' of variables using the causal graph
         as an oracle. The oracle uses d-separation statements given
         the graph to query conditional independences. This is known
@@ -34,12 +47,12 @@ class Oracle(BaseConditionalIndependenceTest):
         df : pd.DataFrame of shape (n_samples, n_variables)
             The data matrix. Passed in for API consistency, but not
             used.
-        x_var : node
+        x_vars : node
             A node in the dataset.
-        y_var : node
+        y_vars : node
             A node in the dataset.
         z_covariates : set
-            The set of variables to check that separates x_var and y_var.
+            The set of variables to check that separates x_vars and y_vars.
 
         Returns
         -------
@@ -53,16 +66,15 @@ class Oracle(BaseConditionalIndependenceTest):
         ----------
         .. footbibliography::
         """
-        self._check_test_input(df, x_var, y_var, z_covariates)
+        self._check_test_input(df, x_vars, y_vars, z_covariates)
 
-        # just check for d-separation between x and y
-        # given sep_set
+        # just check for d-separation between x and y given sep_set
         if isinstance(self.graph, nx.DiGraph):
-            is_sep = nx.d_separated(self.graph, {x_var}, {y_var}, z_covariates)
+            is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates)
         else:
             from graphs import m_separated
 
-            is_sep = m_separated(self.graph, {x_var}, {y_var}, z_covariates)
+            is_sep = m_separated(self.graph, x_vars, y_vars, z_covariates)
 
         if is_sep:
             pvalue = 1

@@ -18,7 +18,7 @@ exclude =
     .circleci
     paper
     setup.py
-    docs
+    doc
 
 per-file-ignores =
     # __init__.py files are allowed to have unused imports

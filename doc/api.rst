@@ -16,17 +16,22 @@ stage.
 Conditional Independence Testing
 ================================
 
+Testing for conditional independence among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.
+
 .. currentmodule:: dodiscover.ci
 .. autosummary::
    :toctree: generated/
 
-   Oracle
    BaseConditionalIndependenceTest
+   Oracle
    KernelCITest
    GSquareCITest
    FisherZCITest
+   ClassifierCITest
 
-Graph Protocols
+Graph protocols
 ===============
 
 .. currentmodule:: dodiscover
@@ -35,3 +40,29 @@ Graph Protocols
 
    GraphProtocol
    EquivalenceClassProtocol
+
+
+Context for causal discovery
+============================
+
+Rather than just data, in many cases structure learning
+has additional "context", in the form of apriori knowledge of
+the structure, or additional datasets from different environments.
+All structure learning algorithms in ``dodiscover`` pass in a ``Context``
+object rather than just data. See docs for ``Context`` for more information.
+
+.. currentmodule:: dodiscover
+.. autosummary::
+   :toctree: generated/
+
+   Context
+
+Constraint-based structure learning
+===================================
+
+.. currentmodule:: dodiscover.constraint
+.. autosummary::
+   :toctree: generated/
+
+   LearnSkeleton
+   SkeletonMethods

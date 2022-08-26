@@ -32,7 +32,7 @@ include-package-data = false
 
 [tool.setuptools.packages.find]
 include = ['dodiscover*']
-exclude = ['*tests']
+exclude = ['*tests', '*testdata']
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
@@ -45,12 +45,15 @@ pandas = "^1.1"
 importlib-resources = { version = "*", python = "<3.9" }
 graphs = { git = "https://github.com/py-why/graphs.git", branch = 'main', optional = true }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
+# pywhy-graphs = { path = "../pywhy-graphs", develop = true }
+pygraphviz = { version = "*", optional = true }
 
 # TODO: the below needs to be refactored into separate dev-dependencies
 # https://github.com/python-poetry/poetry/is
 # it is inefficient to have to install every single dependencey to run
 # e.g. a style check.
 [tool.poetry.dev-dependencies]
+flaky = "^3.7.0"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 mypy = "^0.971"
@@ -80,6 +83,8 @@ nbsphinx = { version = "^0.8" }
 
 [tool.poetry.extras]
 graph_func = ['pywhy-graphs', 'graphs']
+viz = ['pygraphviz']
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -97,11 +102,11 @@ _isort = 'isort .'
 _black_check = 'black --check dodiscover examples'
 _isort_check = 'isort --check .'
 _pydocstyle = 'pydocstyle .'
-_codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespellignore --skip "**/_build/*"'
+_codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespellignore --skip "**/_build/*,**/auto_examples/*"'
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 
-typecheck = 'mypy -p dodiscover --config-file pyproject.toml'
+type_check = 'mypy -p dodiscover --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 build_docs = 'make build-docs'
@@ -122,7 +127,7 @@ ignore_fail = 'return_non_zero'
 # a standard verification sequence for use in pull requests
 #
 [[tool.poe.tasks.verify]]
-sequence = ['apply_format', 'lint', 'typecheck', 'unit_test']
+sequence = ['apply_format', 'lint', 'type_check', 'unit_test']
 ignore_fail = "return_non_zero"
 
 [[tool.poe.tasks.release]]
@@ -173,7 +178,7 @@ filterwarnings = []
 branch = true
 cover_pylib = false
 source = ['dodiscover']
-omit = ['**/__init__.py', '**/tests/**']
+omit = ['**/__init__.py', '**/tests/**', '**/testdata/**']
 
 [tool.coverage.report]
 exclude_lines = ['pragma: no cover', 'if __name__ == .__main__.:']
