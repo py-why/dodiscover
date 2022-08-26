@@ -13,16 +13,18 @@ def nonlinear_additive_gaussian(
     dims_z: int = 1,
     std: float = 0.5,
     freq: float = 1.0,
-    cause_var: NDArray=None,
+    cause_var_x: NDArray=None,
+    cause_var_y: NDArray=None,
+    cause_var_z: NDArray=None,
     nonlinear_func: Callable= np.cos,
     random_state=None,
 ) -> Tuple[NDArray, NDArray, NDArray]:
     """Generate samples from a cosine nonlinear model with additive noise.
 
     The data comes in one of three forms:
-    - :math:`X \perp Y | Z`, where ``X <- Z -> Y``
-    - all X, Y, Z are independent
-    - ``X -> Y <- Z``, where :math:`X \perp Z`, but :math:`X \not\perp Z | Y`
+    - 'ci' :math:`X \perp Y | Z`, where ``X <- Z -> Y``
+    - 'ind' all X, Y, Z are independent
+    - 'dep' ``X -> Y <- Z``, where :math:`X \perp Z`, but :math:`X \not\perp Z | Y`
 
     Follows simulation setup of :footcite:`Sen2017model` for
     "post-nonlinear noise" model.
@@ -65,9 +67,6 @@ def nonlinear_additive_gaussian(
     cov = np.eye(dims_z)
     mu = np.ones(dims_z)
 
-    # generate (n_samples x dims_z) Z variable
-    Z = rng.multivariate_normal(mu, cov, n_samples)
-
     # generate random weighting from Z to X
     # compute the column sums and normalize
     Azx = rng.rand(dims_z, dims_x)
@@ -88,18 +87,25 @@ def nonlinear_additive_gaussian(
     X_noise = rng.multivariate_normal(np.zeros(dims_x), np.eye(dims_x), n_samples)
     Y_noise = rng.multivariate_normal(np.zeros(dims_y), np.eye(dims_y), n_samples)
 
-    if cause_var is None:
-        cause_var = 0
+    if cause_var_x is None:
+        cause_var_x = 0
+    if cause_var_y is None:
+        cause_var_y = 0
+    if cause_var_z is None:
+        cause_var_z = 0
+
+    # generate (n_samples x dims_z) Z variable
+    Z = rng.multivariate_normal(mu, cov, n_samples) + cause_var_z
 
     # compute nonlinear model
     if model_type == "ci":
-        X = nonlinear_func(freq * (Z * Azx + std * X_noise + cause_var))
-        Y = nonlinear_func(freq * (Z * Azy + std * Y_noise + cause_var))
+        X = nonlinear_func(freq * (Z * Azx + std * X_noise + cause_var_x))
+        Y = nonlinear_func(freq * (Z * Azy + std * Y_noise + cause_var_y))
     elif model_type == "ind":
-        X = nonlinear_func(freq * (std * X_noise + cause_var))
-        Y = nonlinear_func(freq * (std * Y_noise + cause_var))
+        X = nonlinear_func(freq * (std * X_noise + cause_var_x))
+        Y = nonlinear_func(freq * (std * Y_noise + cause_var_y))
     elif model_type == "dep":
-        X = nonlinear_func(freq * (std * X_noise + cause_var))
-        Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var))
+        X = nonlinear_func(freq * (std * X_noise + cause_var_x))
+        Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var_y))
 
     return X, Y, Z

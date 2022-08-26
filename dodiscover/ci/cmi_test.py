@@ -95,10 +95,6 @@ class CMITest(BaseConditionalIndependenceTest):
     ) -> Tuple[float, float]:
         if z_covariates is None:
             z_covariates = set()
-
-        # preprocess and transform the data
-        df = self._preprocess_data(df)
-
         # compute the estimate of the CMI
         val = self._compute_cmi(df, x_var, y_var, z_covariates)
 
@@ -115,6 +111,9 @@ class CMITest(BaseConditionalIndependenceTest):
 
     def _compute_cmi(self, df, x_var, y_var, z_covariates: Set):
         n_samples, _ = df.shape
+
+        # preprocess and transform the data
+        df = self._preprocess_data(df)
 
         if self.k < 1:
             knn_here = max(1, int(self.k * n_samples))
@@ -177,7 +176,7 @@ class CMITest(BaseConditionalIndependenceTest):
             The X variable column.
         y_var : column
             The Y variable column.
-        z_covariates : column
+        z_covariates : set of column
             The Z variable column(s).
 
         Returns
