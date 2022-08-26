@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Optional, Set, Union
 
 import networkx as nx
@@ -43,6 +44,13 @@ class Context:
     Setting the apriori explicit direction of an edge is not supported yet.
     """
 
+    _data: pd.DataFrame
+    _variables: Set
+    _latents: Set
+    _init_graph: GraphProtocol
+    _included_edges: nx.Graph
+    _excluded_edges: nx.Graph
+
     def __init__(
         self,
         data: pd.DataFrame,
@@ -77,7 +85,7 @@ class Context:
             graph = nx.complete_graph(variables, create_using=nx.Graph)
         else:
             graph = init_graph
-            if graph.nodes != variables:
+            if set(graph.nodes) != set(variables):
                 raise ValueError(
                     f"The nodes within the initial graph, {graph.nodes}, "
                     f"do not match the nodes in the passed in data, {variables}."
@@ -112,3 +120,21 @@ class Context:
     @property
     def init_graph(self) -> GraphProtocol:
         return self._init_graph
+
+    def copy(self):
+        """Create a copy of the Context object.
+
+        Returns
+        -------
+        context : Context
+            A copy.
+        """
+        context = Context(
+            data=copy(self._data),
+            variables=copy(self._variables),
+            latents=copy(self._latents),
+            init_graph=self._init_graph.copy(),
+            included_edges=self._included_edges.copy(),
+            excluded_edges=self._excluded_edges.copy(),
+        )
+        return context
