@@ -64,5 +64,7 @@ Constraint-based structure learning
    :toctree: generated/
 
    LearnSkeleton
+   LearnSemiMarkovianSkeleton
    SkeletonMethods
    PC
+   FCI
