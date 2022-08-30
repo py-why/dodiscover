@@ -6,7 +6,7 @@ import pywhy_graphs
 
 from dodiscover import Context
 from dodiscover.ci import GSquareCITest, Oracle
-from dodiscover.constraint.skeleton import LearnSkeleton, LearnSemiMarkovianSkeleton
+from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton, LearnSkeleton
 from dodiscover.constraint.utils import dummy_sample
 from dodiscover.testdata.testdata import bin_data, dis_data
 
@@ -126,20 +126,66 @@ def test_learn_pds_skeleton():
     See book Figure 16
 
     See: https://www.cs.cmu.edu/afs/cs.cmu.edu/project/learn-43/lib/photoz/.g/web/.g/scottd/fullbook.pdf
-    """
+    """  # noqa
     # reconstruct the PAG the way FCI would
     edge_list = [("D", "A"), ("B", "E"), ("F", "B"), ("C", "F"), ("C", "H"), ("H", "D")]
     latent_edge_list = [("A", "B"), ("D", "E")]
-    graph = pywhy_graphs.ADMG(incoming_directed_edges=edge_list,incoming_bidirected_edges=latent_edge_list)
-    ci_estimator=Oracle(graph)
+    graph = pywhy_graphs.ADMG(
+        incoming_directed_edges=edge_list, incoming_bidirected_edges=latent_edge_list
+    )
+    ci_estimator = Oracle(graph)
     sample = dummy_sample(graph)
     context = Context(data=sample)
 
+    # after the first stage, we learn a skeleton as in Figure 16
     firstalg = LearnSkeleton(ci_estimator=ci_estimator)
     firstalg.fit(context)
     pag_graph = pywhy_graphs.PAG(incoming_circle_edges=firstalg.adj_graph_)
 
-    context.add_state_variable('PAG', pag_graph)
+    # generate the expected PAG
+    edge_list = [
+        ("A", "B"),
+        ("D", "A"),
+        ("A", "E"),
+        ("B", "E"),
+        ("B", "F"),
+        ("F", "C"),
+        ("C", "H"),
+        ("H", "D"),
+        ("D", "E"),
+    ]
+    expected_skel = nx.Graph(edge_list)
+    assert nx.is_isomorphic(expected_skel, pag_graph.to_undirected())
+    assert nx.is_isomorphic(expected_skel, firstalg.adj_graph_)
+
+    # now, we will run the second stage of learning the skeleton with the PDS set
+    # we should now learn Figure 17
+    edge_list = [
+        ("D", "A"),
+        ("B", "E"),
+        ("H", "D"),
+        ("F", "B"),
+    ]
+    latent_edge_list = [("A", "B"), ("D", "E")]
+    uncertain_edge_list = [
+        ("A", "E"),
+        ("E", "A"),
+        ("B", "F"),
+        ("F", "C"),
+        ("C", "F"),
+        ("C", "H"),
+        ("H", "C"),
+        ("D", "H"),
+    ]
+    first_stage_pag = pywhy_graphs.PAG(
+        edge_list,
+        incoming_bidirected_edges=latent_edge_list,
+        incoming_circle_edges=uncertain_edge_list,
+    )
+
+    # learn the skeleton of the graph now with the first stage skeleton
+    context.init_graph = first_stage_pag.to_undirected()
+    context.add_state_variable("PAG", first_stage_pag)
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
     alg.fit(context)
     skel_graph = alg.adj_graph_
@@ -160,8 +206,11 @@ def test_learn_pds_skeleton():
         ("H", "C"),
         ("D", "H"),
     ]
-    expected_pag = pywhy_graphs.PAG(edge_list, incoming_bidirected_edges=latent_edge_list, incoming_circle_edges=uncertain_edge_list)
-
+    expected_pag = pywhy_graphs.PAG(
+        edge_list,
+        incoming_bidirected_edges=latent_edge_list,
+        incoming_circle_edges=uncertain_edge_list,
+    )
     for edge in expected_pag.to_undirected().edges:
         assert skel_graph.has_edge(*edge)
     for edge in skel_graph.edges:

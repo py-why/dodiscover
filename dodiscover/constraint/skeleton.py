@@ -15,7 +15,6 @@ from ..context import Context
 logger = logging.getLogger()
 
 
-
 def _iter_conditioning_set(
     possible_variables: Iterable,
     x_var: Union[SupportsFloat, str],
@@ -499,19 +498,31 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         keep_sorted: bool = False,
         **ci_estimator_kwargs,
     ) -> None:
-        super().__init__(ci_estimator, sep_set, alpha, min_cond_set_size, max_cond_set_size, max_combinations, skeleton_method, keep_sorted, **ci_estimator_kwargs)
+        super().__init__(
+            ci_estimator,
+            sep_set,
+            alpha,
+            min_cond_set_size,
+            max_cond_set_size,
+            max_combinations,
+            skeleton_method,
+            keep_sorted,
+            **ci_estimator_kwargs,
+        )
         self.max_path_length = max_path_length
 
-    def _compute_candidate_conditioning_sets(self, adj_graph: nx.Graph, x_var: Column, y_var: Column, skeleton_method: SkeletonMethods) -> Set[Column]:
+    def _compute_candidate_conditioning_sets(
+        self, adj_graph: nx.Graph, x_var: Column, y_var: Column, skeleton_method: SkeletonMethods
+    ) -> Set[Column]:
         import pywhy_graphs as pgraph
-        
+
         # get PAG from the context object
-        pag = self.context.get_state_variable('PAG')
+        pag = self.context.get_state_variable("PAG")
 
         if skeleton_method == SkeletonMethods.PDS:
             # determine how we want to construct the candidates for separating nodes
             # perform conditioning independence testing on all combinations
-            possible_variables = pgraph.possibly_d_sep_sets(
+            possible_variables = pgraph.pds(
                 pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
             )
         elif skeleton_method == SkeletonMethods.PDS_PATH:
@@ -539,111 +550,3 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
     def fit(self, context: Context) -> None:
         return super().fit(context)
-
-
-# TODO: refactor into the class
-# def learn_skeleton_graph_with_pdsep(
-#     X: pd.DataFrame,
-#     ci_estimator: BaseConditionalIndependenceTest,
-#     adj_graph: nx.Graph = None,
-#     sep_set: Dict[str, Dict[str, List[Set[Any]]]] = None,
-#     fixed_edges: Set = None,
-#     alpha: float = 0.05,
-#     min_cond_set_size: int = 0,
-#     max_cond_set_size: int = None,
-#     max_path_length: int = np.inf,
-#     pag: PAG = None,
-#     **ci_estimator_kwargs,
-# ) -> nx.Graph:
-#     """Learn a graph from data.
-#     Proceed by testing the possibly d-separating set of nodes.
-#     Parameters
-#     ----------
-#     X : pandas.DataFrame
-#         A dataframe consisting of nodes as columns
-#         and samples as rows.
-#     ci_estimator : Callable
-#         The conditional independence test function. The arguments of the estimator should
-#         be data, node, node to compare, conditioning set of nodes, and any additional
-#         keyword arguments.
-#     adj_graph : nx.Graph
-#         The initialized graph. Can be for example a complete graph.
-#         If ``None``, then a complete graph will be initialized.
-#     sep_set : dictionary of dictionary of sets
-#         Mapping node to other nodes to separating sets of variables.
-#         If ``None``, then an empty dictionary of dictionary of sets
-#         will be initialized.
-#     fixed_edges : set
-#         The set of fixed edges.
-#     alpha : float, optional
-#         The significance level for the conditional independence test, by default 0.05.
-#     min_cond_set_size : int
-#         The minimum size of the conditioning set, by default 0. The number of variables
-#         used in the conditioning set.
-#     max_cond_set_size : int, optional
-#         Maximum size of the conditioning set, by default None. Used to limit
-#         the computation spent on the algorithm.
-#     max_path_length : int
-#         The maximum length of a path to consider when looking for possibly d-separating
-#         sets among two nodes. Only used if ``only_neighbors=False``. Default is infinite.
-#     pag : PAG
-#         The partial ancestral graph. Only used if ``only_neighbors=False``.
-#     ci_estimator_kwargs : dict
-#         Keyword arguments for the ``ci_estimator`` function.
-#     Returns
-#     -------
-#     adj_graph : nx.Graph
-#         The discovered graph from data. Stored using an undirected
-#         graph.
-#     sep_set : dictionary of dictionary of sets
-#         Mapping node to other nodes to separating sets of variables.
-#     See Also
-#     --------
-#     causal_networkx.algorithms.possibly_d_sep_sets
-#     """
-#     if adj_graph is None:
-#         nodes = X.columns
-#         adj_graph = nx.complete_graph(nodes, create_using=nx.Graph)
-#     if sep_set is None:
-#         # keep track of separating sets
-#         sep_set = defaultdict(lambda: defaultdict(list))
-#     if max_cond_set_size is None:
-#         max_cond_set_size = np.inf
-#     nodes = adj_graph.nodes
-#     size_cond_set = min_cond_set_size
-#     while 1:
-#         cont = False
-#         remove_edges = []
-#         # loop through all possible permutation of
-#         # two nodes in the graph
-#         for (i, j) in permutations(nodes, 2):
-#             # ignore fixed edges
-#             if (i, j) in fixed_edges:  # type: ignore
-#                 continue
-#             # determine how we want to construct the candidates for separating nodes
-#             # perform conditioning independence testing on all combinations
-#             sep_nodes = possibly_d_sep_sets(pag, i, j, max_path_length=max_path_length)  # type: ignore
-#             # check that number of adjacencies is greater then the
-#             # cardinality of the conditioning set
-#             if len(sep_nodes) >= size_cond_set:
-#                 # loop through all possible conditioning sets of certain size
-#                 for cond_set in combinations(sep_nodes, size_cond_set):
-#                     # compute conditional independence test
-#                     _, pvalue = ci_estimator.test(X, i, j, set(cond_set), **ci_estimator_kwargs)
-#                     # two variables found to be independent given a separating set
-#                     if pvalue > alpha:
-#                         if adj_graph.has_edge(i, j):
-#                             remove_edges.append((i, j))
-#                         sep_set[i][j].append(set(cond_set))
-#                         sep_set[j][i].append(set(cond_set))
-#                         break
-#                 cont = True
-#         size_cond_set += 1
-#         # finally remove edges after performing
-#         # conditional independence tests
-#         adj_graph.remove_edges_from(remove_edges)
-#         # determine if we reached the maximum number of conditioning,
-#         # or we pruned all possible permutations of nodes
-#         if size_cond_set > max_cond_set_size or cont is False:
-#             break
-#     return adj_graph, sep_set

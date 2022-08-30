@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Optional, Set, Union, Dict, Any
+from typing import Any, Dict, Optional, Set, Union
 
 import networkx as nx
 import pandas as pd
@@ -123,6 +123,10 @@ class Context:
     def init_graph(self) -> GraphProtocol:
         return self._init_graph
 
+    @init_graph.setter
+    def init_graph(self, init_graph: GraphProtocol):
+        self._init_graph = init_graph
+
     def add_state_variable(self, name: str, var: Any) -> None:
         """Add a state variable.
 
@@ -132,7 +136,7 @@ class Context:
         Parameters
         ----------
         name : str
-            The name of the state variable. 
+            The name of the state variable.
         var : any
             Any state variable.
         """
@@ -152,7 +156,7 @@ class Context:
             The state variable.
         """
         if name not in self._state_variables:
-            raise RuntimeError(f'{name} is not a state variable: {self._state_variables}')
+            raise RuntimeError(f"{name} is not a state variable: {self._state_variables}")
 
         return self._state_variables[name]
 
@@ -173,5 +177,5 @@ class Context:
             excluded_edges=self._excluded_edges.copy(),
         )
         for name, var in self._state_variables.items():
-            context.add_state_variable(name, var) 
+            context.add_state_variable(name, var)
         return context

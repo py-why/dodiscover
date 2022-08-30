@@ -1,7 +1,7 @@
 import pandas as pd
 
 from dodiscover import GraphProtocol
-from dodiscover.typing import  SeparatingSet
+from dodiscover.typing import SeparatingSet
 
 
 def dummy_sample(G: GraphProtocol):

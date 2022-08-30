@@ -1,5 +1,6 @@
 from enum import Enum, EnumMeta
 
+
 class MetaEnum(EnumMeta):
     def __contains__(cls, item):
         try:
@@ -17,4 +18,3 @@ class SkeletonMethods(Enum, metaclass=MetaEnum):
     NBRS_PATH = "neighbors_path"
     PDS = "pds"
     PDS_PATH = "pds_path"
-

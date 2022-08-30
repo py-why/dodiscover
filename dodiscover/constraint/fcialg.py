@@ -1,9 +1,11 @@
 import logging
 from itertools import combinations, permutations
 from typing import Dict, List, Optional, Set, Tuple
-import numpy as np
+
 import networkx as nx
+import numpy as np
 import pandas as pd
+
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
@@ -98,7 +100,9 @@ class FCI(BaseConstraintDiscovery):
         self.selection_bias = selection_bias
         self.max_iter = max_iter
 
-    def orient_unshielded_triples(self, graph: SemiMarkovianEquivalenceClass, sep_set: SeparatingSet) -> None:
+    def orient_unshielded_triples(
+        self, graph: SemiMarkovianEquivalenceClass, sep_set: SeparatingSet
+    ) -> None:
         """Orient colliders given a graph and separation set.
 
         Parameters
@@ -131,7 +135,9 @@ class FCI(BaseConstraintDiscovery):
         if graph.has_edge(v_j, u, graph.circle_edge_name):
             graph.orient_uncertain_edge(v_j, u)
 
-    def _apply_rule1(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+    def _apply_rule1(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column
+    ) -> bool:
         """Apply rule 1 of the FCI algorithm.
 
         If A *-> u o-* C, A and C are not adjacent,
@@ -161,7 +167,8 @@ class FCI(BaseConstraintDiscovery):
         if a not in graph.neighbors(c):
             # check a *-> u o-* c
             if (
-                graph.has_edge(a, u, graph.directed_edge_name) or graph.has_edge(a, u, graph.bidirected_edge_name)
+                graph.has_edge(a, u, graph.directed_edge_name)
+                or graph.has_edge(a, u, graph.bidirected_edge_name)
             ) and graph.has_edge(c, u, graph.circle_edge_name):
                 logger.info(f"Rule 1: Orienting edge {u} o-* {c} to {u} -> {c}.")
                 # orient the edge from u to c and delete
@@ -174,7 +181,9 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows
 
-    def _apply_rule2(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+    def _apply_rule2(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column
+    ) -> bool:
         """Apply rule 2 of FCI algorithm.
 
         If
@@ -210,14 +219,18 @@ class FCI(BaseConstraintDiscovery):
                 graph.has_edge(a, u, graph.directed_edge_name)
                 and not graph.has_edge(u, a, graph.directed_edge_name)
                 and not graph.has_edge(u, a, graph.circle_edge_name)
-                and (graph.has_edge(u, c, graph.directed_edge_name) or 
-                graph.has_edge(u, c, graph.bidirected_edge_name))
+                and (
+                    graph.has_edge(u, c, graph.directed_edge_name)
+                    or graph.has_edge(u, c, graph.bidirected_edge_name)
+                )
             )
 
             # check that a *-> u -> c
             condition_two = (
-                (graph.has_edge(a, u, graph.directed_edge_name) or 
-                graph.has_edge(a, u, graph.bidirected_edge_name))
+                (
+                    graph.has_edge(a, u, graph.directed_edge_name)
+                    or graph.has_edge(a, u, graph.bidirected_edge_name)
+                )
                 and graph.has_edge(u, c, graph.directed_edge_name)
                 and not graph.has_edge(c, u, graph.directed_edge_name)
                 and not graph.has_edge(c, u, graph.circle_edge_name)
@@ -230,7 +243,9 @@ class FCI(BaseConstraintDiscovery):
                 added_arrows = True
         return added_arrows
 
-    def _apply_rule3(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+    def _apply_rule3(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column
+    ) -> bool:
         """Apply rule 3 of FCI algorithm.
 
         If A *-> u <-* C, A *-o v o-* C, A/C are not adjacent,
@@ -258,8 +273,12 @@ class FCI(BaseConstraintDiscovery):
             # If A *-> u <-* C, A *-o v o-* C, A/C are not adjacent,
             # and v *-o u, then orient v *-> u.
             # check that a *-> u <-* c
-            condition_one = (graph.has_edge(a, u, graph.directed_edge_name) or graph.has_edge(a, u, graph.bidirected_edge_name)) and (
-                graph.has_edge(c, u, graph.directed_edge_name) or graph.has_edge(c, u, graph.bidirected_edge_name)
+            condition_one = (
+                graph.has_edge(a, u, graph.directed_edge_name)
+                or graph.has_edge(a, u, graph.bidirected_edge_name)
+            ) and (
+                graph.has_edge(c, u, graph.directed_edge_name)
+                or graph.has_edge(c, u, graph.bidirected_edge_name)
             )
             if not condition_one:  # add quick check here to skip non-relevant u nodes
                 return added_arrows
@@ -276,14 +295,18 @@ class FCI(BaseConstraintDiscovery):
                     continue
 
                 # check that a *-o v o-* c
-                condition_two = graph.has_edge(a, v, graph.circle_edge_name) and graph.has_edge(c, v, graph.circle_edge_name)
+                condition_two = graph.has_edge(a, v, graph.circle_edge_name) and graph.has_edge(
+                    c, v, graph.circle_edge_name
+                )
                 if condition_one and condition_two:
                     logger.info(f"Rule 3: Orienting {v} -> {u}.")
                     graph.orient_uncertain_edge(v, u)
                     added_arrows = True
         return added_arrows
 
-    def _apply_rule4(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column, sep_set) -> Tuple[bool, Dict[Column, None]]:
+    def _apply_rule4(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column, sep_set
+    ) -> Tuple[bool, Dict[Column, None]]:
         """Apply rule 4 of FCI algorithm.
 
         If a path, U = <v, ..., a, u, c> is a discriminating
@@ -320,7 +343,9 @@ class FCI(BaseConstraintDiscovery):
 
         # a must point to c for us to begin a discriminating path and
         # not be bi-directional
-        if not graph.has_edge(a, c, graph.directed_edge_name) or graph.has_edge(c, a, graph.bidirected_edge_name):
+        if not graph.has_edge(a, c, graph.directed_edge_name) or graph.has_edge(
+            c, a, graph.bidirected_edge_name
+        ):
             return added_arrows, explored_nodes
 
         # c must also point to u with a circle edge
@@ -330,17 +355,16 @@ class FCI(BaseConstraintDiscovery):
 
         # 'a' cannot be a definite collider if there is no arrow pointing from
         # u to a either as: u -> a, or u <-> a
-        if not graph.has_edge(u, a, graph.directed_edge_name) and not graph.has_edge(u, a, graph.bidirected_edge_name):
+        if not graph.has_edge(u, a, graph.directed_edge_name) and not graph.has_edge(
+            u, a, graph.bidirected_edge_name
+        ):
             return added_arrows, explored_nodes
 
         explored_nodes, found_discriminating_path, disc_path = pgraph.discriminating_path(
             graph, u, a, c, self.max_path_length
         )
         disc_path_str = " ".join(
-            [
-                f'{disc_path[idx]}, {disc_path[idx + 1]}'
-                for idx in range(len(disc_path) - 1)
-            ]
+            [f"{disc_path[idx]}, {disc_path[idx + 1]}" for idx in range(len(disc_path) - 1)]
         )
         if found_discriminating_path:
             last_node = list(explored_nodes.keys())[-1]
@@ -367,7 +391,9 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, explored_nodes
 
-    def _apply_rule8(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+    def _apply_rule8(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column
+    ) -> bool:
         """Apply rule 8 of FCI algorithm.
 
         If A -> u -> C, or A -o B -> C
@@ -397,10 +423,16 @@ class FCI(BaseConstraintDiscovery):
         added_arrows = False
 
         # First check that A o-> C
-        if graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(a, c, graph.directed_edge_name):
+        if graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(
+            a, c, graph.directed_edge_name
+        ):
             # check that A -> u -> C
-            condition_one = graph.has_edge(a, u, graph.directed_edge_name) and not graph.has_edge(u, a, graph.circle_edge_name)
-            condition_two = graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(c, u, graph.circle_edge_name)
+            condition_one = graph.has_edge(a, u, graph.directed_edge_name) and not graph.has_edge(
+                u, a, graph.circle_edge_name
+            )
+            condition_two = graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(
+                c, u, graph.circle_edge_name
+            )
 
             if condition_one and condition_two:
                 logger.info(f"Rule 8: Orienting {a} o-> {c} as {a} -> {c}.")
@@ -410,7 +442,9 @@ class FCI(BaseConstraintDiscovery):
                     added_arrows = True
         return added_arrows
 
-    def _apply_rule9(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column) -> Tuple[bool, List]:
+    def _apply_rule9(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column
+    ) -> Tuple[bool, List]:
         """Apply rule 9 of FCI algorithm.
 
         If A o-> C and p = <A, u, v, ..., C> is an uncovered
@@ -441,7 +475,10 @@ class FCI(BaseConstraintDiscovery):
         uncov_path: List[Column] = []
 
         # Check A o-> C and # check that u is not adjacent to c
-        if (graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(a, c, graph.directed_edge_name)) and c not in graph.neighbors(u):
+        if (
+            graph.has_edge(c, a, graph.circle_edge_name)
+            and graph.has_edge(a, c, graph.directed_edge_name)
+        ) and c not in graph.neighbors(u):
             # check that <a, u> is potentially directed
             if graph.has_edge(a, u):
                 # check that A - u - v, ..., c is an uncovered pd path
@@ -458,7 +495,9 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, uncov_path
 
-    def _apply_rule10(self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column) -> Tuple[bool, List, List]:
+    def _apply_rule10(
+        self, graph: SemiMarkovianEquivalenceClass, u: Column, a: Column, c: Column
+    ) -> Tuple[bool, List, List]:
         """Apply rule 10 of FCI algorithm.
 
         If A o-> C and u -> C <- v and
@@ -495,9 +534,13 @@ class FCI(BaseConstraintDiscovery):
         a_to_v_path: List[Column] = []
 
         # Check A o-> C
-        if graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(a, c, graph.directed_edge_name):
+        if graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(
+            a, c, graph.directed_edge_name
+        ):
             # check that u -> C
-            if graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(c, u, graph.circle_edge_name):
+            if graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(
+                c, u, graph.circle_edge_name
+            ):
                 # loop through all adjacent neighbors of c now to get
                 # possible 'v' node
                 for v in graph.neighbors(c):
@@ -505,7 +548,9 @@ class FCI(BaseConstraintDiscovery):
                         continue
 
                     # make sure v -> C and not v o-> C
-                    if not graph.has_edge(v, c, graph.directed_edge_name) or graph.has_edge(c, v, graph.circle_edge_name):
+                    if not graph.has_edge(v, c, graph.directed_edge_name) or graph.has_edge(
+                        c, v, graph.circle_edge_name
+                    ):
                         continue
 
                     # At this point, we want the paths from A to u and A to v
@@ -519,7 +564,9 @@ class FCI(BaseConstraintDiscovery):
                             continue
 
                         # m and w must be on a potentially directed path
-                        if not graph.has_edge(a, m, graph.directed_edge_name) or not graph.has_edge(a, w, graph.directed_edge_name):
+                        if not graph.has_edge(a, m, graph.directed_edge_name) or not graph.has_edge(
+                            a, w, graph.directed_edge_name
+                        ):
                             continue
 
                         # we do not know which path a-u or a-v, m and w are on
@@ -561,7 +608,7 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, a_to_u_path, a_to_v_path
 
-    def _apply_rules_1to10(self, graph: SemiMarkovianEquivalenceClass, sep_set: Dict[str, Dict[str, Set[Any]]]):
+    def _apply_rules_1to10(self, graph: SemiMarkovianEquivalenceClass, sep_set: SeparatingSet):
         idx = 0
         finished = False
         while idx < self.max_iter and not finished:
@@ -593,7 +640,8 @@ class FCI(BaseConstraintDiscovery):
                         and not change_flag
                     ):
                         logger.info(
-                            f"{change_flag} with {[r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add]}"
+                            f"{change_flag} with "
+                            f"{[r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add]}"
                         )
                         change_flag = True
 
@@ -656,10 +704,7 @@ class FCI(BaseConstraintDiscovery):
         graph: nx.Graph = None,
         sep_set: Optional[SeparatingSet] = None,
         fixed_edges: Optional[Set] = None,
-    ) -> Tuple[
-        nx.Graph,
-        SeparatingSet,
-    ]:
+    ) -> Tuple[nx.Graph, SeparatingSet]:
         """Learn skeleton from data.
 
         Parameters
@@ -689,9 +734,7 @@ class FCI(BaseConstraintDiscovery):
         graph, sep_set = self._initialize_graph(nodes)
 
         # learn the initial skeleton of the graph
-        skel_graph, sep_set = super().learn_skeleton(
-            X, graph, sep_set, fixed_edges
-        )
+        skel_graph, sep_set = super().learn_skeleton(X, graph, sep_set, fixed_edges)
 
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
@@ -706,7 +749,9 @@ class FCI(BaseConstraintDiscovery):
         self.skel_graph_ = skel_graph.copy()
         return skel_graph, sep_set
 
-    def orient_edges(self, graph: SemiMarkovianEquivalenceClass, sep_set: SeparatingSet) -> SemiMarkovianEquivalenceClass:
+    def orient_edges(
+        self, graph: SemiMarkovianEquivalenceClass, sep_set: SeparatingSet
+    ) -> SemiMarkovianEquivalenceClass:
         # orient colliders again
         self._orient_unshielded_triples(graph, sep_set)
         self.orient_coll_graph = graph.copy()

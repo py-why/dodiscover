@@ -1,4 +1,4 @@
-from typing import Union, Dict, List, Set
+from typing import Dict, List, Set, Union
 
 # Pandas DataFrame columns that are also compatible with Graph nodes
 Column = Union[int, float, str]

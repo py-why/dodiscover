@@ -100,13 +100,9 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = None
         self.graph_ = None
 
-    def _initialize_sep_sets(
-        self, init_graph: nx.Graph
-    ) -> SeparatingSet:
+    def _initialize_sep_sets(self, init_graph: nx.Graph) -> SeparatingSet:
         # keep track of separating sets
-        sep_set: SeparatingSet = defaultdict(
-            lambda: defaultdict(list)
-        )
+        sep_set: SeparatingSet = defaultdict(lambda: defaultdict(list))
 
         # since we are not starting from a complete graph, find the separating sets
         for (node_i, node_j) in itertools.combinations(init_graph.nodes, 2):

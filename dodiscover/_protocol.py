@@ -84,6 +84,8 @@ class EquivalenceClassProtocol(GraphProtocol, Protocol):
 
 
 class SemiMarkovianEquivalenceClass(EquivalenceClassProtocol, Protocol):
+    """Protocol for equivalence class of semi-markovian graphs."""
+
     @property
     def bidirected_edge_name(self) -> str:
         """Name of the bidirected edges."""
