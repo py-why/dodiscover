@@ -485,17 +485,63 @@ class LearnSkeleton:
 
 
 class LearnSemiMarkovianSkeleton(LearnSkeleton):
+    """Learning a semi-markovian skeleton.
+
+    This proceeds by learning a skeleton by testing edges with candidate
+    separating sets from the "possibly d-separating" sets (PDS), or PDS
+    sets that lie on a path between two nodes. This algorithm requires
+    the input of a collider-oriented PAG, which provides the necessary
+    information to compute the PDS set for any given nodes.
+
+    Parameters
+    ----------
+    ci_estimator : BaseConditionalIndependenceTest
+        The conditional independence test function.
+    sep_set : dictionary of dictionary of list of set
+        Mapping node to other nodes to separating sets of variables.
+        If ``None``, then an empty dictionary of dictionary of list of sets
+        will be initialized.
+    alpha : float, optional
+        The significance level for the conditional independence test, by default 0.05.
+    min_cond_set_size : int
+        The minimum size of the conditioning set, by default 0. The number of variables
+        used in the conditioning set.
+    max_cond_set_size : int, optional
+        Maximum size of the conditioning set, by default None. Used to limit
+        the computation spent on the algorithm.
+    max_combinations : int, optional
+        Maximum number of tries with a conditioning set chosen from the set of possible
+        parents still, by default None. If None, then will not be used. If set, then
+        the conditioning set will be chosen lexographically based on the sorted
+        test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
+    skeleton_method : SkeletonMethods
+        The method to use for testing conditional independence. Must be one of
+        ('pds', 'pds_path'). See Notes for more details.
+    keep_sorted : bool
+        Whether or not to keep the considered adjacencies in sorted dependency order.
+        If True (default) will sort the existing adjacencies of each variable by its
+        dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).
+    max_path_length : int, optional
+        The maximum length of any discriminating path, or None if unlimited.
+    ci_estimator_kwargs : dict
+        Keyword arguments for the ``ci_estimator`` function.
+
+    Notes
+    -----
+    The difference
+    """
+
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        sep_set: SeparatingSet = None,
+        sep_set: Optional[SeparatingSet] = None,
         alpha: float = 0.05,
         min_cond_set_size: int = 0,
-        max_cond_set_size: int = None,
-        max_combinations: int = None,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
         skeleton_method: SkeletonMethods = SkeletonMethods.PDS,
-        max_path_length: int = np.inf,
         keep_sorted: bool = False,
+        max_path_length: Optional[int] = None,
         **ci_estimator_kwargs,
     ) -> None:
         super().__init__(
@@ -509,6 +555,8 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             keep_sorted,
             **ci_estimator_kwargs,
         )
+        if max_path_length is None:
+            max_path_length = np.inf
         self.max_path_length = max_path_length
 
     def _compute_candidate_conditioning_sets(

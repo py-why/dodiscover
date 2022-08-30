@@ -1,2 +1,4 @@
+from .config import SkeletonMethods
+from .fcialg import FCI
 from .pcalg import PC
-from .skeleton import LearnSkeleton, SkeletonMethods
+from .skeleton import LearnSemiMarkovianSkeleton, LearnSkeleton

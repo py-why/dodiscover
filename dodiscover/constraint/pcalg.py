@@ -5,6 +5,7 @@ from typing import Optional
 import networkx as nx
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
+from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
@@ -35,19 +36,22 @@ class PC(BaseConstraintDiscovery):
     max_cond_set_size : int, optional
         Maximum size of the conditioning set, by default None. Used to limit
         the computation spent on the algorithm.
-    max_iter : int
-        The maximum number of iterations through the graph to apply
-        orientation rules.
     max_combinations : int, optional
         Maximum number of tries with a conditioning set chosen from the set of possible
         parents still, by default None. If None, then will not be used. If set, then
         the conditioning set will be chosen lexographically based on the sorted
         test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
+    skeleton_method : SkeletonMethods
+        The method to use for testing conditional independence. Must be one of
+        ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
         and separating set per pair of variables. If ``True`` (default), will
         apply Meek's orientation rules R0-3, orienting colliders and certain
         arrowheads :footcite:`Meek1995`.
+    max_iter : int
+        The maximum number of iterations through the graph to apply
+        orientation rules.
     ci_estimator_kwargs : dict
         Keyword arguments for the ``ci_estimator`` function.
 
@@ -66,17 +70,18 @@ class PC(BaseConstraintDiscovery):
     """
 
     graph_: EquivalenceClassProtocol
-    separating_sets_: Optional[SeparatingSet]
+    separating_sets_: SeparatingSet
 
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
         alpha: float = 0.05,
-        min_cond_set_size: int = None,
-        max_cond_set_size: int = None,
-        max_iter: int = 1000,
-        max_combinations: int = None,
+        min_cond_set_size: Optional[int] = None,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
+        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
         apply_orientations: bool = True,
+        max_iter: int = 1000,
         **ci_estimator_kwargs,
     ):
         super().__init__(
@@ -85,6 +90,7 @@ class PC(BaseConstraintDiscovery):
             min_cond_set_size=min_cond_set_size,
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
+            skeleton_method=skeleton_method,
             **ci_estimator_kwargs,
         )
         self.max_iter = max_iter

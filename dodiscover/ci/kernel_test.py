@@ -127,13 +127,19 @@ class KernelCITest(BaseConditionalIndependenceTest):
         pvalue : float
             The p-value of the test.
         """
+        if z_covariates is None:
+            z_covariates = set()
         self._check_test_input(df, x_vars, y_vars, z_covariates)
-        if z_covariates is None or len(z_covariates) == 0:
+
+        x_cols = list(x_vars)
+        y_cols = list(y_vars)
+        z_cols = list(z_covariates)
+        if len(z_cols) == 0:
             Z = None
         else:
-            Z = df[z_covariates].to_numpy().reshape((-1, len(z_covariates)))
-        X = df[x_vars].to_numpy()
-        Y = df[y_vars].to_numpy()
+            Z = df[z_cols].to_numpy().reshape((-1, len(z_cols)))
+        X = df[x_cols].to_numpy()
+        Y = df[y_cols].to_numpy()
         if X.ndim == 1:
             X = X[:, np.newaxis]
         if Y.ndim == 1:

@@ -27,7 +27,7 @@ class GraphProtocol(Protocol):
         """Remove a node from the graph."""
         pass
 
-    def remove_edge(self, u, v) -> None:
+    def remove_edge(self, u, v, edge_type) -> None:
         """Remove edge from graph."""
         pass
 
@@ -82,9 +82,7 @@ class EquivalenceClassProtocol(GraphProtocol, Protocol):
         """Nodes with directed edges pointing from 'node'."""
         pass
 
-
-class SemiMarkovianEquivalenceClass(EquivalenceClassProtocol, Protocol):
-    """Protocol for equivalence class of semi-markovian graphs."""
+    """Protocol methods for equivalence class of semi-markovian graphs."""
 
     @property
     def bidirected_edge_name(self) -> str:

@@ -41,9 +41,6 @@ class BaseConstraintDiscovery:
     skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
-    max_path_length : int
-        The maximum length of a path to consider when looking for possibly d-separating
-        sets among two nodes. Only used if ``skeleton_method=pds``. Default is infinite.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
         and separating set per pair of variables. If ``True`` (default), will
@@ -62,17 +59,16 @@ class BaseConstraintDiscovery:
     """
 
     graph_: Optional[EquivalenceClassProtocol]
-    separating_sets_: Optional[SeparatingSet]
+    separating_sets_: SeparatingSet
 
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
         alpha: float = 0.05,
-        min_cond_set_size: int = None,
-        max_cond_set_size: int = None,
-        max_combinations: int = None,
+        min_cond_set_size: Optional[int] = None,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
         skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
-        max_path_length: int = np.inf,
         apply_orientations: bool = True,
         **ci_estimator_kwargs,
     ):
@@ -93,11 +89,8 @@ class BaseConstraintDiscovery:
             max_combinations = np.inf
         self.max_combinations = max_combinations
 
-        # special attributes for learning skeleton with semi-Markovian models
-        self.max_path_length = max_path_length
-
         # initialize the result properties we want to fit
-        self.separating_sets_ = None
+        self.separating_sets_ = defaultdict(lambda: defaultdict(list))
         self.graph_ = None
 
     def _initialize_sep_sets(self, init_graph: nx.Graph) -> SeparatingSet:
@@ -162,10 +155,10 @@ class BaseConstraintDiscovery:
         self.X_ = self.context_.data
 
         # initialize graph object to apply learning
-        sep_set = self._initialize_sep_sets(self.init_graph_)
+        self.separating_sets_ = self._initialize_sep_sets(self.init_graph_)
 
         # learn skeleton graph and the separating sets per variable
-        graph, sep_set = self.learn_skeleton(self.context_, sep_set)
+        graph, self.separating_sets_ = self.learn_skeleton(self.context_, self.separating_sets_)
 
         # convert networkx.Graph to relevant causal graph object
         graph = self.convert_skeleton_graph(graph)
@@ -174,11 +167,10 @@ class BaseConstraintDiscovery:
         if self.apply_orientations:
             # for all pairs of non-adjacent variables with a common neighbor
             # check if we can orient the edge as a collider
-            self.orient_unshielded_triples(graph, sep_set)
+            self.orient_unshielded_triples(graph, self.separating_sets_)
             self.orient_edges(graph)
 
         # store resulting data structures
-        self.separating_sets_ = sep_set
         self.graph_ = graph
 
     def evaluate_edge(
