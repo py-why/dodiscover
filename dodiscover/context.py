@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Optional, Set, Union
+from typing import Optional, Set, Union, Dict, Any
 
 import networkx as nx
 import pandas as pd
@@ -50,6 +50,7 @@ class Context:
     _init_graph: GraphProtocol
     _included_edges: nx.Graph
     _excluded_edges: nx.Graph
+    _state_variables: Dict[str, Any]
 
     def __init__(
         self,
@@ -98,6 +99,7 @@ class Context:
             excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
 
         # set to class
+        self._state_variables = dict()
         self._data = data
         self._variables = variables
         self._latents = latents
@@ -121,6 +123,39 @@ class Context:
     def init_graph(self) -> GraphProtocol:
         return self._init_graph
 
+    def add_state_variable(self, name: str, var: Any) -> None:
+        """Add a state variable.
+
+        Called by an algorithm to persist data objects that
+        are used in intermediate steps.
+
+        Parameters
+        ----------
+        name : str
+            The name of the state variable. 
+        var : any
+            Any state variable.
+        """
+        self._state_variables[name] = var
+
+    def get_state_variable(self, name: str) -> Any:
+        """Get a state variable.
+
+        Parameters
+        ----------
+        name : str
+            The name of the state variable.
+
+        Returns
+        -------
+        state_var : Any
+            The state variable.
+        """
+        if name not in self._state_variables:
+            raise RuntimeError(f'{name} is not a state variable: {self._state_variables}')
+
+        return self._state_variables[name]
+
     def copy(self):
         """Create a copy of the Context object.
 
@@ -137,4 +172,6 @@ class Context:
             included_edges=self._included_edges.copy(),
             excluded_edges=self._excluded_edges.copy(),
         )
+        for name, var in self._state_variables.items():
+            context.add_state_variable(name, var) 
         return context

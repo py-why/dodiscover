@@ -1,9 +1,7 @@
-from typing import Dict, List, Set
-
 import pandas as pd
 
 from dodiscover import GraphProtocol
-from dodiscover.typing import Column
+from dodiscover.typing import  SeparatingSet
 
 
 def dummy_sample(G: GraphProtocol):
@@ -16,7 +14,7 @@ def dummy_sample(G: GraphProtocol):
 
 def is_in_sep_set(
     check_var,
-    sep_set: Dict[Column, Dict[Column, List[Set[Column]]]],
+    sep_set: SeparatingSet,
     x_var,
     y_var,
     mode: str = "any",

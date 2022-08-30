@@ -2,10 +2,11 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import pytest
+import pywhy_graphs
 
 from dodiscover import Context
 from dodiscover.ci import GSquareCITest, Oracle
-from dodiscover.constraint.skeleton import LearnSkeleton
+from dodiscover.constraint.skeleton import LearnSkeleton, LearnSemiMarkovianSkeleton
 from dodiscover.constraint.utils import dummy_sample
 from dodiscover.testdata.testdata import bin_data, dis_data
 
@@ -117,3 +118,52 @@ def test_learn_skeleton_oracle(G):
 
     # the skeleton of both graphs should match perfectly
     assert nx.is_isomorphic(skel_graph, G.to_undirected())
+
+
+def test_learn_pds_skeleton():
+    """Test example in Causation, Prediction and Search book.
+
+    See book Figure 16
+
+    See: https://www.cs.cmu.edu/afs/cs.cmu.edu/project/learn-43/lib/photoz/.g/web/.g/scottd/fullbook.pdf
+    """
+    # reconstruct the PAG the way FCI would
+    edge_list = [("D", "A"), ("B", "E"), ("F", "B"), ("C", "F"), ("C", "H"), ("H", "D")]
+    latent_edge_list = [("A", "B"), ("D", "E")]
+    graph = pywhy_graphs.ADMG(incoming_directed_edges=edge_list,incoming_bidirected_edges=latent_edge_list)
+    ci_estimator=Oracle(graph)
+    sample = dummy_sample(graph)
+    context = Context(data=sample)
+
+    firstalg = LearnSkeleton(ci_estimator=ci_estimator)
+    firstalg.fit(context)
+    pag_graph = pywhy_graphs.PAG(incoming_circle_edges=firstalg.adj_graph_)
+
+    context.add_state_variable('PAG', pag_graph)
+    alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
+    alg.fit(context)
+    skel_graph = alg.adj_graph_
+
+    # generate the expected PAG
+    edge_list = [
+        ("D", "A"),
+        ("B", "E"),
+        ("H", "D"),
+        ("F", "B"),
+    ]
+    latent_edge_list = [("A", "B"), ("D", "E")]
+    uncertain_edge_list = [
+        ("B", "F"),
+        ("F", "C"),
+        ("C", "F"),
+        ("C", "H"),
+        ("H", "C"),
+        ("D", "H"),
+    ]
+    expected_pag = pywhy_graphs.PAG(edge_list, incoming_bidirected_edges=latent_edge_list, incoming_circle_edges=uncertain_edge_list)
+
+    for edge in expected_pag.to_undirected().edges:
+        assert skel_graph.has_edge(*edge)
+    for edge in skel_graph.edges:
+        assert expected_pag.to_undirected().has_edge(*edge)
+    assert nx.is_isomorphic(skel_graph, expected_pag.to_undirected())

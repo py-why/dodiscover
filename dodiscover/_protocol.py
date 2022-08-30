@@ -27,6 +27,10 @@ class GraphProtocol(Protocol):
         """Remove a node from the graph."""
         pass
 
+    def remove_edge(self, u, v) -> None:
+        """Remove edge from graph."""
+        pass
+
     def remove_edges_from(self, edges) -> None:
         """Remove a set of edges from the graph."""
         pass
@@ -76,4 +80,16 @@ class EquivalenceClassProtocol(GraphProtocol, Protocol):
 
     def successors(self, node) -> Iterable:
         """Nodes with directed edges pointing from 'node'."""
+        pass
+
+
+class SemiMarkovianEquivalenceClass(EquivalenceClassProtocol, Protocol):
+    @property
+    def bidirected_edge_name(self) -> str:
+        """Name of the bidirected edges."""
+        pass
+
+    @property
+    def circle_edge_name(self) -> str:
+        """Name of the directed edges."""
         pass

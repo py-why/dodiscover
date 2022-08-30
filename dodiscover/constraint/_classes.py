@@ -1,6 +1,6 @@
 import itertools
 from collections import defaultdict
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Optional, Set, Tuple
 
 import networkx as nx
 import numpy as np
@@ -9,7 +9,7 @@ import pandas as pd
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.skeleton import LearnSkeleton, SkeletonMethods
 from dodiscover.context import Context
-from dodiscover.typing import Column
+from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClassProtocol
 
@@ -62,7 +62,7 @@ class BaseConstraintDiscovery:
     """
 
     graph_: Optional[EquivalenceClassProtocol]
-    separating_sets_: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]]
+    separating_sets_: Optional[SeparatingSet]
 
     def __init__(
         self,
@@ -102,9 +102,9 @@ class BaseConstraintDiscovery:
 
     def _initialize_sep_sets(
         self, init_graph: nx.Graph
-    ) -> Dict[Column, Dict[Column, List[Set[Column]]]]:
+    ) -> SeparatingSet:
         # keep track of separating sets
-        sep_set: Dict[Column, Dict[Column, List[Set[Column]]]] = defaultdict(
+        sep_set: SeparatingSet = defaultdict(
             lambda: defaultdict(list)
         )
 
@@ -125,7 +125,7 @@ class BaseConstraintDiscovery:
     def orient_unshielded_triples(
         self,
         graph: EquivalenceClassProtocol,
-        sep_set: Dict[Column, Dict[Column, List[Set[Column]]]],
+        sep_set: SeparatingSet,
     ) -> None:
         raise NotImplementedError()
 
@@ -216,8 +216,8 @@ class BaseConstraintDiscovery:
     def learn_skeleton(
         self,
         context: Context,
-        sep_set: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]] = None,
-    ) -> Tuple[nx.Graph, Dict[Column, Dict[Column, List[Set[Column]]]]]:
+        sep_set: Optional[SeparatingSet] = None,
+    ) -> Tuple[nx.Graph, SeparatingSet]:
         """Learns the skeleton of a causal DAG using pairwise independence testing.
 
         Encodes the skeleton via an undirected graph, `networkx.Graph`. Only
