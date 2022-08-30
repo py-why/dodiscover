@@ -30,6 +30,7 @@ Changelog
 - |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
 - |Feature| Implement skeleton learning method, :class:`dodiscover.constraint.LearnSkeleton` under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`20`)
 - |Feature| Implement PC algorithm, :class:`dodiscover.constraint.PC` for learning causal structure from observational data under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`30`)
+- |Feature| Implement FCI algorithm, :class:`dodiscover.constraint.FCI` for learning causal structure from observational data with latent confounders under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`32`)
 
 Code and Documentation Contributors
 -----------------------------------
