@@ -8,16 +8,44 @@ import sklearn.metrics
 from numpy.typing import NDArray
 from sklearn.neighbors import NearestNeighbors
 from sklearn.utils import check_random_state
-
+from sklearn.metrics import accuracy_score
 from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
 
 
+def f_divergence_score(y_stat_q, y_stat_p):
+    """Compute f-divergence upper bound on KL-divergence.
+
+    See definition 4 in :footcite:`Mukherjee2020ccmi`, where
+    the function is reversed to give an upper-bound for the
+    sake of gradient descent.
+
+    The f-divergence bound gives an upper bound on KL-divergence:
+    .. math:: 
+    
+        $$D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]$$
+
+    Parameters
+    ----------
+    y_stat_q : arraylike of shape (n_samples,)
+        Samples from the distribution Q, the variational class.
+    y_stat_p : : arraylike of shape (n_samples,)
+        Samples from the distribution P, the joint distribution.
+
+    Returns
+    -------
+    f_div : float
+        The f-divergence score.
+    """
+    f_div = np.mean(np.exp(y_stat_q - 1)) - np.mean(y_stat_p)
+    return f_div
+
+
 class ClassifierCMITest(BaseConditionalIndependenceTest):
     def __init__(self, 
         clf: sklearn.base.BaseEstimator,
-        metric: Callable = sklearn.metrics.accuracy_score,
+        metric: Callable = f_divergence_score,
         bootstrap: bool = False,
         n_iter: int = 20,
         correct_bias: bool = True,
