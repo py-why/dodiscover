@@ -1,0 +1,2052 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.4, mkdocs-material-7.3.0">
+    
+    
+      
+        <title>G Test - dodiscover</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8b42a75e.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4cae4f">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="green" data-md-color-accent="lightgreen">
+  
+    
+    <script>function __prefix(e){return new URL("../../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-dodiscovercig_test" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="dodiscover" class="md-header__button md-logo" aria-label="dodiscover" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dodiscover
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              G Test
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/adam2392/dodiscover/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dodiscover
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="dodiscover" class="md-nav__button md-logo" aria-label="dodiscover" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    dodiscover
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/adam2392/dodiscover/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dodiscover
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../CONTRIBUTING/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../DEVELOPING/" class="md-nav__link">
+        Developing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Dodiscover
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Dodiscover" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Dodiscover
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1_2" type="checkbox" id="__nav_4_1_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1_2">
+          Ci
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ci" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ci
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base/" class="md-nav__link">
+        Base
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fisher_z_test/" class="md-nav__link">
+        Fisher Z Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          G Test
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        G Test
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g_square_binary" class="md-nav__link">
+    g_square_binary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g_square_discrete" class="md-nav__link">
+    g_square_discrete
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gsquarecitest" class="md-nav__link">
+    GSquareCITest
+  </a>
+  
+    <nav class="md-nav" aria-label="GSquareCITest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ancestors-in-mro" class="md-nav__link">
+    Ancestors (in MRO)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    test
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernel_test/" class="md-nav__link">
+        Kernel Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        Oracle
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g_square_binary" class="md-nav__link">
+    g_square_binary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g_square_discrete" class="md-nav__link">
+    g_square_discrete
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gsquarecitest" class="md-nav__link">
+    GSquareCITest
+  </a>
+  
+    <nav class="md-nav" aria-label="GSquareCITest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ancestors-in-mro" class="md-nav__link">
+    Ancestors (in MRO)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    test
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/adam2392/dodiscover/edit/main/reference/dodiscover/ci/g_test.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="module-dodiscovercig_test">Module dodiscover.ci.g_test</h1>
+<p>None</p>
+<p>None</p>
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="c1"># This code was originally adapted from https://github.com/keiichishima/gsq</span>
+
+<span class="c1"># and heavily refactored and modified.</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">NDArray</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+
+<span class="k">def</span> <span class="nf">_calculate_contingency_tble</span><span class="p">(</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">sep_set</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">],</span>
+
+    <span class="n">dof</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
+
+    <span class="n">nlevels_x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+
+    <span class="n">nlevels_y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+
+    <span class="n">levels</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Calculate log term for binary G^2 statistic in CI test.</span>
+
+<span class="sd">    Computes the contingency table and the associated log-term</span>
+
+<span class="sd">    within the G^2 statistic for binary data.</span>
+
+<span class="sd">    Parameters</span>
+
+<span class="sd">    ----------</span>
+
+<span class="sd">    x : int | str</span>
+
+<span class="sd">        the first node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;x&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    y : int | str</span>
+
+<span class="sd">        the second node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;y&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    sep_set : set</span>
+
+<span class="sd">        the set of neibouring nodes of x and y (as a set()).</span>
+
+<span class="sd">    dof : int</span>
+
+<span class="sd">        The degrees of freedom.</span>
+
+<span class="sd">    data : np.ndarray of shape (n_samples, n_variables)</span>
+
+<span class="sd">        The input data matrix.</span>
+
+<span class="sd">    nlevels_x : int</span>
+
+<span class="sd">        The number of levels in the &#39;x&#39; data variable.</span>
+
+<span class="sd">    nlevels_y : int</span>
+
+<span class="sd">        The number of levels in the &#39;y&#39; data variable.</span>
+
+<span class="sd">    levels : np.ndarray of shape (n_variables,)</span>
+
+<span class="sd">        The number of levels associated with each variable.</span>
+
+<span class="sd">    Returns</span>
+
+<span class="sd">    -------</span>
+
+<span class="sd">    contingency_tble : np.ndarray of shape (2, 2, dof)</span>
+
+<span class="sd">        A contingency table per degree of freedom.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># define contingency table as a 2 by 2 table relating &#39;x&#39; and &#39;y&#39;</span>
+
+    <span class="c1"># across different separating set variables</span>
+
+    <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">zeros</span><span class="p">((</span><span class="n">nlevels_x</span><span class="p">,</span> <span class="n">nlevels_y</span><span class="p">,</span> <span class="n">dof</span><span class="p">))</span>
+
+    <span class="n">x_idx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>  <span class="c1"># [:, x]</span>
+
+    <span class="n">y_idx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">]</span>  <span class="c1"># [:, y]</span>
+
+    <span class="n">sep_set</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span>
+
+    <span class="c1"># sum all co-occurrences of x and y conditioned on z</span>
+
+    <span class="k">for</span> <span class="n">row_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">jdx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">x_idx</span><span class="p">,</span> <span class="n">y_idx</span><span class="p">)):</span>
+
+        <span class="n">kdx</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">zidx</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sep_set</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">levels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="c1"># binary case</span>
+
+                <span class="n">kdx</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">z</span><span class="p">][</span><span class="n">row_idx</span><span class="p">]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">zidx</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="c1"># discrete case</span>
+
+                <span class="k">if</span> <span class="n">zidx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                    <span class="n">kdx</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">z</span><span class="p">][</span><span class="n">row_idx</span><span class="p">]</span>  <span class="c1"># data[row_idx, z]</span>
+
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="n">lprod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">prod</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">levels</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">sep_set</span><span class="p">[:</span><span class="n">zidx</span><span class="p">])))</span>  <span class="c1"># type: ignore</span>
+
+                    <span class="n">kdx</span> <span class="o">+=</span> <span class="n">data</span><span class="p">[</span><span class="n">z</span><span class="p">][</span><span class="n">row_idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">lprod</span>
+
+        <span class="c1"># increment the co-occurrence found</span>
+
+        <span class="n">contingency_tble</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">jdx</span><span class="p">,</span> <span class="n">kdx</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">contingency_tble</span>
+
+<span class="k">def</span> <span class="nf">_calculate_highdim_contingency</span><span class="p">(</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
+
+    <span class="n">nlevel_x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+
+    <span class="n">nlevels_y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Calculate the contingency table for &quot;large&quot; separating set.</span>
+
+<span class="sd">    When separating set is deemed &quot;large&quot;, we use a different approach</span>
+
+<span class="sd">    to computing the overall contingency table.</span>
+
+<span class="sd">    Parameters</span>
+
+<span class="sd">    ----------</span>
+
+<span class="sd">    x : int | str</span>
+
+<span class="sd">        the first node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;x&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    y : int | str</span>
+
+<span class="sd">        the second node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;y&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    sep_set : set</span>
+
+<span class="sd">        the set of neibouring nodes of x and y (as a set()).</span>
+
+<span class="sd">    data : np.ndarray of shape (n_samples, n_variables)</span>
+
+<span class="sd">        The input data matrix.</span>
+
+<span class="sd">    nlevel_x : int</span>
+
+<span class="sd">        Number of levels of the &#39;x&#39; variable in the data matrix.</span>
+
+<span class="sd">    nlevels_y : int</span>
+
+<span class="sd">        Number of levels of the &#39;y&#39; variable in the data matrix.</span>
+
+<span class="sd">    Returns</span>
+
+<span class="sd">    -------</span>
+
+<span class="sd">    contingency_tble : np.ndarray of shape (nlevel_x, nlevel_y, dof)</span>
+
+<span class="sd">        A contingency table per degree of freedom per level</span>
+
+<span class="sd">        of each variable.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n_samples</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="kp">shape</span>
+
+    <span class="c1"># keep track of all variables in the separating set</span>
+
+    <span class="n">sep_set</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">sep_set</span><span class="p">]</span>
+
+    <span class="c1"># count number of value combinations for sepset variables</span>
+
+    <span class="c1"># observed in the data</span>
+
+    <span class="n">dof_count</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">parents_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">array</span><span class="p">([</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]])</span>
+
+    <span class="c1"># initialize the contingency table</span>
+
+    <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">xdx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+
+    <span class="n">ydx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+
+    <span class="n">contingency_tble</span><span class="p">[</span><span class="n">xdx</span><span class="p">,</span> <span class="n">ydx</span><span class="p">,</span> <span class="n">dof_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># check how many parents we can create from the rest of the dataset</span>
+
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+
+        <span class="n">is_new</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">xdx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+
+        <span class="n">ydx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+
+        <span class="c1"># comparing the current values of the subset variables to all</span>
+
+        <span class="c1"># already existing combinations of subset variables values</span>
+
+        <span class="n">tcomp</span> <span class="o">=</span> <span class="n">parents_val</span><span class="p">[:</span><span class="n">dof_count</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">k</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">for</span> <span class="n">it_parents</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dof_count</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="kp">all</span><span class="p">(</span><span class="n">tcomp</span><span class="p">[</span><span class="n">it_parents</span><span class="p">,</span> <span class="p">:]):</span>
+
+                <span class="n">contingency_tble</span><span class="p">[</span><span class="n">xdx</span><span class="p">,</span> <span class="n">ydx</span><span class="p">,</span> <span class="n">it_parents</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">is_new</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">break</span>
+
+        <span class="c1"># new combination of separating set values, so we create a new</span>
+
+        <span class="c1"># contingency table</span>
+
+        <span class="k">if</span> <span class="n">is_new</span><span class="p">:</span>
+
+            <span class="n">dof_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">parents_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">r_</span><span class="p">[</span><span class="n">parents_val</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]]]</span>
+
+            <span class="c1"># create a new contingnecy table and update cell counts</span>
+
+            <span class="c1"># using the original table up to the last value</span>
+
+            <span class="n">ncontingency_tble</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">zeros</span><span class="p">((</span><span class="n">nlevel_x</span><span class="p">,</span> <span class="n">nlevels_y</span><span class="p">,</span> <span class="n">dof_count</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dof_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+
+                <span class="n">ncontingency_tble</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">contingency_tble</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">p</span><span class="p">]</span>
+
+            <span class="n">ncontingency_tble</span><span class="p">[</span><span class="n">xdx</span><span class="p">,</span> <span class="n">ydx</span><span class="p">,</span> <span class="n">dof_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">ncontingency_tble</span>
+
+    <span class="k">return</span> <span class="n">contingency_tble</span>
+
+<span class="k">def</span> <span class="nf">_calculate_g_statistic</span><span class="p">(</span><span class="n">contingency_tble</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Calculate a G statistic from contingency table.</span>
+
+<span class="sd">    Parameters</span>
+
+<span class="sd">    ----------</span>
+
+<span class="sd">    contingency_tble : np.ndarray of shape (nlevels_x, nlevels_y, dof)</span>
+
+<span class="sd">        The contingency table of &#39;x&#39; vs &#39;y&#39;.</span>
+
+<span class="sd">    Returns</span>
+
+<span class="sd">    -------</span>
+
+<span class="sd">    G2 : float</span>
+
+<span class="sd">        G^2 test statistic.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nlevels_x</span><span class="p">,</span> <span class="n">nlevels_y</span><span class="p">,</span> <span class="n">dof_count</span> <span class="o">=</span> <span class="n">contingency_tble</span><span class="o">.</span><span class="kp">shape</span>
+
+    <span class="c1"># now compute marginal terms across all degrees of freedom</span>
+
+    <span class="n">tx_dof</span> <span class="o">=</span> <span class="n">contingency_tble</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ty_dof</span> <span class="o">=</span> <span class="n">contingency_tble</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute sample size within each degree of freedom</span>
+
+    <span class="n">nk</span> <span class="o">=</span> <span class="n">ty_dof</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute the term to be logged:</span>
+
+    <span class="c1"># s^{ab}_{ij} * M / (s_i^a s_j^b)</span>
+
+    <span class="n">tlog</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">zeros</span><span class="p">((</span><span class="n">nlevels_x</span><span class="p">,</span> <span class="n">nlevels_y</span><span class="p">,</span> <span class="n">dof_count</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dof_count</span><span class="p">):</span>
+
+        <span class="c1"># create a 2x1 and 1x2 array of marginal counts</span>
+
+        <span class="c1"># for each degree of freedom</span>
+
+        <span class="n">tx</span> <span class="o">=</span> <span class="n">tx_dof</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">k</span><span class="p">][:,</span> <span class="n">np</span><span class="o">.</span><span class="kp">newaxis</span><span class="p">]</span>
+
+        <span class="n">ty</span> <span class="o">=</span> <span class="n">ty_dof</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">k</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="kp">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># compute the final term in the log</span>
+
+        <span class="n">tdijk</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">ty</span><span class="p">)</span>
+
+        <span class="n">tlog</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">contingency_tble</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">nk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">tdijk</span>
+
+    <span class="n">log_tlog</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">log</span><span class="p">(</span><span class="n">tlog</span><span class="p">)</span>
+
+    <span class="n">G2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">nansum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">contingency_tble</span> <span class="o">*</span> <span class="n">log_tlog</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">G2</span>
+
+<span class="k">def</span> <span class="nf">g_square_binary</span><span class="p">(</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
+
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+
+    <span class="sd">&quot;&quot;&quot;G square test for a binary data.</span>
+
+<span class="sd">    When running a conditional-independence test, degrees of freecom</span>
+
+<span class="sd">    is calculated. It is defined as ``2^|S|``, where ``|S|`` is the</span>
+
+<span class="sd">    cardinality of the separating set, ``S``.</span>
+
+<span class="sd">    Parameters</span>
+
+<span class="sd">    ----------</span>
+
+<span class="sd">    data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)</span>
+
+<span class="sd">        The data matrix to be used.</span>
+
+<span class="sd">    x : int | str</span>
+
+<span class="sd">        the first node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;x&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    y : int | str</span>
+
+<span class="sd">        the second node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;y&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    sep_set : set</span>
+
+<span class="sd">        the set of neibouring nodes of x and y (as a set()).</span>
+
+<span class="sd">    Returns</span>
+
+<span class="sd">    -------</span>
+
+<span class="sd">    G2_stat : float</span>
+
+<span class="sd">        The G^2 statistic.</span>
+
+<span class="sd">    p_val : float</span>
+
+<span class="sd">        The p-value of conditional independence.</span>
+
+<span class="sd">    Notes</span>
+
+<span class="sd">    -----</span>
+
+<span class="sd">    The ``G^2`` statistic for binary outcome &#39;a&#39; and &#39;b&#39; is:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        2 \\times \sum_{a,b} S^{a,b}_{ij} ln(\\frac{s^{ab}_{ij} M}{s_i^a s_j^b})</span>
+
+<span class="sd">    which takes the sum over occurrences of &#39;a&#39; and &#39;b&#39; and multiplies</span>
+
+<span class="sd">    it by the number of samples, M and normalizes it :footcite:`Neapolitan2003`.</span>
+
+<span class="sd">    References</span>
+
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. footbibliography::</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># rng = np.random.RandomState(random_state)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">xy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]):</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+
+            <span class="sa">f</span><span class="s1">&#39;Variables &quot;x&quot; (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">) and &quot;y&quot; (</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1">) are not in the columns of &quot;data&quot;: &#39;</span>
+
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s2">.&quot;</span>
+
+        <span class="p">)</span>
+
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">s_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span>
+
+    <span class="n">dof</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">s_size</span><span class="p">))</span>
+
+    <span class="c1"># check number of samples relative to degrees of freedom</span>
+
+    <span class="c1"># assuming no zeros</span>
+
+    <span class="n">n_samples_req</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">dof</span>
+
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&lt;</span> <span class="n">n_samples_req</span><span class="p">:</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not enough samples. </span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s2"> is too small. Need </span><span class="si">{</span><span class="n">n_samples_req</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># hard-cut off cardinality of separating set at 6</span>
+
+    <span class="k">if</span> <span class="n">s_size</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+
+        <span class="c1"># set up contingency table for binary data 2x2xdof</span>
+
+        <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">_calculate_contingency_tble</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sep_set</span><span class="p">,</span> <span class="n">dof</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># s_size &gt;= 6</span>
+
+        <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">_calculate_highdim_contingency</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sep_set</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">G2_stat</span> <span class="o">=</span> <span class="n">_calculate_g_statistic</span><span class="p">(</span><span class="n">contingency_tble</span><span class="p">)</span>
+
+    <span class="n">p_val</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">G2_stat</span><span class="p">,</span> <span class="n">dof</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">G2_stat</span><span class="p">,</span> <span class="n">p_val</span>
+
+<span class="k">def</span> <span class="nf">g_square_discrete</span><span class="p">(</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+
+    <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
+
+    <span class="n">levels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+
+    <span class="sd">&quot;&quot;&quot;G square test for discrete data.</span>
+
+<span class="sd">    Parameters</span>
+
+<span class="sd">    ----------</span>
+
+<span class="sd">    data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)</span>
+
+<span class="sd">        The data matrix to be used.</span>
+
+<span class="sd">    x : int | str</span>
+
+<span class="sd">        the first node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;x&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    y : int | str</span>
+
+<span class="sd">        the second node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="sd">        &#39;y&#39; must be in the columns of ``data``.</span>
+
+<span class="sd">    sep_set : set</span>
+
+<span class="sd">        the set of neibouring nodes of x and y (as a set()).</span>
+
+<span class="sd">    levels : list</span>
+
+<span class="sd">        Levels of each column in the data matrix (as a list()).</span>
+
+<span class="sd">    Returns</span>
+
+<span class="sd">    -------</span>
+
+<span class="sd">    G2 : float</span>
+
+<span class="sd">        The G^2 test statistic.</span>
+
+<span class="sd">    p_val : float</span>
+
+<span class="sd">        the p-value of conditional independence.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">xy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]):</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+
+            <span class="sa">f</span><span class="s1">&#39;Variables &quot;x&quot; (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">) and &quot;y&quot; (</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1">) are not in the columns of &quot;data&quot;: &#39;</span>
+
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s2">.&quot;</span>
+
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">levels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">amax</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">s_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span>
+
+    <span class="n">dof</span> <span class="o">=</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="kp">prod</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">levels</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">sep_set</span><span class="p">)))</span>
+
+    <span class="c1"># check number of samples relative to degrees of freedom</span>
+
+    <span class="n">n_samples_req</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">dof</span>
+
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&lt;</span> <span class="n">n_samples_req</span><span class="p">:</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not enough samples. </span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s2"> is too small. Need </span><span class="si">{</span><span class="n">n_samples_req</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="n">contingency_tble</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># hard-cut off cardinality of separating set at 5</span>
+
+    <span class="k">if</span> <span class="n">s_size</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+
+        <span class="c1"># degrees of freedom</span>
+
+        <span class="n">prod_levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">prod</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">levels</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">sep_set</span><span class="p">)))</span><span class="o">.</span><span class="kp">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># set up contingency table for binary data</span>
+
+        <span class="c1"># |X| x |Y| x dof</span>
+
+        <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">_calculate_contingency_tble</span><span class="p">(</span>
+
+            <span class="n">x</span><span class="p">,</span>
+
+            <span class="n">y</span><span class="p">,</span>
+
+            <span class="n">sep_set</span><span class="p">,</span>
+
+            <span class="n">prod_levels</span><span class="p">,</span>
+
+            <span class="n">data</span><span class="p">,</span>
+
+            <span class="n">nlevels_x</span><span class="o">=</span><span class="n">levels</span><span class="p">[</span><span class="n">x</span><span class="p">],</span>
+
+            <span class="n">nlevels_y</span><span class="o">=</span><span class="n">levels</span><span class="p">[</span><span class="n">y</span><span class="p">],</span>
+
+            <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># s_size &gt;= 5</span>
+
+        <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">_calculate_highdim_contingency</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sep_set</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">levels</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">levels</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+
+    <span class="c1"># calculate the actual G statistic given the contingency table</span>
+
+    <span class="n">G2</span> <span class="o">=</span> <span class="n">_calculate_g_statistic</span><span class="p">(</span><span class="n">contingency_tble</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dof</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="c1"># dof can be 0 when levels[x] or levels[y] is 1, which is</span>
+
+        <span class="c1"># the case that the values of columns x or y are all 0.</span>
+
+        <span class="n">p_val</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">p_val</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">G2</span><span class="p">,</span> <span class="n">dof</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">G2</span><span class="p">,</span> <span class="n">p_val</span>
+
+<span class="k">class</span> <span class="nc">GSquareCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;binary&quot;</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span> <span class="o">=</span> <span class="n">data_type</span>
+
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+
+        <span class="bp">self</span><span class="p">,</span>
+
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+
+        <span class="n">x_var</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+
+        <span class="n">y_var</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+        <span class="n">levels</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">z_covariates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
+
+            <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">g_square_binary</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">&quot;discrete&quot;</span><span class="p">:</span>
+
+            <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">g_square_discrete</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+
+                <span class="sa">f</span><span class="s2">&quot;The acceptable data_type for G Square CI test is &quot;</span>
+
+                <span class="sa">f</span><span class="s1">&#39;&quot;binary&quot; and &quot;discrete&quot;, not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="si">}</span><span class="s1">.&#39;</span>
+
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span>
+</code></pre></div>
+
+</details>
+<h2 id="functions">Functions</h2>
+<h3 id="g_square_binary">g_square_binary</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">g_square_binary</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">[</span><span class="o">+</span><span class="n">ScalarType</span><span class="p">]],</span> <span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+</code></pre></div>
+
+<p>G square test for a binary data.</p>
+<p>When running a conditional-independence test, degrees of freecom
+is calculated. It is defined as <code>2^|S|</code>, where <code>|S|</code> is the
+cardinality of the separating set, <code>S</code>.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>np.ndarray</td>
+<td>pandas.DataFrame of shape (n_samples, n_variables)</td>
+<td>The data matrix to be used.</td>
+</tr>
+<tr>
+<td>x</td>
+<td>int</td>
+<td>str</td>
+<td>the first node variable. If <code>data</code> is a DataFrame, then</td>
+</tr>
+<tr>
+<td>'x' must be in the columns of <code>data</code>.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>y</td>
+<td>int</td>
+<td>str</td>
+<td>the second node variable. If <code>data</code> is a DataFrame, then</td>
+</tr>
+<tr>
+<td>'y' must be in the columns of <code>data</code>.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>sep_set</td>
+<td>set</td>
+<td>the set of neibouring nodes of x and y (as a set()).</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>float</td>
+<td>The G^2 statistic.</td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">g_square_binary</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">data</span><span class="o">:</span><span class="w"> </span><span class="k">Union</span><span class="err">[</span><span class="n">NDArray</span><span class="p">,</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="err">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="k">Union</span><span class="err">[</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">str</span><span class="err">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="k">Union</span><span class="err">[</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">str</span><span class="err">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">sep_set</span><span class="o">:</span><span class="w"> </span><span class="k">Set</span><span class="p">,</span><span class="w"></span>
+
+<span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Tuple</span><span class="err">[</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="err">]</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">    </span><span class="s2">&quot;</span><span class="se">&quot;&quot;</span><span class="s2">G square test for a binary data.</span>
+
+<span class="s2">    When running a conditional-independence test, degrees of freecom</span>
+
+<span class="s2">    is calculated. It is defined as ``2^|S|``, where ``|S|`` is the</span>
+
+<span class="s2">    cardinality of the separating set, ``S``.</span>
+
+<span class="s2">    Parameters</span>
+
+<span class="s2">    ----------</span>
+
+<span class="s2">    data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)</span>
+
+<span class="s2">        The data matrix to be used.</span>
+
+<span class="s2">    x : int | str</span>
+
+<span class="s2">        the first node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="s2">        &#39;x&#39; must be in the columns of ``data``.</span>
+
+<span class="s2">    y : int | str</span>
+
+<span class="s2">        the second node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="s2">        &#39;y&#39; must be in the columns of ``data``.</span>
+
+<span class="s2">    sep_set : set</span>
+
+<span class="s2">        the set of neibouring nodes of x and y (as a set()).</span>
+
+<span class="s2">    Returns</span>
+
+<span class="s2">    -------</span>
+
+<span class="s2">    G2_stat : float</span>
+
+<span class="s2">        The G^2 statistic.</span>
+
+<span class="s2">    p_val : float</span>
+
+<span class="s2">        The p-value of conditional independence.</span>
+
+<span class="s2">    Notes</span>
+
+<span class="s2">    -----</span>
+
+<span class="s2">    The ``G^2`` statistic for binary outcome &#39;a&#39; and &#39;b&#39; is:</span>
+
+<span class="s2">    .. math::</span>
+
+<span class="s2">        2 </span><span class="se">\\</span><span class="s2">times </span><span class="err">\</span><span class="s2">sum_{a,b} S^{a,b}_{ij} ln(</span><span class="se">\\</span><span class="s2">frac{s^{ab}_{ij} M}{s_i^a s_j^b})</span>
+
+<span class="s2">    which takes the sum over occurrences of &#39;a&#39; and &#39;b&#39; and multiplies</span>
+
+<span class="s2">    it by the number of samples, M and normalizes it :footcite:`Neapolitan2003`.</span>
+
+<span class="s2">    References</span>
+
+<span class="s2">    ----------</span>
+
+<span class="s2">    .. footbibliography::</span>
+
+<span class="s2">    </span><span class="se">&quot;&quot;</span><span class="s2">&quot;</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1"># rng = np.random.RandomState(random_state)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">isinstance</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="k">any</span><span class="p">(</span><span class="n">xy</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">data</span><span class="p">.</span><span class="k">columns</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="err">[</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="err">]</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">f</span><span class="s1">&#39;Variables &quot;x&quot; ({x}) and &quot;y&quot; ({y}) are not in the columns of &quot;data&quot;: &#39;</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{data.columns.values}.&quot;</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">n_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">data</span><span class="p">.</span><span class="n">shape</span><span class="err">[</span><span class="mi">0</span><span class="err">]</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">s_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">len</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">dof</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="nf">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">s_size</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1"># check number of samples relative to degrees of freedom</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1"># assuming no zeros</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">n_samples_req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dof</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">n_samples</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n_samples_req</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">raise</span><span class="w"> </span><span class="n">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Not enough samples. {n_samples} is too small. Need {n_samples_req}.&quot;</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1"># hard-cut off cardinality of separating set at 6</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">s_size</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">6</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># set up contingency table for binary data 2x2xdof</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">contingency_tble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_calculate_contingency_tble</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">sep_set</span><span class="p">,</span><span class="w"> </span><span class="n">dof</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">else</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># s_size &gt;= 6</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">contingency_tble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_calculate_highdim_contingency</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">sep_set</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">G2_stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_calculate_g_statistic</span><span class="p">(</span><span class="n">contingency_tble</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">p_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chi2</span><span class="p">.</span><span class="n">sf</span><span class="p">(</span><span class="n">G2_stat</span><span class="p">,</span><span class="w"> </span><span class="n">dof</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">G2_stat</span><span class="p">,</span><span class="w"> </span><span class="n">p_val</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+<h3 id="g_square_discrete">g_square_discrete</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">g_square_discrete</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">[</span><span class="o">+</span><span class="n">ScalarType</span><span class="p">]],</span> <span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
+    <span class="n">levels</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+</code></pre></div>
+
+<p>G square test for discrete data.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>np.ndarray</td>
+<td>pandas.DataFrame of shape (n_samples, n_variables)</td>
+<td>The data matrix to be used.</td>
+</tr>
+<tr>
+<td>x</td>
+<td>int</td>
+<td>str</td>
+<td>the first node variable. If <code>data</code> is a DataFrame, then</td>
+</tr>
+<tr>
+<td>'x' must be in the columns of <code>data</code>.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>y</td>
+<td>int</td>
+<td>str</td>
+<td>the second node variable. If <code>data</code> is a DataFrame, then</td>
+</tr>
+<tr>
+<td>'y' must be in the columns of <code>data</code>.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>sep_set</td>
+<td>set</td>
+<td>the set of neibouring nodes of x and y (as a set()).</td>
+<td>None</td>
+</tr>
+<tr>
+<td>levels</td>
+<td>list</td>
+<td>Levels of each column in the data matrix (as a list()).</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>float</td>
+<td>The G^2 test statistic.</td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">g_square_discrete</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">data</span><span class="err">:</span><span class="w"> </span><span class="ow">Union</span><span class="o">[</span><span class="n">NDArray, pd.DataFrame</span><span class="o">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="nl">x</span><span class="p">:</span><span class="w"> </span><span class="ow">Union</span><span class="o">[</span><span class="n">int, str</span><span class="o">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="nl">y</span><span class="p">:</span><span class="w"> </span><span class="ow">Union</span><span class="o">[</span><span class="n">int, str</span><span class="o">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="nl">sep_set</span><span class="p">:</span><span class="w"> </span><span class="k">Set</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">levels</span><span class="o">=</span><span class="k">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Tuple</span><span class="o">[</span><span class="n">float, float</span><span class="o">]</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">    </span><span class="ss">&quot;&quot;&quot;G square test for discrete data.</span>
+
+<span class="ss">    Parameters</span>
+
+<span class="ss">    ----------</span>
+
+<span class="ss">    data : np.ndarray | pandas.DataFrame of shape (n_samples, n_variables)</span>
+
+<span class="ss">        The data matrix to be used.</span>
+
+<span class="ss">    x : int | str</span>
+
+<span class="ss">        the first node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="ss">        &#39;x&#39; must be in the columns of ``data``.</span>
+
+<span class="ss">    y : int | str</span>
+
+<span class="ss">        the second node variable. If ``data`` is a DataFrame, then</span>
+
+<span class="ss">        &#39;y&#39; must be in the columns of ``data``.</span>
+
+<span class="ss">    sep_set : set</span>
+
+<span class="ss">        the set of neibouring nodes of x and y (as a set()).</span>
+
+<span class="ss">    levels : list</span>
+
+<span class="ss">        Levels of each column in the data matrix (as a list()).</span>
+
+<span class="ss">    Returns</span>
+
+<span class="ss">    -------</span>
+
+<span class="ss">    G2 : float</span>
+
+<span class="ss">        The G^2 test statistic.</span>
+
+<span class="ss">    p_val : float</span>
+
+<span class="ss">        the p-value of conditional independence.</span>
+
+<span class="ss">    &quot;&quot;&quot;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">isinstance</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">ndarray</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ow">any</span><span class="p">(</span><span class="n">xy</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">data</span><span class="p">.</span><span class="n">columns</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="o">[</span><span class="n">x, y</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">f</span><span class="s1">&#39;Variables &quot;x&quot; ({x}) and &quot;y&quot; ({y}) are not in the columns of &quot;data&quot;: &#39;</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">f</span><span class="ss">&quot;{data.columns.values}.&quot;</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">None</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">amax</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">n_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">data</span><span class="p">.</span><span class="n">shape</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">s_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">dof</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">levels</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">levels</span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">prod</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="k">map</span><span class="p">(</span><span class="n">lambda</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="w"> </span><span class="n">levels</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">sep_set</span><span class="p">)))</span><span class="w"></span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">samples</span><span class="w"> </span><span class="k">relative</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nf">degrees</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">freedom</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">n_samples_req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dof</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">n_samples</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nl">n_samples_req</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">raise</span><span class="w"> </span><span class="n">RuntimeError</span><span class="p">(</span><span class="n">f</span><span class="ss">&quot;Not enough samples. {n_samples} is too small. Need {n_samples_req}.&quot;</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">contingency_tble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span><span class="w"></span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">hard</span><span class="o">-</span><span class="n">cut</span><span class="w"> </span><span class="k">off</span><span class="w"> </span><span class="k">cardinality</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">separating</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="mi">5</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">s_size</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="nf">degrees</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">freedom</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">prod_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">prod</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="k">map</span><span class="p">(</span><span class="n">lambda</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="w"> </span><span class="n">levels</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">sep_set</span><span class="p">))).</span><span class="n">astype</span><span class="p">(</span><span class="nc">int</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="n">contingency</span><span class="w"> </span><span class="nc">table</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nc">binary</span><span class="w"> </span><span class="k">data</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="o">|</span><span class="n">X</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">|</span><span class="n">Y</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dof</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">contingency_tble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_calculate_contingency_tble</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">x</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">y</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">sep_set</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">prod_levels</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">data</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">nlevels_x</span><span class="o">=</span><span class="n">levels</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">nlevels_y</span><span class="o">=</span><span class="n">levels</span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">s_size</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">contingency_tble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_calculate_highdim_contingency</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">sep_set</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">calculate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">actual</span><span class="w"> </span><span class="n">G</span><span class="w"> </span><span class="n">statistic</span><span class="w"> </span><span class="n">given</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">contingency</span><span class="w"> </span><span class="nc">table</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">G2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_calculate_g_statistic</span><span class="p">(</span><span class="n">contingency_tble</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">dof</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">dof</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">levels</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">levels</span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">is</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="mf">0.</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">p_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">p_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chi2</span><span class="p">.</span><span class="n">sf</span><span class="p">(</span><span class="n">G2</span><span class="p">,</span><span class="w"> </span><span class="n">dof</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">G2</span><span class="p">,</span><span class="w"> </span><span class="n">p_val</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+<h2 id="classes">Classes</h2>
+<h3 id="gsquarecitest">GSquareCITest</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">GSquareCITest</span><span class="p">(</span>
+    <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;binary&#39;</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">GSquareCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">data_type</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;binary&quot;</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_type</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">test</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">df</span><span class="p">:</span><span class="w"> </span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">x_var</span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">y_var</span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">z_covariates</span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">levels</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Tuple</span><span class="p">[</span><span class="nb nb-Type">float</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="p">]:</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">z_covariates</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">None</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">z_covariates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">set</span><span class="p">()</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;binary&quot;</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_square_binary</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">elif</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_square_discrete</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;The acceptable data_type for G Square CI test is &quot;</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s1">&#39;&quot;binary&quot; and &quot;discrete&quot;, not {self.data_type}.&#39;</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+<hr />
+<h4 id="ancestors-in-mro">Ancestors (in MRO)</h4>
+<ul>
+<li>dodiscover.ci.base.BaseConditionalIndependenceTest</li>
+</ul>
+<h4 id="methods">Methods</h4>
+<h4 id="test">test</h4>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">x_var</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">y_var</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">levels</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Abstract method for all conditional independence tests.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>df</td>
+<td>pd.DataFrame</td>
+<td><em>description</em></td>
+<td>None</td>
+</tr>
+<tr>
+<td>x_var</td>
+<td>Any</td>
+<td><em>description</em></td>
+<td>None</td>
+</tr>
+<tr>
+<td>y_var</td>
+<td>Any</td>
+<td><em>description</em></td>
+<td>None</td>
+</tr>
+<tr>
+<td>z_covariates</td>
+<td>Any</td>
+<td><em>description</em>, by default None</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tuple[float, float]</td>
+<td><em>description</em></td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">test</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">df</span><span class="p">:</span><span class="w"> </span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">x_var</span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">y_var</span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">z_covariates</span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">levels</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Tuple</span><span class="p">[</span><span class="nb nb-Type">float</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="p">]:</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">z_covariates</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">None</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">z_covariates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">set</span><span class="p">()</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;binary&quot;</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_square_binary</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">elif</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_square_discrete</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;The acceptable data_type for G Square CI test is &quot;</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s1">&#39;&quot;binary&quot; and &quot;discrete&quot;, not {self.data_type}.&#39;</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../fisher_z_test/" title="Fisher Z Test" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Fisher Z Test
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../" title="Index" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Index
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Powered by
+        <a href="http://timothycrosley.github.io/portray">portray.</a>
+        You too can
+        <a href="http://timothycrosley.github.io/portray">
+          portray</a>
+        your Python project well using automatic documentation.
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.f8263e09.min.js", "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.4fc53ad4.min.js"></script>
+      
+    
+  </body>
+</html>

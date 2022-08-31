@@ -1,0 +1,2091 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.4, mkdocs-material-7.3.0">
+    
+    
+      
+        <title>Kernel Test - dodiscover</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8b42a75e.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4cae4f">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="green" data-md-color-accent="lightgreen">
+  
+    
+    <script>function __prefix(e){return new URL("../../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-dodiscovercikernel_test" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="dodiscover" class="md-header__button md-logo" aria-label="dodiscover" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dodiscover
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Kernel Test
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/adam2392/dodiscover/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dodiscover
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="dodiscover" class="md-nav__button md-logo" aria-label="dodiscover" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    dodiscover
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/adam2392/dodiscover/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dodiscover
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../CONTRIBUTING/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../DEVELOPING/" class="md-nav__link">
+        Developing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Dodiscover
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Dodiscover" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Dodiscover
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1_2" type="checkbox" id="__nav_4_1_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1_2">
+          Ci
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ci" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ci
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base/" class="md-nav__link">
+        Base
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fisher_z_test/" class="md-nav__link">
+        Fisher Z Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../g_test/" class="md-nav__link">
+        G Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Kernel Test
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Kernel Test
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    Variables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernelcitest" class="md-nav__link">
+    KernelCITest
+  </a>
+  
+    <nav class="md-nav" aria-label="KernelCITest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ancestors-in-mro" class="md-nav__link">
+    Ancestors (in MRO)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    test
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oracle/" class="md-nav__link">
+        Oracle
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    Variables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernelcitest" class="md-nav__link">
+    KernelCITest
+  </a>
+  
+    <nav class="md-nav" aria-label="KernelCITest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ancestors-in-mro" class="md-nav__link">
+    Ancestors (in MRO)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    test
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/adam2392/dodiscover/edit/main/reference/dodiscover/ci/kernel_test.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="module-dodiscovercikernel_test">Module dodiscover.ci.kernel_test</h1>
+<p>None</p>
+<p>None</p>
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">pairwise_distances</span><span class="p">,</span> <span class="n">pairwise_kernels</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">PAIRWISE_KERNEL_FUNCTIONS</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+
+<span class="k">class</span> <span class="nc">KernelCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+
+        <span class="bp">self</span><span class="p">,</span>
+
+        <span class="n">kernel_x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
+
+        <span class="n">kernel_y</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
+
+        <span class="n">kernel_z</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
+
+        <span class="n">null_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+
+        <span class="n">approx_with_gamma</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+
+        <span class="n">kwidth_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+        <span class="n">kwidth_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+        <span class="n">kwidth_z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
+
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+    <span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;Kernel (Conditional) Independence Test.</span>
+
+<span class="sd">        For testing (conditional) independence on continuous data, we</span>
+
+<span class="sd">        leverage kernels :footcite:`Zhang2011` that are computationally efficient.</span>
+
+<span class="sd">        Parameters</span>
+
+<span class="sd">        ----------</span>
+
+<span class="sd">        kernel_x : str, optional</span>
+
+<span class="sd">            The kernel function for data &#39;X&#39;, by default &quot;rbf&quot;.</span>
+
+<span class="sd">        kernel_y : str, optional</span>
+
+<span class="sd">            The kernel function for data &#39;Y&#39;, by default &quot;rbf&quot;.</span>
+
+<span class="sd">        kernel_z : str, optional</span>
+
+<span class="sd">            The kernel function for data &#39;Z&#39;, by default &quot;rbf&quot;.</span>
+
+<span class="sd">        null_size : int, optional</span>
+
+<span class="sd">            The number of samples to generate for the bootstrap distribution to</span>
+
+<span class="sd">            approximate the pvalue, by default 1000.</span>
+
+<span class="sd">        approx_with_gamma : bool, optional</span>
+
+<span class="sd">            Whether to use the Gamma distribution approximation for the pvalue,</span>
+
+<span class="sd">            by default True.</span>
+
+<span class="sd">        kwidth_x : _type_, optional</span>
+
+<span class="sd">            _description_, by default None</span>
+
+<span class="sd">        kwidth_y : _type_, optional</span>
+
+<span class="sd">            _description_, by default None</span>
+
+<span class="sd">        kwidth_z : _type_, optional</span>
+
+<span class="sd">            _description_, by default None</span>
+
+<span class="sd">        threshold : float, optional</span>
+
+<span class="sd">            The threshold set on the value of eigenvalues, by default 1e-5. Used</span>
+
+<span class="sd">            to regularize the method.</span>
+
+<span class="sd">        n_jobs : int, optional</span>
+
+<span class="sd">            The number of CPUs to use, by default None.</span>
+
+<span class="sd">        Notes</span>
+
+<span class="sd">        -----</span>
+
+<span class="sd">        Valid strings for ``compute_kernel`` are, as defined in</span>
+
+<span class="sd">        :func:`sklearn.metrics.pairwise.pairwise_kernels`,</span>
+
+<span class="sd">            [``&quot;additive_chi2&quot;``, ``&quot;chi2&quot;``, ``&quot;linear&quot;``, ``&quot;poly&quot;``,</span>
+
+<span class="sd">            ``&quot;polynomial&quot;``, ``&quot;rbf&quot;``,</span>
+
+<span class="sd">            ``&quot;laplacian&quot;``, ``&quot;sigmoid&quot;``, ``&quot;cosine&quot;``]</span>
+
+<span class="sd">        References</span>
+
+<span class="sd">        ----------</span>
+
+<span class="sd">        .. footbibliography::</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel_x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">kernel_x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+
+                <span class="sa">f</span><span class="s2">&quot;The kernels that are currently supported are </span><span class="si">{</span><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="si">}</span><span class="s2">. &quot;</span>
+
+                <span class="sa">f</span><span class="s2">&quot;You passed in </span><span class="si">{</span><span class="n">kernel_x</span><span class="si">}</span><span class="s2"> for kernel_x.&quot;</span>
+
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel_y</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">kernel_y</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+
+                <span class="sa">f</span><span class="s2">&quot;The kernels that are currently supported are </span><span class="si">{</span><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="si">}</span><span class="s2">. &quot;</span>
+
+                <span class="sa">f</span><span class="s2">&quot;You passed in </span><span class="si">{</span><span class="n">kernel_y</span><span class="si">}</span><span class="s2"> for kernel_y.&quot;</span>
+
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel_z</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">kernel_z</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+
+                <span class="sa">f</span><span class="s2">&quot;The kernels that are currently supported are </span><span class="si">{</span><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="si">}</span><span class="s2">. &quot;</span>
+
+                <span class="sa">f</span><span class="s2">&quot;You passed in </span><span class="si">{</span><span class="n">kernel_z</span><span class="si">}</span><span class="s2"> for kernel_z.&quot;</span>
+
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_x</span> <span class="o">=</span> <span class="n">kernel_x</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_y</span> <span class="o">=</span> <span class="n">kernel_y</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_z</span> <span class="o">=</span> <span class="n">kernel_z</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">null_size</span> <span class="o">=</span> <span class="n">null_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">approx_with_gamma</span> <span class="o">=</span> <span class="n">approx_with_gamma</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+
+        <span class="c1"># hyperparameters of the kernsl</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwidth_x</span> <span class="o">=</span> <span class="n">kwidth_x</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwidth_y</span> <span class="o">=</span> <span class="n">kwidth_y</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwidth_z</span> <span class="o">=</span> <span class="n">kwidth_z</span>
+
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+            <span class="n">Z</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">z_covariates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span>
+
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">z_covariates</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="kp">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)))</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">x_var</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[:,</span> <span class="n">np</span><span class="o">.</span><span class="kp">newaxis</span><span class="p">]</span>
+
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">y_var</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[:,</span> <span class="n">np</span><span class="o">.</span><span class="kp">newaxis</span><span class="p">]</span>
+
+        <span class="c1"># first normalize the data to have zero mean and unit variance</span>
+
+        <span class="c1"># along the columns of the data</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">Z</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># when running CI, \ddot{X} comprises of (X, Z)</span>
+
+            <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">Kz</span><span class="p">,</span> <span class="n">sigma_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span>
+
+                <span class="n">Z</span><span class="p">,</span>
+
+                <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+
+                <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_z</span><span class="p">,</span>
+
+                <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_z</span><span class="p">,</span>
+
+                <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+
+            <span class="p">)</span>
+
+        <span class="c1"># compute the centralized kernel matrices of each the datasets</span>
+
+        <span class="n">Kx</span><span class="p">,</span> <span class="n">sigma_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span>
+
+            <span class="n">X</span><span class="p">,</span>
+
+            <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+
+            <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_x</span><span class="p">,</span>
+
+            <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_x</span><span class="p">,</span>
+
+            <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+
+        <span class="p">)</span>
+
+        <span class="n">Ky</span><span class="p">,</span> <span class="n">sigma_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span>
+
+            <span class="n">Y</span><span class="p">,</span> <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_y</span><span class="p">,</span> <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_y</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span>
+
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="c1"># test statistic is just the normal bivariate independence</span>
+
+            <span class="c1"># test statistic</span>
+
+            <span class="n">test_stat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span> <span class="n">Ky</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">approx_with_gamma</span><span class="p">:</span>
+
+                <span class="c1"># approximate the pvalue using the Gamma distribution</span>
+
+                <span class="n">k_appr</span><span class="p">,</span> <span class="n">theta_appr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_approx_gamma_params_ind</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span> <span class="n">Ky</span><span class="p">)</span>
+
+                <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">test_stat</span><span class="p">,</span> <span class="n">k_appr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">theta_appr</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">null_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_null_ind</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span> <span class="n">Ky</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span>
+
+                <span class="n">pvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">null_samples</span> <span class="o">&gt;</span> <span class="n">test_stat</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># compute the centralizing matrix for the kernels according to</span>
+
+            <span class="c1"># conditioning set Z</span>
+
+            <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-7</span>
+
+            <span class="n">n</span> <span class="o">=</span> <span class="n">Kx</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">Rz</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="kp">pinv</span><span class="p">(</span><span class="n">Kz</span> <span class="o">+</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="kp">eye</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+            <span class="c1"># compute the centralized kernel matrices</span>
+
+            <span class="n">KxzR</span> <span class="o">=</span> <span class="n">Rz</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">Kx</span><span class="p">)</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">Rz</span><span class="p">)</span>
+
+            <span class="n">KyzR</span> <span class="o">=</span> <span class="n">Rz</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">Ky</span><span class="p">)</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">Rz</span><span class="p">)</span>
+
+            <span class="c1"># compute the conditional independence test statistic</span>
+
+            <span class="n">test_stat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="n">KxzR</span><span class="p">,</span> <span class="n">KyzR</span><span class="p">)</span>
+
+            <span class="c1"># compute the product of the eigenvectors</span>
+
+            <span class="n">uu_prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_prod_eigvecs</span><span class="p">(</span><span class="n">KxzR</span><span class="p">,</span> <span class="n">KyzR</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">approx_with_gamma</span><span class="p">:</span>
+
+                <span class="c1"># approximate the pvalue using the Gamma distribution</span>
+
+                <span class="n">k_appr</span><span class="p">,</span> <span class="n">theta_appr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_approx_gamma_params_ci</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span>
+
+                <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">test_stat</span><span class="p">,</span> <span class="n">k_appr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">theta_appr</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">null_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_null_ci</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span>
+
+                <span class="n">pvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">null_samples</span> <span class="o">&gt;</span> <span class="n">test_stat</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span>
+
+    <span class="k">def</span> <span class="nf">_approx_gamma_params_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Kx</span><span class="p">,</span> <span class="n">Ky</span><span class="p">):</span>
+
+        <span class="n">T</span> <span class="o">=</span> <span class="n">Kx</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">mean_appr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">trace</span><span class="p">(</span><span class="n">Kx</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="kp">trace</span><span class="p">(</span><span class="n">Ky</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span>
+
+        <span class="n">var_appr</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="kp">trace</span><span class="p">(</span><span class="n">Kx</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">Kx</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="kp">trace</span><span class="p">(</span><span class="n">Ky</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">Ky</span><span class="p">))</span> <span class="o">/</span> <span class="n">T</span> <span class="o">/</span> <span class="n">T</span>
+
+        <span class="n">k_appr</span> <span class="o">=</span> <span class="n">mean_appr</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">var_appr</span>
+
+        <span class="n">theta_appr</span> <span class="o">=</span> <span class="n">var_appr</span> <span class="o">/</span> <span class="n">mean_appr</span>
+
+        <span class="k">return</span> <span class="n">k_appr</span><span class="p">,</span> <span class="n">theta_appr</span>
+
+    <span class="k">def</span> <span class="nf">_approx_gamma_params_ci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uu_prod</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;Get parameters of the approximated Gamma distribution.</span>
+
+<span class="sd">        Parameters</span>
+
+<span class="sd">        ----------</span>
+
+<span class="sd">        uu_prod : np.ndarray of shape (n_features, n_features)</span>
+
+<span class="sd">            The product of the eigenvectors of Kx and Ky, the kernels</span>
+
+<span class="sd">            on the input data, X and Y.</span>
+
+<span class="sd">        Returns</span>
+
+<span class="sd">        -------</span>
+
+<span class="sd">        k_appr : float</span>
+
+<span class="sd">            The shape parameter of the Gamma distribution.</span>
+
+<span class="sd">        theta_appr : float</span>
+
+<span class="sd">            The scale parameter of the Gamma distribution.</span>
+
+<span class="sd">        Notes</span>
+
+<span class="sd">        -----</span>
+
+<span class="sd">        X ~ Gamma(k, theta) with a probability density function of the following:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            f(x; k, \\theta) = \\frac{x^{k-1} e^{-x / \\theta}}{\\theta^k \\Gamma(k)}</span>
+
+<span class="sd">        where $\\Gamma(k)$ is the Gamma function evaluated at k. In this scenario</span>
+
+<span class="sd">        k governs the shape of the pdf, while $\\theta$ governs more how spread out</span>
+
+<span class="sd">        the data is.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># approximate the mean and the variance</span>
+
+        <span class="n">mean_appr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">trace</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span>
+
+        <span class="n">var_appr</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="kp">trace</span><span class="p">(</span><span class="n">uu_prod</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">))</span>
+
+        <span class="n">k_appr</span> <span class="o">=</span> <span class="n">mean_appr</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">var_appr</span>
+
+        <span class="n">theta_appr</span> <span class="o">=</span> <span class="n">var_appr</span> <span class="o">/</span> <span class="n">mean_appr</span>
+
+        <span class="k">return</span> <span class="n">k_appr</span><span class="p">,</span> <span class="n">theta_appr</span>
+
+    <span class="k">def</span> <span class="nf">_compute_prod_eigvecs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Kx</span><span class="p">,</span> <span class="n">Ky</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">T</span> <span class="o">=</span> <span class="n">Kx</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">wx</span><span class="p">,</span> <span class="n">vx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">Kx</span> <span class="o">+</span> <span class="n">Kx</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+
+        <span class="n">wy</span><span class="p">,</span> <span class="n">vy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">Ky</span> <span class="o">+</span> <span class="n">Ky</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="c1"># threshold eigenvalues that are below a certain threshold</span>
+
+            <span class="c1"># and remove their corresponding values and eigenvectors</span>
+
+            <span class="n">vx</span> <span class="o">=</span> <span class="n">vx</span><span class="p">[:,</span> <span class="n">wx</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="kp">max</span><span class="p">(</span><span class="n">wx</span><span class="p">)</span> <span class="o">*</span> <span class="n">threshold</span><span class="p">]</span>
+
+            <span class="n">wx</span> <span class="o">=</span> <span class="n">wx</span><span class="p">[</span><span class="n">wx</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="kp">max</span><span class="p">(</span><span class="n">wx</span><span class="p">)</span> <span class="o">*</span> <span class="n">threshold</span><span class="p">]</span>
+
+            <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span><span class="p">[:,</span> <span class="n">wy</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="kp">max</span><span class="p">(</span><span class="n">wy</span><span class="p">)</span> <span class="o">*</span> <span class="n">threshold</span><span class="p">]</span>
+
+            <span class="n">wy</span> <span class="o">=</span> <span class="n">wy</span><span class="p">[</span><span class="n">wy</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="kp">max</span><span class="p">(</span><span class="n">wy</span><span class="p">)</span> <span class="o">*</span> <span class="n">threshold</span><span class="p">]</span>
+
+        <span class="c1"># scale the eigenvectors by their eigenvalues</span>
+
+        <span class="n">vx</span> <span class="o">=</span> <span class="n">vx</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="kp">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="kp">sqrt</span><span class="p">(</span><span class="n">wx</span><span class="p">)))</span>
+
+        <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="kp">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="kp">sqrt</span><span class="p">(</span><span class="n">wy</span><span class="p">)))</span>
+
+        <span class="c1"># compute the product of the scaled eigenvectors</span>
+
+        <span class="n">num_eigx</span> <span class="o">=</span> <span class="n">vx</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">num_eigy</span> <span class="o">=</span> <span class="n">vy</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">size_u</span> <span class="o">=</span> <span class="n">num_eigx</span> <span class="o">*</span> <span class="n">num_eigy</span>
+
+        <span class="n">uu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">zeros</span><span class="p">((</span><span class="n">T</span><span class="p">,</span> <span class="n">size_u</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_eigx</span><span class="p">):</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_eigy</span><span class="p">):</span>
+
+                <span class="c1"># compute the dot product of eigenvectors</span>
+
+                <span class="n">uu</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">*</span> <span class="n">num_eigy</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">vx</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">vy</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span>
+
+        <span class="c1"># now compute the product</span>
+
+        <span class="k">if</span> <span class="n">size_u</span> <span class="o">&gt;</span> <span class="n">T</span><span class="p">:</span>
+
+            <span class="n">uu_prod</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">uu</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">uu_prod</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">uu</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">uu_prod</span>
+
+    <span class="k">def</span> <span class="nf">_compute_V_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">KxR</span><span class="p">,</span> <span class="n">KyR</span><span class="p">):</span>
+
+        <span class="c1"># n = KxR.shape[0]</span>
+
+        <span class="c1"># compute the sum of the two kernsl</span>
+
+        <span class="n">Vstat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">KxR</span> <span class="o">*</span> <span class="n">KyR</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Vstat</span>
+
+    <span class="k">def</span> <span class="nf">_compute_null_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Kx</span><span class="p">,</span> <span class="n">Ky</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">max_num_eigs</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">Kx</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># get the eigenvalues in ascending order, smallest to largest</span>
+
+        <span class="n">eigvals_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Kx</span><span class="p">)</span>
+
+        <span class="n">eigvals_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Ky</span><span class="p">)</span>
+
+        <span class="c1"># optionally only keep the largest &quot;N&quot; eigenvalues</span>
+
+        <span class="n">eigvals_x</span> <span class="o">=</span> <span class="n">eigvals_x</span><span class="p">[</span><span class="o">-</span><span class="n">max_num_eigs</span><span class="p">:]</span>
+
+        <span class="n">eigvals_y</span> <span class="o">=</span> <span class="n">eigvals_y</span><span class="p">[</span><span class="o">-</span><span class="n">max_num_eigs</span><span class="p">:]</span>
+
+        <span class="n">num_eigs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigvals_x</span><span class="p">)</span>
+
+        <span class="c1"># compute the entry-wise product of the eigenvalues and store it as a vector</span>
+
+        <span class="n">eigvals_prod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span>
+
+            <span class="n">eigvals_x</span><span class="o">.</span><span class="kp">reshape</span><span class="p">(</span><span class="n">num_eigs</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">eigvals_y</span><span class="o">.</span><span class="kp">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_eigs</span><span class="p">)</span>
+
+        <span class="p">)</span><span class="o">.</span><span class="kp">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># only keep eigenvalues above a certain threshold</span>
+
+        <span class="n">eigvals_prod</span> <span class="o">=</span> <span class="n">eigvals_prod</span><span class="p">[</span><span class="n">eigvals_prod</span> <span class="o">&gt;</span> <span class="n">eigvals_prod</span><span class="o">.</span><span class="kp">max</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">]</span>
+
+        <span class="c1"># generate chi-square distributed values z_{ij} with degree of freedom 1</span>
+
+        <span class="n">f_rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="kp">size</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigvals_prod</span><span class="p">),</span> <span class="n">n_samples</span><span class="p">))</span>
+
+        <span class="c1"># compute the null distribution consisting now of (n_samples)</span>
+
+        <span class="c1"># of chi-squared random variables weighted by the eigenvalue products</span>
+
+        <span class="n">null_dist</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n</span> <span class="o">*</span> <span class="n">eigvals_prod</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">f_rand</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">null_dist</span>
+
+    <span class="k">def</span> <span class="nf">_compute_null_ci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uu_prod</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+
+        <span class="c1"># the eigenvalues of ww^T</span>
+
+        <span class="n">eig_uu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span>
+
+        <span class="n">eig_uu</span> <span class="o">=</span> <span class="n">eig_uu</span><span class="p">[</span><span class="n">eig_uu</span> <span class="o">&gt;</span> <span class="n">eig_uu</span><span class="o">.</span><span class="kp">max</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">]</span>
+
+        <span class="c1"># generate chi-square distributed values z_{ij} with degree of freedom 1</span>
+
+        <span class="n">f_rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="kp">size</span><span class="o">=</span><span class="p">(</span><span class="n">eig_uu</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_samples</span><span class="p">))</span>
+
+        <span class="c1"># compute the null distribution consisting now of (n_samples)</span>
+
+        <span class="c1"># of chi-squared random variables weighted by the eigenvalue products</span>
+
+        <span class="n">null_dist</span> <span class="o">=</span> <span class="n">eig_uu</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">f_rand</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">null_dist</span>
+
+    <span class="k">def</span> <span class="nf">_compute_kernel</span><span class="p">(</span>
+
+        <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="n">kwidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span>
+
+    <span class="p">):</span>
+
+        <span class="c1"># if the width of the kernel is not set, then use the median trick to set the</span>
+
+        <span class="c1"># kernel width based on the data X</span>
+
+        <span class="k">if</span> <span class="n">kwidth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="c1"># Note: sigma = 1 / np.sqrt(kwidth)</span>
+
+            <span class="c1"># compute N x N pairwise distance matrix</span>
+
+            <span class="n">dists</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">distance_metric</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span>
+
+            <span class="c1"># compute median of off diagonal elements</span>
+
+            <span class="n">med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">median</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">dists</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># prevents division by zero when used on label vectors</span>
+
+            <span class="n">med</span> <span class="o">=</span> <span class="n">med</span> <span class="k">if</span> <span class="n">med</span> <span class="k">else</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">med</span> <span class="o">=</span> <span class="n">kwidth</span>
+
+        <span class="n">extra_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;rbf&quot;</span><span class="p">:</span>
+
+            <span class="c1"># compute the normalization factor of the width of the Gaussian kernel</span>
+
+            <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">med</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+            <span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gamma</span>
+
+        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;polynomial&quot;</span><span class="p">:</span>
+
+            <span class="n">degree</span> <span class="o">=</span> <span class="mi">2</span>
+
+            <span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">degree</span>
+
+        <span class="c1"># compute the potentially pairwise kernel</span>
+
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">pairwise_kernels</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">centered</span><span class="p">:</span>
+
+            <span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center_kernel</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">med</span>
+
+    <span class="k">def</span> <span class="nf">_center_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;Centers the kernel matrix.</span>
+
+<span class="sd">        Applies a transformation H * K * H, where H is a diagonal matrix with 1/n along</span>
+
+<span class="sd">        the diagonal.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="kp">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n</span>
+
+        <span class="k">return</span> <span class="n">H</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="kp">dot</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+</code></pre></div>
+
+</details>
+<h2 id="variables">Variables</h2>
+<div class="codehilite"><pre><span></span><code><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span>
+</code></pre></div>
+
+<h2 id="classes">Classes</h2>
+<h3 id="kernelcitest">KernelCITest</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">KernelCITest</span><span class="p">(</span>
+    <span class="n">kernel_x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span>
+    <span class="n">kernel_y</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span>
+    <span class="n">kernel_z</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span>
+    <span class="n">null_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">approx_with_gamma</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">kwidth_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">kwidth_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">kwidth_z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-05</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">KernelCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kernel_x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kernel_y</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kernel_z</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">null_size</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">approx_with_gamma</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">True</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kwidth_x</span><span class="o">=</span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kwidth_y</span><span class="o">=</span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kwidth_z</span><span class="o">=</span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e-5</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">n_jobs</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Kernel (Conditional) Independence Test.</span>
+
+<span class="sd">        For testing (conditional) independence on continuous data, we</span>
+
+<span class="sd">        leverage kernels :footcite:`Zhang2011` that are computationally efficient.</span>
+
+<span class="sd">        Parameters</span>
+
+<span class="sd">        ----------</span>
+
+<span class="sd">        kernel_x : str, optional</span>
+
+<span class="sd">            The kernel function for data &#39;X&#39;, by default &quot;rbf&quot;.</span>
+
+<span class="sd">        kernel_y : str, optional</span>
+
+<span class="sd">            The kernel function for data &#39;Y&#39;, by default &quot;rbf&quot;.</span>
+
+<span class="sd">        kernel_z : str, optional</span>
+
+<span class="sd">            The kernel function for data &#39;Z&#39;, by default &quot;rbf&quot;.</span>
+
+<span class="sd">        null_size : int, optional</span>
+
+<span class="sd">            The number of samples to generate for the bootstrap distribution to</span>
+
+<span class="sd">            approximate the pvalue, by default 1000.</span>
+
+<span class="sd">        approx_with_gamma : bool, optional</span>
+
+<span class="sd">            Whether to use the Gamma distribution approximation for the pvalue,</span>
+
+<span class="sd">            by default True.</span>
+
+<span class="sd">        kwidth_x : _type_, optional</span>
+
+<span class="sd">            _description_, by default None</span>
+
+<span class="sd">        kwidth_y : _type_, optional</span>
+
+<span class="sd">            _description_, by default None</span>
+
+<span class="sd">        kwidth_z : _type_, optional</span>
+
+<span class="sd">            _description_, by default None</span>
+
+<span class="sd">        threshold : float, optional</span>
+
+<span class="sd">            The threshold set on the value of eigenvalues, by default 1e-5. Used</span>
+
+<span class="sd">            to regularize the method.</span>
+
+<span class="sd">        n_jobs : int, optional</span>
+
+<span class="sd">            The number of CPUs to use, by default None.</span>
+
+<span class="sd">        Notes</span>
+
+<span class="sd">        -----</span>
+
+<span class="sd">        Valid strings for ``compute_kernel`` are, as defined in</span>
+
+<span class="sd">        :func:`sklearn.metrics.pairwise.pairwise_kernels`,</span>
+
+<span class="sd">            [``&quot;additive_chi2&quot;``, ``&quot;chi2&quot;``, ``&quot;linear&quot;``, ``&quot;poly&quot;``,</span>
+
+<span class="sd">            ``&quot;polynomial&quot;``, ``&quot;rbf&quot;``,</span>
+
+<span class="sd">            ``&quot;laplacian&quot;``, ``&quot;sigmoid&quot;``, ``&quot;cosine&quot;``]</span>
+
+<span class="sd">        References</span>
+
+<span class="sd">        ----------</span>
+
+<span class="sd">        .. footbibliography::</span>
+
+<span class="sd">        &quot;&quot;&quot;</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">isinstance</span><span class="p">(</span><span class="n">kernel_x</span><span class="p">,</span><span class="w"> </span><span class="nb">str</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">kernel_x</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;The kernels that are currently supported are {PAIRWISE_KERNEL_FUNCTIONS}. &quot;</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;You passed in {kernel_x} for kernel_x.&quot;</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">isinstance</span><span class="p">(</span><span class="n">kernel_y</span><span class="p">,</span><span class="w"> </span><span class="nb">str</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">kernel_y</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;The kernels that are currently supported are {PAIRWISE_KERNEL_FUNCTIONS}. &quot;</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;You passed in {kernel_y} for kernel_y.&quot;</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">isinstance</span><span class="p">(</span><span class="n">kernel_z</span><span class="p">,</span><span class="w"> </span><span class="nb">str</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">kernel_z</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">PAIRWISE_KERNEL_FUNCTIONS</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">ValueError</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;The kernels that are currently supported are {PAIRWISE_KERNEL_FUNCTIONS}. &quot;</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">f</span><span class="s2">&quot;You passed in {kernel_z} for kernel_z.&quot;</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kernel_x</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kernel_y</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kernel_z</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">null_size</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">approx_with_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">approx_with_gamma</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threshold</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_jobs</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># hyperparameters of the kernsl</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kwidth_x</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kwidth_y</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kwidth_z</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="o">=</span><span class="n">None</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">z_covariates</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">None</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">z_covariates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">[</span><span class="n">z_covariates</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">[</span><span class="n">x_var</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[:,</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">[</span><span class="n">y_var</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[:,</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># first normalize the data to have zero mean and unit variance</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># along the columns of the data</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">Z</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">None</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># when running CI, \ddot{X} comprises of (X, Z)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="p">),</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Kz</span><span class="p">,</span><span class="w"> </span><span class="n">sigma_z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">Z</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_z</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_z</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">centered</span><span class="o">=</span><span class="n">True</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the centralized kernel matrices of each the datasets</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">sigma_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">X</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_x</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_x</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">centered</span><span class="o">=</span><span class="n">True</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Ky</span><span class="p">,</span><span class="w"> </span><span class="n">sigma_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_y</span><span class="p">,</span><span class="w"> </span><span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_y</span><span class="p">,</span><span class="w"> </span><span class="n">centered</span><span class="o">=</span><span class="n">True</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">Z</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">None</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># test statistic is just the normal bivariate independence</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># test statistic</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">test_stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">approx_with_gamma</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="c1"># approximate the pvalue using the Gamma distribution</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_approx_gamma_params_ind</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">test_stat</span><span class="p">,</span><span class="w"> </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">null_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_null_ind</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">,</span><span class="w"> </span><span class="n">n_samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">null_samples</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">test_stat</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute the centralizing matrix for the kernels according to</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># conditioning set Z</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">epsilon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e-7</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Kx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Rz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Kz</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute the centralized kernel matrices</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">KxzR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rz</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Kx</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Rz</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">KyzR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rz</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ky</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Rz</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute the conditional independence test statistic</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">test_stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="n">KxzR</span><span class="p">,</span><span class="w"> </span><span class="n">KyzR</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute the product of the eigenvectors</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">uu_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_prod_eigvecs</span><span class="p">(</span><span class="n">KxzR</span><span class="p">,</span><span class="w"> </span><span class="n">KyzR</span><span class="p">,</span><span class="w"> </span><span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">approx_with_gamma</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="c1"># approximate the pvalue using the Gamma distribution</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_approx_gamma_params_ci</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">test_stat</span><span class="p">,</span><span class="w"> </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">null_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_null_ci</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">null_samples</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">test_stat</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">test_stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_approx_gamma_params_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Kx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">mean_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Kx</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Ky</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">T</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">var_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Kx</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Kx</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Ky</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ky</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">T</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">k_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean_appr</span><span class="o">**</span><span class="mi">2</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">var_appr</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">theta_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var_appr</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mean_appr</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_approx_gamma_params_ci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">uu_prod</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get parameters of the approximated Gamma distribution.</span>
+
+<span class="sd">        Parameters</span>
+
+<span class="sd">        ----------</span>
+
+<span class="sd">        uu_prod : np.ndarray of shape (n_features, n_features)</span>
+
+<span class="sd">            The product of the eigenvectors of Kx and Ky, the kernels</span>
+
+<span class="sd">            on the input data, X and Y.</span>
+
+<span class="sd">        Returns</span>
+
+<span class="sd">        -------</span>
+
+<span class="sd">        k_appr : float</span>
+
+<span class="sd">            The shape parameter of the Gamma distribution.</span>
+
+<span class="sd">        theta_appr : float</span>
+
+<span class="sd">            The scale parameter of the Gamma distribution.</span>
+
+<span class="sd">        Notes</span>
+
+<span class="sd">        -----</span>
+
+<span class="sd">        X ~ Gamma(k, theta) with a probability density function of the following:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            f(x; k, \\theta) = \\frac{x^{k-1} e^{-x / \\theta}}{\\theta^k \\Gamma(k)}</span>
+
+<span class="sd">        where $\\Gamma(k)$ is the Gamma function evaluated at k. In this scenario</span>
+
+<span class="sd">        k governs the shape of the pdf, while $\\theta$ governs more how spread out</span>
+
+<span class="sd">        the data is.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># approximate the mean and the variance</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">mean_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">var_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">uu_prod</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">k_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean_appr</span><span class="o">**</span><span class="mi">2</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">var_appr</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">theta_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var_appr</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mean_appr</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_compute_prod_eigvecs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">,</span><span class="w"> </span><span class="n">threshold</span><span class="o">=</span><span class="n">None</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Kx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">wx</span><span class="p">,</span><span class="w"> </span><span class="n">vx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">Kx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Kx</span><span class="o">.</span><span class="n">T</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">wy</span><span class="p">,</span><span class="w"> </span><span class="n">vy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">Ky</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Ky</span><span class="o">.</span><span class="n">T</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">threshold</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">None</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># threshold eigenvalues that are below a certain threshold</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># and remove their corresponding values and eigenvectors</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">vx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vx</span><span class="p">[:,</span><span class="w"> </span><span class="n">wx</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">wx</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">threshold</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">wx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wx</span><span class="p">[</span><span class="n">wx</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">wx</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">threshold</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">vy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vy</span><span class="p">[:,</span><span class="w"> </span><span class="n">wy</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">wy</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">threshold</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">wy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wy</span><span class="p">[</span><span class="n">wy</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">wy</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">threshold</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># scale the eigenvectors by their eigenvalues</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">vx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vx</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">wx</span><span class="p">)))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">vy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">wy</span><span class="p">)))</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the product of the scaled eigenvectors</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">num_eigx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">num_eigy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vy</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">size_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_eigx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_eigy</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">uu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">size_u</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">num_eigx</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">num_eigy</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">                </span><span class="c1"># compute the dot product of eigenvectors</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">uu</span><span class="p">[:,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_eigy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vx</span><span class="p">[:,</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">vy</span><span class="p">[:,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># now compute the product</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">size_u</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">uu_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uu</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">uu</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">uu_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uu</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">uu</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">uu_prod</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">KxR</span><span class="p">,</span><span class="w"> </span><span class="n">KyR</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># n = KxR.shape[0]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the sum of the two kernsl</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Vstat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">KxR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">KyR</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Vstat</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_compute_null_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">,</span><span class="w"> </span><span class="n">n_samples</span><span class="p">,</span><span class="w"> </span><span class="n">max_num_eigs</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Kx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># get the eigenvalues in ascending order, smallest to largest</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eigvals_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Kx</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eigvals_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Ky</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># optionally only keep the largest &quot;N&quot; eigenvalues</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eigvals_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigvals_x</span><span class="p">[</span><span class="o">-</span><span class="n">max_num_eigs</span><span class="p">:]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eigvals_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigvals_y</span><span class="p">[</span><span class="o">-</span><span class="n">max_num_eigs</span><span class="p">:]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">num_eigs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">len</span><span class="p">(</span><span class="n">eigvals_x</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the entry-wise product of the eigenvalues and store it as a vector</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eigvals_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">eigvals_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_eigs</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">eigvals_y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">num_eigs</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># only keep eigenvalues above a certain threshold</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eigvals_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigvals_prod</span><span class="p">[</span><span class="n">eigvals_prod</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">eigvals_prod</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># generate chi-square distributed values z_{ij} with degree of freedom 1</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">f_rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">eigvals_prod</span><span class="p">),</span><span class="w"> </span><span class="n">n_samples</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the null distribution consisting now of (n_samples)</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># of chi-squared random variables weighted by the eigenvalue products</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">null_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eigvals_prod</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f_rand</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">null_dist</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_compute_null_ci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">uu_prod</span><span class="p">,</span><span class="w"> </span><span class="n">n_samples</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># the eigenvalues of ww^T</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eig_uu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">eig_uu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eig_uu</span><span class="p">[</span><span class="n">eig_uu</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">eig_uu</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># generate chi-square distributed values z_{ij} with degree of freedom 1</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">f_rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">eig_uu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">n_samples</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the null distribution consisting now of (n_samples)</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># of chi-squared random variables weighted by the eigenvalue products</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">null_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eig_uu</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f_rand</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">null_dist</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">        </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="o">=</span><span class="n">None</span><span class="p">,</span><span class="w"> </span><span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">kwidth</span><span class="o">=</span><span class="n">None</span><span class="p">,</span><span class="w"> </span><span class="n">centered</span><span class="o">=</span><span class="n">True</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># if the width of the kernel is not set, then use the median trick to set the</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># kernel width based on the data X</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">kwidth</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">None</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># Note: sigma = 1 / np.sqrt(kwidth)</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute N x N pairwise distance matrix</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">dists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pairwise_distances</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="o">=</span><span class="n">distance_metric</span><span class="p">,</span><span class="w"> </span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute median of off diagonal elements</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">med</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">dists</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">])</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># prevents division by zero when used on label vectors</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">med</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">med</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">med</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">med</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kwidth</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">extra_kwargs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dict</span><span class="p">()</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">metric</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;rbf&quot;</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="c1"># compute the normalization factor of the width of the Gaussian kernel</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">med</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gamma</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">elif</span><span class="w"> </span><span class="n">metric</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;polynomial&quot;</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">degree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">degree</span><span class="w"></span>
+
+<span class="w">        </span><span class="c1"># compute the potentially pairwise kernel</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">kernel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pairwise_kernels</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span><span class="w"> </span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span><span class="w"> </span><span class="o">**</span><span class="n">extra_kwargs</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">centered</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">kernel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_center_kernel</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">kernel</span><span class="p">,</span><span class="w"> </span><span class="n">med</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_center_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">):</span><span class="w"></span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Centers the kernel matrix.</span>
+
+<span class="sd">        Applies a transformation H * K * H, where H is a diagonal matrix with 1/n along</span>
+
+<span class="sd">        the diagonal.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">H</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+<hr />
+<h4 id="ancestors-in-mro">Ancestors (in MRO)</h4>
+<ul>
+<li>dodiscover.ci.base.BaseConditionalIndependenceTest</li>
+</ul>
+<h4 id="methods">Methods</h4>
+<h4 id="test">test</h4>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">x_var</span><span class="p">,</span>
+    <span class="n">y_var</span><span class="p">,</span>
+    <span class="n">z_covariates</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Abstract method for all conditional independence tests.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>df</td>
+<td>pd.DataFrame</td>
+<td><em>description</em></td>
+<td>None</td>
+</tr>
+<tr>
+<td>x_var</td>
+<td>Any</td>
+<td><em>description</em></td>
+<td>None</td>
+</tr>
+<tr>
+<td>y_var</td>
+<td>Any</td>
+<td><em>description</em></td>
+<td>None</td>
+</tr>
+<tr>
+<td>z_covariates</td>
+<td>Any</td>
+<td><em>description</em>, by default None</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tuple[float, float]</td>
+<td><em>description</em></td>
+</tr>
+</tbody>
+</table>
+<details class="example">
+<summary>View Source</summary>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">test</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="o">=</span><span class="k">None</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">x_var</span><span class="p">,</span><span class="w"> </span><span class="n">y_var</span><span class="p">,</span><span class="w"> </span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">z_covariates</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">None</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">z_covariates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="o">[</span><span class="n">z_covariates</span><span class="o">]</span><span class="p">.</span><span class="n">to_numpy</span><span class="p">().</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="o">[</span><span class="n">x_var</span><span class="o">]</span><span class="p">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">[</span><span class="n">:, np.newaxis</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="o">[</span><span class="n">y_var</span><span class="o">]</span><span class="p">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">[</span><span class="n">:, np.newaxis</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="k">normalize</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="n">mean</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">variance</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">along</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">Z</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="k">None</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">CI</span><span class="p">,</span><span class="w"> </span><span class="err">\</span><span class="n">ddot</span><span class="err">{</span><span class="n">X</span><span class="err">}</span><span class="w"> </span><span class="n">comprises</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="p">),</span><span class="w"> </span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Kz</span><span class="p">,</span><span class="w"> </span><span class="n">sigma_z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">Z</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">distance_metric</span><span class="o">=</span><span class="ss">&quot;l2&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">metric</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">kernel_z</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">kwidth</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">kwidth_z</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">centered</span><span class="o">=</span><span class="k">True</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">compute</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">centralized</span><span class="w"> </span><span class="n">kernel</span><span class="w"> </span><span class="n">matrices</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">datasets</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">sigma_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">X</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">distance_metric</span><span class="o">=</span><span class="ss">&quot;l2&quot;</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">metric</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">kernel_x</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">kwidth</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">kwidth_x</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">centered</span><span class="o">=</span><span class="k">True</span><span class="p">,</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">Ky</span><span class="p">,</span><span class="w"> </span><span class="n">sigma_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_kernel</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">distance_metric</span><span class="o">=</span><span class="ss">&quot;l2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">kernel_y</span><span class="p">,</span><span class="w"> </span><span class="n">kwidth</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">kwidth_y</span><span class="p">,</span><span class="w"> </span><span class="n">centered</span><span class="o">=</span><span class="k">True</span><span class="w"></span>
+
+<span class="w">        </span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">Z</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">None</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">statistic</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">normal</span><span class="w"> </span><span class="n">bivariate</span><span class="w"> </span><span class="n">independence</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">statistic</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">test_stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="nl">approx_with_gamma</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="n">approximate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">pvalue</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Gamma</span><span class="w"> </span><span class="n">distribution</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_approx_gamma_params_ind</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="n">gamma</span><span class="p">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">test_stat</span><span class="p">,</span><span class="w"> </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">null_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_null_ind</span><span class="p">(</span><span class="n">Kx</span><span class="p">,</span><span class="w"> </span><span class="n">Ky</span><span class="p">,</span><span class="w"> </span><span class="n">n_samples</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">null_samples</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">test_stat</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nc">float</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">compute</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">centralizing</span><span class="w"> </span><span class="n">matrix</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">kernels</span><span class="w"> </span><span class="n">according</span><span class="w"> </span><span class="k">to</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="n">conditioning</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">Z</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">epsilon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e-7</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Kx</span><span class="p">.</span><span class="n">shape</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">Rz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Kz</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">compute</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">centralized</span><span class="w"> </span><span class="n">kernel</span><span class="w"> </span><span class="n">matrices</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">KxzR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rz</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Kx</span><span class="p">).</span><span class="n">dot</span><span class="p">(</span><span class="n">Rz</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">KyzR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rz</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ky</span><span class="p">).</span><span class="n">dot</span><span class="p">(</span><span class="n">Rz</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">compute</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">conditional</span><span class="w"> </span><span class="n">independence</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">statistic</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">test_stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_V_statistic</span><span class="p">(</span><span class="n">KxzR</span><span class="p">,</span><span class="w"> </span><span class="n">KyzR</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">compute</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">eigenvectors</span><span class="w"></span>
+
+<span class="w">            </span><span class="n">uu_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_prod_eigvecs</span><span class="p">(</span><span class="n">KxzR</span><span class="p">,</span><span class="w"> </span><span class="n">KyzR</span><span class="p">,</span><span class="w"> </span><span class="n">threshold</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">threshold</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="nl">approx_with_gamma</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="n">approximate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">pvalue</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Gamma</span><span class="w"> </span><span class="n">distribution</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_approx_gamma_params_ci</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stats</span><span class="p">.</span><span class="n">gamma</span><span class="p">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">test_stat</span><span class="p">,</span><span class="w"> </span><span class="n">k_appr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">theta_appr</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">null_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_compute_null_ci</span><span class="p">(</span><span class="n">uu_prod</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">                </span><span class="n">pvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">null_samples</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">test_stat</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nc">float</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">null_size</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">test_stat</span><span class="p">,</span><span class="w"> </span><span class="n">pvalue</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../" title="Index" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Index
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../oracle/" title="Oracle" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Oracle
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Powered by
+        <a href="http://timothycrosley.github.io/portray">portray.</a>
+        You too can
+        <a href="http://timothycrosley.github.io/portray">
+          portray</a>
+        your Python project well using automatic documentation.
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.f8263e09.min.js", "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.4fc53ad4.min.js"></script>
+      
+    
+  </body>
+</html>

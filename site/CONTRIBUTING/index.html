@@ -1,0 +1,813 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.4, mkdocs-material-7.3.0">
+    
+    
+      
+        <title>Contributing - dodiscover</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8b42a75e.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4cae4f">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="green" data-md-color-accent="lightgreen">
+  
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#contributing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="dodiscover" class="md-header__button md-logo" aria-label="dodiscover" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dodiscover
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Contributing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/adam2392/dodiscover/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dodiscover
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="dodiscover" class="md-nav__button md-logo" aria-label="dodiscover" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    dodiscover
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/adam2392/dodiscover/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dodiscover
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contributing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Contributing
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bug-reports-and-feature-requests" class="md-nav__link">
+    Bug reports and feature requests
+  </a>
+  
+    <nav class="md-nav" aria-label="Bug reports and feature requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#did-you-find-a-bug" class="md-nav__link">
+    Did you find a bug?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-you-have-a-suggestion-for-an-enhancement-or-new-feature" class="md-nav__link">
+    Do you have a suggestion for an enhancement or new feature?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-a-pull-request" class="md-nav__link">
+    Making a pull request
+  </a>
+  
+    <nav class="md-nav" aria-label="Making a pull request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writing-docstrings" class="md-nav__link">
+    Writing docstrings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPING/" class="md-nav__link">
+        Developing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Dodiscover
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Dodiscover" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Dodiscover
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1_2" type="checkbox" id="__nav_4_1_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1_2">
+          Ci
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ci" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ci
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/ci/base/" class="md-nav__link">
+        Base
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/ci/fisher_z_test/" class="md-nav__link">
+        Fisher Z Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/ci/g_test/" class="md-nav__link">
+        G Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/ci/" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/ci/kernel_test/" class="md-nav__link">
+        Kernel Test
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/dodiscover/ci/oracle/" class="md-nav__link">
+        Oracle
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bug-reports-and-feature-requests" class="md-nav__link">
+    Bug reports and feature requests
+  </a>
+  
+    <nav class="md-nav" aria-label="Bug reports and feature requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#did-you-find-a-bug" class="md-nav__link">
+    Did you find a bug?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-you-have-a-suggestion-for-an-enhancement-or-new-feature" class="md-nav__link">
+    Do you have a suggestion for an enhancement or new feature?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-a-pull-request" class="md-nav__link">
+    Making a pull request
+  </a>
+  
+    <nav class="md-nav" aria-label="Making a pull request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writing-docstrings" class="md-nav__link">
+    Writing docstrings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/adam2392/dodiscover/edit/main/CONTRIBUTING.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="contributing">Contributing</h1>
+<p>Thanks for considering contributing! Please read this document to learn the various ways you can contribute to this project and how to go about doing it.</p>
+<h2 id="bug-reports-and-feature-requests">Bug reports and feature requests</h2>
+<h3 id="did-you-find-a-bug">Did you find a bug?</h3>
+<p>First, do <a href="https://github.com/py-why/dodiscover/issues">a quick search</a> to see whether your issue has already been reported.
+If your issue has already been reported, please comment on the existing issue.</p>
+<p>Otherwise, open <a href="https://github.com/py-why/dodiscover/issues">a new GitHub issue</a>.  Be sure to include a clear title
+and description.  The description should include as much relevant information as possible.  The description should
+explain how to reproduce the erroneous behavior as well as the behavior you expect to see.  Ideally you would include a
+code sample or an executable test case demonstrating the expected behavior.</p>
+<h3 id="do-you-have-a-suggestion-for-an-enhancement-or-new-feature">Do you have a suggestion for an enhancement or new feature?</h3>
+<p>We use GitHub issues to track feature requests. Before you create an feature request:</p>
+<ul>
+<li>Make sure you have a clear idea of the enhancement you would like. If you have a vague idea, consider discussing
+it first on a GitHub issue.</li>
+<li>Check the documentation to make sure your feature does not already exist.</li>
+<li>Do <a href="https://github.com/py-why/dodiscover/issues">a quick search</a> to see whether your feature has already been suggested.</li>
+</ul>
+<p>When creating your request, please:</p>
+<ul>
+<li>Provide a clear title and description.</li>
+<li>Explain why the enhancement would be useful. It may be helpful to highlight the feature in other libraries.</li>
+<li>Include code examples to demonstrate how the enhancement would be used.</li>
+</ul>
+<h2 id="making-a-pull-request">Making a pull request</h2>
+<p>When you're ready to contribute code to address an open issue, please follow these guidelines to help us be able to review your pull request (PR) quickly.</p>
+<ol>
+<li>
+<p><strong>Initial setup</strong> (only do this once)</p>
+<p><details><summary>Expand details 👇</summary><br/></p>
+<p>If you haven't already done so, please <a href="https://help.github.com/en/enterprise/2.13/user/articles/fork-a-repo">fork</a> this repository on GitHub.</p>
+<p>Then clone your fork locally with</p>
+<div class="codehilite"><pre><span></span><code>git clone https://github.com/USERNAME/dodiscover.git
+</code></pre></div>
+
+<p>or </p>
+<div class="codehilite"><pre><span></span><code><span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">USERNAME</span><span class="o">/</span><span class="n">dodiscover</span><span class="p">.</span><span class="n">git</span><span class="w"></span>
+</code></pre></div>
+
+<p>At this point the local clone of your fork only knows that it came from <em>your</em> repo, github.com/USERNAME/dodiscover.git, but doesn't know anything the <em>main</em> repo, <a href="https://github.com/py-why/dodiscover">https://github.com/py-why/dodiscover.git</a>. You can see this by running</p>
+<div class="codehilite"><pre><span></span><code>#<span class="w"> </span><span class="nv">Note</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">should</span><span class="w"> </span><span class="nv">be</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="s2">&quot;dodiscover&quot;</span><span class="w"> </span><span class="nv">directory</span>.<span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="nv">you</span><span class="err">&#39;re not</span>
+<span class="err"># run &quot;cd ./dodiscover&quot; to change directory into the repo</span>
+<span class="err">git remote -v</span><span class="w"></span>
+</code></pre></div>
+
+<p>which will output something like this:</p>
+<div class="codehilite"><pre><span></span><code>origin https://github.com/USERNAME/dodiscover.git (fetch)
+origin https://github.com/USERNAME/dodiscover.git (push)
+</code></pre></div>
+
+<p>This means that your local clone can only track changes from your fork, but not from the main repo, and so you won't be able to keep your fork up-to-date with the main repo over time. Therefore you'll need to add another "remote" to your clone that points to <a href="https://github.com/py-why/dodiscover">https://github.com/py-why/dodiscover.git</a>. To do this, run the following:</p>
+<div class="codehilite"><pre><span></span><code>git remote add upstream https://github.com/py-why/dodiscover.git
+</code></pre></div>
+
+<p>Now if you do <code>git remote -v</code> again, you'll see</p>
+<div class="codehilite"><pre><span></span><code>origin https://github.com/USERNAME/dodiscover.git (fetch)
+origin https://github.com/USERNAME/dodiscover.git (push)
+upstream https://github.com/py-why/dodiscover.git (fetch)
+upstream https://github.com/py-why/dodiscover.git (push)
+</code></pre></div>
+
+<p>Finally, you'll need to create a Python 3 virtual environment suitable for working on this project. There a number of tools out there that making working with virtual environments easier.
+The most direct way is with the <a href="https://docs.python.org/3.7/library/venv.html"><code>venv</code> module</a> in the standard library, but if you're new to Python or you don't already have a recent Python 3 version installed on your machine,
+we recommend <a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>.</p>
+<p>On Mac, for example, you can install Miniconda with <a href="https://brew.sh/">Homebrew</a>:</p>
+<div class="codehilite"><pre><span></span><code>brew install miniconda
+</code></pre></div>
+
+<p>Then you can create and activate a new Python environment by running:</p>
+<div class="codehilite"><pre><span></span><code>conda create -n dodiscover python=3.9
+conda activate dodiscover
+</code></pre></div>
+
+<p>Once your virtual environment is activated, you can install your local clone in "editable mode" with</p>
+<div class="codehilite"><pre><span></span><code><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="o">-</span><span class="n">U</span><span class="w"> </span><span class="n">pip</span><span class="w"> </span><span class="n">setuptools</span><span class="w"> </span><span class="n">wheel</span><span class="w"></span>
+<span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="o">-</span><span class="n">e</span><span class="w"> </span><span class="p">.</span><span class="o">[</span><span class="n">dev</span><span class="o">]</span><span class="w"></span>
+</code></pre></div>
+
+<p>The "editable mode" comes from the <code>-e</code> argument to <code>pip</code>, and essential just creates a symbolic link from the site-packages directory of your virtual environment to the source code in your local clone. That way any changes you make will be immediately reflected in your virtual environment.</p>
+</details>
+</li>
+<li>
+<p><strong>Ensure your fork is up-to-date</strong></p>
+<p><details><summary>Expand details 👇</summary><br/></p>
+<p>Once you've added an "upstream" remote pointing to <a href="https://github.com/py-why/dodiscover">https://github.com/allenai/python-package-temlate.git</a>, keeping your fork up-to-date is easy:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">git</span><span class="w"> </span><span class="nv">checkout</span><span class="w"> </span><span class="nv">main</span><span class="w">  </span>#<span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">not</span><span class="w"> </span><span class="nv">already</span><span class="w"> </span><span class="nv">on</span><span class="w"> </span><span class="nv">main</span><span class="w"></span>
+<span class="nv">git</span><span class="w"> </span><span class="nv">pull</span><span class="w"> </span><span class="o">--</span><span class="nv">rebase</span><span class="w"> </span><span class="nv">upstream</span><span class="w"> </span><span class="nv">main</span><span class="w"></span>
+<span class="nv">git</span><span class="w"> </span><span class="nv">push</span><span class="w"></span>
+</code></pre></div>
+
+</details>
+</li>
+<li>
+<p><strong>Create a new branch to work on your fix or enhancement</strong></p>
+<p><details><summary>Expand details 👇</summary><br/></p>
+<p>Committing directly to the main branch of your fork is not recommended. It will be easier to keep your fork clean if you work on a separate branch for each contribution you intend to make.</p>
+<p>You can create a new branch with</p>
+<div class="codehilite"><pre><span></span><code># replace BRANCH with whatever name you want to give it
+git checkout -b BRANCH
+git push -u origin BRANCH
+</code></pre></div>
+
+</details>
+</li>
+<li>
+<p><strong>Developing and testing your changes</strong></p>
+<p><details><summary>Expand details 👇</summary><br/></p>
+<p>Our continuous integration (CI) testing runs <a href="https://github.com/py-why/dodiscover/actions">a number of checks</a> for each pull request on <a href="https://github.com/features/actions">GitHub Actions</a>. You can run most of these tests locally, which is something you should do <em>before</em> opening a PR to help speed up the review process and make it easier for us. Please see our <a href="https://github.com/py-why/dodiscover/blob/main/DEVELOPING.md">development guide</a> for a comprehensive overview of useful commands leveraging <a href="https://python-poetry.org">poetry</a>. This will cover aspects of code style checking, unit testing, integration testing, and building the documentation. We try to make it as easy as possible with copy/paste commands leveraging poetry which will guide your development process!</p>
+<p>And finally, please update the <a href="https://github.com/py-why/dodiscover/docs/whats_new.rst">CHANGELOG</a> with notes on your contribution in the "Unreleased" section at the top.</p>
+<p>After all of the above checks have passed, you can now open <a href="https://github.com/py-why/dodiscover/pulls">a new GitHub pull request</a>.
+Make sure you have a clear description of the problem and the solution, and include a link to relevant issues.</p>
+<p>We look forward to reviewing your PR!</p>
+</details>
+</li>
+</ol>
+<h3 id="writing-docstrings">Writing docstrings</h3>
+<p>We use <a href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> to build our API docs, which automatically parses all docstrings
+of public classes and methods. All docstrings should adhere to the <a href="https://www.sphinx-doc.org/en/master/usage/extensions/example_numpy.html">Numpy styling convention</a>.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href=".." title="Home" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Home
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../DEVELOPING/" title="Developing" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Developing
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Powered by
+        <a href="http://timothycrosley.github.io/portray">portray.</a>
+        You too can
+        <a href="http://timothycrosley.github.io/portray">
+          portray</a>
+        your Python project well using automatic documentation.
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.f8263e09.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.4fc53ad4.min.js"></script>
+      
+    
+  </body>
+</html>
