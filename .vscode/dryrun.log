@@ -1,8 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/adam2392/Documents/dodiscover'
-echo "Building documentation"
-make -C doc/ clean
-make -C doc/ html-noplot
-cd doc/ && make view
-make: Leaving directory `/Users/adam2392/Documents/dodiscover'
- 
