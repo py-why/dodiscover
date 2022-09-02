@@ -2,7 +2,6 @@ from typing import Tuple, Callable
 
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.utils import check_random_state
 
 
 def nonlinear_additive_gaussian(
@@ -17,7 +16,7 @@ def nonlinear_additive_gaussian(
     cause_var_y: NDArray=None,
     cause_var_z: NDArray=None,
     nonlinear_func: Callable= np.cos,
-    random_state=None,
+    random_state: int=None,
 ) -> Tuple[NDArray, NDArray, NDArray]:
     """Generate samples from a cosine nonlinear model with additive noise.
 
@@ -46,7 +45,7 @@ def nonlinear_additive_gaussian(
         Noise amplitude, by default 0.5.
     freq : float, optional
         Frequency of the cosine signal, by default 1.0.
-    random_state : random state, optional
+    random_state : int, optional
         Random seed, by default None.
 
     Returns
@@ -62,24 +61,24 @@ def nonlinear_additive_gaussian(
     ----------
     .. footbibliography::
     """
-    rng = check_random_state(random_state)
+    rng = np.random.default_rng(random_state)
 
     cov = np.eye(dims_z)
     mu = np.ones(dims_z)
 
     # generate random weighting from Z to X
     # compute the column sums and normalize
-    Azx = rng.rand(dims_z, dims_x)
+    Azx = rng.random((dims_z, dims_x))
     col_sum = np.linalg.norm(Azx, axis=0, keepdims=True)
     Azx = Azx / col_sum
 
     # generate random weighting from Z to Y
-    Azy = rng.rand(dims_z, dims_y)
+    Azy = rng.random((dims_z, dims_y))
     col_sum = np.linalg.norm(Azy, axis=0, keepdims=True)
     Azy = Azy / col_sum
 
     # generate random weighting from X to Y
-    Axy = rng.rand(dims_x, dims_y)
+    Axy = rng.random((dims_x, dims_y))
     col_sum = np.linalg.norm(Axy, axis=0, keepdims=True)
     Axy = Axy / col_sum
 
@@ -106,6 +105,6 @@ def nonlinear_additive_gaussian(
         Y = nonlinear_func(freq * (std * Y_noise + cause_var_y))
     elif model_type == "dep":
         X = nonlinear_func(freq * (std * X_noise + cause_var_x))
-        Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var_y))
+        Y = nonlinear_func(freq * (2 * Axy * X + Z @ Azy + std * Y_noise + cause_var_y))
 
     return X, Y, Z
