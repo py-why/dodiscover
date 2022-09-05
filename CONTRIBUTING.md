@@ -2,6 +2,8 @@
 
 Thanks for considering contributing! Please read this document to learn the various ways you can contribute to this project and how to go about doing it.
 
+This Project welcomes contributions, suggestions, and feedback. All contributions, suggestions, and feedback you submitted are accepted under the [Project's license](./LICENSE.md). You represent that if you do not own copyright in the code that you have the authority to submit it under the [Project's license](./LICENSE.md). All feedback, suggestions, or contributions are not confidential.
+
 ## Bug reports and feature requests
 
 ### Did you find a bug?
@@ -43,7 +45,7 @@ When you're ready to contribute code to address an open issue, please follow the
 
         git clone https://github.com/USERNAME/dodiscover.git
 
-    or 
+    or
 
         git clone git@github.com:USERNAME/dodiscover.git
 
@@ -136,3 +138,11 @@ When you're ready to contribute code to address an open issue, please follow the
 
 We use [Sphinx](https://www.sphinx-doc.org/en/master/index.html) to build our API docs, which automatically parses all docstrings
 of public classes and methods. All docstrings should adhere to the [Numpy styling convention](https://www.sphinx-doc.org/en/master/usage/extensions/example_numpy.html).
+
+---
+
+The Project abides by the Organization's [code of conduct](https://github.com/py-why/governance/blob/main/CODE-OF-CONDUCT.md) and [trademark policy](https://github.com/py-why/governance/blob/main/TRADEMARKS.md).
+
+---
+Part of MVG-0.1-beta.
+Made with love by GitHub. Licensed under the [CC-BY 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
