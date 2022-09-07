@@ -24,91 +24,94 @@ class ContextBuilder:
         self._observed_variables = None
         self._latent_variables = None
 
-    """
-    Initialize the data
-
-    Parameters
-    ----------
-    data : pd.DataFrame - the new dataframe to use
-    """
-
     def data(self, data: pd.DataFrame) -> "ContextBuilder":
+        """Sets the dataset to use
+
+        Parameters
+        ----------
+        data : pd.DataFrame - the new dataframe to use
+
+        Returns
+        -------
+        ContextBuilder
+            The builder instance
+        """
         self._data = data
         return self
 
-    """
-    Initialize the data
-
-    Parameters
-    ----------
-    data : pd.DataFrame - the new dataframe to use
-
-    
-    Returns
-    -------
-    The builder instance
-    """
-
     def init_graph(self, graph: GraphProtocol) -> "ContextBuilder":
+        """Sets the partial graph to start with.
+
+        Parameters
+        ----------
+        data : pd.DataFrame - the new dataframe to use
+
+
+        Returns
+        -------
+        ContextBuilder
+            The builder instance
+        """
         self._graph = graph
         return self
-
-    """
-    Set edge constraints to apply in discovery
-
-    Parameters
-    ----------
-    included_edges : Optional[Union[nx.Graph, nx.DiGraph]]
-        Edges that should be included in the resultant graph
-    excluded_edges : Optional[Union[nx.Graph, nx.DiGraph]]
-        Edges that must be excluded in the resultant graph
-
-    Returns
-    -------
-    The builder instance
-    """
 
     def edge_constraints(
         self,
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> "ContextBuilder":
+        """Set edge constraints to apply in discovery
+
+        Parameters
+        ----------
+        included_edges : Optional[Union[nx.Graph, nx.DiGraph]]
+            Edges that should be included in the resultant graph
+        excluded_edges : Optional[Union[nx.Graph, nx.DiGraph]]
+            Edges that must be excluded in the resultant graph
+
+        Returns
+        -------
+        ContextBuilder
+            The builder instance
+        """
         self._included_edges = included_edges
         self._excluded_edges = excluded_edges
         return self
 
-    """
-    Set feature-list information to utilize in discovery
-
-    Parameters
-    ----------
-    observed_variables : Optional[Set[str]]
-        Set of observed variables, by default None. If neither ``latents``,
-        nor ``variables`` is set, then it is presumed that ``variables`` consists
-        of the columns of ``data`` and ``latents`` is the empty set.
-    latent_variables : Optional[Set[str]] - variables that are latent
-        Set of latent "unobserved" variables, by default None. If neither ``latents``,
-        nor ``variables`` is set, then it is presumed that ``variables`` consists
-        of the columns of ``data`` and ``latents`` is the empty set.
-    """
-
     def features(
         self, observed_variables: Set[str], latent_variables: Set[str]
     ) -> "ContextBuilder":
+        """Set feature-list information to utilize in discovery
+
+        Parameters
+        ----------
+        observed_variables : Optional[Set[str]]
+            Set of observed variables, by default None. If neither ``latents``,
+            nor ``variables`` is set, then it is presumed that ``variables`` consists
+            of the columns of ``data`` and ``latents`` is the empty set.
+        latent_variables : Optional[Set[str]] - variables that are latent
+            Set of latent "unobserved" variables, by default None. If neither ``latents``,
+            nor ``variables`` is set, then it is presumed that ``variables`` consists
+            of the columns of ``data`` and ``latents`` is the empty set.
+
+        Returns
+        -------
+        ContextBuilder
+            The builder instance
+        """
         self._features = features
         self.observed_variables = observed_variables
         self.latent_variables = latent_variables
         return self
 
-    """
-    Builds the resultant Context object to be used in discovery tasks
-
-    Returns
-    -------
-    The populated Context object
-    """
-
     def build() -> Context:
+        """Builds the resultant Context object to be used in discovery tasks
+
+        Returns
+        -------
+        Context
+            The populated Context object
+        """
         return Context(
             data=self._data,
             init_graph=self._graph,
@@ -119,20 +122,20 @@ class ContextBuilder:
         )
 
 
-"""Factory function for creating a new ContextBuilder instance
-
-Parameters
-----------
-data : pd.DataFrame
-    The data to use in the context
-
-Returns
--------
-The new ContextBuilder instance
-"""
-
-
 def context_builder(data: pd.DataFrame) -> ContextBuilder:
+    """Factory function for creating a new ContextBuilder instance
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        The data to use in the context
+
+    Returns
+    -------
+    ContextBuilder
+        The new ContextBuilder instance
+    """
+
     return ContextBuilder(data)
 
 
