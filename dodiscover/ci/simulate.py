@@ -1,4 +1,4 @@
-from typing import Tuple, Callable
+from typing import Callable, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,8 +13,8 @@ def nonlinear_additive_gaussian(
     dims_z: int = 1,
     std: float = 0.5,
     freq: float = 1.0,
-    cause_var: NDArray=None,
-    nonlinear_func: Callable= np.cos,
+    cause_var: NDArray = None,
+    nonlinear_func: Callable = np.cos,
     random_state=None,
 ) -> Tuple[NDArray, NDArray, NDArray]:
     """Generate samples from a cosine nonlinear model with additive noise.

@@ -129,6 +129,9 @@ numpydoc_xref_ignore = {
     "n_estimated_nodes",
     "n_samples",
     "n_variables",
+    # deep learning
+    "pytorch",
+    "model",
 }
 numpydoc_xref_aliases = {
     # Networkx
@@ -187,6 +190,7 @@ intersphinx_mapping = {
     "sklearn": ("https://scikit-learn.org/stable", None),
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
+    "torch": ("https://pytorch.org/docs/master/", None),
 }
 intersphinx_timeout = 5
 
