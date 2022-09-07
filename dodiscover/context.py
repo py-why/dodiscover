@@ -6,6 +6,55 @@ import pandas as pd
 from ._protocol import GraphProtocol
 
 
+class ContextBuilder:
+    def __init__(self, data: pd.DataFrame) -> None:
+        self._data = data
+        self._graph = None
+        self._included_edges = None
+        self._excluded_edges = None
+        self._observed_variables = None
+        self._latent_variables = None
+
+    def data(self, data: pd.DataFrame) -> "ContextBuilder":
+        self._data = data
+        return self
+
+    def init_graph(self, graph: GraphProtocol) -> "ContextBuilder":
+        self._graph = graph
+        return self
+
+    def edge_constraints(
+        self,
+        included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+        excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+    ) -> "ContextBuilder":
+        self._included_edges = included_edges
+        self._excluded_edges = excluded_edges
+        return self
+
+    def features(
+        self, observed_variables: Set[str], latent_variables: Set[str]
+    ) -> "ContextBuilder":
+        self._features = features
+        self.observed_variables = observed_variables
+        self.latent_variables = latent_variables
+        return self
+
+    def build() -> Context:
+        return Context(
+            data=self._data,
+            init_graph=self._graph,
+            included_edges=self._included_edges,
+            excluded_edges=self._excluded_edges,
+            variables=self._observed_variables,
+            latents=self._latent_variables,
+        )
+
+
+def context_builder(data: pd.DataFrame) -> ContextBuilder:
+    return ContextBuilder(data)
+
+
 class Context:
     """Context of assumptions, domain knowledge and data.
 
