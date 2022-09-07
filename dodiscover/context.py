@@ -7,6 +7,15 @@ from ._protocol import GraphProtocol
 
 
 class ContextBuilder:
+    """A builder class that allows users to create Context objects ergonomically.
+    Context objects contain assumptions, domain knowledge, and data.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        A dataset in data-frame form, consisting of samples as rows and variables as columns.
+    """
+
     def __init__(self, data: pd.DataFrame) -> None:
         self._data = data
         self._graph = None
@@ -15,13 +24,49 @@ class ContextBuilder:
         self._observed_variables = None
         self._latent_variables = None
 
+    """
+    Initialize the data
+
+    Parameters
+    ----------
+    data : pd.DataFrame - the new dataframe to use
+    """
+
     def data(self, data: pd.DataFrame) -> "ContextBuilder":
         self._data = data
         return self
 
+    """
+    Initialize the data
+
+    Parameters
+    ----------
+    data : pd.DataFrame - the new dataframe to use
+
+    
+    Returns
+    -------
+    The builder instance
+    """
+
     def init_graph(self, graph: GraphProtocol) -> "ContextBuilder":
         self._graph = graph
         return self
+
+    """
+    Set edge constraints to apply in discovery
+
+    Parameters
+    ----------
+    included_edges : Optional[Union[nx.Graph, nx.DiGraph]]
+        Edges that should be included in the resultant graph
+    excluded_edges : Optional[Union[nx.Graph, nx.DiGraph]]
+        Edges that must be excluded in the resultant graph
+
+    Returns
+    -------
+    The builder instance
+    """
 
     def edge_constraints(
         self,
@@ -32,6 +77,21 @@ class ContextBuilder:
         self._excluded_edges = excluded_edges
         return self
 
+    """
+    Set feature-list information to utilize in discovery
+
+    Parameters
+    ----------
+    observed_variables : Optional[Set[str]]
+        Set of observed variables, by default None. If neither ``latents``,
+        nor ``variables`` is set, then it is presumed that ``variables`` consists
+        of the columns of ``data`` and ``latents`` is the empty set.
+    latent_variables : Optional[Set[str]] - variables that are latent
+        Set of latent "unobserved" variables, by default None. If neither ``latents``,
+        nor ``variables`` is set, then it is presumed that ``variables`` consists
+        of the columns of ``data`` and ``latents`` is the empty set.
+    """
+
     def features(
         self, observed_variables: Set[str], latent_variables: Set[str]
     ) -> "ContextBuilder":
@@ -39,6 +99,14 @@ class ContextBuilder:
         self.observed_variables = observed_variables
         self.latent_variables = latent_variables
         return self
+
+    """
+    Builds the resultant Context object to be used in discovery tasks
+
+    Returns
+    -------
+    The populated Context object
+    """
 
     def build() -> Context:
         return Context(
@@ -49,6 +117,19 @@ class ContextBuilder:
             variables=self._observed_variables,
             latents=self._latent_variables,
         )
+
+
+"""Factory function for creating a new ContextBuilder instance
+
+Parameters
+----------
+data : pd.DataFrame
+    The data to use in the context
+
+Returns
+-------
+The new ContextBuilder instance
+"""
 
 
 def context_builder(data: pd.DataFrame) -> ContextBuilder:
@@ -89,7 +170,7 @@ class Context:
     priors and other structured contexts alongside the datasets. This class
     is used in conjunction with a discovery algorithm.
 
-    Setting the apriori explicit direction of an edge is not supported yet.
+    Setting the a priori explicit direction of an edge is not supported yet.
     """
 
     def __init__(
