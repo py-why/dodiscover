@@ -69,7 +69,7 @@ class CMITest(BaseConditionalIndependenceTest):
     .. footbibliography::
     """
 
-    random_state: np.random.BitGenerator
+    random_state: np.random.Generator
 
     def __init__(
         self,
@@ -85,10 +85,7 @@ class CMITest(BaseConditionalIndependenceTest):
         self.transform = transform
         self.n_jobs = n_jobs
         self.n_shuffle = n_shuffle
-
-        if random_state is None:
-            random_state = np.random.RandomState(seed=random_state)
-        self.random_state = random_state
+        self.random_state = np.random.default_rng(random_state)
 
     def test(
         self, df: pd.DataFrame, x_var, y_var, z_covariates: Optional[Set] = None
@@ -124,14 +121,11 @@ class CMITest(BaseConditionalIndependenceTest):
         k_xz, k_yz, k_z = self._get_knn(df, x_var, y_var, z_covariates)
 
         # compute the final CMI value
-        val = (
-            scipy.special.digamma(knn_here)
-            - (
-                scipy.special.digamma(k_xz)
-                + scipy.special.digamma(k_yz)
-                - scipy.special.digamma(k_z)
-            ).mean()
-        )
+        hxyz = scipy.special.digamma(knn_here)
+        hxz = scipy.special.digamma(k_xz)
+        hyz = scipy.special.digamma(k_yz)
+        hz = scipy.special.digamma(k_z)
+        val = (hxyz - (hxz + hyz - hz).mean())
         return val
 
     def _preprocess_data(self, data: pd.DataFrame) -> pd.DataFrame:
@@ -201,6 +195,7 @@ class CMITest(BaseConditionalIndependenceTest):
         yz_cols = [y_var]
         for z_var in z_covariates:
             yz_cols.append(z_var)
+        z_columns = list(z_covariates)
         columns = list(set(xz_cols).union(set(yz_cols)))
         data = data[columns]
 
@@ -227,8 +222,8 @@ class CMITest(BaseConditionalIndependenceTest):
         )
 
         # Find nearest neighbors in subspaces of just the Z covariates
-        if len(z_covariates) > 0:
-            z = data[z_covariates]
+        if len(z_columns) > 0:
+            z = data[z_columns]
             tree_z = scipy.spatial.cKDTree(z)
             k_z = tree_z.query_ball_point(
                 z, r=epsarray, eps=0.0, p=np.inf, workers=self.n_jobs, return_length=True
