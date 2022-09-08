@@ -8,7 +8,7 @@ import networkx as nx
 import numpy as np
 
 from dodiscover.ci import BaseConditionalIndependenceTest
-from dodiscover.typing import Column
+from dodiscover.typing import Column, SeparatingSet
 
 from ..context import Context
 
@@ -186,7 +186,7 @@ class LearnSkeleton:
     """
 
     adj_graph_: nx.Graph
-    sep_set_: Dict[Column, Dict[Column, List[Set[Column]]]]
+    sep_set_: SeparatingSet
     remove_edges: Set
     min_cond_set_size_: int
     max_cond_set_size_: int
@@ -195,7 +195,7 @@ class LearnSkeleton:
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        sep_set: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]] = None,
+        sep_set: Optional[SeparatingSet] = None,
         alpha: float = 0.05,
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,

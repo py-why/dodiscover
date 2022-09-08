@@ -1,4 +1,4 @@
-from copy import copy
+from copy import copy, deepcopy
 from typing import Optional, Set, Union
 
 import networkx as nx
@@ -130,11 +130,11 @@ class Context:
             A copy.
         """
         context = Context(
-            data=copy(self._data),
+            data=self._data.copy(deep=True),
             variables=copy(self._variables),
             latents=copy(self._latents),
-            init_graph=self._init_graph.copy(),
-            included_edges=self._included_edges.copy(),
-            excluded_edges=self._excluded_edges.copy(),
+            init_graph=deepcopy(self._init_graph),
+            included_edges=deepcopy(self._included_edges),
+            excluded_edges=deepcopy(self._excluded_edges),
         )
         return context

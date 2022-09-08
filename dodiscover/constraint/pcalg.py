@@ -1,12 +1,12 @@
 import logging
 from itertools import combinations, permutations
-from typing import Dict, List, Optional, Set
+from typing import Optional
 
 import networkx as nx
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.utils import is_in_sep_set
-from dodiscover.typing import Column
+from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClassProtocol
 from ._classes import BaseConstraintDiscovery
@@ -23,10 +23,11 @@ class PC(BaseConstraintDiscovery):
 
     Parameters
     ----------
-    ci_estimator : Callable
+    ci_estimator : BaseConditionalIndependenceTest
         The conditional independence test function. The arguments of the estimator should
         be data, node, node to compare, conditioning set of nodes, and any additional
-        keyword arguments.
+        keyword arguments. It should return a tuple of test statistic and pvalue in that
+        order.
     alpha : float, optional
         The significance level for the conditional independence test, by default 0.05.
     min_cond_set_size : int, optional
@@ -66,7 +67,7 @@ class PC(BaseConstraintDiscovery):
     """
 
     graph_: EquivalenceClassProtocol
-    separating_sets_: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]]
+    separating_sets_: Optional[SeparatingSet]
 
     def __init__(
         self,
@@ -164,7 +165,7 @@ class PC(BaseConstraintDiscovery):
     def orient_unshielded_triples(
         self,
         graph: EquivalenceClassProtocol,
-        sep_set: Dict[Column, Dict[Column, List[Set[Column]]]],
+        sep_set: SeparatingSet,
     ) -> None:
         """Orient colliders given a graph and separation set.
 
