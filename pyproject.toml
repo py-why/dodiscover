@@ -85,6 +85,8 @@ ipython = { version = "^7.4.0" }
 nbsphinx = { version = "^0.8" }
 dowhy = { version = "^0.8" }
 typing-extensions = { version = "*" }         # needed in dowhy's package 
+joblib = { version = "^1.1.0" }               # needed in dowhy's package
+tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 
 [tool.poetry.extras]
 graph_func = ['pywhy-graphs']
