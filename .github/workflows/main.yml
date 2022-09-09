@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-          poetry-version: [1.1.14]
+          poetry-version: [1.2.0]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -32,16 +32,15 @@ jobs:
           architecture: 'x64'
 
       - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.1.5
+        uses: abatilo/actions-poetry@v2.1.6
         with:
           poetry-version: ${{ matrix.poetry-version }}
 
       - name: Install Poetry Dynamic Versioning Plugin
         run: pip install poetry-dynamic-versioning
 
-      # TODO: once poetry v1.2 is release, we want to only install dev dependencies
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --only style
       
       # check formatting of the code style
       - name: Check code formatting
@@ -55,14 +54,13 @@ jobs:
         run: poetry run poe type_check
 
   build:
-    # TODO: modify back to 10 mins after we improve poetry install
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu, macos, windows]
         python-version: [3.8, 3.9, "3.10"]
-        poetry-version: [1.1.14]
+        poetry-version: [1.2.0]
     name: build ${{ matrix.os }} - py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}-latest
     defaults:
@@ -77,13 +75,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
       - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.1.5
+        uses: abatilo/actions-poetry@v2.1.6
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install from source
         run: |
           poetry install
-          pip install -e .
       - name: Test package install
         run: poetry run python -c "import dodiscover; print(dodiscover.__version__)"
       - name: Remove package install
@@ -134,19 +131,20 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
       - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.1.5
+        uses: abatilo/actions-poetry@v2.1.6
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install Poetry Dynamic Versioning Plugin
         run: pip install poetry-dynamic-versioning
       - name: Install packages via poetry
         run: |
-          poetry install --extras graph_func
-      - name: Install Networkx (main)
-        if: "matrix.networkx == 'main'"
-        run: |
-          pip uninstall -yq networkx
-          pip install --progress-bar off git+https://github.com/networkx/networkx
+          poetry install --with test --extras graph_func
+      # TODO: uncomment, when MixedEdgeGraph PRed into networkx
+      # - name: Install Networkx (main)
+      #   if: "matrix.networkx == 'main'"
+      #   run: |
+      #     pip uninstall -yq networkx
+      #     pip install --progress-bar off git+https://github.com/networkx/networkx
       - name: Run pytest  # headless via Xvfb on linux
         run: poetry run poe unit_test
       - name: Upload coverage stats to codecov
