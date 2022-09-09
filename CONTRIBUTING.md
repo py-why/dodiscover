@@ -84,10 +84,17 @@ When you're ready to contribute code to address an open issue, please follow the
         conda create -n dodiscover python=3.9
         conda activate dodiscover
 
-    Once your virtual environment is activated, you can install your local clone in "editable mode" with
+    Next, you'll need poetry installed, which is a software dependency manager written in Python. Follow the [official instructions to install poetry](https://python-poetry.org/docs/#installation). Once your virtual environment is activated, you can install your local clone with ``poetry``.
 
+        # the output should show a version greater than 1.2.0 (e.g. "Poetry (version 1.2.0)")
+        poetry --version
+
+        # next install dodiscover using poetry
         pip install -U pip setuptools wheel
-        pip install -e .[dev]
+        poetry install --with docs,test,style --extras graph_func
+
+        # or you can try installing in editable mode with pip
+        pip install -e .
 
     The "editable mode" comes from the `-e` argument to `pip`, and essential just creates a symbolic link from the site-packages directory of your virtual environment to the source code in your local clone. That way any changes you make will be immediately reflected in your virtual environment.
 
