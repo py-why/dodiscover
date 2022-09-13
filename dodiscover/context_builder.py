@@ -6,6 +6,7 @@ import pandas as pd
 from ._protocol import GraphProtocol
 from .context import Context
 
+
 class ContextBuilder:
     """A builder class that allows users to create Context objects ergonomically.
     Context objects contain assumptions, domain knowledge, and data.
@@ -137,4 +138,3 @@ def context_builder(data: pd.DataFrame) -> ContextBuilder:
     """
 
     return ContextBuilder(data)
-

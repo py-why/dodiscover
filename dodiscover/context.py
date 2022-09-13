@@ -112,4 +112,3 @@ class Context:
     @property
     def init_graph(self) -> GraphProtocol:
         return self._init_graph
-
