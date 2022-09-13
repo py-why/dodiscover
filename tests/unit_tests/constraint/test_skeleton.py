@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from dodiscover import Context
+from dodiscover import make_context
 from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint.skeleton import LearnSkeleton
 from dodiscover.constraint.utils import dummy_sample

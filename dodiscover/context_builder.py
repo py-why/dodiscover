@@ -8,8 +8,9 @@ from .context import Context
 
 
 class ContextBuilder:
-    """A builder class that allows users to create Context objects ergonomically.
-    Context objects contain assumptions, domain knowledge, and data.
+    """A builder class for creating Context objects ergonomically.
+
+    The context builder provides a way to capture assumptions, domain knowledge, and data.
 
     Parameters
     ----------
@@ -26,7 +27,7 @@ class ContextBuilder:
         self._latent_variables = None
 
     def data(self, data: pd.DataFrame) -> "ContextBuilder":
-        """Sets the dataset to use
+        """Set the dataset to use.
 
         Parameters
         ----------
@@ -41,7 +42,7 @@ class ContextBuilder:
         return self
 
     def init_graph(self, graph: GraphProtocol) -> "ContextBuilder":
-        """Sets the partial graph to start with.
+        """Set the partial graph to start with.
 
         Parameters
         ----------
@@ -61,7 +62,7 @@ class ContextBuilder:
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> "ContextBuilder":
-        """Set edge constraints to apply in discovery
+        """Set edge constraints to apply in discovery.
 
         Parameters
         ----------
@@ -82,7 +83,7 @@ class ContextBuilder:
     def features(
         self, observed_variables: Set[str], latent_variables: Set[str]
     ) -> "ContextBuilder":
-        """Set feature-list information to utilize in discovery
+        """Set feature-list information to utilize in discovery.
 
         Parameters
         ----------
@@ -100,13 +101,12 @@ class ContextBuilder:
         ContextBuilder
             The builder instance
         """
-        self._features = features
         self.observed_variables = observed_variables
         self.latent_variables = latent_variables
         return self
 
-    def build() -> Context:
-        """Builds the resultant Context object to be used in discovery tasks
+    def build(self) -> Context:
+        """Build the Context object.
 
         Returns
         -------
@@ -124,7 +124,7 @@ class ContextBuilder:
 
 
 def context_builder(data: pd.DataFrame) -> ContextBuilder:
-    """Factory function for creating a new ContextBuilder instance
+    """Create a new ContextBuilder instance.
 
     Parameters
     ----------
@@ -136,5 +136,4 @@ def context_builder(data: pd.DataFrame) -> ContextBuilder:
     ContextBuilder
         The new ContextBuilder instance
     """
-
     return ContextBuilder(data)
