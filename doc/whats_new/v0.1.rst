@@ -29,7 +29,7 @@ Changelog
 - |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
 - |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
 - |Feature| Implement skeleton learning method, :class:`dodiscover.constraint.LearnSkeleton` under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`20`)
-
+- |Feature| Add ContextBuilder class and make_context factory function for creating context objects. by `Chris Trevino`_ (:pr:`42`)
 
 Code and Documentation Contributors
 -----------------------------------
