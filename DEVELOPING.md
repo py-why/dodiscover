@@ -1,6 +1,7 @@
 # Requirements
 * Python 3.8+
-* Poetry (`curl -sSL https://install.python-poetry.org | python`)
+* Poetry (`curl -sSL https://install.python-poetry.org | python - --version=1.2.0`)
+* Poetry dynamic versioning plugin (`poetry self add "poetry-dynamic-versioning[plugin]"`)
 
 For the other requirements, inspect the ``pyproject.toml`` file. If you are updated the dependencies, please run `poetry update` to update the
 
