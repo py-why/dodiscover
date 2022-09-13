@@ -18,13 +18,14 @@ class ContextBuilder:
         A dataset in data-frame form, consisting of samples as rows and variables as columns.
     """
 
+    _graph: Optional[GraphProtocol] = None
+    _included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
+    _excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
+    _observed_variables: Optional[Set[str]] = None
+    _latent_variables: Optional[Set[str]] = None
+
     def __init__(self, data: pd.DataFrame) -> None:
         self._data = data
-        self._graph = None
-        self._included_edges = None
-        self._excluded_edges = None
-        self._observed_variables = None
-        self._latent_variables = None
 
     def data(self, data: pd.DataFrame) -> "ContextBuilder":
         """Set the dataset to use.
@@ -81,7 +82,7 @@ class ContextBuilder:
         return self
 
     def features(
-        self, observed_variables: Set[str], latent_variables: Set[str]
+        self, observed_variables: Optional[Set[str]], latent_variables: Optional[Set[str]]
     ) -> "ContextBuilder":
         """Set feature-list information to utilize in discovery.
 
@@ -123,7 +124,7 @@ class ContextBuilder:
         )
 
 
-def context_builder(data: pd.DataFrame) -> ContextBuilder:
+def make_context(data: pd.DataFrame) -> ContextBuilder:
     """Create a new ContextBuilder instance.
 
     Parameters
