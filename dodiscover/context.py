@@ -21,7 +21,7 @@ class Context:
         Set of latent "unobserved" variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    init_graph : Optional[GraphProtocol], optional
+    init_graph : Optional[Graph], optional
         The graph to start with, by default None.
     included_edges : Optional[nx.Graph], optional
         Included edges without direction, by default None.
@@ -112,3 +112,11 @@ class Context:
     @property
     def init_graph(self) -> Graph:
         return self._init_graph
+
+    @property
+    def observed_variables(self) -> Set[str]:
+        return self._variables
+
+    @property
+    def latent_variables(self) -> Set[str]:
+        return self._latents

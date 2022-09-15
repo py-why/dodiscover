@@ -7,12 +7,11 @@ from dodiscover import make_context
 seed = 12345
 
 
-def make_df():
+def make_df() -> pd.DataFrame:
     rng = np.random.RandomState(seed)
     X = rng.randn(300, 1)
     Y = rng.randn(300, 1)
-    Z = rng.randn(300, 1)
-    return pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
+    return pd.DataFrame(np.hstack((X, Y)), columns=["x", "y"])
 
 
 def test_constructor():
@@ -20,19 +19,17 @@ def test_constructor():
     ctx = make_context(df)
 
     assert ctx is not None
-    assert ctx.data == df
-    assert ctx.build().data == df
+    assert ctx.build().data is df
 
 
 def test_build_with_initial_graph():
     graph = nx.DiGraph()
-    ctx = make_context(make_df()).init_graph(graph)
-    built = ctx.build()
-    assert built.graph == graph
+    graph.add_edges_from([("x", "y")])
+    ctx = make_context(make_df()).init_graph(graph).build()
+    assert ctx.graph is graph
 
 
 def test_build_with_observed_and_latents():
-    ctx = make_context(make_df()).features(observed=["x"], latents=["y"])
-    built = ctx.build()
-    assert built.observed == ["x"]
-    assert built.latents == ["y"]
+    ctx = make_context(make_df()).features(observed_variables=["x"], latent_variables=["y"]).build()
+    assert ctx.observed_variables == set(["x"])
+    assert ctx.latent_variables == set(["y"])

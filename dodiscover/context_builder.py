@@ -3,7 +3,7 @@ from typing import Optional, Set, Union
 import networkx as nx
 import pandas as pd
 
-from ._protocol import GraphProtocol
+from ._protocol import Graph
 from .context import Context
 
 
@@ -18,7 +18,7 @@ class ContextBuilder:
         A dataset in data-frame form, consisting of samples as rows and variables as columns.
     """
 
-    _graph: Optional[GraphProtocol] = None
+    _graph: Optional[Graph] = None
     _included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
     _excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
     _observed_variables: Optional[Set[str]] = None
@@ -42,7 +42,7 @@ class ContextBuilder:
         self._data = data
         return self
 
-    def init_graph(self, graph: GraphProtocol) -> "ContextBuilder":
+    def init_graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
 
         Parameters
@@ -102,8 +102,8 @@ class ContextBuilder:
         ContextBuilder
             The builder instance
         """
-        self.observed_variables = observed_variables
-        self.latent_variables = latent_variables
+        self._observed_variables = observed_variables
+        self._latent_variables = latent_variables
         return self
 
     def build(self) -> Context:
