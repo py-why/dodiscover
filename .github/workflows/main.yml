@@ -115,7 +115,7 @@ jobs:
       matrix:
         os: [ubuntu, macos, windows]
         python-version: [3.8, "3.10"]  # oldest and newest supported versions
-        poetry-version: [1.1.14]
+        poetry-version: [1.2.0]
         networkx: [stable, main]
     name: pytest ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
     runs-on: ${{ matrix.os }}-latest
