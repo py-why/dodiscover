@@ -26,7 +26,7 @@ def test_build_with_initial_graph():
     graph = nx.DiGraph()
     graph.add_edges_from([("x", "y")])
     ctx = make_context(make_df()).init_graph(graph).build()
-    assert ctx.graph is graph
+    assert ctx.init_graph is graph
 
 
 def test_build_with_observed_and_latents():

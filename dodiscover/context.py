@@ -77,7 +77,7 @@ class Context:
             graph = nx.complete_graph(variables, create_using=nx.Graph)
         else:
             graph = init_graph
-            if graph.nodes != variables:
+            if set(graph.nodes) != variables:
                 raise ValueError(
                     f"The nodes within the initial graph, {graph.nodes}, "
                     f"do not match the nodes in the passed in data, {variables}."
