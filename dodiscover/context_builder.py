@@ -42,7 +42,7 @@ class ContextBuilder:
         self._data = data
         return self
 
-    def init_graph(self, graph: Graph) -> "ContextBuilder":
+    def graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
 
         Parameters

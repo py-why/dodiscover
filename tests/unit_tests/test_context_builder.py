@@ -25,7 +25,7 @@ def test_constructor():
 def test_build_with_initial_graph():
     graph = nx.DiGraph()
     graph.add_edges_from([("x", "y")])
-    ctx = make_context(make_df()).init_graph(graph).build()
+    ctx = make_context(make_df()).graph(graph).build()
     assert ctx.init_graph is graph
 
 
