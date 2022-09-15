@@ -38,9 +38,6 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
 
-      - name: Install Poetry Dynamic Versioning Plugin
-        run: poetry self add "poetry-dynamic-versioning[plugin]"
-
       - name: Install dependencies
         run: poetry install --only style
 
@@ -144,8 +141,6 @@ jobs:
         uses: abatilo/actions-poetry@v2.1.6
         with:
           poetry-version: ${{ matrix.poetry-version }}
-      - name: Install Poetry Dynamic Versioning Plugin
-        run: poetry self add "poetry-dynamic-versioning[plugin]"
       - name: Install packages via poetry
         run: |
           poetry install --with test --extras graph_func
@@ -184,13 +179,15 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install Poetry Dynamic Versioning Plugin
-        run: poetry self add "poetry-dynamic-versioning[plugin]"
+        run: pip install poetry-dynamic-versioning
       - name: Prepare environment
         run: |
           echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
           echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       - name: Build the release artifact
-        run: poetry build
+        run: |
+          poetry-dynamic-versioning
+          poetry build      
       - name: Download package distribution files
         uses: actions/download-artifact@v3
         with:
