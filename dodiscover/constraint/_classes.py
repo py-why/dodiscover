@@ -11,7 +11,7 @@ from dodiscover.constraint.skeleton import LearnSkeleton, SkeletonMethods
 from dodiscover.context import Context
 from dodiscover.typing import Column
 
-from .._protocol import EquivalenceClassProtocol
+from .._protocol import EquivalenceClass
 
 
 class BaseConstraintDiscovery:
@@ -61,7 +61,7 @@ class BaseConstraintDiscovery:
         variables in the graph that separate the two.
     """
 
-    graph_: Optional[EquivalenceClassProtocol]
+    graph_: Optional[EquivalenceClass]
     separating_sets_: Optional[Dict[Column, Dict[Column, List[Set[Column]]]]]
 
     def __init__(
@@ -116,7 +116,7 @@ class BaseConstraintDiscovery:
 
         return sep_set
 
-    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClassProtocol:
+    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
         raise NotImplementedError(
             "All constraint discovery algorithms need to implement a function to convert "
             "the skeleton graph to a causal graph."
@@ -124,12 +124,12 @@ class BaseConstraintDiscovery:
 
     def orient_unshielded_triples(
         self,
-        graph: EquivalenceClassProtocol,
+        graph: EquivalenceClass,
         sep_set: Dict[Column, Dict[Column, List[Set[Column]]]],
     ) -> None:
         raise NotImplementedError()
 
-    def orient_edges(self, graph: EquivalenceClassProtocol) -> None:
+    def orient_edges(self, graph: EquivalenceClass) -> None:
         raise NotImplementedError(
             "All constraint discovery algorithms need to implement a function to orient the "
             "skeleton graph given a separating set."
