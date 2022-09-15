@@ -3,7 +3,7 @@ from typing import Optional, Set, Union
 import networkx as nx
 import pandas as pd
 
-from ._protocol import GraphProtocol
+from ._protocol import Graph
 
 
 class Context:
@@ -48,7 +48,7 @@ class Context:
         data: pd.DataFrame,
         variables: Optional[Set] = None,
         latents: Optional[Set] = None,
-        init_graph: Optional[GraphProtocol] = None,
+        init_graph: Optional[Graph] = None,
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> None:
@@ -110,5 +110,5 @@ class Context:
         return self._excluded_edges
 
     @property
-    def init_graph(self) -> GraphProtocol:
+    def init_graph(self) -> Graph:
         return self._init_graph
