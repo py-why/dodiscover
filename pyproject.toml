@@ -22,7 +22,6 @@ keywords = ['causality', 'graphs', 'causal-inference', 'graphical-model']
 
 [tool.poetry-dynamic-versioning]
 enable = true
-vcs = "git"
 
 [tool.poetry-dynamic-versioning.substitution]
 files = ["dodiscover/__init__.py"]
