@@ -212,7 +212,7 @@
 
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
 
-<span class="kn">from</span> <span class="nn">.._protocol</span> <span class="kn">import</span> <span class="n">GraphProtocol</span>
+<span class="kn">from</span> <span class="nn">.._protocol</span> <span class="kn">import</span> <span class="n">Graph</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
 
 
@@ -229,7 +229,7 @@
 
     <span class="n">_allow_multivariate_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">GraphProtocol</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
 
 <div class="viewcode-block" id="Oracle.test"><a class="viewcode-back" href="../../../generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>

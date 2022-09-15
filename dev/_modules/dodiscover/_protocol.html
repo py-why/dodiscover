@@ -209,7 +209,7 @@
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 
 
-<div class="viewcode-block" id="GraphProtocol"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol">[docs]</a><span class="k">class</span> <span class="nc">GraphProtocol</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="Graph"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph">[docs]</a><span class="k">class</span> <span class="nc">Graph</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Protocol for graphs to work with dodiscover algorithms.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -217,31 +217,31 @@
         <span class="sd">&quot;&quot;&quot;Return an iterable over nodes in graph.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="GraphProtocol.edges"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.edges">[docs]</a>    <span class="k">def</span> <span class="nf">edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.edges"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.edges">[docs]</a>    <span class="k">def</span> <span class="nf">edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return an iterable over edge tuples in graph.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GraphProtocol.has_edge"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.has_edge">[docs]</a>    <span class="k">def</span> <span class="nf">has_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">edge_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.has_edge"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.has_edge">[docs]</a>    <span class="k">def</span> <span class="nf">has_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">edge_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check if graph has an edge for a specific edge type.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GraphProtocol.add_node"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_for_adding</span><span class="p">,</span> <span class="o">**</span><span class="n">attr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.add_node"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_for_adding</span><span class="p">,</span> <span class="o">**</span><span class="n">attr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Add a node to the graph.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GraphProtocol.remove_node"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.remove_node">[docs]</a>    <span class="k">def</span> <span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.remove_node"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.remove_node">[docs]</a>    <span class="k">def</span> <span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Remove a node from the graph.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GraphProtocol.remove_edges_from"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.remove_edges_from">[docs]</a>    <span class="k">def</span> <span class="nf">remove_edges_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.remove_edges_from"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.remove_edges_from">[docs]</a>    <span class="k">def</span> <span class="nf">remove_edges_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Remove a set of edges from the graph.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GraphProtocol.neighbors"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.neighbors">[docs]</a>    <span class="k">def</span> <span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.neighbors"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.neighbors">[docs]</a>    <span class="k">def</span> <span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Iterate over all nodes that have any edge connection with &#39;node&#39;.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GraphProtocol.to_undirected"><a class="viewcode-back" href="../../generated/dodiscover.GraphProtocol.html#dodiscover.GraphProtocol.to_undirected">[docs]</a>    <span class="k">def</span> <span class="nf">to_undirected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.to_undirected"><a class="viewcode-back" href="../../generated/dodiscover.Graph.html#dodiscover.Graph.to_undirected">[docs]</a>    <span class="k">def</span> <span class="nf">to_undirected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Convert a graph to a fully undirected networkx graph.</span>
 
 <span class="sd">        All nodes are connected by an undirected edge if there are any</span>
@@ -250,10 +250,10 @@
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="EquivalenceClassProtocol"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClassProtocol.html#dodiscover.EquivalenceClassProtocol">[docs]</a><span class="k">class</span> <span class="nc">EquivalenceClassProtocol</span><span class="p">(</span><span class="n">GraphProtocol</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="EquivalenceClass"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass">[docs]</a><span class="k">class</span> <span class="nc">EquivalenceClass</span><span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Protocol for equivalence class of graphs.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="EquivalenceClassProtocol.orient_uncertain_edge"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClassProtocol.html#dodiscover.EquivalenceClassProtocol.orient_uncertain_edge">[docs]</a>    <span class="k">def</span> <span class="nf">orient_uncertain_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EquivalenceClass.orient_uncertain_edge"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass.orient_uncertain_edge">[docs]</a>    <span class="k">def</span> <span class="nf">orient_uncertain_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Orients an uncertain edge in the equivalence class to directed ``&#39;u&#39;*-&gt;&#39;v&#39;``.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 

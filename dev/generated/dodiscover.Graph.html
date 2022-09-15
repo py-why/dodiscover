@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>dodiscover.GraphProtocol &#8212; dodiscover v0.0.0</title>
+    <title>dodiscover.Graph &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -46,7 +46,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dodiscover.EquivalenceClassProtocol" href="dodiscover.EquivalenceClassProtocol.html" />
+    <link rel="next" title="dodiscover.EquivalenceClass" href="dodiscover.EquivalenceClass.html" />
     <link rel="prev" title="dodiscover.ci.FisherZCITest" href="dodiscover.ci.FisherZCITest.html" />
     <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
@@ -213,12 +213,12 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   dodiscover.GraphProtocol
+   dodiscover.Graph
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.EquivalenceClassProtocol.html">
-   dodiscover.EquivalenceClassProtocol
+  <a class="reference internal" href="dodiscover.EquivalenceClass.html">
+   dodiscover.EquivalenceClass
   </a>
  </li>
 </ul>
@@ -278,15 +278,15 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="dodiscover-graphprotocol">
-<h1>dodiscover.GraphProtocol<a class="headerlink" href="#dodiscover-graphprotocol" title="Permalink to this heading">#</a></h1>
+  <section id="dodiscover-graph">
+<h1>dodiscover.Graph<a class="headerlink" href="#dodiscover-graph" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.</span></span><span class="sig-name descname"><span class="pre">GraphProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.</span></span><span class="sig-name descname"><span class="pre">Graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph" title="Permalink to this definition">#</a></dt>
 <dd><p>Protocol for graphs to work with dodiscover algorithms.</p>
 <dl class="field-list">
 <dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#dodiscover.GraphProtocol.nodes" title="dodiscover.GraphProtocol.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#dodiscover.Graph.nodes" title="dodiscover.Graph.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></p>
 <blockquote>
 <div><p>Return an iterable over nodes in graph.</p>
 </div></blockquote>
@@ -299,74 +299,74 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.add_node" title="dodiscover.GraphProtocol.add_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code></a>(node_for_adding, **attr)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.add_node" title="dodiscover.Graph.add_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code></a>(node_for_adding, **attr)</p></td>
 <td><p>Add a node to the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.edges" title="dodiscover.GraphProtocol.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>([data])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.edges" title="dodiscover.Graph.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>([data])</p></td>
 <td><p>Return an iterable over edge tuples in graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.has_edge" title="dodiscover.GraphProtocol.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v, edge_type)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.has_edge" title="dodiscover.Graph.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v, edge_type)</p></td>
 <td><p>Check if graph has an edge for a specific edge type.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.neighbors" title="dodiscover.GraphProtocol.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.neighbors" title="dodiscover.Graph.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
 <td><p>Iterate over all nodes that have any edge connection with 'node'.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.remove_edges_from" title="dodiscover.GraphProtocol.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_edges_from" title="dodiscover.Graph.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
 <td><p>Remove a set of edges from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.remove_node" title="dodiscover.GraphProtocol.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_node" title="dodiscover.Graph.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
 <td><p>Remove a node from the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.GraphProtocol.to_undirected" title="dodiscover.GraphProtocol.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.to_undirected" title="dodiscover.Graph.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
 <td><p>Convert a graph to a fully undirected networkx graph.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.add_node">
-<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.add_node" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.add_node" title="Permalink to this definition">#</a></dt>
 <dd><p>Add a node to the graph.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.edges">
-<span class="sig-name descname"><span class="pre">edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.edges" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.edges">
+<span class="sig-name descname"><span class="pre">edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.edges" title="Permalink to this definition">#</a></dt>
 <dd><p>Return an iterable over edge tuples in graph.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.has_edge">
-<span class="sig-name descname"><span class="pre">has_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.has_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.has_edge" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.has_edge">
+<span class="sig-name descname"><span class="pre">has_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.has_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.has_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Check if graph has an edge for a specific edge type.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.neighbors">
-<span class="sig-name descname"><span class="pre">neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.neighbors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.neighbors" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.neighbors">
+<span class="sig-name descname"><span class="pre">neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.neighbors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.neighbors" title="Permalink to this definition">#</a></dt>
 <dd><p>Iterate over all nodes that have any edge connection with ‘node’.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></em><a class="headerlink" href="#dodiscover.GraphProtocol.nodes" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></em><a class="headerlink" href="#dodiscover.Graph.nodes" title="Permalink to this definition">#</a></dt>
 <dd><p>Return an iterable over nodes in graph.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.remove_edges_from">
-<span class="sig-name descname"><span class="pre">remove_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.remove_edges_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.remove_edges_from" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.remove_edges_from">
+<span class="sig-name descname"><span class="pre">remove_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.remove_edges_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.remove_edges_from" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove a set of edges from the graph.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.remove_node">
-<span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.remove_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.remove_node" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.remove_node">
+<span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.remove_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.remove_node" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove a node from the graph.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.GraphProtocol.to_undirected">
-<span class="sig-name descname"><span class="pre">to_undirected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0b1.dev0)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#GraphProtocol.to_undirected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.GraphProtocol.to_undirected" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.Graph.to_undirected">
+<span class="sig-name descname"><span class="pre">to_undirected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0b1.dev0)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.to_undirected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.to_undirected" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert a graph to a fully undirected networkx graph.</p>
 <p>All nodes are connected by an undirected edge if there are any
 edges between the two.</p>
@@ -391,10 +391,10 @@ edges between the two.</p>
           <p class="prev-next-title">dodiscover.ci.FisherZCITest</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="dodiscover.EquivalenceClassProtocol.html" title="next page">
+  <a class='right-next' id="next-link" href="dodiscover.EquivalenceClass.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">dodiscover.EquivalenceClassProtocol</p>
+      <p class="prev-next-title">dodiscover.EquivalenceClass</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>
