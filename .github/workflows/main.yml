@@ -150,7 +150,7 @@ jobs:
       #   run: |
       #     pip uninstall -yq networkx
       #     pip install --progress-bar off git+https://github.com/networkx/networkx
-      - name: Run pytest # headless via Xvfb on linux
+      - name: Run pytest
         run: poetry run poe unit_test
       - name: Upload coverage stats to codecov
         if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.10' && matrix.networkx == 'stable' }}
