@@ -239,7 +239,7 @@ def g_square_binary(
     The ``G^2`` statistic for binary outcome 'a' and 'b' is:
 
     .. math::
-        2 \\times \sum_{a,b} S^{a,b}_{ij} ln(\\frac{s^{ab}_{ij} M}{s_i^a s_j^b})
+        2 \\times \\sum_{a,b} S^{a,b}_{ij} ln(\\frac{s^{ab}_{ij} M}{s_i^a s_j^b})
 
     which takes the sum over occurrences of 'a' and 'b' and multiplies
     it by the number of samples, M and normalizes it :footcite:`Neapolitan2003`.
