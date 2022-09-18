@@ -3,12 +3,12 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
-from ._protocol import GraphProtocol
+from ._protocol import Graph
 
 
 def confusion_matrix_networks(
-    true_graph: GraphProtocol,
-    pred_graph: GraphProtocol,
+    true_graph: Graph,
+    pred_graph: Graph,
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
 

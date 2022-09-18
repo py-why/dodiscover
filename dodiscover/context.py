@@ -47,7 +47,7 @@ class Context:
     _data: pd.DataFrame
     _variables: Set
     _latents: Set
-    _init_graph: GraphProtocol
+    _init_graph: Graph
     _included_edges: nx.Graph
     _excluded_edges: nx.Graph
 

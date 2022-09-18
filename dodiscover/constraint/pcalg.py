@@ -8,7 +8,7 @@ from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
-from .._protocol import EquivalenceClassProtocol
+from .._protocol import EquivalenceClass
 from ._classes import BaseConstraintDiscovery
 
 logger = logging.getLogger()
@@ -54,7 +54,7 @@ class PC(BaseConstraintDiscovery):
 
     Attributes
     ----------
-    graph_ : EquivalenceClassProtocol
+    graph_ : EquivalenceClass
         The equivalence class of graphs discovered.
     separating_sets_ : dict of dict of list of set
         The dictionary of separating sets, where it is a nested dictionary from
@@ -66,7 +66,7 @@ class PC(BaseConstraintDiscovery):
     .. footbibliography::
     """
 
-    graph_: EquivalenceClassProtocol
+    graph_: EquivalenceClass
     separating_sets_: Optional[SeparatingSet]
 
     def __init__(
@@ -91,7 +91,7 @@ class PC(BaseConstraintDiscovery):
         self.max_iter = max_iter
         self.apply_orientations = apply_orientations
 
-    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClassProtocol:
+    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
         """Convert skeleton graph as undirected networkx Graph to CPDAG.
 
         Parameters
@@ -102,7 +102,7 @@ class PC(BaseConstraintDiscovery):
 
         Returns
         -------
-        graph : EquivalenceClassProtocol
+        graph : EquivalenceClass
             The CPDAG class.
         """
         from pywhy_graphs import CPDAG
@@ -112,7 +112,7 @@ class PC(BaseConstraintDiscovery):
         graph = CPDAG(incoming_undirected_edges=graph)
         return graph
 
-    def orient_edges(self, graph: EquivalenceClassProtocol) -> None:
+    def orient_edges(self, graph: EquivalenceClass) -> None:
         """Orient edges in a skeleton graph to estimate the causal DAG, or CPDAG.
 
         These are known as the Meek rules :footcite:`Meek1995`. They are deterministic
@@ -121,7 +121,7 @@ class PC(BaseConstraintDiscovery):
 
         Parameters
         ----------
-        graph : EquivalenceClassProtocol
+        graph : EquivalenceClass
             A skeleton graph. If ``None``, then will initialize PC using a
             complete graph. By default None.
         """
@@ -164,14 +164,14 @@ class PC(BaseConstraintDiscovery):
 
     def orient_unshielded_triples(
         self,
-        graph: EquivalenceClassProtocol,
+        graph: EquivalenceClass,
         sep_set: SeparatingSet,
     ) -> None:
         """Orient colliders given a graph and separation set.
 
         Parameters
         ----------
-        graph : EquivalenceClassProtocol
+        graph : EquivalenceClass
             The CPDAG.
         sep_set : Dict[Dict[Set[Set[Any]]]]
             The separating set between any two nodes.
@@ -189,7 +189,7 @@ class PC(BaseConstraintDiscovery):
                     self._orient_collider(graph, v_i, u, v_j)
 
     def _orient_collider(
-        self, graph: EquivalenceClassProtocol, v_i: Column, u: Column, v_j: Column
+        self, graph: EquivalenceClass, v_i: Column, u: Column, v_j: Column
     ) -> None:
         logger.info(
             f"orienting collider: {v_i} -> {u} and {v_j} -> {u} to make {v_i} -> {u} <- {v_j}."
@@ -200,7 +200,7 @@ class PC(BaseConstraintDiscovery):
         if graph.has_edge(v_j, u, graph.undirected_edge_name):
             graph.orient_uncertain_edge(v_j, u)
 
-    def _apply_meek_rule1(self, graph: EquivalenceClassProtocol, i: Column, j: Column) -> bool:
+    def _apply_meek_rule1(self, graph: EquivalenceClass, i: Column, j: Column) -> bool:
         """Apply rule 1 of Meek's rules.
 
         Looks for i - j such that k -> i, such that (k,i,j)
@@ -228,7 +228,7 @@ class PC(BaseConstraintDiscovery):
                 break
         return added_arrows
 
-    def _apply_meek_rule2(self, graph: EquivalenceClassProtocol, i: Column, j: Column) -> bool:
+    def _apply_meek_rule2(self, graph: EquivalenceClass, i: Column, j: Column) -> bool:
         """Apply rule 2 of Meek's rules.
 
         Check for i - j, and then looks for i -> k -> j
@@ -267,7 +267,7 @@ class PC(BaseConstraintDiscovery):
                 added_arrows = True
         return added_arrows
 
-    def _apply_meek_rule3(self, graph: EquivalenceClassProtocol, i: Column, j: Column) -> bool:
+    def _apply_meek_rule3(self, graph: EquivalenceClass, i: Column, j: Column) -> bool:
         """Apply rule 3 of Meek's rules.
 
         Check for i - j, and then looks for k -> j <- l
