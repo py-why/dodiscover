@@ -37,8 +37,8 @@ Graph protocols
 .. autosummary::
    :toctree: generated/
 
-   GraphProtocol
-   EquivalenceClassProtocol
+   Graph
+   EquivalenceClass
 
 
 Context for causal discovery

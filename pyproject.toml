@@ -20,9 +20,13 @@ classifiers = [
 ]
 keywords = ['causality', 'graphs', 'causal-inference', 'graphical-model']
 
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry-dynamic-versioning]
 enable = true
-vcs = "git"
+vsc = "git"
 
 [tool.poetry-dynamic-versioning.substitution]
 files = ["dodiscover/__init__.py"]
@@ -91,10 +95,6 @@ tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 [tool.poetry.extras]
 graph_func = ['pywhy-graphs']
 viz = ['pygraphviz']
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.portray]
 output_dir = ['site']

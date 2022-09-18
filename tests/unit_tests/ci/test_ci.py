@@ -4,7 +4,12 @@ import pytest
 from dodiscover.ci import FisherZCITest, GSquareCITest, KernelCITest, Oracle
 from dodiscover.constraint.utils import dummy_sample
 
-ground_truth_graph = nx.DiGraph([("x", "y"), ("z", "y")])
+ground_truth_graph = nx.DiGraph(
+    [
+        ("x", "y"),
+        ("z", "y"),
+    ]
+)
 sample_df = dummy_sample(ground_truth_graph)
 
 

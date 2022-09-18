@@ -3,7 +3,7 @@ from typing import Dict, FrozenSet, Iterable, Protocol
 import networkx as nx
 
 
-class GraphProtocol(Protocol):
+class Graph(Protocol):
     """Protocol for graphs to work with dodiscover algorithms."""
 
     @property
@@ -44,7 +44,7 @@ class GraphProtocol(Protocol):
         pass
 
 
-class EquivalenceClassProtocol(GraphProtocol, Protocol):
+class EquivalenceClass(Graph, Protocol):
     """Protocol for equivalence class of graphs."""
 
     @property

@@ -1,10 +1,10 @@
 import pandas as pd
 
-from dodiscover import GraphProtocol
+from dodiscover import Graph
 from dodiscover.typing import SeparatingSet
 
 
-def dummy_sample(G: GraphProtocol):
+def dummy_sample(G: Graph):
     """Sample an empty dataframe with columns as the nodes.
 
     Used for oracle testing.
