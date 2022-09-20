@@ -12,7 +12,8 @@ def confusion_matrix_networks(
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
 
-    Converts the graphs into adjacency matrices, which are symmetric.
+    Converts the graphs into an undirected graph, and then compares their adjacency
+    matrix, which are symmetric.
 
     Parameters
     ----------
@@ -30,11 +31,16 @@ def confusion_matrix_networks(
     See Also
     --------
     sklearn.metrics.confusion_matrix
+
+    Notes
+    -----
+    This function only compares the graph's adjacency structure, which does
+    not take into consideration the directionality of edges.
     """
     if set(true_graph.nodes) != set(pred_graph.nodes):
         raise RuntimeError("Both nodes should match.")
 
-    # convert graphs to adjacency graph in networkx
+    # convert graphs to undirected graph in networkx
     true_graph = true_graph.to_undirected()
     pred_graph = pred_graph.to_undirected()
 
@@ -45,10 +51,6 @@ def confusion_matrix_networks(
     # next convert into 2D numpy array format and make sure nodes are ordered accordingly
     true_adj_mat = nx.to_numpy_array(true_graph)[np.ix_(idx, idx)]
     pred_adj_mat = nx.to_numpy_array(pred_graph)[np.ix_(other_idx, other_idx)]
-
-    # ensure we are looking at symmetric graphs
-    true_adj_mat += true_adj_mat.T
-    pred_adj_mat += pred_adj_mat.T
 
     # then only extract lower-triangular portion
     true_adj_mat = true_adj_mat[np.tril_indices_from(true_adj_mat, k=-1)]
