@@ -140,8 +140,8 @@ numpydoc_xref_aliases = {
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
     "Context": "dodiscover.Context",
     "PC": "dodiscover.PC",
-    "EquivalenceClassProtocol": "dodiscover.EquivalenceClassProtocol",
-    "GraphProtocol": "dodiscover.GraphProtocol",
+    "EquivalenceClass": "dodiscover.EquivalenceClass",
+    "Graph": "dodiscover.Graph",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # pandas
