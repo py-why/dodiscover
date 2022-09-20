@@ -11,18 +11,22 @@ def confusion_matrix_networks(
     pred_graph: Graph,
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
+
     Converts the graphs into adjacency matrices, which are symmetric.
+
     Parameters
     ----------
-    true_graph : an instance of causal graph
+    true_graph : instance of causal graph
         The true graph.
-    pred_graph : an instance of causal graph
+    pred_graph : instance of causal graph
         The predicted graph. The predicted graph and true graph must be
         the same type.
+
     Returns
     -------
     cm : np.ndarray of shape (2, 2)
         The confusion matrix.
+
     See Also
     --------
     sklearn.metrics.confusion_matrix
