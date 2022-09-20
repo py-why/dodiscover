@@ -7,6 +7,7 @@ import sklearn
 import sklearn.metrics
 from numpy.typing import NDArray
 from sklearn.neighbors import NearestNeighbors
+from sklearn.utils import check_random_state
 
 from dodiscover.typing import Column
 
@@ -95,13 +96,12 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         self.test_size = test_size
 
         # set the internal random state generator
-        rng = np.random.default_rng(random_state)
-        self.random_state = rng
+        self.random_state = check_random_state(random_state)
 
     def _unconditional_shuffle(
         self, x_arr: NDArray, y_arr: NDArray
     ) -> Tuple[NDArray, NDArray, NDArray, NDArray]:
-        """Generate samples to emulate X independent of Y.
+        r"""Generate samples to emulate X independent of Y.
 
         Shuffles the Y samples, such that if there is any dependence among X and Y,
         they are broken and the resulting samples emulate those which came from
