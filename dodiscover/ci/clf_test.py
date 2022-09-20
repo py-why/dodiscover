@@ -7,7 +7,6 @@ import sklearn
 import sklearn.metrics
 from numpy.typing import NDArray
 from sklearn.neighbors import NearestNeighbors
-from sklearn.utils import check_random_state
 
 from dodiscover.typing import Column
 
@@ -36,7 +35,9 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         Parameters
         ----------
         clf : instance of sklearn.base.BaseEstimator or pytorch model
-            An instance of a classification model.
+            An instance of a classification model. If a PyTorch model is used,
+            then the user must pass the PyTorch model through ``skorch`` to turn
+            the Neural Network into an object that is sklearn-compliant API.
         metric : Callable of sklearn metric
             A metric function to measure the performance of the classification model.
         bootstrap : bool, optional
@@ -48,6 +49,8 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         test_size : Union[int, float], optional
             The size of the teset set, by default 0.25. If less than 1, then
             will take a fraction of ``n_samples``.
+        random_state : int, optional
+            The random seed that is used to seed via ``np.random.defaultrng``.
 
         Notes
         -----
@@ -90,7 +93,10 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         self.n_iter = n_iter
         self.threshold = threshold
         self.test_size = test_size
-        self.random_state = check_random_state(random_state)
+
+        # set the internal random state generator
+        rng = np.random.default_rng(random_state)
+        self.random_state = rng
 
     def _unconditional_shuffle(
         self, x_arr: NDArray, y_arr: NDArray

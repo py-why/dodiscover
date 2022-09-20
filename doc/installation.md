@@ -3,25 +3,26 @@ Installation
 
 **dodiscover** supports Python >= 3.8.
 
-## Installing with ``pip``
+## Installing with ``pip``, or ``poetry``.
 
 **dodiscover** is available [on PyPI](https://pypi.org/project/dodiscover/). Just run
 
-```bash
-pip install dodiscover
-```
+    pip install dodiscover
+
+    # or via poetry (recommended)
+    poetry add dodiscover
 
 ## Installing from source
 
 To install **dodiscover** from source, first clone [the repository](https://github.com/pywhy/dodiscover):
 
-```bash
-git clone https://github.com/py-why/dodiscover.git
-cd dodiscover
-```
+    git clone https://github.com/py-why/dodiscover.git
+    cd dodiscover
 
-Then run
+Then run installation via poetry (recommended)
 
-```bash
-pip install -e .
-```
+    poetry install
+
+or via pip
+
+    pip install -e .

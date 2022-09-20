@@ -2,6 +2,8 @@
 
 Thanks for considering contributing! Please read this document to learn the various ways you can contribute to this project and how to go about doing it.
 
+This Project welcomes contributions, suggestions, and feedback. All contributions, suggestions, and feedback you submitted are accepted under the [Project's license](./LICENSE.md). You represent that if you do not own copyright in the code that you have the authority to submit it under the [Project's license](./LICENSE.md). All feedback, suggestions, or contributions are not confidential.
+
 ## Bug reports and feature requests
 
 ### Did you find a bug?
@@ -43,7 +45,7 @@ When you're ready to contribute code to address an open issue, please follow the
 
         git clone https://github.com/USERNAME/dodiscover.git
 
-    or 
+    or
 
         git clone git@github.com:USERNAME/dodiscover.git
 
@@ -82,10 +84,17 @@ When you're ready to contribute code to address an open issue, please follow the
         conda create -n dodiscover python=3.9
         conda activate dodiscover
 
-    Once your virtual environment is activated, you can install your local clone in "editable mode" with
+    Next, you'll need poetry installed, which is a software dependency manager written in Python. Follow the [official instructions to install poetry](https://python-poetry.org/docs/#installation). Once your virtual environment is activated, you can install your local clone with ``poetry``.
 
+        # the output should show a version greater than 1.2.0 (e.g. "Poetry (version 1.2.0)")
+        poetry --version
+
+        # next install dodiscover using poetry
         pip install -U pip setuptools wheel
-        pip install -e .[dev]
+        poetry install --with docs,test,style --extras graph_func
+
+        # or you can try installing in editable mode with pip
+        pip install -e .
 
     The "editable mode" comes from the `-e` argument to `pip`, and essential just creates a symbolic link from the site-packages directory of your virtual environment to the source code in your local clone. That way any changes you make will be immediately reflected in your virtual environment.
 
@@ -136,3 +145,11 @@ When you're ready to contribute code to address an open issue, please follow the
 
 We use [Sphinx](https://www.sphinx-doc.org/en/master/index.html) to build our API docs, which automatically parses all docstrings
 of public classes and methods. All docstrings should adhere to the [Numpy styling convention](https://www.sphinx-doc.org/en/master/usage/extensions/example_numpy.html).
+
+---
+
+The Project abides by the Organization's [code of conduct](https://github.com/py-why/governance/blob/main/CODE-OF-CONDUCT.md) and [trademark policy](https://github.com/py-why/governance/blob/main/TRADEMARKS.md).
+
+---
+Part of MVG-0.1-beta.
+Made with love by GitHub. Licensed under the [CC-BY 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
