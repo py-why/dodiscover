@@ -1,5 +1,8 @@
+from typing import Optional
+
 import networkx as nx
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
@@ -9,6 +12,8 @@ from ._protocol import Graph
 def confusion_matrix_networks(
     true_graph: Graph,
     pred_graph: Graph,
+    labels: Optional[NDArray] = None,
+    normalize: str = None,
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
 
@@ -22,6 +27,15 @@ def confusion_matrix_networks(
     pred_graph : instance of causal graph
         The predicted graph. The predicted graph and true graph must be
         the same type.
+    labels : array-like of shape (n_classes), default=None
+        List of labels to index the matrix. This may be used to reorder
+        or select a subset of labels.
+        If ``None`` is given, those that appear at least once
+        in ``y_true`` or ``y_pred`` are used in sorted order.
+    normalize : {'true', 'pred', 'all'}, default=None
+        Normalizes confusion matrix over the true (rows), predicted (columns)
+        conditions or all the population. If None, confusion matrix will not be
+        normalized.
 
     Returns
     -------
@@ -64,5 +78,5 @@ def confusion_matrix_networks(
     y_pred = LabelBinarizer().fit_transform(pred_adj_mat.flatten()).squeeze()
 
     # compute the confusion matrix
-    conf_mat = confusion_matrix(y_true, y_pred, labels=[0, 1])
+    conf_mat = confusion_matrix(y_true, y_pred, labels=labels, normalize=normalize)
     return conf_mat
