@@ -66,3 +66,12 @@ Constraint-based structure learning
 
    LearnSkeleton
    SkeletonMethods
+
+Comparing causal discovery algorithms
+=====================================
+
+.. currentmodule:: dodiscover.metrics
+.. autosummary::
+   :toctree: generated/
+
+   confusion_matrix_networks
