@@ -43,7 +43,7 @@ python = ">=3.8,<3.11"
 numpy = "^1.23.0"
 scipy = "^1.9.0"
 scikit-learn = "^1.1.0"
-pandas = "^1.1"
+pandas = "^1.5.0"
 importlib-resources = { version = "*", python = "<3.9" }
 networkx = { git = "https://github.com/adam2392/networkx.git", branch = 'mixededge' }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
@@ -69,6 +69,7 @@ poethepoet = "^0.16.0"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 memory_profiler = { version = "^0.60.0" }
+flaky = "^3.7.0"
 
 [tool.poetry.group.docs]
 optional = true

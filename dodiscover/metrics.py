@@ -1,5 +1,8 @@
+from typing import Optional
+
 import networkx as nx
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
@@ -9,18 +12,30 @@ from ._protocol import Graph
 def confusion_matrix_networks(
     true_graph: Graph,
     pred_graph: Graph,
+    labels: Optional[NDArray] = None,
+    normalize: str = None,
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
 
-    Converts the graphs into adjacency matrices, which are symmetric.
+    Converts the graphs into an undirected graph, and then compares their adjacency
+    matrix, which are symmetric.
 
     Parameters
     ----------
-    true_graph : an instance of causal graph
+    true_graph : instance of causal graph
         The true graph.
-    pred_graph : an instance of causal graph
+    pred_graph : instance of causal graph
         The predicted graph. The predicted graph and true graph must be
         the same type.
+    labels : array-like of shape (n_classes), default=None
+        List of labels to index the matrix. This may be used to reorder
+        or select a subset of labels.
+        If ``None`` is given, those that appear at least once
+        in ``y_true`` or ``y_pred`` are used in sorted order.
+    normalize : {'true', 'pred', 'all'}, default=None
+        Normalizes confusion matrix over the true (rows), predicted (columns)
+        conditions or all the population. If None, confusion matrix will not be
+        normalized.
 
     Returns
     -------
@@ -30,11 +45,16 @@ def confusion_matrix_networks(
     See Also
     --------
     sklearn.metrics.confusion_matrix
+
+    Notes
+    -----
+    This function only compares the graph's adjacency structure, which does
+    not take into consideration the directionality of edges.
     """
     if set(true_graph.nodes) != set(pred_graph.nodes):
         raise RuntimeError("Both nodes should match.")
 
-    # convert graphs to adjacency graph in networkx
+    # convert graphs to undirected graph in networkx
     true_graph = true_graph.to_undirected()
     pred_graph = pred_graph.to_undirected()
 
@@ -45,10 +65,6 @@ def confusion_matrix_networks(
     # next convert into 2D numpy array format and make sure nodes are ordered accordingly
     true_adj_mat = nx.to_numpy_array(true_graph)[np.ix_(idx, idx)]
     pred_adj_mat = nx.to_numpy_array(pred_graph)[np.ix_(other_idx, other_idx)]
-
-    # ensure we are looking at symmetric graphs
-    true_adj_mat += true_adj_mat.T
-    pred_adj_mat += pred_adj_mat.T
 
     # then only extract lower-triangular portion
     true_adj_mat = true_adj_mat[np.tril_indices_from(true_adj_mat, k=-1)]
@@ -62,5 +78,5 @@ def confusion_matrix_networks(
     y_pred = LabelBinarizer().fit_transform(pred_adj_mat.flatten()).squeeze()
 
     # compute the confusion matrix
-    conf_mat = confusion_matrix(y_true, y_pred, labels=[0, 1])
+    conf_mat = confusion_matrix(y_true, y_pred, labels=labels, normalize=normalize)
     return conf_mat

@@ -125,6 +125,8 @@ numpydoc_xref_ignore = {
     "n_estimated_nodes",
     "n_samples",
     "n_variables",
+    "n_classes",
+    "NDArray",
 }
 numpydoc_xref_aliases = {
     # Networkx
@@ -263,4 +265,8 @@ html_context = {
 # resolve.
 
 nitpicky = True
-nitpick_ignore = []
+nitpick_ignore = [
+    ("py:class", "numpy._typing._generic_alias.ScalarType"),
+    ("py:class", "numpy._typing._array_like._SupportsArray"),
+    ("py:class", "numpy._typing._nested_sequence._NestedSequence"),
+]
