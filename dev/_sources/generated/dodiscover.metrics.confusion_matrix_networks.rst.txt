@@ -1,0 +1,12 @@
+﻿dodiscover.metrics.confusion_matrix_networks
+============================================
+
+.. currentmodule:: dodiscover.metrics
+
+.. autofunction:: confusion_matrix_networks
+
+.. include:: dodiscover.metrics.confusion_matrix_networks.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
