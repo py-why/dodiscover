@@ -133,7 +133,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
         else:
             Z = df[z_covariates].to_numpy().reshape((-1, len(z_covariates)))
         x_columns = list(x_vars)
-        y_columns = list(y_columns)
+        y_columns = list(y_vars)
         X = df[x_columns].to_numpy()
         Y = df[y_columns].to_numpy()
         if X.ndim == 1:
