@@ -116,6 +116,9 @@ numpydoc_xref_ignore = {
     "node",
     "nodes",
     "graph",
+    # numpy
+    "ScalarType",
+    "ArrayLike",
     # shapes
     "n_times",
     "obj",
@@ -128,6 +131,9 @@ numpydoc_xref_ignore = {
     "n_variables",
     "n_classes",
     "NDArray",
+    # deep learning
+    "pytorch",
+    "model",
 }
 numpydoc_xref_aliases = {
     # Networkx
@@ -142,11 +148,14 @@ numpydoc_xref_aliases = {
     "DAG": "dodiscover.DAG",
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
     "Context": "dodiscover.Context",
+    "Column": "dodiscover.typing.Column",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
+    # numpy
+    "NDArray": "numpy.ndarray",
+    "ArrayLike": ":term:`array_like`",
     # pandas
     "pd.DataFrame": "pandas.DataFrame",
-    "pandas.DataFrame": "pandas.DataFrame",
     "column": "pandas.DataFrame.columns",
 }
 
@@ -175,7 +184,7 @@ source_suffix = [".rst", ".md"]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "numpy": ("https://numpy.org/devdocs", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
     "scipy": ("https://scipy.github.io/devdocs", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
     "networkx": ("https://networkx.org/documentation/latest/", None),
@@ -183,6 +192,7 @@ intersphinx_mapping = {
     "sklearn": ("https://scikit-learn.org/stable", None),
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
+    "torch": ("https://pytorch.org/docs/master/", None),
 }
 intersphinx_timeout = 5
 
