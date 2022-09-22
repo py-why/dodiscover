@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional, Set, Union
 import networkx as nx
 import pandas as pd
 
-from ._protocol import GraphProtocol
+from ._protocol import Graph
 
 
 class Context:
@@ -22,7 +22,7 @@ class Context:
         Set of latent "unobserved" variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    init_graph : Optional[GraphProtocol], optional
+    init_graph : Optional[Graph], optional
         The graph to start with, by default None.
     included_edges : Optional[nx.Graph], optional
         Included edges without direction, by default None.
@@ -47,7 +47,7 @@ class Context:
     _data: pd.DataFrame
     _variables: Set
     _latents: Set
-    _init_graph: GraphProtocol
+    _init_graph: Graph
     _included_edges: nx.Graph
     _excluded_edges: nx.Graph
     _state_variables: Dict[str, Any]
@@ -57,7 +57,7 @@ class Context:
         data: pd.DataFrame,
         variables: Optional[Set] = None,
         latents: Optional[Set] = None,
-        init_graph: Optional[GraphProtocol] = None,
+        init_graph: Optional[Graph] = None,
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> None:
@@ -120,11 +120,11 @@ class Context:
         return self._excluded_edges
 
     @property
-    def init_graph(self) -> GraphProtocol:
+    def init_graph(self) -> Graph:
         return self._init_graph
 
     @init_graph.setter
-    def init_graph(self, init_graph: GraphProtocol):
+    def init_graph(self, init_graph: Graph):
         self._init_graph = init_graph
 
     def add_state_variable(self, name: str, var: Any) -> None:

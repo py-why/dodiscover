@@ -37,8 +37,8 @@ Graph protocols
 .. autosummary::
    :toctree: generated/
 
-   GraphProtocol
-   EquivalenceClassProtocol
+   Graph
+   EquivalenceClass
 
 
 Context for causal discovery
@@ -66,5 +66,14 @@ Constraint-based structure learning
    LearnSkeleton
    LearnSemiMarkovianSkeleton
    SkeletonMethods
+
+Comparing causal discovery algorithms
+=====================================
+
+.. currentmodule:: dodiscover.metrics
+.. autosummary::
+   :toctree: generated/
+
+   confusion_matrix_networks
    PC
    FCI

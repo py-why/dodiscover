@@ -29,6 +29,7 @@ Changelog
 - |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
 - |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
 - |Feature| Implement skeleton learning method, :class:`dodiscover.constraint.LearnSkeleton` under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`20`)
+- |Feature| Implement confusion matrix method for comparing networkx-like graphs, :func:`dodiscover.metrics.confusion_matrix_networks`, by `Adam Li`_ (:pr:`48`)
 - |Feature| Implement PC algorithm, :class:`dodiscover.constraint.PC` for learning causal structure from observational data under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`30`)
 - |Feature| Implement FCI algorithm, :class:`dodiscover.constraint.FCI` for learning causal structure from observational data with latent confounders under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`32`)
 
