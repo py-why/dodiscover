@@ -1,3 +1,4 @@
+from copy import copy, deepcopy
 from typing import Optional, Set, Union
 
 import networkx as nx
@@ -21,7 +22,7 @@ class Context:
         Set of latent "unobserved" variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    init_graph : Optional[GraphProtocol], optional
+    init_graph : Optional[Graph], optional
         The graph to start with, by default None.
     included_edges : Optional[nx.Graph], optional
         Included edges without direction, by default None.
@@ -42,6 +43,13 @@ class Context:
 
     Setting the apriori explicit direction of an edge is not supported yet.
     """
+
+    _data: pd.DataFrame
+    _variables: Set
+    _latents: Set
+    _init_graph: Graph
+    _included_edges: nx.Graph
+    _excluded_edges: nx.Graph
 
     def __init__(
         self,
@@ -77,7 +85,7 @@ class Context:
             graph = nx.complete_graph(variables, create_using=nx.Graph)
         else:
             graph = init_graph
-            if graph.nodes != variables:
+            if set(graph.nodes) != set(variables):
                 raise ValueError(
                     f"The nodes within the initial graph, {graph.nodes}, "
                     f"do not match the nodes in the passed in data, {variables}."
@@ -112,3 +120,21 @@ class Context:
     @property
     def init_graph(self) -> Graph:
         return self._init_graph
+
+    def copy(self):
+        """Create a copy of the Context object.
+
+        Returns
+        -------
+        context : Context
+            A copy.
+        """
+        context = Context(
+            data=self._data.copy(deep=True),
+            variables=copy(self._variables),
+            latents=copy(self._latents),
+            init_graph=deepcopy(self._init_graph),
+            included_edges=deepcopy(self._included_edges),
+            excluded_edges=deepcopy(self._excluded_edges),
+        )
+        return context
