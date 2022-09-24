@@ -17,7 +17,7 @@ class Oracle(BaseConditionalIndependenceTest):
 
     Parameters
     ----------
-    graph : nx.DiGraph | GraphProtocol
+    graph : nx.DiGraph | Graph
         The ground-truth causal graph.
     """
 

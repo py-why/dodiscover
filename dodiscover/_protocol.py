@@ -66,6 +66,16 @@ class EquivalenceClass(Graph, Protocol):
         """Name of the undirected edges."""
         pass
 
+    @property
+    def bidirected_edge_name(self) -> str:
+        """Name of the bidirected edges."""
+        pass
+
+    @property
+    def circle_edge_name(self) -> str:
+        """Name of the directed edges."""
+        pass
+
     def orient_uncertain_edge(self, u, v) -> None:
         """Orients an uncertain edge in the equivalence class to directed ``'u'*->'v'``."""
         pass
@@ -80,16 +90,4 @@ class EquivalenceClass(Graph, Protocol):
 
     def successors(self, node) -> Iterable:
         """Nodes with directed edges pointing from 'node'."""
-        pass
-
-    """Protocol methods for equivalence class of semi-markovian graphs."""
-
-    @property
-    def bidirected_edge_name(self) -> str:
-        """Name of the bidirected edges."""
-        pass
-
-    @property
-    def circle_edge_name(self) -> str:
-        """Name of the directed edges."""
         pass

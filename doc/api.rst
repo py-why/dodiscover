@@ -29,6 +29,7 @@ learning.
    KernelCITest
    GSquareCITest
    FisherZCITest
+   ClassifierCITest
 
 Graph protocols
 ===============
@@ -66,6 +67,8 @@ Constraint-based structure learning
    LearnSkeleton
    LearnSemiMarkovianSkeleton
    SkeletonMethods
+   PC
+   FCI
 
 Comparing causal discovery algorithms
 =====================================
@@ -75,5 +78,3 @@ Comparing causal discovery algorithms
    :toctree: generated/
 
    confusion_matrix_networks
-   PC
-   FCI

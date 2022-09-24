@@ -109,9 +109,7 @@ class FCI(BaseConstraintDiscovery):
         self.selection_bias = selection_bias
         self.pds_skeleton_method = pds_skeleton_method
 
-    def orient_unshielded_triples(
-        self, graph: EquivalenceClass, sep_set: SeparatingSet
-    ) -> None:
+    def orient_unshielded_triples(self, graph: EquivalenceClass, sep_set: SeparatingSet) -> None:
         """Orient colliders given a graph and separation set.
 
         Parameters
@@ -144,9 +142,7 @@ class FCI(BaseConstraintDiscovery):
         if graph.has_edge(v_j, u, graph.circle_edge_name):
             graph.orient_uncertain_edge(v_j, u)
 
-    def _apply_rule1(
-        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
-    ) -> bool:
+    def _apply_rule1(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 1 of the FCI algorithm.
 
         If A *-> u o-* C, A and C are not adjacent,
@@ -190,9 +186,7 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows
 
-    def _apply_rule2(
-        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
-    ) -> bool:
+    def _apply_rule2(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 2 of FCI algorithm.
 
         If
@@ -252,9 +246,7 @@ class FCI(BaseConstraintDiscovery):
                 added_arrows = True
         return added_arrows
 
-    def _apply_rule3(
-        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
-    ) -> bool:
+    def _apply_rule3(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 3 of FCI algorithm.
 
         If A *-> u <-* C, A *-o v o-* C, A/C are not adjacent,
@@ -401,9 +393,7 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, explored_nodes
 
-    def _apply_rule8(
-        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
-    ) -> bool:
+    def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 8 of FCI algorithm.
 
         If A -> u -> C, or A -o B -> C
@@ -669,7 +659,7 @@ class FCI(BaseConstraintDiscovery):
 
         # initially learn the skeleton
         skel_graph, sep_set = super().learn_skeleton(context, sep_set)
-        
+
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
         pag = pywhy_graphs.PAG(incoming_circle_edges=skel_graph, name="PAG derived with FCI")

@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 from itertools import chain, combinations
-from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Union, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
 
 import networkx as nx
 import numpy as np
@@ -205,7 +205,7 @@ class LearnSkeleton:
 
         # debugging mode
         self.n_ci_tests = 0
-        
+
     def _initialize_params(self) -> None:
         """Initialize parameters for learning skeleton.
 
@@ -393,9 +393,7 @@ class LearnSkeleton:
                             break
 
                         # compute conditional independence test
-                        test_stat, pvalue = self.evaluate_edge(
-                            X, {x_var}, {y_var}, set(cond_set)
-                        )
+                        test_stat, pvalue = self.evaluate_edge(X, x_var, y_var, set(cond_set))
 
                         # if any "independence" is found through inability to reject
                         # the null hypothesis, then we will break the loop comparing X and Y
