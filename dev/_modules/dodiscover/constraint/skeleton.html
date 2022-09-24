@@ -214,7 +214,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">dodiscover.ci</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
-<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
+<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">SeparatingSet</span>
 
 <span class="kn">from</span> <span class="nn">..context</span> <span class="kn">import</span> <span class="n">Context</span>
 
@@ -392,7 +392,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">adj_graph_</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span>
-    <span class="n">sep_set_</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]]]</span>
+    <span class="n">sep_set_</span><span class="p">:</span> <span class="n">SeparatingSet</span>
     <span class="n">remove_edges</span><span class="p">:</span> <span class="n">Set</span>
     <span class="n">min_cond_set_size_</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">max_cond_set_size_</span><span class="p">:</span> <span class="nb">int</span>
@@ -401,7 +401,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ci_estimator</span><span class="p">:</span> <span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span>
-        <span class="n">sep_set</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Column</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sep_set</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SeparatingSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
         <span class="n">min_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">max_cond_set_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

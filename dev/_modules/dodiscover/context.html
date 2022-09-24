@@ -204,7 +204,8 @@
               <article class="bd-article" role="main">
                 
   <h1>Source code for dodiscover.context</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -227,7 +228,7 @@
 <span class="sd">        Set of latent &quot;unobserved&quot; variables, by default None. If neither ``latents``,</span>
 <span class="sd">        nor ``variables`` is set, then it is presumed that ``variables`` consists</span>
 <span class="sd">        of the columns of ``data`` and ``latents`` is the empty set.</span>
-<span class="sd">    init_graph : Optional[GraphProtocol], optional</span>
+<span class="sd">    init_graph : Optional[Graph], optional</span>
 <span class="sd">        The graph to start with, by default None.</span>
 <span class="sd">    included_edges : Optional[nx.Graph], optional</span>
 <span class="sd">        Included edges without direction, by default None.</span>
@@ -248,6 +249,13 @@
 
 <span class="sd">    Setting the apriori explicit direction of an edge is not supported yet.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="n">_variables</span><span class="p">:</span> <span class="n">Set</span>
+    <span class="n">_latents</span><span class="p">:</span> <span class="n">Set</span>
+    <span class="n">_init_graph</span><span class="p">:</span> <span class="n">Graph</span>
+    <span class="n">_included_edges</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span>
+    <span class="n">_excluded_edges</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -283,7 +291,7 @@
             <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">complete_graph</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">graph</span> <span class="o">=</span> <span class="n">init_graph</span>
-            <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span> <span class="o">!=</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;The nodes within the initial graph, </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="si">}</span><span class="s2">, &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;do not match the nodes in the passed in data, </span><span class="si">{</span><span class="n">variables</span><span class="si">}</span><span class="s2">.&quot;</span>
@@ -317,7 +325,25 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">init_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span>
+
+<div class="viewcode-block" id="Context.copy"><a class="viewcode-back" href="../../generated/dodiscover.Context.html#dodiscover.Context.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a copy of the Context object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        context : Context</span>
+<span class="sd">            A copy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">variables</span><span class="o">=</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">),</span>
+            <span class="n">latents</span><span class="o">=</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_latents</span><span class="p">),</span>
+            <span class="n">init_graph</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span><span class="p">),</span>
+            <span class="n">included_edges</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span><span class="p">),</span>
+            <span class="n">excluded_edges</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">context</span></div></div>
 </pre></div>
 
               </article>

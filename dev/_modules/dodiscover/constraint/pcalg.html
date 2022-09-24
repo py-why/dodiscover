@@ -1,0 +1,556 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dodiscover.constraint.pcalg &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../api.html">
+  API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../use.html">
+  Using dodiscover
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../tutorials.html">
+  Tutorial
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <h1>Source code for dodiscover.constraint.pcalg</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">permutations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="kn">from</span> <span class="nn">dodiscover.ci.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+<span class="kn">from</span> <span class="nn">dodiscover.constraint.utils</span> <span class="kn">import</span> <span class="n">is_in_sep_set</span>
+<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">SeparatingSet</span>
+
+<span class="kn">from</span> <span class="nn">.._protocol</span> <span class="kn">import</span> <span class="n">EquivalenceClass</span>
+<span class="kn">from</span> <span class="nn">._classes</span> <span class="kn">import</span> <span class="n">BaseConstraintDiscovery</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="PC"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC">[docs]</a><span class="k">class</span> <span class="nc">PC</span><span class="p">(</span><span class="n">BaseConstraintDiscovery</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Peter and Clarke (PC) algorithm for causal discovery.</span>
+
+<span class="sd">    Assumes causal sufficiency, that is, all confounders in the</span>
+<span class="sd">    causal graph are observed variables. See :footcite:`Spirtes1993` for</span>
+<span class="sd">    full details on the algorithm.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ci_estimator : BaseConditionalIndependenceTest</span>
+<span class="sd">        The conditional independence test function. The arguments of the estimator should</span>
+<span class="sd">        be data, node, node to compare, conditioning set of nodes, and any additional</span>
+<span class="sd">        keyword arguments. It should return a tuple of test statistic and pvalue in that</span>
+<span class="sd">        order.</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        The significance level for the conditional independence test, by default 0.05.</span>
+<span class="sd">    min_cond_set_size : int, optional</span>
+<span class="sd">        Minimum size of the conditioning set, by default None, which will be set to &#39;0&#39;.</span>
+<span class="sd">        Used to constrain the computation spent on the algorithm.</span>
+<span class="sd">    max_cond_set_size : int, optional</span>
+<span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
+<span class="sd">        the computation spent on the algorithm.</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">        The maximum number of iterations through the graph to apply</span>
+<span class="sd">        orientation rules.</span>
+<span class="sd">    max_combinations : int, optional</span>
+<span class="sd">        Maximum number of tries with a conditioning set chosen from the set of possible</span>
+<span class="sd">        parents still, by default None. If None, then will not be used. If set, then</span>
+<span class="sd">        the conditioning set will be chosen lexographically based on the sorted</span>
+<span class="sd">        test statistic values of &#39;ith Pa(X) -&gt; X&#39;, for each possible parent node of &#39;X&#39;.</span>
+<span class="sd">    apply_orientations : bool</span>
+<span class="sd">        Whether or not to apply orientation rules given the learned skeleton graph</span>
+<span class="sd">        and separating set per pair of variables. If ``True`` (default), will</span>
+<span class="sd">        apply Meek&#39;s orientation rules R0-3, orienting colliders and certain</span>
+<span class="sd">        arrowheads :footcite:`Meek1995`.</span>
+<span class="sd">    ci_estimator_kwargs : dict</span>
+<span class="sd">        Keyword arguments for the ``ci_estimator`` function.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph_ : EquivalenceClass</span>
+<span class="sd">        The equivalence class of graphs discovered.</span>
+<span class="sd">    separating_sets_ : dict of dict of list of set</span>
+<span class="sd">        The dictionary of separating sets, where it is a nested dictionary from</span>
+<span class="sd">        the variable name to the variable it is being compared to the set of</span>
+<span class="sd">        variables in the graph that separate the two.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. footbibliography::</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">graph_</span><span class="p">:</span> <span class="n">EquivalenceClass</span>
+    <span class="n">separating_sets_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SeparatingSet</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ci_estimator</span><span class="p">:</span> <span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">min_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">max_combinations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">apply_orientations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">ci_estimator</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="p">,</span>
+            <span class="n">min_cond_set_size</span><span class="o">=</span><span class="n">min_cond_set_size</span><span class="p">,</span>
+            <span class="n">max_cond_set_size</span><span class="o">=</span><span class="n">max_cond_set_size</span><span class="p">,</span>
+            <span class="n">max_combinations</span><span class="o">=</span><span class="n">max_combinations</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_orientations</span> <span class="o">=</span> <span class="n">apply_orientations</span>
+
+<div class="viewcode-block" id="PC.convert_skeleton_graph"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC.convert_skeleton_graph">[docs]</a>    <span class="k">def</span> <span class="nf">convert_skeleton_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EquivalenceClass</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Convert skeleton graph as undirected networkx Graph to CPDAG.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        graph : nx.Graph</span>
+<span class="sd">            Converts a skeleton graph to the representation needed</span>
+<span class="sd">            for PC algorithm, a CPDAG.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        graph : EquivalenceClass</span>
+<span class="sd">            The CPDAG class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">pywhy_graphs</span> <span class="kn">import</span> <span class="n">CPDAG</span>
+
+        <span class="c1"># convert Graph object to a CPDAG object with</span>
+        <span class="c1"># all undirected edges</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">CPDAG</span><span class="p">(</span><span class="n">incoming_undirected_edges</span><span class="o">=</span><span class="n">graph</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">graph</span></div>
+
+<div class="viewcode-block" id="PC.orient_edges"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC.orient_edges">[docs]</a>    <span class="k">def</span> <span class="nf">orient_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Orient edges in a skeleton graph to estimate the causal DAG, or CPDAG.</span>
+
+<span class="sd">        These are known as the Meek rules :footcite:`Meek1995`. They are deterministic</span>
+<span class="sd">        in the sense that they are logical characterizations of what edges must be</span>
+<span class="sd">        present given the rest of the local graph structure.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        graph : EquivalenceClass</span>
+<span class="sd">            A skeleton graph. If ``None``, then will initialize PC using a</span>
+<span class="sd">            complete graph. By default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node_ids</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span>
+
+        <span class="c1"># For all the combination of nodes i and j, apply the following</span>
+        <span class="c1"># rules.</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">finished</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">finished</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+            <span class="n">change_flag</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">node_ids</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># Rule 1: Orient i-j into i-&gt;j whenever there is an arrow k-&gt;i</span>
+                <span class="c1"># such that k and j are nonadjacent.</span>
+                <span class="n">r1_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_meek_rule1</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+                <span class="c1"># Rule 2: Orient i-j into i-&gt;j whenever there is a chain</span>
+                <span class="c1"># i-&gt;k-&gt;j.</span>
+                <span class="n">r2_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_meek_rule2</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+                <span class="c1"># Rule 3: Orient i-j into i-&gt;j whenever there are two chains</span>
+                <span class="c1"># i-k-&gt;j and i-l-&gt;j such that k and l are nonadjacent.</span>
+                <span class="n">r3_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_meek_rule3</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+                <span class="c1"># Rule 4: Orient i-j into i-&gt;j whenever there are two chains</span>
+                <span class="c1"># i-k-&gt;l and k-&gt;l-&gt;j such that k and j are nonadjacent.</span>
+                <span class="c1">#</span>
+                <span class="c1"># However, this rule is not necessary when the PC-algorithm</span>
+                <span class="c1"># is used to estimate a DAG.</span>
+
+                <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">r1_add</span><span class="p">,</span> <span class="n">r2_add</span><span class="p">,</span> <span class="n">r3_add</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">change_flag</span><span class="p">:</span>
+                    <span class="n">change_flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">change_flag</span><span class="p">:</span>
+                <span class="n">finished</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished applying R1-3, with </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> iterations&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="PC.orient_unshielded_triples"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC.orient_unshielded_triples">[docs]</a>    <span class="k">def</span> <span class="nf">orient_unshielded_triples</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span>
+        <span class="n">sep_set</span><span class="p">:</span> <span class="n">SeparatingSet</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Orient colliders given a graph and separation set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        graph : EquivalenceClass</span>
+<span class="sd">            The CPDAG.</span>
+<span class="sd">        sep_set : Dict[Dict[Set[Set[Any]]]]</span>
+<span class="sd">            The separating set between any two nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># for every node in the PAG, evaluate neighbors that have any edge</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">v_i</span><span class="p">,</span> <span class="n">v_j</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="c1"># Check that there is no edge of any type between</span>
+                <span class="c1"># v_i and v_j, else this is a &quot;shielded&quot; collider.</span>
+                <span class="c1"># Then check to see if &#39;u&#39; is in &quot;any&quot; separating</span>
+                <span class="c1"># set. If it is not, then there is a collider.</span>
+                <span class="k">if</span> <span class="n">v_j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">v_i</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_in_sep_set</span><span class="p">(</span>
+                    <span class="n">u</span><span class="p">,</span> <span class="n">sep_set</span><span class="p">,</span> <span class="n">v_i</span><span class="p">,</span> <span class="n">v_j</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;any&quot;</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_orient_collider</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">v_i</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v_j</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_orient_collider</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">v_i</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">v_j</span><span class="p">:</span> <span class="n">Column</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;orienting collider: </span><span class="si">{</span><span class="n">v_i</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">v_j</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> to make </span><span class="si">{</span><span class="n">v_i</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> &lt;- </span><span class="si">{</span><span class="n">v_j</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">v_i</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span><span class="p">):</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">orient_uncertain_edge</span><span class="p">(</span><span class="n">v_i</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">v_j</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span><span class="p">):</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">orient_uncertain_edge</span><span class="p">(</span><span class="n">v_j</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_meek_rule1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Apply rule 1 of Meek&#39;s rules.</span>
+
+<span class="sd">        Looks for i - j such that k -&gt; i, such that (k,i,j)</span>
+<span class="sd">        is an unshielded triple. Then can orient i - j as i -&gt; j.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">added_arrows</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Check if i-j.</span>
+        <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="c1"># Skip if k and j are adjacent because then it is a</span>
+                <span class="c1"># shielded triple</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># check if the triple is in the graph&#39;s excluded triples</span>
+                <span class="k">if</span> <span class="nb">frozenset</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">excluded_triples</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Make i-j into i-&gt;j</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R1: Removing edge (</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">) and orienting as </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">orient_uncertain_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+                <span class="n">added_arrows</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">added_arrows</span>
+
+    <span class="k">def</span> <span class="nf">_apply_meek_rule2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Apply rule 2 of Meek&#39;s rules.</span>
+
+<span class="sd">        Check for i - j, and then looks for i -&gt; k -&gt; j</span>
+<span class="sd">        triple, to orient i - j as i -&gt; j.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">added_arrows</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Check if i-j.</span>
+        <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span><span class="p">):</span>
+            <span class="c1"># Find nodes k where k is i-&gt;k</span>
+            <span class="n">succs_i</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">directed_edge_name</span><span class="p">):</span>
+                    <span class="n">succs_i</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="c1"># Find nodes j where j is k-&gt;j.</span>
+            <span class="n">preds_j</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">directed_edge_name</span><span class="p">):</span>
+                    <span class="n">preds_j</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+            <span class="c1"># Check if there is any node k where i-&gt;k-&gt;j.</span>
+            <span class="n">candidate_k</span> <span class="o">=</span> <span class="n">succs_i</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">preds_j</span><span class="p">)</span>
+            <span class="c1"># if the graph has excluded triples, we would check at this point</span>
+            <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">excluded_triples</span><span class="p">:</span>
+                <span class="c1"># check if the triple is in the graph&#39;s excluded triples</span>
+                <span class="c1"># if so, remove them from the candidates</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">candidate_k</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">frozenset</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">excluded_triples</span><span class="p">:</span>
+                        <span class="n">candidate_k</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+            <span class="c1"># if there are candidate &#39;k&#39; nodes, then orient the edge accordingly</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidate_k</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Make i-j into i-&gt;j</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R2: Removing edge </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2"> to form </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">-&gt;</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">orient_uncertain_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                <span class="n">added_arrows</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">added_arrows</span>
+
+    <span class="k">def</span> <span class="nf">_apply_meek_rule3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Apply rule 3 of Meek&#39;s rules.</span>
+
+<span class="sd">        Check for i - j, and then looks for k -&gt; j &lt;- l</span>
+<span class="sd">        collider, and i - k and i - l, then orient i -&gt; j.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">added_arrows</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Check if i-j first</span>
+        <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span><span class="p">):</span>
+            <span class="c1"># For all the pairs of nodes adjacent to i,</span>
+            <span class="c1"># look for (k, l), such that j -&gt; l and k -&gt; l</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="c1"># Skip if k and l are adjacent.</span>
+                <span class="k">if</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="c1"># Skip if not k-&gt;j.</span>
+                <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">directed_edge_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                    <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">directed_edge_name</span><span class="p">)</span>
+                <span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="c1"># Skip if not l-&gt;j.</span>
+                <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">directed_edge_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                    <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">directed_edge_name</span><span class="p">)</span>
+                <span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># check if the triple is inside graph&#39;s excluded triples</span>
+                <span class="k">if</span> <span class="nb">frozenset</span><span class="p">((</span><span class="n">l</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">excluded_triples</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># if i - k and i - l, then  at this point, we have a valid path</span>
+                <span class="c1"># to orient</span>
+                <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span>
+                    <span class="n">l</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">undirected_edge_name</span>
+                <span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R3: Removing edge </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2"> to form </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">-&gt;</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">graph</span><span class="o">.</span><span class="n">orient_uncertain_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                    <span class="n">added_arrows</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+        <span class="k">return</span> <span class="n">added_arrows</span></div>
+</pre></div>
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2022, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

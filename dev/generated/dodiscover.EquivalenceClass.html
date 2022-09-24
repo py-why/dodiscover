@@ -245,6 +245,11 @@
    dodiscover.constraint.SkeletonMethods
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PC.html">
+   dodiscover.constraint.PC
+  </a>
+ </li>
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -298,13 +303,21 @@
 <dd><p>Protocol for equivalence class of graphs.</p>
 <dl class="field-list">
 <dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#dodiscover.EquivalenceClass.excluded_triples" title="dodiscover.EquivalenceClass.excluded_triples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">excluded_triples</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#dodiscover.EquivalenceClass.directed_edge_name" title="dodiscover.EquivalenceClass.directed_edge_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">directed_edge_name</span></code></a></p>
+<blockquote>
+<div><p>Name of the directed edges.</p>
+</div></blockquote>
+<p><a class="reference internal" href="#dodiscover.EquivalenceClass.excluded_triples" title="dodiscover.EquivalenceClass.excluded_triples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">excluded_triples</span></code></a></p>
 <blockquote>
 <div><p>A set of triples that are excluded from orientation.</p>
 </div></blockquote>
 <p><a class="reference internal" href="#dodiscover.EquivalenceClass.nodes" title="dodiscover.EquivalenceClass.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></p>
 <blockquote>
 <div><p>Return an iterable over nodes in graph.</p>
+</div></blockquote>
+<p><a class="reference internal" href="#dodiscover.EquivalenceClass.undirected_edge_name" title="dodiscover.EquivalenceClass.undirected_edge_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">undirected_edge_name</span></code></a></p>
+<blockquote>
+<div><p>Name of the undirected edges.</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -324,11 +337,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.has_edge" title="dodiscover.EquivalenceClass.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v, edge_type)</p></td>
 <td><p>Check if graph has an edge for a specific edge type.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.neighbors" title="dodiscover.EquivalenceClass.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple" title="dodiscover.EquivalenceClass.mark_unfaithful_triple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mark_unfaithful_triple</span></code></a>(v_i, u, v_j)</p></td>
+<td><p>Mark a triple as unfaithful, and put it in the excluded triple set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.neighbors" title="dodiscover.EquivalenceClass.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
 <td><p>Iterate over all nodes that have any edge connection with 'node'.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.orient_uncertain_edge" title="dodiscover.EquivalenceClass.orient_uncertain_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orient_uncertain_edge</span></code></a>(u, v)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.orient_uncertain_edge" title="dodiscover.EquivalenceClass.orient_uncertain_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orient_uncertain_edge</span></code></a>(u, v)</p></td>
 <td><p>Orients an uncertain edge in the equivalence class to directed <code class="docutils literal notranslate"><span class="pre">'u'*-&gt;'v'</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.predecessors" title="dodiscover.EquivalenceClass.predecessors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predecessors</span></code></a>(node)</p></td>
+<td><p>Nodes with directed edges pointing to 'node'.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_edges_from" title="dodiscover.EquivalenceClass.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
 <td><p>Remove a set of edges from the graph.</p></td>
@@ -336,7 +355,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_node" title="dodiscover.EquivalenceClass.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
 <td><p>Remove a node from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.to_undirected" title="dodiscover.EquivalenceClass.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.successors" title="dodiscover.EquivalenceClass.successors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">successors</span></code></a>(node)</p></td>
+<td><p>Nodes with directed edges pointing from 'node'.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.to_undirected" title="dodiscover.EquivalenceClass.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
 <td><p>Convert a graph to a fully undirected networkx graph.</p></td>
 </tr>
 </tbody>
@@ -345,6 +367,12 @@
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.add_node">
 <span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_node" title="Permalink to this definition">#</a></dt>
 <dd><p>Add a node to the graph.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dodiscover.EquivalenceClass.directed_edge_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">directed_edge_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.directed_edge_name" title="Permalink to this definition">#</a></dt>
+<dd><p>Name of the directed edges.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -366,6 +394,12 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.EquivalenceClass.mark_unfaithful_triple">
+<span class="sig-name descname"><span class="pre">mark_unfaithful_triple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_j</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.mark_unfaithful_triple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple" title="Permalink to this definition">#</a></dt>
+<dd><p>Mark a triple as unfaithful, and put it in the excluded triple set.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.neighbors">
 <span class="sig-name descname"><span class="pre">neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.neighbors" title="Permalink to this definition">#</a></dt>
 <dd><p>Iterate over all nodes that have any edge connection with ‘node’.</p>
@@ -384,6 +418,12 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.EquivalenceClass.predecessors">
+<span class="sig-name descname"><span class="pre">predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.predecessors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.predecessors" title="Permalink to this definition">#</a></dt>
+<dd><p>Nodes with directed edges pointing to ‘node’.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.remove_edges_from">
 <span class="sig-name descname"><span class="pre">remove_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_edges_from" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove a set of edges from the graph.</p>
@@ -396,11 +436,23 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.EquivalenceClass.successors">
+<span class="sig-name descname"><span class="pre">successors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.successors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.successors" title="Permalink to this definition">#</a></dt>
+<dd><p>Nodes with directed edges pointing from ‘node’.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.to_undirected">
 <span class="sig-name descname"><span class="pre">to_undirected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0b1.dev0)"><span class="pre">Graph</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.to_undirected" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert a graph to a fully undirected networkx graph.</p>
 <p>All nodes are connected by an undirected edge if there are any
 edges between the two.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dodiscover.EquivalenceClass.undirected_edge_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">undirected_edge_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.undirected_edge_name" title="Permalink to this definition">#</a></dt>
+<dd><p>Name of the undirected edges.</p>
 </dd></dl>
 
 </dd></dl>

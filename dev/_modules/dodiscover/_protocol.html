@@ -253,14 +253,36 @@
 <div class="viewcode-block" id="EquivalenceClass"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass">[docs]</a><span class="k">class</span> <span class="nc">EquivalenceClass</span><span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Protocol for equivalence class of graphs.&quot;&quot;&quot;</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">excluded_triples</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">FrozenSet</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;A set of triples that are excluded from orientation.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">directed_edge_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Name of the directed edges.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">undirected_edge_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Name of the undirected edges.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
 <div class="viewcode-block" id="EquivalenceClass.orient_uncertain_edge"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass.orient_uncertain_edge">[docs]</a>    <span class="k">def</span> <span class="nf">orient_uncertain_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Orients an uncertain edge in the equivalence class to directed ``&#39;u&#39;*-&gt;&#39;v&#39;``.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">excluded_triples</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">FrozenSet</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;A set of triples that are excluded from orientation.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EquivalenceClass.mark_unfaithful_triple"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass.mark_unfaithful_triple">[docs]</a>    <span class="k">def</span> <span class="nf">mark_unfaithful_triple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v_i</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v_j</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Mark a triple as unfaithful, and put it in the excluded triple set.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="EquivalenceClass.predecessors"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass.predecessors">[docs]</a>    <span class="k">def</span> <span class="nf">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Nodes with directed edges pointing to &#39;node&#39;.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="EquivalenceClass.successors"><a class="viewcode-back" href="../../generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass.successors">[docs]</a>    <span class="k">def</span> <span class="nf">successors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Nodes with directed edges pointing from &#39;node&#39;.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
 </pre></div>
 
               </article>
