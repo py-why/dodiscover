@@ -1,10 +1,11 @@
 import logging
 from collections import defaultdict
 from itertools import chain, combinations
-from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Union
+from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Union, Tuple
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import SkeletonMethods
@@ -202,6 +203,9 @@ class LearnSkeleton:
         # for tracking strength of dependencies
         self.keep_sorted = keep_sorted
 
+        # debugging mode
+        self.n_ci_tests = 0
+        
     def _initialize_params(self) -> None:
         """Initialize parameters for learning skeleton.
 
@@ -238,6 +242,35 @@ class LearnSkeleton:
             self.max_combinations_ = np.inf
         else:
             self.max_combinations_ = self.max_combinations
+
+    def evaluate_edge(
+        self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
+    ) -> Tuple[float, float]:
+        """Test any specific edge for X || Y | Z.
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The dataset
+        X : column
+            A column in ``data``.
+        Y : column
+            A column in ``data``.
+        Z : set, optional
+            A list of columns in ``data``, by default None.
+
+        Returns
+        -------
+        test_stat : float
+            Test statistic.
+        pvalue : float
+            The pvalue.
+        """
+        if Z is None:
+            Z = set()
+        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        self.n_ci_tests += 1
+        return test_stat, pvalue
 
     def fit(self, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
@@ -360,8 +393,8 @@ class LearnSkeleton:
                             break
 
                         # compute conditional independence test
-                        test_stat, pvalue = self.ci_estimator.test(
-                            X, {x_var}, {y_var}, set(cond_set), **self.ci_estimator_kwargs
+                        test_stat, pvalue = self.evaluate_edge(
+                            X, {x_var}, {y_var}, set(cond_set)
                         )
 
                         # if any "independence" is found through inability to reject

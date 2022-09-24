@@ -11,7 +11,7 @@ from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.context import Context
 from dodiscover.typing import Column, SeparatingSet
 
-from .._protocol import EquivalenceClassProtocol
+from .._protocol import EquivalenceClass
 from ._classes import BaseConstraintDiscovery
 
 logger = logging.getLogger()
@@ -76,7 +76,7 @@ class FCI(BaseConstraintDiscovery):
     independence tests it must run.
     """
 
-    graph_: EquivalenceClassProtocol
+    graph_: EquivalenceClass
     separating_sets_: SeparatingSet
 
     def __init__(
@@ -110,13 +110,13 @@ class FCI(BaseConstraintDiscovery):
         self.pds_skeleton_method = pds_skeleton_method
 
     def orient_unshielded_triples(
-        self, graph: EquivalenceClassProtocol, sep_set: SeparatingSet
+        self, graph: EquivalenceClass, sep_set: SeparatingSet
     ) -> None:
         """Orient colliders given a graph and separation set.
 
         Parameters
         ----------
-        graph : EquivalenceClassProtocol
+        graph : EquivalenceClass
             The partial ancestral graph (PAG).
         sep_set : SeparatingSet
             The separating set between any two nodes.
@@ -134,7 +134,7 @@ class FCI(BaseConstraintDiscovery):
                     self._orient_collider(graph, v_i, u, v_j)
 
     def _orient_collider(
-        self, graph: EquivalenceClassProtocol, v_i: Column, u: Column, v_j: Column
+        self, graph: EquivalenceClass, v_i: Column, u: Column, v_j: Column
     ) -> None:
         logger.info(
             f"orienting collider: {v_i} -> {u} and {v_j} -> {u} to make {v_i} -> {u} <- {v_j}."
@@ -145,7 +145,7 @@ class FCI(BaseConstraintDiscovery):
             graph.orient_uncertain_edge(v_j, u)
 
     def _apply_rule1(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
     ) -> bool:
         """Apply rule 1 of the FCI algorithm.
 
@@ -154,7 +154,7 @@ class FCI(BaseConstraintDiscovery):
 
         Parameters
         ----------
-        graph : EquivalenceClassProtocol
+        graph : EquivalenceClass
             The causal graph to apply rules to.
         u : node
             A node in the graph.
@@ -191,7 +191,7 @@ class FCI(BaseConstraintDiscovery):
         return added_arrows
 
     def _apply_rule2(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
     ) -> bool:
         """Apply rule 2 of FCI algorithm.
 
@@ -253,7 +253,7 @@ class FCI(BaseConstraintDiscovery):
         return added_arrows
 
     def _apply_rule3(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
     ) -> bool:
         """Apply rule 3 of FCI algorithm.
 
@@ -314,7 +314,7 @@ class FCI(BaseConstraintDiscovery):
         return added_arrows
 
     def _apply_rule4(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column, sep_set
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column, sep_set
     ) -> Tuple[bool, Set[Column]]:
         """Apply rule 4 of FCI algorithm.
 
@@ -402,7 +402,7 @@ class FCI(BaseConstraintDiscovery):
         return added_arrows, explored_nodes
 
     def _apply_rule8(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
     ) -> bool:
         """Apply rule 8 of FCI algorithm.
 
@@ -453,7 +453,7 @@ class FCI(BaseConstraintDiscovery):
         return added_arrows
 
     def _apply_rule9(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
     ) -> Tuple[bool, List]:
         """Apply rule 9 of FCI algorithm.
 
@@ -506,7 +506,7 @@ class FCI(BaseConstraintDiscovery):
         return added_arrows, uncov_path
 
     def _apply_rule10(
-        self, graph: EquivalenceClassProtocol, u: Column, a: Column, c: Column
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column
     ) -> Tuple[bool, List, List]:
         """Apply rule 10 of FCI algorithm.
 
@@ -618,7 +618,7 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, a_to_u_path, a_to_v_path
 
-    def _apply_rules_1to10(self, graph: EquivalenceClassProtocol, sep_set: SeparatingSet):
+    def _apply_rules_1to10(self, graph: EquivalenceClass, sep_set: SeparatingSet):
         idx = 0
         finished = False
         while idx < self.max_iter and not finished:
@@ -669,7 +669,7 @@ class FCI(BaseConstraintDiscovery):
 
         # initially learn the skeleton
         skel_graph, sep_set = super().learn_skeleton(context, sep_set)
-
+        
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
         pag = pywhy_graphs.PAG(incoming_circle_edges=skel_graph, name="PAG derived with FCI")
@@ -708,9 +708,10 @@ class FCI(BaseConstraintDiscovery):
 
         skel_graph = skel_alg.adj_graph_
         sep_set = skel_alg.sep_set_
+        self.n_ci_tests += skel_alg.n_ci_tests
         return skel_graph, sep_set
 
-    def orient_edges(self, graph: EquivalenceClassProtocol):
+    def orient_edges(self, graph: EquivalenceClass):
         # orient colliders again
         self.orient_unshielded_triples(graph, self.separating_sets_)
 
@@ -718,7 +719,7 @@ class FCI(BaseConstraintDiscovery):
         # as possible
         self._apply_rules_1to10(graph, self.separating_sets_)
 
-    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClassProtocol:
+    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
         import pywhy_graphs as pgraph
 
         # convert the undirected skeleton graph to a PAG, where

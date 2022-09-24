@@ -93,6 +93,9 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = defaultdict(lambda: defaultdict(list))
         self.graph_ = None
 
+        # debugging mode
+        self.n_ci_tests = 0
+
     def _initialize_sep_sets(self, init_graph: nx.Graph) -> SeparatingSet:
         # keep track of separating sets
         sep_set: SeparatingSet = defaultdict(lambda: defaultdict(list))
@@ -255,5 +258,6 @@ class BaseConstraintDiscovery:
 
         skel_graph = skel_alg.adj_graph_
         sep_set = skel_alg.sep_set_
-
+        self.n_ci_tests += skel_alg.n_ci_tests
+        
         return skel_graph, sep_set
