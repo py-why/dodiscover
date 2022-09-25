@@ -1,12 +1,14 @@
 import logging
 from collections import defaultdict
 from itertools import chain, combinations
-from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Union
+from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 from dodiscover.ci import BaseConditionalIndependenceTest
+from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.typing import Column, SeparatingSet
 
 from ..context import Context
@@ -170,6 +172,7 @@ class LearnSkeleton:
     adj_graph_: nx.Graph
     sep_set_: SeparatingSet
     remove_edges: Set
+    context: Context
     min_cond_set_size_: int
     max_cond_set_size_: int
     max_combinations_: int
@@ -199,6 +202,9 @@ class LearnSkeleton:
 
         # for tracking strength of dependencies
         self.keep_sorted = keep_sorted
+
+        # debugging mode
+        self.n_ci_tests = 0
 
     def _initialize_params(self) -> None:
         """Initialize parameters for learning skeleton.
@@ -237,6 +243,35 @@ class LearnSkeleton:
         else:
             self.max_combinations_ = self.max_combinations
 
+    def evaluate_edge(
+        self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
+    ) -> Tuple[float, float]:
+        """Test any specific edge for X || Y | Z.
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The dataset
+        X : column
+            A column in ``data``.
+        Y : column
+            A column in ``data``.
+        Z : set, optional
+            A list of columns in ``data``, by default None.
+
+        Returns
+        -------
+        test_stat : float
+            Test statistic.
+        pvalue : float
+            The pvalue.
+        """
+        if Z is None:
+            Z = set()
+        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        self.n_ci_tests += 1
+        return test_stat, pvalue
+
     def fit(self, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
 
@@ -245,10 +280,12 @@ class LearnSkeleton:
         context : Context
             A context object.
         """
+        self.context = context.copy()
+
         # get the initialized graph
-        adj_graph = context.init_graph
+        adj_graph = self.context.init_graph
         nodes = adj_graph.nodes
-        X = context.data
+        X = self.context.data
 
         # track progress of the algorithm for which edges to remove to ensure stability
         self.remove_edges = set()
@@ -309,7 +346,7 @@ class LearnSkeleton:
                         continue
 
                     # ignore fixed edges
-                    if (x_var, y_var) in context.included_edges.edges:
+                    if (x_var, y_var) in self.context.included_edges.edges:
                         continue
 
                     # compute the possible variables used in the conditioning set
@@ -356,9 +393,7 @@ class LearnSkeleton:
                             break
 
                         # compute conditional independence test
-                        test_stat, pvalue = self.ci_estimator.test(
-                            X, {x_var}, {y_var}, set(cond_set), **self.ci_estimator_kwargs
-                        )
+                        test_stat, pvalue = self.evaluate_edge(X, x_var, y_var, set(cond_set))
 
                         # if any "independence" is found through inability to reject
                         # the null hypothesis, then we will break the loop comparing X and Y
@@ -409,7 +444,7 @@ class LearnSkeleton:
 
     def _compute_candidate_conditioning_sets(
         self, adj_graph: nx.Graph, x_var: Column, y_var: Column, skeleton_method: SkeletonMethods
-    ) -> Set:
+    ) -> Set[Column]:
         """Compute candidate conditioning sets.
 
         Parameters
@@ -478,3 +513,119 @@ class LearnSkeleton:
             self.sep_set_[y_var][x_var].append(set(cond_set))
             return True
         return False
+
+
+class LearnSemiMarkovianSkeleton(LearnSkeleton):
+    """Learning a semi-markovian skeleton.
+
+    This proceeds by learning a skeleton by testing edges with candidate
+    separating sets from the "possibly d-separating" sets (PDS), or PDS
+    sets that lie on a path between two nodes. This algorithm requires
+    the input of a collider-oriented PAG, which provides the necessary
+    information to compute the PDS set for any given nodes.
+
+    Parameters
+    ----------
+    ci_estimator : BaseConditionalIndependenceTest
+        The conditional independence test function.
+    sep_set : dictionary of dictionary of list of set
+        Mapping node to other nodes to separating sets of variables.
+        If ``None``, then an empty dictionary of dictionary of list of sets
+        will be initialized.
+    alpha : float, optional
+        The significance level for the conditional independence test, by default 0.05.
+    min_cond_set_size : int
+        The minimum size of the conditioning set, by default 0. The number of variables
+        used in the conditioning set.
+    max_cond_set_size : int, optional
+        Maximum size of the conditioning set, by default None. Used to limit
+        the computation spent on the algorithm.
+    max_combinations : int, optional
+        Maximum number of tries with a conditioning set chosen from the set of possible
+        parents still, by default None. If None, then will not be used. If set, then
+        the conditioning set will be chosen lexographically based on the sorted
+        test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
+    skeleton_method : SkeletonMethods
+        The method to use for testing conditional independence. Must be one of
+        ('pds', 'pds_path'). See Notes for more details.
+    keep_sorted : bool
+        Whether or not to keep the considered adjacencies in sorted dependency order.
+        If True (default) will sort the existing adjacencies of each variable by its
+        dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).
+    max_path_length : int, optional
+        The maximum length of any discriminating path, or None if unlimited.
+    ci_estimator_kwargs : dict
+        Keyword arguments for the ``ci_estimator`` function.
+
+    Notes
+    -----
+    The difference
+    """
+
+    def __init__(
+        self,
+        ci_estimator: BaseConditionalIndependenceTest,
+        sep_set: Optional[SeparatingSet] = None,
+        alpha: float = 0.05,
+        min_cond_set_size: int = 0,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
+        skeleton_method: SkeletonMethods = SkeletonMethods.PDS,
+        keep_sorted: bool = False,
+        max_path_length: Optional[int] = None,
+        **ci_estimator_kwargs,
+    ) -> None:
+        super().__init__(
+            ci_estimator,
+            sep_set,
+            alpha,
+            min_cond_set_size,
+            max_cond_set_size,
+            max_combinations,
+            skeleton_method,
+            keep_sorted,
+            **ci_estimator_kwargs,
+        )
+        if max_path_length is None:
+            max_path_length = np.inf
+        self.max_path_length = max_path_length
+
+    def _compute_candidate_conditioning_sets(
+        self, adj_graph: nx.Graph, x_var: Column, y_var: Column, skeleton_method: SkeletonMethods
+    ) -> Set[Column]:
+        import pywhy_graphs as pgraph
+
+        # get PAG from the context object
+        pag = self.context.get_state_variable("PAG")
+
+        if skeleton_method == SkeletonMethods.PDS:
+            # determine how we want to construct the candidates for separating nodes
+            # perform conditioning independence testing on all combinations
+            possible_variables = pgraph.pds(
+                pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+            )
+        elif skeleton_method == SkeletonMethods.PDS_PATH:
+            # determine how we want to construct the candidates for separating nodes
+            # perform conditioning independence testing on all combinations
+            possible_variables = pgraph.pds_path(
+                pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+            )
+
+        if self.keep_sorted:
+            # Note it is assumed in public API that 'test_stat' is set
+            # inside the adj_graph
+            possible_variables = sorted(
+                possible_variables,
+                key=lambda n: adj_graph.edges[x_var, n]["test_stat"],
+                reverse=True,
+            )  # type: ignore
+
+        if x_var in possible_variables:
+            possible_variables.remove(x_var)
+        if y_var in possible_variables:
+            possible_variables.remove(y_var)
+
+        return possible_variables
+
+    def fit(self, context: Context) -> None:
+        return super().fit(context)
