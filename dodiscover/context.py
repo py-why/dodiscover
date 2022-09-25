@@ -60,6 +60,7 @@ class Context:
         init_graph: Optional[Graph] = None,
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+        state_variables: Dict[str, Any] = None,
     ) -> None:
         # initialize and parse the set of variables, latents and others
         columns = set(data.columns)
@@ -98,8 +99,11 @@ class Context:
         if excluded_edges is None:
             excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
 
+        if state_variables is None:
+            state_variables = dict()
+
         # set to class
-        self._state_variables = dict()
+        self._state_variables = state_variables
         self._data = data
         self._variables = variables
         self._latents = latents
@@ -175,5 +179,6 @@ class Context:
             init_graph=deepcopy(self._init_graph),
             included_edges=deepcopy(self._included_edges),
             excluded_edges=deepcopy(self._excluded_edges),
+            state_variables=deepcopy(self._state_variables),
         )
         return context
