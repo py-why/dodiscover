@@ -1,6 +1,5 @@
 import logging
 from collections import defaultdict
-from enum import Enum, EnumMeta
 from itertools import chain, combinations
 from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Union
 
@@ -13,23 +12,6 @@ from dodiscover.typing import Column, SeparatingSet
 from ..context import Context
 
 logger = logging.getLogger()
-
-
-class MetaEnum(EnumMeta):
-    def __contains__(cls, item):
-        try:
-            cls(item)
-        except ValueError:
-            return False
-        return True
-
-
-class SkeletonMethods(Enum, metaclass=MetaEnum):
-    """Available methods for learning a skeleton from data."""
-
-    COMPLETE = "complete"
-    NBRS = "neighbors"
-    NBRS_PATH = "neighbors_path"
 
 
 def _iter_conditioning_set(

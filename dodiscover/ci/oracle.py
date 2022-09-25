@@ -72,9 +72,7 @@ class Oracle(BaseConditionalIndependenceTest):
         if isinstance(self.graph, nx.DiGraph):
             is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates)
         else:
-            from graphs import m_separated
-
-            is_sep = m_separated(self.graph, x_vars, y_vars, z_covariates)
+            is_sep = nx.m_separated(self.graph, x_vars, y_vars, z_covariates)
 
         if is_sep:
             pvalue = 1
