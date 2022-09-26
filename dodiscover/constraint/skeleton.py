@@ -626,6 +626,3 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             possible_variables.remove(y_var)
 
         return possible_variables
-
-    def fit(self, context: Context) -> None:
-        return super().fit(context)

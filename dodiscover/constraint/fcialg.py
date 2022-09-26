@@ -701,6 +701,9 @@ class FCI(BaseConstraintDiscovery):
         self.n_ci_tests += skel_alg.n_ci_tests
         return skel_graph, sep_set
 
+    def fit(self, context: Context) -> None:
+        return super().fit(context)
+
     def orient_edges(self, graph: EquivalenceClass):
         # orient colliders again
         self.orient_unshielded_triples(graph, self.separating_sets_)
