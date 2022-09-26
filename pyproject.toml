@@ -113,13 +113,14 @@ _codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespelligno
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 
-# TODO: the following do not work because of the "piping" character "|"
-_clean_pyc = """find . -name "*.pyc" | xargs rm -f"""
-_clean_so = """
+# Note: Shell commands will only work on systems with POSIX, which
+# is not necessarily in Windows
+_clean_pyc.shell = """find . -name "*.pyc" | xargs rm -f"""
+_clean_so.shell = """
 find . -name "*.so" | xargs rm -f
 find . -name "*.pyd" | xargs rm -f
 """
-_clean_cache = """
+_clean_cache.shell = """
 find . -name "__pycache__" | xargs rm -rf
 """
 _clean_build = 'rm -rf _build build dist dodiscover.egg-info'
