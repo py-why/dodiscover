@@ -133,7 +133,7 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # then addresses identifiability given those assumptions and data. In this sense,
 # the Context class houses both data, apriori assumptions and other relevant data
 # that may be used in downstream structure learning algorithms.
-context = make_context.build()
+context = make_context().build()
 
 # Alternatively, one could say specify some fixed edges.
 # Note that when specifying fixed edges, the resulting graph that is
