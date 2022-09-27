@@ -94,10 +94,12 @@ class LearnSkeleton:
         Maximum size of the conditioning set, by default None. Used to limit
         the computation spent on the algorithm.
     max_combinations : int, optional
-        Maximum number of tries with a conditioning set chosen from the set of possible
-        parents still, by default None. If None, then will not be used. If set, then
-        the conditioning set will be chosen lexographically based on the sorted
-        test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
+        The maximum number of conditional independence tests to run from the set
+        of possible conditioning sets. By default None, which means the algorithm will
+        check all possible conditioning sets. If ``max_combinations=n`` is set, then
+        for every conditioning set size, 'p', there will be at most 'n' CI tests run
+        before the conditioning set size 'p' is incremented. For controlling the size
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``.
     skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('complete', 'neighbors', 'neighbors_path'). See Notes for more details.
@@ -520,9 +522,10 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
     This proceeds by learning a skeleton by testing edges with candidate
     separating sets from the "possibly d-separating" sets (PDS), or PDS
-    sets that lie on a path between two nodes. This algorithm requires
-    the input of a collider-oriented PAG, which provides the necessary
-    information to compute the PDS set for any given nodes.
+    sets that lie on a path between two nodes :footcite:`Spirtes1993`.
+    This algorithm requires the input of a collider-oriented PAG, which
+    provides the necessary information to compute the PDS set for any
+    given nodes. See Notes for more details.
 
     Parameters
     ----------
@@ -541,10 +544,12 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         Maximum size of the conditioning set, by default None. Used to limit
         the computation spent on the algorithm.
     max_combinations : int, optional
-        Maximum number of tries with a conditioning set chosen from the set of possible
-        parents still, by default None. If None, then will not be used. If set, then
-        the conditioning set will be chosen lexographically based on the sorted
-        test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
+        The maximum number of conditional independence tests to run from the set
+        of possible conditioning sets. By default None, which means the algorithm will
+        check all possible conditioning sets. If ``max_combinations=n`` is set, then
+        for every conditioning set size, 'p', there will be at most 'n' CI tests run
+        before the conditioning set size 'p' is incremented. For controlling the size
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``.
     skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
@@ -559,7 +564,31 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
     Notes
     -----
-    The difference
+    To learn the skeleton of a Semi-Markovian causal model, one approach is to consider
+    the possibly d-separating (PDS) set, which is a superset of the d-separating sets in
+    the true causal model. Knowing the PDS set requires knowledge of the skeleton and orientation
+    of certain edges. Therefore, we first learn an initial skeleton by checking conditional
+    independences with respect to node neighbors. From this, one can orient certain colliders.
+    The resulting PAG can now be used to enumerate the PDS sets for each node, which
+    are now conditioning candidates to check for conditional independence.
+
+    For visual examples, see Figures 16, 17 and 18 in :footcite:`Spirtes1993`. Also,
+    see the RFCI paper for other examples :footcite:`Colombo2012`.
+
+    Different methods for learning the skeleton:
+
+        There are different ways to learn the skeleton that are valid under various
+        assumptions. The value of ``skeleton_method`` completely defines how one
+        selects the conditioning set.
+
+        - 'pds': This conditions on the PDS set of 'x_var'. Note, this definition does
+          not rely on 'y_var'. See :footcite:`Spirtes1993`.
+        - 'pds_path': This is 'pds', but restricts to variables with a possibly directed path
+          from 'x_var' to 'y_var'. This is a variant from the RFCI paper :footcite:`Colombo2012`.
+
+    References
+    ----------
+    .. footbibliography::
     """
 
     def __init__(

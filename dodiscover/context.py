@@ -167,6 +167,8 @@ class Context:
     def copy(self):
         """Create a copy of the Context object.
 
+        Performs a deep-copy when necessary.
+
         Returns
         -------
         context : Context
