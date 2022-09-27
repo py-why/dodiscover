@@ -666,5 +666,5 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return possible_variables
 
-    def fit(self, context: Context) -> None:
-        return super().fit(context)
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
+        return super().fit(data, context)
