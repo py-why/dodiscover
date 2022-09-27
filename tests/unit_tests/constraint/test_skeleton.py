@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 import pywhy_graphs
+from flaky import flaky
 
 from dodiscover import make_context
 from dodiscover.ci import GSquareCITest, Oracle
@@ -120,6 +121,7 @@ def test_learn_skeleton_oracle(G):
     assert nx.is_isomorphic(skel_graph, G.to_undirected())
 
 
+@flaky
 def test_learn_pds_skeleton():
     """Test example in Causation, Prediction and Search book.
 
