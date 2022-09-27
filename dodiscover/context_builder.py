@@ -109,7 +109,7 @@ class ContextBuilder:
 
         self._observed_variables = observed
         self._latent_variables = latents
-        if (self._observed_variables is None) or (self._latent_variables is None):
+        if (self._observed_variables is None):
             raise ValueError("Could not infer variables from data or given arguments.")
         return self
 
@@ -156,42 +156,44 @@ class ContextBuilder:
         Context
             The populated Context object
         """
-        if (self._observed_variables is None) or (self._latent_variables is None):
+        if self._observed_variables is None:
+            raise ValueError("Could not infer variables from data or given arguments.")
+        return Context(
+            init_graph=self._interpolate_graph(),
+            included_edges=self._interpolate_included_edges(),
+            excluded_edges=self._interpolate_excluded_edges(),
+            variables=self._observed_variables,
+            latents=self._latent_variables or set(),
+            state_variables=self._state_variables or dict(),
+        )
+
+    def _interpolate_graph(self) -> nx.Graph:
+        if self._observed_variables is None:
             raise ValueError("Must set variables() before building Context.")
 
+        variables = self._observed_variables or set()
         graph = self._graph
-        variables = self._observed_variables
-        latents = self._latent_variables
-        included_edges = self._included_edges
-        excluded_edges = self._excluded_edges
-        state_variables = self._state_variables
-
         # initialize the starting graph
         if graph is None:
-            graph = nx.complete_graph(variables, create_using=nx.Graph)
+            return nx.complete_graph(variables, create_using=nx.Graph)
         else:
             if set(graph.nodes) != set(variables):
                 raise ValueError(
                     f"The nodes within the initial graph, {graph.nodes}, "
                     f"do not match the nodes in the passed in data, {variables}."
                 )
+            return graph
 
+    def _interpolate_included_edges(self) -> Union[nx.Graph, nx.DiGraph]:
         # initialize set of fixed and included edges
-        if included_edges is None:
-            included_edges = nx.empty_graph(variables, create_using=nx.Graph)
-        if excluded_edges is None:
-            excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
+        return self._included_edges or nx.empty_graph(
+            self._observed_variables, create_using=nx.Graph
+        )
 
-        if state_variables is None:
-            state_variables = dict()
-
-        return Context(
-            init_graph=graph,
-            included_edges=included_edges,
-            excluded_edges=excluded_edges,
-            variables=variables,
-            latents=latents,
-            state_variables=state_variables,
+    def _interpolate_excluded_edges(self) -> Union[nx.Graph, nx.DiGraph]:
+        # initialize set of fixed and included edges
+        return self._excluded_edges or nx.empty_graph(
+            self._observed_variables, create_using=nx.Graph
         )
 
 

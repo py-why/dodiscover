@@ -105,7 +105,7 @@ class Context:
         """
         self._state_variables[name] = var
 
-    def get_state_variable(self, name: str) -> Any:
+    def state_variable(self, name: str) -> Any:
         """Get a state variable.
 
         Parameters

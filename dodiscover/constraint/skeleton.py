@@ -635,7 +635,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         import pywhy_graphs as pgraph
 
         # get PAG from the context object
-        pag = self.context.get_state_variable("PAG")
+        pag = self.context.state_variable("PAG")
 
         if skeleton_method == SkeletonMethods.PDS:
             # determine how we want to construct the candidates for separating nodes
