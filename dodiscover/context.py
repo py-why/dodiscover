@@ -12,11 +12,11 @@ class Context:
 
     Parameters
     ----------
-    variables : Optional[Set[Column]], optional
+    variables : Optional[Set], optional
         Set of observed variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    latents : Optional[Set[Column]], optional
+    latents : Optional[Set], optional
         Set of latent "unobserved" variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
