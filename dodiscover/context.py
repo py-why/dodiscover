@@ -1,4 +1,3 @@
-from copy import copy, deepcopy
 from typing import Any, Dict, Set, Union
 
 import networkx as nx
@@ -122,23 +121,3 @@ class Context:
             raise RuntimeError(f"{name} is not a state variable: {self._state_variables}")
 
         return self._state_variables[name]
-
-    def copy(self):
-        """Create a copy of the Context object.
-
-        Performs a deep-copy when necessary.
-
-        Returns
-        -------
-        context : Context
-            A copy.
-        """
-        context = Context(
-            variables=copy(self._variables),
-            latents=copy(self._latents),
-            init_graph=deepcopy(self._init_graph),
-            included_edges=deepcopy(self._included_edges),
-            excluded_edges=deepcopy(self._excluded_edges),
-            state_variables=deepcopy(self._state_variables),
-        )
-        return context

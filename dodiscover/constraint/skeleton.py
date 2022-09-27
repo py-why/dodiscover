@@ -12,6 +12,7 @@ from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.typing import Column, SeparatingSet
 
 from ..context import Context
+from ..context_builder import make_context
 
 logger = logging.getLogger()
 
@@ -288,7 +289,7 @@ class LearnSkeleton:
         context : Context
             A context object.
         """
-        self.context = context.copy()
+        self.context = make_context(context).build()
 
         # get the initialized graph
         adj_graph = self.context.init_graph

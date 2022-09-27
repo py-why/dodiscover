@@ -1,3 +1,4 @@
+from copy import copy, deepcopy
 from typing import Any, Dict, Optional, Set, Union
 
 import networkx as nx
@@ -207,8 +208,8 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
     """
     result = ContextBuilder()
     if context is not None:
-        result.graph(context.init_graph)
-        result.edges(context.included_edges, context.excluded_edges)
-        result.variables(context.observed_variables, context.latent_variables)
-        result.state_variables(context.state_variables)
+        result.graph(deepcopy(context.init_graph))
+        result.edges(deepcopy(context.included_edges), deepcopy(context.excluded_edges))
+        result.variables(copy(context.observed_variables), copy(context.latent_variables))
+        result.state_variables(deepcopy(context.state_variables))
     return result

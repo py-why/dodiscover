@@ -9,6 +9,7 @@ import pandas as pd
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.skeleton import LearnSkeleton, SkeletonMethods
 from dodiscover.context import Context
+from dodiscover.context_builder import make_context
 from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass
@@ -149,7 +150,7 @@ class BaseConstraintDiscovery:
         Control over the constraints imposed by the algorithm can be passed into the class
         constructor.
         """
-        self.context_ = context.copy()
+        self.context_ = make_context(context).build()
         graph = self.context_.init_graph
         self.init_graph_ = graph
         self.fixed_edges_ = self.context_.included_edges
