@@ -68,6 +68,7 @@ Constraint-based structure learning
    LearnSemiMarkovianSkeleton
    SkeletonMethods
    PC
+   FCI
 
 Comparing causal discovery algorithms
 =====================================
