@@ -184,8 +184,12 @@ def test_learn_pds_skeleton():
     )
 
     # learn the skeleton of the graph now with the first stage skeleton
-    context.init_graph = first_stage_pag.to_undirected()
-    context.add_state_variable("PAG", first_stage_pag)
+    context = (
+        make_context(context)
+        .graph(first_stage_pag.to_undirected())
+        .state_variable("PAG", first_stage_pag)
+        .build()
+    )
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
     alg.fit(sample, context)
     skel_graph = alg.adj_graph_

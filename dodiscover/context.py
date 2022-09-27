@@ -86,6 +86,10 @@ class Context:
     def latent_variables(self) -> Set[Column]:
         return self._latents
 
+    @property
+    def state_variables(self) -> Dict[str, Any]:
+        return self._state_variables
+
     def add_state_variable(self, name: str, var: Any) -> None:
         """Add a state variable.
 

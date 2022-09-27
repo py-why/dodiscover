@@ -129,6 +129,25 @@ class ContextBuilder:
         self._state_variables = state_variables
         return self
 
+    def state_variable(self, name: str, var: Any) -> "ContextBuilder":
+        """Add a state variable.
+
+        Called by an algorithm to persist data objects that
+        are used in intermediate steps.
+
+        Parameters
+        ----------
+        name : str
+            The name of the state variable.
+        var : any
+            Any state variable.
+        """
+        if self._state_variables is None:
+            self._state_variables = dict()
+
+        self._state_variables[name] = var
+        return self
+
     def build(self) -> Context:
         """Build the Context object.
 
@@ -176,7 +195,7 @@ class ContextBuilder:
         )
 
 
-def make_context() -> ContextBuilder:
+def make_context(context: Optional[Context] = None) -> ContextBuilder:
     """Create a new ContextBuilder instance.
 
     Returns
@@ -184,4 +203,10 @@ def make_context() -> ContextBuilder:
     ContextBuilder
         The new ContextBuilder instance
     """
-    return ContextBuilder()
+    result = ContextBuilder()
+    if context is not None:
+        result.graph(context.init_graph)
+        result.edges(context.included_edges, context.excluded_edges)
+        result.variables(context.observed_variables, context.latent_variables)
+        result.state_variables(context.state_variables)
+    return result
