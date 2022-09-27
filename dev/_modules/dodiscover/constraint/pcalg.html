@@ -39,6 +39,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -211,6 +212,7 @@
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 
 <span class="kn">from</span> <span class="nn">dodiscover.ci.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+<span class="kn">from</span> <span class="nn">dodiscover.constraint.config</span> <span class="kn">import</span> <span class="n">SkeletonMethods</span>
 <span class="kn">from</span> <span class="nn">dodiscover.constraint.utils</span> <span class="kn">import</span> <span class="n">is_in_sep_set</span>
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">SeparatingSet</span>
 
@@ -229,11 +231,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ci_estimator : BaseConditionalIndependenceTest</span>
+<span class="sd">    ci_estimator : Callable</span>
 <span class="sd">        The conditional independence test function. The arguments of the estimator should</span>
 <span class="sd">        be data, node, node to compare, conditioning set of nodes, and any additional</span>
-<span class="sd">        keyword arguments. It should return a tuple of test statistic and pvalue in that</span>
-<span class="sd">        order.</span>
+<span class="sd">        keyword arguments.</span>
 <span class="sd">    alpha : float, optional</span>
 <span class="sd">        The significance level for the conditional independence test, by default 0.05.</span>
 <span class="sd">    min_cond_set_size : int, optional</span>
@@ -242,19 +243,22 @@
 <span class="sd">    max_cond_set_size : int, optional</span>
 <span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
 <span class="sd">        the computation spent on the algorithm.</span>
-<span class="sd">    max_iter : int</span>
-<span class="sd">        The maximum number of iterations through the graph to apply</span>
-<span class="sd">        orientation rules.</span>
 <span class="sd">    max_combinations : int, optional</span>
 <span class="sd">        Maximum number of tries with a conditioning set chosen from the set of possible</span>
 <span class="sd">        parents still, by default None. If None, then will not be used. If set, then</span>
 <span class="sd">        the conditioning set will be chosen lexographically based on the sorted</span>
 <span class="sd">        test statistic values of &#39;ith Pa(X) -&gt; X&#39;, for each possible parent node of &#39;X&#39;.</span>
+<span class="sd">    skeleton_method : SkeletonMethods</span>
+<span class="sd">        The method to use for testing conditional independence. Must be one of</span>
+<span class="sd">        (&#39;neighbors&#39;, &#39;complete&#39;, &#39;neighbors_path&#39;). See Notes for more details.</span>
 <span class="sd">    apply_orientations : bool</span>
 <span class="sd">        Whether or not to apply orientation rules given the learned skeleton graph</span>
 <span class="sd">        and separating set per pair of variables. If ``True`` (default), will</span>
 <span class="sd">        apply Meek&#39;s orientation rules R0-3, orienting colliders and certain</span>
 <span class="sd">        arrowheads :footcite:`Meek1995`.</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">        The maximum number of iterations through the graph to apply</span>
+<span class="sd">        orientation rules.</span>
 <span class="sd">    ci_estimator_kwargs : dict</span>
 <span class="sd">        Keyword arguments for the ``ci_estimator`` function.</span>
 
@@ -273,17 +277,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">graph_</span><span class="p">:</span> <span class="n">EquivalenceClass</span>
-    <span class="n">separating_sets_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SeparatingSet</span><span class="p">]</span>
+    <span class="n">separating_sets_</span><span class="p">:</span> <span class="n">SeparatingSet</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ci_estimator</span><span class="p">:</span> <span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span>
         <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
-        <span class="n">min_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">max_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="n">max_combinations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">min_cond_set_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_cond_set_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_combinations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span> <span class="o">=</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">NBRS</span><span class="p">,</span>
         <span class="n">apply_orientations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -292,6 +297,7 @@
             <span class="n">min_cond_set_size</span><span class="o">=</span><span class="n">min_cond_set_size</span><span class="p">,</span>
             <span class="n">max_cond_set_size</span><span class="o">=</span><span class="n">max_cond_set_size</span><span class="p">,</span>
             <span class="n">max_combinations</span><span class="o">=</span><span class="n">max_combinations</span><span class="p">,</span>
+            <span class="n">skeleton_method</span><span class="o">=</span><span class="n">skeleton_method</span><span class="p">,</span>
             <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
@@ -546,7 +552,7 @@
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
 </p>
   </div>
   

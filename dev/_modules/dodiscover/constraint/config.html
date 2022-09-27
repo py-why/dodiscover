@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dodiscover.ci.oracle &#8212; dodiscover v0.0.0</title>
+    <title>dodiscover.constraint.config &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -204,90 +204,40 @@
               
               <article class="bd-article" role="main">
                 
-  <h1>Source code for dodiscover.ci.oracle</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
-
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
-
-<span class="kn">from</span> <span class="nn">.._protocol</span> <span class="kn">import</span> <span class="n">Graph</span>
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+  <h1>Source code for dodiscover.constraint.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span>
 
 
-<div class="viewcode-block" id="Oracle"><a class="viewcode-back" href="../../../generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle">[docs]</a><span class="k">class</span> <span class="nc">Oracle</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Oracle conditional independence testing.</span>
+<span class="k">class</span> <span class="nc">MetaEnum</span><span class="p">(</span><span class="n">EnumMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Meta class to enable easy checks for Enums.&quot;&quot;&quot;</span>
 
-<span class="sd">    Used for unit testing and checking intuition.</span>
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allows &#39;contain&#39; checks.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    graph : nx.DiGraph | Graph</span>
-<span class="sd">        The ground-truth causal graph.</span>
+<span class="sd">        Example: ``is &#39;method&#39; in EnumClass``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="SkeletonMethods"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods">[docs]</a><span class="k">class</span> <span class="nc">SkeletonMethods</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Available methods for learning a skeleton from data.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Allows &#39;contains&#39; checks because of the metaclass. For example,</span>
+<span class="sd">    one can do ``is &#39;complete&#39; in SkeletonMethods``, which would</span>
+<span class="sd">    return True.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_allow_multivariate_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
-
-<div class="viewcode-block" id="Oracle.test"><a class="viewcode-back" href="../../../generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
-        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
-        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Conditional independence test given an oracle.</span>
-
-<span class="sd">        Checks conditional independence between &#39;x_vars&#39; and &#39;y_vars&#39;</span>
-<span class="sd">        given &#39;z_covariates&#39; of variables using the causal graph</span>
-<span class="sd">        as an oracle. The oracle uses d-separation statements given</span>
-<span class="sd">        the graph to query conditional independences. This is known</span>
-<span class="sd">        as the Markov property for graphs</span>
-<span class="sd">        :footcite:`Pearl_causality_2009,Spirtes1993`.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        df : pd.DataFrame of shape (n_samples, n_variables)</span>
-<span class="sd">            The data matrix. Passed in for API consistency, but not</span>
-<span class="sd">            used.</span>
-<span class="sd">        x_vars : node</span>
-<span class="sd">            A node in the dataset.</span>
-<span class="sd">        y_vars : node</span>
-<span class="sd">            A node in the dataset.</span>
-<span class="sd">        z_covariates : set</span>
-<span class="sd">            The set of variables to check that separates x_vars and y_vars.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        statistic : None</span>
-<span class="sd">            A return argument for the statistic.</span>
-<span class="sd">        pvalue : float</span>
-<span class="sd">            The pvalue. Return &#39;1.0&#39; if not independent and &#39;0.0&#39;</span>
-<span class="sd">            if they are.</span>
-
-<span class="sd">        References</span>
-<span class="sd">        ----------</span>
-<span class="sd">        .. footbibliography::</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
-
-        <span class="c1"># just check for d-separation between x and y given sep_set</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">):</span>
-            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">d_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">m_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">is_sep</span><span class="p">:</span>
-            <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="n">test_stat</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">test_stat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        <span class="k">return</span> <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span></div></div>
+    <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+    <span class="n">NBRS</span> <span class="o">=</span> <span class="s2">&quot;neighbors&quot;</span>
+    <span class="n">NBRS_PATH</span> <span class="o">=</span> <span class="s2">&quot;neighbors_path&quot;</span>
+    <span class="n">PDS</span> <span class="o">=</span> <span class="s2">&quot;pds&quot;</span>
+    <span class="n">PDS_PATH</span> <span class="o">=</span> <span class="s2">&quot;pds_path&quot;</span></div>
 </pre></div>
 
               </article>

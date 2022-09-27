@@ -40,6 +40,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -241,6 +242,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html">
+   dodiscover.constraint.LearnSemiMarkovianSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.constraint.SkeletonMethods.html">
    dodiscover.constraint.SkeletonMethods
   </a>
@@ -275,9 +281,160 @@
     
     <div class="toc-item">
       
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     EquivalenceClass
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.add_node">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.add_node()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.directed_edge_name">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.directed_edge_name
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.edges">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.edges()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.excluded_triples">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.excluded_triples
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.has_edge">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.has_edge()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.mark_unfaithful_triple()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.neighbors">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.neighbors()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.nodes">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.nodes
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.orient_uncertain_edge">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.orient_uncertain_edge()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.predecessors">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.predecessors()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.remove_edges_from">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.remove_edges_from()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.remove_node">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.remove_node()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.successors">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.successors()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.to_undirected">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.to_undirected()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.undirected_edge_name">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.undirected_edge_name
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
 </nav>
     </div>
     
@@ -504,7 +661,7 @@ edges between the two.</p>
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
 </p>
   </div>
   

@@ -40,6 +40,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -47,7 +48,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="dodiscover.constraint.PC" href="dodiscover.constraint.PC.html" />
-    <link rel="prev" title="dodiscover.constraint.LearnSkeleton" href="dodiscover.constraint.LearnSkeleton.html" />
+    <link rel="prev" title="dodiscover.constraint.LearnSemiMarkovianSkeleton" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html" />
     <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
@@ -240,6 +241,11 @@
    dodiscover.constraint.LearnSkeleton
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html">
+   dodiscover.constraint.LearnSemiMarkovianSkeleton
+  </a>
+ </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    dodiscover.constraint.SkeletonMethods
@@ -275,9 +281,23 @@
     
     <div class="toc-item">
       
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dodiscover.constraint.SkeletonMethods">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     SkeletonMethods
+    </span>
+   </code>
+  </a>
+ </li>
+</ul>
+
 </nav>
     </div>
     
@@ -299,8 +319,12 @@
 <h1>dodiscover.constraint.SkeletonMethods<a class="headerlink" href="#dodiscover-constraint-skeletonmethods" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dodiscover.constraint.SkeletonMethods">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">SkeletonMethods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/skeleton.html#SkeletonMethods"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.SkeletonMethods" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">SkeletonMethods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/config.html#SkeletonMethods"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.SkeletonMethods" title="Permalink to this definition">#</a></dt>
 <dd><p>Available methods for learning a skeleton from data.</p>
+<p class="rubric">Notes</p>
+<p>Allows ‘contains’ checks because of the metaclass. For example,
+one can do <code class="docutils literal notranslate"><span class="pre">is</span> <span class="pre">'complete'</span> <span class="pre">in</span> <span class="pre">SkeletonMethods</span></code>, which would
+return True.</p>
 </dd></dl>
 
 </section>
@@ -313,11 +337,11 @@
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="dodiscover.constraint.LearnSkeleton.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">dodiscover.constraint.LearnSkeleton</p>
+          <p class="prev-next-title">dodiscover.constraint.LearnSemiMarkovianSkeleton</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="dodiscover.constraint.PC.html" title="next page">
@@ -350,7 +374,7 @@
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
 </p>
   </div>
   

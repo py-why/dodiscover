@@ -39,6 +39,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -206,36 +207,20 @@
   <h1>Source code for dodiscover.constraint.skeleton</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">dodiscover.ci</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+<span class="kn">from</span> <span class="nn">dodiscover.constraint.config</span> <span class="kn">import</span> <span class="n">SkeletonMethods</span>
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">SeparatingSet</span>
 
 <span class="kn">from</span> <span class="nn">..context</span> <span class="kn">import</span> <span class="n">Context</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
-
-
-<span class="k">class</span> <span class="nc">MetaEnum</span><span class="p">(</span><span class="n">EnumMeta</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">cls</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span>
-
-
-<div class="viewcode-block" id="SkeletonMethods"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods">[docs]</a><span class="k">class</span> <span class="nc">SkeletonMethods</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Available methods for learning a skeleton from data.&quot;&quot;&quot;</span>
-
-    <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
-    <span class="n">NBRS</span> <span class="o">=</span> <span class="s2">&quot;neighbors&quot;</span>
-    <span class="n">NBRS_PATH</span> <span class="o">=</span> <span class="s2">&quot;neighbors_path&quot;</span></div>
 
 
 <span class="k">def</span> <span class="nf">_iter_conditioning_set</span><span class="p">(</span>
@@ -297,7 +282,7 @@
 
 
 <div class="viewcode-block" id="LearnSkeleton"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton">[docs]</a><span class="k">class</span> <span class="nc">LearnSkeleton</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Learn a skeleton graph from context.</span>
+    <span class="sd">&quot;&quot;&quot;Learn a skeleton graph from a Markovian causal model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -316,17 +301,23 @@
 <span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
 <span class="sd">        the computation spent on the algorithm.</span>
 <span class="sd">    max_combinations : int, optional</span>
-<span class="sd">        Maximum number of tries with a conditioning set chosen from the set of possible</span>
-<span class="sd">        parents still, by default None. If None, then will not be used. If set, then</span>
-<span class="sd">        the conditioning set will be chosen lexographically based on the sorted</span>
-<span class="sd">        test statistic values of &#39;ith Pa(X) -&gt; X&#39;, for each possible parent node of &#39;X&#39;.</span>
+<span class="sd">        The maximum number of conditional independence tests to run from the set</span>
+<span class="sd">        of possible conditioning sets. By default None, which means the algorithm will</span>
+<span class="sd">        check all possible conditioning sets. If ``max_combinations=n`` is set, then</span>
+<span class="sd">        for every conditioning set size, &#39;p&#39;, there will be at most &#39;n&#39; CI tests run</span>
+<span class="sd">        before the conditioning set size &#39;p&#39; is incremented. For controlling the size</span>
+<span class="sd">        of &#39;p&#39;, see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used</span>
+<span class="sd">        in conjunction with ``keep_sorted`` parameter to only test the &quot;strongest&quot;</span>
+<span class="sd">        dependences.</span>
 <span class="sd">    skeleton_method : SkeletonMethods</span>
 <span class="sd">        The method to use for testing conditional independence. Must be one of</span>
 <span class="sd">        (&#39;complete&#39;, &#39;neighbors&#39;, &#39;neighbors_path&#39;). See Notes for more details.</span>
 <span class="sd">    keep_sorted : bool</span>
-<span class="sd">        Whether or not to keep the considered adjacencies in sorted dependency order.</span>
-<span class="sd">        If True (default) will sort the existing adjacencies of each variable by its</span>
-<span class="sd">        dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).</span>
+<span class="sd">        Whether or not to keep the considered conditioning set variables in sorted</span>
+<span class="sd">        dependency order. If True (default) will sort the existing dependencies of each variable</span>
+<span class="sd">        by its dependencies from strongest to weakest (i.e. largest CI test statistic value</span>
+<span class="sd">        to lowest). This can be used in conjunction with ``max_combinations`` parameter</span>
+<span class="sd">        to only test the &quot;strongest&quot; dependences.</span>
 <span class="sd">    ci_estimator_kwargs : dict</span>
 <span class="sd">        Keyword arguments for the ``ci_estimator`` function.</span>
 
@@ -394,6 +385,7 @@
     <span class="n">adj_graph_</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span>
     <span class="n">sep_set_</span><span class="p">:</span> <span class="n">SeparatingSet</span>
     <span class="n">remove_edges</span><span class="p">:</span> <span class="n">Set</span>
+    <span class="n">context</span><span class="p">:</span> <span class="n">Context</span>
     <span class="n">min_cond_set_size_</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">max_cond_set_size_</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">max_combinations_</span><span class="p">:</span> <span class="nb">int</span>
@@ -423,6 +415,9 @@
 
         <span class="c1"># for tracking strength of dependencies</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keep_sorted</span> <span class="o">=</span> <span class="n">keep_sorted</span>
+
+        <span class="c1"># debugging mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_ci_tests</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_initialize_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize parameters for learning skeleton.</span>
@@ -461,6 +456,35 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span>
 
+<div class="viewcode-block" id="LearnSkeleton.evaluate_edge"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.evaluate_edge">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_edge</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Test any specific edge for X || Y | Z.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : pd.DataFrame</span>
+<span class="sd">            The dataset</span>
+<span class="sd">        X : column</span>
+<span class="sd">            A column in ``data``.</span>
+<span class="sd">        Y : column</span>
+<span class="sd">            A column in ``data``.</span>
+<span class="sd">        Z : set, optional</span>
+<span class="sd">            A list of columns in ``data``, by default None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        test_stat : float</span>
+<span class="sd">            Test statistic.</span>
+<span class="sd">        pvalue : float</span>
+<span class="sd">            The pvalue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="n">X</span><span class="p">},</span> <span class="p">{</span><span class="n">Y</span><span class="p">},</span> <span class="n">Z</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_ci_tests</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span></div>
+
 <div class="viewcode-block" id="LearnSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Run structure learning to learn the skeleton of the causal graph.</span>
 
@@ -469,10 +493,12 @@
 <span class="sd">        context : Context</span>
 <span class="sd">            A context object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
         <span class="c1"># get the initialized graph</span>
-        <span class="n">adj_graph</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">init_graph</span>
+        <span class="n">adj_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">init_graph</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">data</span>
 
         <span class="c1"># track progress of the algorithm for which edges to remove to ensure stability</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -533,7 +559,7 @@
                         <span class="k">continue</span>
 
                     <span class="c1"># ignore fixed edges</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">)</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">included_edges</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">included_edges</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
                         <span class="k">continue</span>
 
                     <span class="c1"># compute the possible variables used in the conditioning set</span>
@@ -580,9 +606,7 @@
                             <span class="k">break</span>
 
                         <span class="c1"># compute conditional independence test</span>
-                        <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
-                            <span class="n">X</span><span class="p">,</span> <span class="p">{</span><span class="n">x_var</span><span class="p">},</span> <span class="p">{</span><span class="n">y_var</span><span class="p">},</span> <span class="nb">set</span><span class="p">(</span><span class="n">cond_set</span><span class="p">),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_estimator_kwargs</span>
-                        <span class="p">)</span>
+                        <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_edge</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">cond_set</span><span class="p">))</span>
 
                         <span class="c1"># if any &quot;independence&quot; is found through inability to reject</span>
                         <span class="c1"># the null hypothesis, then we will break the loop comparing X and Y</span>
@@ -633,7 +657,7 @@
 
     <span class="k">def</span> <span class="nf">_compute_candidate_conditioning_sets</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">adj_graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">x_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">y_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Compute candidate conditioning sets.</span>
 
 <span class="sd">        Parameters</span>
@@ -702,6 +726,153 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">sep_set_</span><span class="p">[</span><span class="n">y_var</span><span class="p">][</span><span class="n">x_var</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cond_set</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="LearnSemiMarkovianSkeleton"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton">[docs]</a><span class="k">class</span> <span class="nc">LearnSemiMarkovianSkeleton</span><span class="p">(</span><span class="n">LearnSkeleton</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Learning a skeleton from a semi-markovian causal model.</span>
+
+<span class="sd">    This proceeds by learning a skeleton by testing edges with candidate</span>
+<span class="sd">    separating sets from the &quot;possibly d-separating&quot; sets (PDS), or PDS</span>
+<span class="sd">    sets that lie on a path between two nodes :footcite:`Spirtes1993`.</span>
+<span class="sd">    This algorithm requires the input of a collider-oriented PAG, which</span>
+<span class="sd">    provides the necessary information to compute the PDS set for any</span>
+<span class="sd">    given nodes. See Notes for more details.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ci_estimator : BaseConditionalIndependenceTest</span>
+<span class="sd">        The conditional independence test function.</span>
+<span class="sd">    sep_set : dictionary of dictionary of list of set</span>
+<span class="sd">        Mapping node to other nodes to separating sets of variables.</span>
+<span class="sd">        If ``None``, then an empty dictionary of dictionary of list of sets</span>
+<span class="sd">        will be initialized.</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        The significance level for the conditional independence test, by default 0.05.</span>
+<span class="sd">    min_cond_set_size : int</span>
+<span class="sd">        The minimum size of the conditioning set, by default 0. The number of variables</span>
+<span class="sd">        used in the conditioning set.</span>
+<span class="sd">    max_cond_set_size : int, optional</span>
+<span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
+<span class="sd">        the computation spent on the algorithm.</span>
+<span class="sd">    max_combinations : int, optional</span>
+<span class="sd">        The maximum number of conditional independence tests to run from the set</span>
+<span class="sd">        of possible conditioning sets. By default None, which means the algorithm will</span>
+<span class="sd">        check all possible conditioning sets. If ``max_combinations=n`` is set, then</span>
+<span class="sd">        for every conditioning set size, &#39;p&#39;, there will be at most &#39;n&#39; CI tests run</span>
+<span class="sd">        before the conditioning set size &#39;p&#39; is incremented. For controlling the size</span>
+<span class="sd">        of &#39;p&#39;, see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used</span>
+<span class="sd">        in conjunction with ``keep_sorted`` parameter to only test the &quot;strongest&quot;</span>
+<span class="sd">        dependences.</span>
+<span class="sd">    skeleton_method : SkeletonMethods</span>
+<span class="sd">        The method to use for testing conditional independence. Must be one of</span>
+<span class="sd">        (&#39;pds&#39;, &#39;pds_path&#39;). See Notes for more details.</span>
+<span class="sd">    keep_sorted : bool</span>
+<span class="sd">        Whether or not to keep the considered conditioning set variables in sorted</span>
+<span class="sd">        dependency order. If True (default) will sort the existing dependencies of each variable</span>
+<span class="sd">        by its dependencies from strongest to weakest (i.e. largest CI test statistic value</span>
+<span class="sd">        to lowest). This can be used in conjunction with ``max_combinations`` parameter</span>
+<span class="sd">        to only test the &quot;strongest&quot; dependences.</span>
+<span class="sd">    max_path_length : int, optional</span>
+<span class="sd">        The maximum length of any discriminating path, or None if unlimited.</span>
+<span class="sd">    ci_estimator_kwargs : dict</span>
+<span class="sd">        Keyword arguments for the ``ci_estimator`` function.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To learn the skeleton of a Semi-Markovian causal model, one approach is to consider</span>
+<span class="sd">    the possibly d-separating (PDS) set, which is a superset of the d-separating sets in</span>
+<span class="sd">    the true causal model. Knowing the PDS set requires knowledge of the skeleton and orientation</span>
+<span class="sd">    of certain edges. Therefore, we first learn an initial skeleton by checking conditional</span>
+<span class="sd">    independences with respect to node neighbors. From this, one can orient certain colliders.</span>
+<span class="sd">    The resulting PAG can now be used to enumerate the PDS sets for each node, which</span>
+<span class="sd">    are now conditioning candidates to check for conditional independence.</span>
+
+<span class="sd">    For visual examples, see Figures 16, 17 and 18 in :footcite:`Spirtes1993`. Also,</span>
+<span class="sd">    see the RFCI paper for other examples :footcite:`Colombo2012`.</span>
+
+<span class="sd">    Different methods for learning the skeleton:</span>
+
+<span class="sd">        There are different ways to learn the skeleton that are valid under various</span>
+<span class="sd">        assumptions. The value of ``skeleton_method`` completely defines how one</span>
+<span class="sd">        selects the conditioning set.</span>
+
+<span class="sd">        - &#39;pds&#39;: This conditions on the PDS set of &#39;x_var&#39;. Note, this definition does</span>
+<span class="sd">          not rely on &#39;y_var&#39;. See :footcite:`Spirtes1993`.</span>
+<span class="sd">        - &#39;pds_path&#39;: This is &#39;pds&#39;, but restricts to variables with a possibly directed path</span>
+<span class="sd">          from &#39;x_var&#39; to &#39;y_var&#39;. This is a variant from the RFCI paper :footcite:`Colombo2012`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. footbibliography::</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ci_estimator</span><span class="p">:</span> <span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span>
+        <span class="n">sep_set</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SeparatingSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">min_cond_set_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_cond_set_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_combinations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span> <span class="o">=</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">PDS</span><span class="p">,</span>
+        <span class="n">keep_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_path_length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">ci_estimator</span><span class="p">,</span>
+            <span class="n">sep_set</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="p">,</span>
+            <span class="n">min_cond_set_size</span><span class="p">,</span>
+            <span class="n">max_cond_set_size</span><span class="p">,</span>
+            <span class="n">max_combinations</span><span class="p">,</span>
+            <span class="n">skeleton_method</span><span class="p">,</span>
+            <span class="n">keep_sorted</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">ci_estimator_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_path_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_path_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_path_length</span> <span class="o">=</span> <span class="n">max_path_length</span>
+
+    <span class="k">def</span> <span class="nf">_compute_candidate_conditioning_sets</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">adj_graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">x_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">y_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]:</span>
+        <span class="kn">import</span> <span class="nn">pywhy_graphs</span> <span class="k">as</span> <span class="nn">pgraph</span>
+
+        <span class="c1"># get PAG from the context object</span>
+        <span class="n">pag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_state_variable</span><span class="p">(</span><span class="s2">&quot;PAG&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">skeleton_method</span> <span class="o">==</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">PDS</span><span class="p">:</span>
+            <span class="c1"># determine how we want to construct the candidates for separating nodes</span>
+            <span class="c1"># perform conditioning independence testing on all combinations</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="n">pgraph</span><span class="o">.</span><span class="n">pds</span><span class="p">(</span>
+                <span class="n">pag</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">max_path_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_path_length</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">skeleton_method</span> <span class="o">==</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">PDS_PATH</span><span class="p">:</span>
+            <span class="c1"># determine how we want to construct the candidates for separating nodes</span>
+            <span class="c1"># perform conditioning independence testing on all combinations</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="n">pgraph</span><span class="o">.</span><span class="n">pds_path</span><span class="p">(</span>
+                <span class="n">pag</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">max_path_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_path_length</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_sorted</span><span class="p">:</span>
+            <span class="c1"># Note it is assumed in public API that &#39;test_stat&#39; is set</span>
+            <span class="c1"># inside the adj_graph</span>
+            <span class="n">possible_variables</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">possible_variables</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">x_var</span><span class="p">,</span> <span class="n">n</span><span class="p">][</span><span class="s2">&quot;test_stat&quot;</span><span class="p">],</span>
+                <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">if</span> <span class="n">x_var</span> <span class="ow">in</span> <span class="n">possible_variables</span><span class="p">:</span>
+            <span class="n">possible_variables</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">x_var</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y_var</span> <span class="ow">in</span> <span class="n">possible_variables</span><span class="p">:</span>
+            <span class="n">possible_variables</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">possible_variables</span>
+
+<div class="viewcode-block" id="LearnSemiMarkovianSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div></div>
 </pre></div>
 
               </article>
@@ -734,7 +905,7 @@
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
 </p>
   </div>
   
