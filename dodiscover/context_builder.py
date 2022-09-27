@@ -82,18 +82,18 @@ class ContextBuilder:
         self._excluded_edges = excluded_edges
         return self
 
-    def features(
-        self, observed_variables: Optional[Set[Column]], latent_variables: Optional[Set[Column]]
+    def variables(
+        self, observed: Optional[Set[Column]], latent: Optional[Set[Column]]
     ) -> "ContextBuilder":
-        """Set feature-list information to utilize in discovery.
+        """Set variable-list information to utilize in discovery.
 
         Parameters
         ----------
-        observed_variables : Optional[Set[Column]]
+        observed : Optional[Set[Column]]
             Set of observed variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
-        latent_variables : Optional[Set[Column]] - variables that are latent
+        latent : Optional[Set[Column]] - variables that are latent
             Set of latent "unobserved" variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
@@ -103,8 +103,8 @@ class ContextBuilder:
         ContextBuilder
             The builder instance
         """
-        self._observed_variables = observed_variables
-        self._latent_variables = latent_variables
+        self._observed_variables = observed
+        self._latent_variables = latent
         return self
 
     def build(self) -> Context:

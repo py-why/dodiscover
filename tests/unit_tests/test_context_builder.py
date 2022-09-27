@@ -30,6 +30,6 @@ def test_build_with_initial_graph():
 
 
 def test_build_with_observed_and_latents():
-    ctx = make_context(make_df()).features(observed_variables=["x"], latent_variables=["y"]).build()
+    ctx = make_context(make_df()).variables(observed=["x"], latent=["y"]).build()
     assert ctx.observed_variables == set(["x"])
     assert ctx.latent_variables == set(["y"])
