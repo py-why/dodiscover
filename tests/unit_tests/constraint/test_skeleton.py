@@ -139,7 +139,7 @@ def test_learn_pds_skeleton():
 
     # after the first stage, we learn a skeleton as in Figure 16
     firstalg = LearnSkeleton(ci_estimator=ci_estimator)
-    firstalg.fit(context)
+    firstalg.fit(sample, context)
     pag_graph = pywhy_graphs.PAG(incoming_circle_edges=firstalg.adj_graph_)
 
     # generate the expected PAG
@@ -187,7 +187,7 @@ def test_learn_pds_skeleton():
     context.init_graph = first_stage_pag.to_undirected()
     context.add_state_variable("PAG", first_stage_pag)
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
-    alg.fit(context)
+    alg.fit(sample, context)
     skel_graph = alg.adj_graph_
 
     # generate the expected PAG
