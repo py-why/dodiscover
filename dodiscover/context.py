@@ -1,5 +1,5 @@
 from copy import copy, deepcopy
-from typing import Any, Dict, Optional, Set, Union
+from typing import Any, Dict, Set, Union
 
 import networkx as nx
 
@@ -12,20 +12,20 @@ class Context:
 
     Parameters
     ----------
-    variables : Optional[Set], optional
-        Set of observed variables, by default None. If neither ``latents``,
+    variables : Set
+        Set of observed variables. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    latents : Optional[Set], optional
-        Set of latent "unobserved" variables, by default None. If neither ``latents``,
+    latents : Set
+        Set of latent "unobserved" variables. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    init_graph : Optional[Graph], optional
-        The graph to start with, by default None.
-    included_edges : Optional[nx.Graph], optional
-        Included edges without direction, by default None.
-    excluded_edges : Optional[nx.Graph], optional
-        Excluded edges without direction, by default None.
+    init_graph : Graph
+        The graph to start with.
+    included_edges : nx.Graph
+        Included edges without direction.
+    excluded_edges : nx.Graph
+        Excluded edges without direction.
 
     Raises
     ------
@@ -53,36 +53,16 @@ class Context:
         self,
         variables: Set[Column],
         latents: Set[Column],
-        init_graph: Optional[Graph] = None,
-        included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
-        excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
-        state_variables: Dict[str, Any] = None,
+        init_graph: Graph,
+        included_edges: Union[nx.Graph, nx.DiGraph],
+        excluded_edges: Union[nx.Graph, nx.DiGraph],
+        state_variables: Dict[str, Any],
     ) -> None:
-        # initialize the starting graph
-        if init_graph is None:
-            graph = nx.complete_graph(variables, create_using=nx.Graph)
-        else:
-            graph = init_graph
-            if set(graph.nodes) != set(variables):
-                raise ValueError(
-                    f"The nodes within the initial graph, {graph.nodes}, "
-                    f"do not match the nodes in the passed in data, {variables}."
-                )
-
-        # initialize set of fixed and included edges
-        if included_edges is None:
-            included_edges = nx.empty_graph(variables, create_using=nx.Graph)
-        if excluded_edges is None:
-            excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
-
-        if state_variables is None:
-            state_variables = dict()
-
         # set to class
         self._state_variables = state_variables
         self._variables = variables
         self._latents = latents
-        self._init_graph = graph
+        self._init_graph = init_graph
         self._included_edges = included_edges
         self._excluded_edges = excluded_edges
 

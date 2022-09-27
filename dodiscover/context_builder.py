@@ -1,4 +1,4 @@
-from typing import Optional, Set, Union
+from typing import Any, Dict, Optional, Set, Union
 
 import networkx as nx
 import pandas as pd
@@ -19,6 +19,7 @@ class ContextBuilder:
     _excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
+    _state_variables: Optional[Dict[str, Any]] = None
 
     def graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
@@ -112,6 +113,22 @@ class ContextBuilder:
             raise ValueError("Could not infer variables from data or given arguments.")
         return self
 
+    def state_variables(self, state_variables: Dict[str, Any]) -> "ContextBuilder":
+        """Set the state variables to use in discovery.
+
+        Parameters
+        ----------
+        state_variables : Dict[str, Any]
+            The state variables to use in discovery.
+
+        Returns
+        -------
+        ContextBuilder
+            The builder instance
+        """
+        self._state_variables = state_variables
+        return self
+
     def build(self) -> Context:
         """Build the Context object.
 
@@ -122,12 +139,40 @@ class ContextBuilder:
         """
         if (self._observed_variables is None) or (self._latent_variables is None):
             raise ValueError("Must set variables() before building Context.")
+
+        graph = self._graph
+        variables = self._observed_variables
+        latents = self._latent_variables
+        included_edges = self._included_edges
+        excluded_edges = self._excluded_edges
+        state_variables = self._state_variables
+
+        # initialize the starting graph
+        if graph is None:
+            graph = nx.complete_graph(variables, create_using=nx.Graph)
+        else:
+            if set(graph.nodes) != set(variables):
+                raise ValueError(
+                    f"The nodes within the initial graph, {graph.nodes}, "
+                    f"do not match the nodes in the passed in data, {variables}."
+                )
+
+        # initialize set of fixed and included edges
+        if included_edges is None:
+            included_edges = nx.empty_graph(variables, create_using=nx.Graph)
+        if excluded_edges is None:
+            excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
+
+        if state_variables is None:
+            state_variables = dict()
+
         return Context(
-            init_graph=self._graph,
-            included_edges=self._included_edges,
-            excluded_edges=self._excluded_edges,
-            variables=self._observed_variables,
-            latents=self._latent_variables,
+            init_graph=graph,
+            included_edges=included_edges,
+            excluded_edges=excluded_edges,
+            variables=variables,
+            latents=latents,
+            state_variables=state_variables,
         )
 
 
