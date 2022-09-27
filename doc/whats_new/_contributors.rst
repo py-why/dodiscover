@@ -21,3 +21,4 @@
 
 
 .. _Adam Li: https://pywhy.github.io
+.. _Chris Trevino: https://pywhy.github.io
