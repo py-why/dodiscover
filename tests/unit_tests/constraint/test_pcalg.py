@@ -55,7 +55,7 @@ def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha):
     to finite samples.
     """
     data_df = pd.DataFrame(data_matrix)
-    context = make_context().build()
+    context = make_context().variables(data=data_df).build()
     alg = PC(ci_estimator=indep_test_func, alpha=alpha)
     alg.fit(data_df, context)
     graph = alg.graph_
@@ -81,7 +81,7 @@ def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha):
 
     # test what happens if fixed edges are present
     fixed_edges = nx.complete_graph(data_df.columns.values)
-    context = make_context().edges(include=fixed_edges).build()
+    context = make_context().variables(data=data_df).edges(include=fixed_edges).build()
     alg = PC(ci_estimator=indep_test_func, alpha=alpha)
     alg.fit(data_df, context)
     complete_graph = alg.graph_
@@ -100,7 +100,7 @@ def test_common_cause_and_collider():
     incoming_graph_data = {0: {1: ed1, 2: ed2}, 3: {2: ed2}}
     G = nx.DiGraph(incoming_graph_data)
     df = dummy_sample(G)
-    context = make_context().build()
+    context = make_context().variables(data=df).build()
     pc = PC(ci_estimator=Oracle(G), apply_orientations=True)
     pc.fit(df, context)
     cpdag = pc.graph_
@@ -122,7 +122,7 @@ def test_collider():
     oracle = Oracle(G)
     pc = PC(ci_estimator=oracle)
     sample = dummy_sample(G)
-    context = make_context().build()
+    context = make_context().variables(data=sample).build()
     pc.fit(sample, context)
     graph = pc.graph_
 
@@ -229,7 +229,7 @@ class Test_PC:
 
     def test_pc_skel_graph(self):
         sample = dummy_sample(self.G)
-        context = make_context().build()
+        context = make_context().variables(data=sample).build()
         pc = PC(ci_estimator=self.ci_estimator, apply_orientations=False)
         pc.fit(sample, context)
         skel_graph = pc.graph_
@@ -241,7 +241,7 @@ class Test_PC:
 
     def test_pc_basic_collider(self):
         sample = dummy_sample(self.G)
-        context = make_context().build()
+        context = make_context().variables(data=sample).build()
         pc = PC(ci_estimator=self.ci_estimator, apply_orientations=False)
         pc.fit(sample, context)
         skel_graph = pc.graph_

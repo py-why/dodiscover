@@ -50,37 +50,12 @@ class Context:
 
     def __init__(
         self,
-        variables: Optional[Set[Column]] = None,
-        latents: Optional[Set[Column]] = None,
+        variables: Set[Column],
+        latents: Set[Column],
         init_graph: Optional[Graph] = None,
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> None:
-        #
-        # @robertness - is this logic important to preserve?
-        #
-
-        # # initialize and parse the set of variables, latents and others
-        # columns = set(data.columns)
-        # if variables is not None and latents is not None:
-        #     if columns - set(variables) != set(latents):
-        #         raise ValueError(
-        #             "If variables and latents are set, then they must be "
-        #             "include all columns in data."
-        #         )
-        # elif variables is None and latents is not None:
-        #     variables = columns - set(latents)
-        # elif latents is None and variables is not None:
-        #     latents = columns - set(variables)
-        # elif variables is None and latents is None:
-        #     # when neither variables, nor latents is set, it is assumed
-        #     # that the data is all "not latent"
-        #     variables = columns
-        #     latents = set()
-
-        variables = set(variables)  # type: ignore
-        latents = set(latents)  # type: ignore
-
         # initialize the starting graph
         if init_graph is None:
             graph = nx.complete_graph(variables, create_using=nx.Graph)
@@ -134,7 +109,6 @@ class Context:
             A copy.
         """
         context = Context(
-            data=self._data.copy(deep=True),
             variables=copy(self._variables),
             latents=copy(self._latents),
             init_graph=deepcopy(self._init_graph),

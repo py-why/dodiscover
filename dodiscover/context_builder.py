@@ -1,6 +1,7 @@
 from typing import Optional, Set, Union
 
 import networkx as nx
+import pandas as pd
 
 from ._protocol import Graph
 from .context import Context
@@ -59,7 +60,10 @@ class ContextBuilder:
         return self
 
     def variables(
-        self, observed: Optional[Set[Column]], latent: Optional[Set[Column]]
+        self,
+        observed: Optional[Set[Column]] = None,
+        latents: Optional[Set[Column]] = None,
+        data: Optional[pd.DataFrame] = None,
     ) -> "ContextBuilder":
         """Set variable-list information to utilize in discovery.
 
@@ -69,18 +73,41 @@ class ContextBuilder:
             Set of observed variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
-        latent : Optional[Set[Column]] - variables that are latent
+        latents : Optional[Set[Column]] - variables that are latent
             Set of latent "unobserved" variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
+        data : Optional[pd.DataFrame] - the data to use for variable inference.
 
         Returns
         -------
         ContextBuilder
             The builder instance
         """
+        if data is not None:
+            # initialize and parse the set of variables, latents and others
+            columns = set(data.columns)
+            if observed is not None and latents is not None:
+                if columns - set(observed) != set(latents):
+                    raise ValueError(
+                        "If observed and latents are set, then they must be "
+                        "include all columns in data."
+                    )
+            elif observed is None and latents is not None:
+                observed = columns - set(latents)
+            elif latents is None and observed is not None:
+                latents = columns - set(observed)
+            elif observed is None and latents is None:
+                # when neither observed, nor latents is set, it is assumed
+                # that the data is all "not latent"
+                observed = columns
+                latents = set()
+
+        observed = set(observed)  # type: ignore
+        latents = set(latents)  # type: ignore
+
         self._observed_variables = observed
-        self._latent_variables = latent
+        self._latent_variables = latents
         return self
 
     def build(self) -> Context:
@@ -91,6 +118,8 @@ class ContextBuilder:
         Context
             The populated Context object
         """
+        if (self._observed_variables is None) or (self._latent_variables is None):
+            raise ValueError("Must set variables() before building Context.")
         return Context(
             init_graph=self._graph,
             included_edges=self._included_edges,
