@@ -91,8 +91,8 @@ def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer):
     """Test PC algorithm for estimating the causal DAG."""
     data_df = pd.DataFrame(data_matrix)
     alg = LearnSkeleton(ci_estimator=indep_test_func)
-    context = make_context(data_df).build()
-    alg.fit(context)
+    context = make_context().build()
+    alg.fit(data_df, context)
 
     # obtain the fitted skeleton graph
     skel_graph = alg.adj_graph_
@@ -109,8 +109,8 @@ def test_learn_skeleton_oracle(G):
     oracle = Oracle(G)
     alpha = 0.05
     alg = LearnSkeleton(ci_estimator=oracle, alpha=alpha)
-    context = make_context(df).build()
-    alg.fit(context)
+    context = make_context().build()
+    alg.fit(df, context)
 
     # obtain the fitted skeleton graph
     skel_graph = alg.adj_graph_

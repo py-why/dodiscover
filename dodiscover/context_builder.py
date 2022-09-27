@@ -1,7 +1,6 @@
 from typing import Optional, Set, Union
 
 import networkx as nx
-import pandas as pd
 
 from ._protocol import Graph
 from .context import Context
@@ -12,11 +11,6 @@ class ContextBuilder:
     """A builder class for creating Context objects ergonomically.
 
     The context builder provides a way to capture assumptions, domain knowledge, and data.
-
-    Parameters
-    ----------
-    data : pd.DataFrame
-        A dataset in data-frame form, consisting of samples as rows and variables as columns.
     """
 
     _graph: Optional[Graph] = None
@@ -25,30 +19,12 @@ class ContextBuilder:
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
 
-    def __init__(self, data: pd.DataFrame) -> None:
-        self._data = data
-
-    def data(self, data: pd.DataFrame) -> "ContextBuilder":
-        """Set the dataset to use.
-
-        Parameters
-        ----------
-        data : pd.DataFrame - the new dataframe to use
-
-        Returns
-        -------
-        ContextBuilder
-            The builder instance
-        """
-        self._data = data
-        return self
-
     def graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
 
         Parameters
         ----------
-        data : pd.DataFrame - the new dataframe to use
+        graph : Graph - the new graph instance
 
 
         Returns
@@ -59,18 +35,18 @@ class ContextBuilder:
         self._graph = graph
         return self
 
-    def edge_constraints(
+    def edges(
         self,
-        included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
-        excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+        include: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+        exclude: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> "ContextBuilder":
         """Set edge constraints to apply in discovery.
 
         Parameters
         ----------
-        included_edges : Optional[Union[nx.Graph, nx.DiGraph]]
+        included : Optional[Union[nx.Graph, nx.DiGraph]]
             Edges that should be included in the resultant graph
-        excluded_edges : Optional[Union[nx.Graph, nx.DiGraph]]
+        excluded : Optional[Union[nx.Graph, nx.DiGraph]]
             Edges that must be excluded in the resultant graph
 
         Returns
@@ -78,8 +54,8 @@ class ContextBuilder:
         ContextBuilder
             The builder instance
         """
-        self._included_edges = included_edges
-        self._excluded_edges = excluded_edges
+        self._included_edges = include
+        self._excluded_edges = exclude
         return self
 
     def variables(
@@ -116,7 +92,6 @@ class ContextBuilder:
             The populated Context object
         """
         return Context(
-            data=self._data,
             init_graph=self._graph,
             included_edges=self._included_edges,
             excluded_edges=self._excluded_edges,
@@ -125,17 +100,12 @@ class ContextBuilder:
         )
 
 
-def make_context(data: pd.DataFrame) -> ContextBuilder:
+def make_context() -> ContextBuilder:
     """Create a new ContextBuilder instance.
-
-    Parameters
-    ----------
-    data : pd.DataFrame
-        The data to use in the context
 
     Returns
     -------
     ContextBuilder
         The new ContextBuilder instance
     """
-    return ContextBuilder(data)
+    return ContextBuilder()

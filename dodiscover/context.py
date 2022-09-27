@@ -2,9 +2,9 @@ from copy import copy, deepcopy
 from typing import Optional, Set, Union
 
 import networkx as nx
-import pandas as pd
 
 from ._protocol import Graph
+from .typing import Column
 
 
 class Context:
@@ -12,13 +12,11 @@ class Context:
 
     Parameters
     ----------
-    data : pd.DataFrame
-        A dataset, consisting of samples as rows and columns as variables.
-    variables : Optional[Set], optional
+    variables : Optional[Set[Column]], optional
         Set of observed variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    latents : Optional[Set], optional
+    latents : Optional[Set[Column]], optional
         Set of latent "unobserved" variables, by default None. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
@@ -44,39 +42,42 @@ class Context:
     Setting the a priori explicit direction of an edge is not supported yet.
     """
 
-    _data: pd.DataFrame
-    _variables: Set
-    _latents: Set
+    _variables: Set[Column]
+    _latents: Set[Column]
     _init_graph: Graph
     _included_edges: nx.Graph
     _excluded_edges: nx.Graph
 
     def __init__(
         self,
-        data: pd.DataFrame,
-        variables: Optional[Set] = None,
-        latents: Optional[Set] = None,
+        variables: Optional[Set[Column]] = None,
+        latents: Optional[Set[Column]] = None,
         init_graph: Optional[Graph] = None,
         included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
         excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
     ) -> None:
-        # initialize and parse the set of variables, latents and others
-        columns = set(data.columns)
-        if variables is not None and latents is not None:
-            if columns - set(variables) != set(latents):
-                raise ValueError(
-                    "If variables and latents are set, then they must be "
-                    "include all columns in data."
-                )
-        elif variables is None and latents is not None:
-            variables = columns - set(latents)
-        elif latents is None and variables is not None:
-            latents = columns - set(variables)
-        elif variables is None and latents is None:
-            # when neither variables, nor latents is set, it is assumed
-            # that the data is all "not latent"
-            variables = columns
-            latents = set()
+        #
+        # @robertness - is this logic important to preserve?
+        #
+
+        # # initialize and parse the set of variables, latents and others
+        # columns = set(data.columns)
+        # if variables is not None and latents is not None:
+        #     if columns - set(variables) != set(latents):
+        #         raise ValueError(
+        #             "If variables and latents are set, then they must be "
+        #             "include all columns in data."
+        #         )
+        # elif variables is None and latents is not None:
+        #     variables = columns - set(latents)
+        # elif latents is None and variables is not None:
+        #     latents = columns - set(variables)
+        # elif variables is None and latents is None:
+        #     # when neither variables, nor latents is set, it is assumed
+        #     # that the data is all "not latent"
+        #     variables = columns
+        #     latents = set()
+
         variables = set(variables)  # type: ignore
         latents = set(latents)  # type: ignore
 
@@ -98,16 +99,11 @@ class Context:
             excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
 
         # set to class
-        self._data = data
         self._variables = variables
         self._latents = latents
         self._init_graph = graph
         self._included_edges = included_edges
         self._excluded_edges = excluded_edges
-
-    @property
-    def data(self) -> pd.DataFrame:
-        return self._data
 
     @property
     def included_edges(self) -> nx.Graph:
@@ -122,11 +118,11 @@ class Context:
         return self._init_graph
 
     @property
-    def observed_variables(self) -> Set[str]:
+    def observed_variables(self) -> Set[Column]:
         return self._variables
 
     @property
-    def latent_variables(self) -> Set[str]:
+    def latent_variables(self) -> Set[Column]:
         return self._latents
 
     def copy(self):

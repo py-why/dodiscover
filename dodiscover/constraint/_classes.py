@@ -131,7 +131,7 @@ class BaseConstraintDiscovery:
             "skeleton graph given a separating set."
         )
 
-    def fit(self, context: Context) -> None:
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
         """Fit constraint-based discovery algorithm on dataset 'X'.
 
         Parameters
@@ -159,13 +159,13 @@ class BaseConstraintDiscovery:
         self.fixed_edges_ = self.context_.included_edges
 
         # create a reference to the underlying data to be used
-        self.X_ = self.context_.data
+        self.X_ = data
 
         # initialize graph object to apply learning
         sep_set = self._initialize_sep_sets(self.init_graph_)
 
         # learn skeleton graph and the separating sets per variable
-        graph, sep_set = self.learn_skeleton(self.context_, sep_set)
+        graph, sep_set = self.learn_skeleton(self.X_, self.context_, sep_set)
 
         # convert networkx.Graph to relevant causal graph object
         graph = self.convert_skeleton_graph(graph)
@@ -211,6 +211,7 @@ class BaseConstraintDiscovery:
 
     def learn_skeleton(
         self,
+        data: pd.DataFrame,
         context: Context,
         sep_set: Optional[SeparatingSet] = None,
     ) -> Tuple[nx.Graph, SeparatingSet]:
@@ -221,6 +222,8 @@ class BaseConstraintDiscovery:
 
         Parameters
         ----------
+        data : pd.DataFrame
+            The dataset.
         context : Context
             A context object.
         sep_set : dict of dict of list of set
@@ -259,7 +262,7 @@ class BaseConstraintDiscovery:
             keep_sorted=False,
             **self.ci_estimator_kwargs,
         )
-        skel_alg.fit(context)
+        skel_alg.fit(data, context)
 
         skel_graph = skel_alg.adj_graph_
         sep_set = skel_alg.sep_set_

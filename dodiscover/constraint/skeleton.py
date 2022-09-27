@@ -6,6 +6,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Unio
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.typing import Column, SeparatingSet
@@ -255,18 +256,20 @@ class LearnSkeleton:
         else:
             self.max_combinations_ = self.max_combinations
 
-    def fit(self, context: Context) -> None:
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
 
         Parameters
         ----------
+        data : pd.DataFrame
+            The data to learn the causal graph from.
         context : Context
             A context object.
         """
         # get the initialized graph
         adj_graph = context.init_graph
         nodes = adj_graph.nodes
-        X = context.data
+        X = data
 
         # track progress of the algorithm for which edges to remove to ensure stability
         self.remove_edges = set()
