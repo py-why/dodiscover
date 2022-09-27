@@ -108,6 +108,8 @@ class ContextBuilder:
 
         self._observed_variables = observed
         self._latent_variables = latents
+        if (self._observed_variables is None) or (self._latent_variables is None):
+            raise ValueError("Could not infer variables from data or given arguments.")
         return self
 
     def build(self) -> Context:
