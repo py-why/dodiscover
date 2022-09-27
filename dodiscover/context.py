@@ -128,6 +128,7 @@ class Context:
     @property
     def latent_variables(self) -> Set[str]:
         return self._latents
+
     def copy(self):
         """Create a copy of the Context object.
 
