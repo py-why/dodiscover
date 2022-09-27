@@ -5,6 +5,7 @@ import pandas as pd
 
 from ._protocol import Graph
 from .context import Context
+from .typing import Column
 
 
 class ContextBuilder:
@@ -21,8 +22,8 @@ class ContextBuilder:
     _graph: Optional[Graph] = None
     _included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
     _excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
-    _observed_variables: Optional[Set[str]] = None
-    _latent_variables: Optional[Set[str]] = None
+    _observed_variables: Optional[Set[Column]] = None
+    _latent_variables: Optional[Set[Column]] = None
 
     def __init__(self, data: pd.DataFrame) -> None:
         self._data = data
@@ -82,17 +83,17 @@ class ContextBuilder:
         return self
 
     def features(
-        self, observed_variables: Optional[Set[str]], latent_variables: Optional[Set[str]]
+        self, observed_variables: Optional[Set[Column]], latent_variables: Optional[Set[Column]]
     ) -> "ContextBuilder":
         """Set feature-list information to utilize in discovery.
 
         Parameters
         ----------
-        observed_variables : Optional[Set[str]]
+        observed_variables : Optional[Set[Column]]
             Set of observed variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
-        latent_variables : Optional[Set[str]] - variables that are latent
+        latent_variables : Optional[Set[Column]] - variables that are latent
             Set of latent "unobserved" variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
