@@ -75,7 +75,7 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
 
 
 class LearnSkeleton:
-    """Learn a skeleton graph from context.
+    """Learn a skeleton graph from a Markovian causal model.
 
     Parameters
     ----------
@@ -99,14 +99,18 @@ class LearnSkeleton:
         check all possible conditioning sets. If ``max_combinations=n`` is set, then
         for every conditioning set size, 'p', there will be at most 'n' CI tests run
         before the conditioning set size 'p' is incremented. For controlling the size
-        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``.
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
+        in conjunction with ``keep_sorted`` parameter to only test the "strongest"
+        dependences.
     skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('complete', 'neighbors', 'neighbors_path'). See Notes for more details.
     keep_sorted : bool
-        Whether or not to keep the considered adjacencies in sorted dependency order.
-        If True (default) will sort the existing adjacencies of each variable by its
-        dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
     ci_estimator_kwargs : dict
         Keyword arguments for the ``ci_estimator`` function.
 
@@ -518,7 +522,7 @@ class LearnSkeleton:
 
 
 class LearnSemiMarkovianSkeleton(LearnSkeleton):
-    """Learning a semi-markovian skeleton.
+    """Learning a skeleton from a semi-markovian causal model.
 
     This proceeds by learning a skeleton by testing edges with candidate
     separating sets from the "possibly d-separating" sets (PDS), or PDS
@@ -549,14 +553,18 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         check all possible conditioning sets. If ``max_combinations=n`` is set, then
         for every conditioning set size, 'p', there will be at most 'n' CI tests run
         before the conditioning set size 'p' is incremented. For controlling the size
-        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``.
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
+        in conjunction with ``keep_sorted`` parameter to only test the "strongest"
+        dependences.
     skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
     keep_sorted : bool
-        Whether or not to keep the considered adjacencies in sorted dependency order.
-        If True (default) will sort the existing adjacencies of each variable by its
-        dependencies from strongest to weakest (i.e. largest CI test statistic value to lowest).
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
     max_path_length : int, optional
         The maximum length of any discriminating path, or None if unlimited.
     ci_estimator_kwargs : dict
