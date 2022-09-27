@@ -28,6 +28,6 @@ def test_build_with_initial_graph():
 
 
 def test_build_with_observed_and_latents():
-    ctx = make_context().variables(observed=["x"], latents=["y"]).build()
-    assert ctx.observed_variables == set(["x"])
-    assert ctx.latent_variables == set(["y"])
+    ctx = make_context().variables(observed=set("x"), latents=set("y")).build()
+    assert ctx.observed_variables == set("x")
+    assert ctx.latent_variables == set("y")

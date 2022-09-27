@@ -103,8 +103,8 @@ class ContextBuilder:
                 observed = columns
                 latents = set()
 
-        observed = set(observed)  # type: ignore
-        latents = set(latents)  # type: ignore
+            observed = set(observed)  # type: ignore
+            latents = set(latents)  # type: ignore
 
         self._observed_variables = observed
         self._latent_variables = latents
