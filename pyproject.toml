@@ -113,10 +113,34 @@ _codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespelligno
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 
+# Note: Shell commands will only work on systems with POSIX, which
+# is not necessarily in Windows
+_clean_pyc.shell = """find . -name "*.pyc" | xargs rm -f"""
+_clean_so.shell = """
+find . -name "*.so" | xargs rm -f
+find . -name "*.pyd" | xargs rm -f
+"""
+_clean_cache.shell = """
+find . -name "__pycache__" | xargs rm -rf
+"""
+_clean_build = 'rm -rf _build build dist dodiscover.egg-info'
+_clean_ctags = 'rm -f tags'
+_clean_test = """
+rm -rf .pytest_cache .mypy_cache .ipynb_checkpoints
+rm junit-results.xml
+rm coverage.xml
+rm .coverage
+"""
+
 type_check = 'mypy -p dodiscover --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
-build_docs = 'make build-docs'
+build_docs = 'make -C doc html'
+
+[[tool.poe.tasks.clean]]
+# '_clean_cache', '_clean_pyc', '_clean_so'
+sequence = ['_clean_cache', '_clean_pyc', '_clean_so', '_clean_build', '_clean_ctags', '_clean_test']
+ignore_fail = 'return_non_zero'
 
 [[tool.poe.tasks.lint]]
 sequence = ['_flake8', '_bandit', '_codespell', '_pydocstyle']
