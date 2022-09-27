@@ -135,7 +135,7 @@ def test_learn_pds_skeleton():
     )
     ci_estimator = Oracle(graph)
     sample = dummy_sample(graph)
-    context = Context(data=sample)
+    context = make_context().variables(data=sample).build()
 
     # after the first stage, we learn a skeleton as in Figure 16
     firstalg = LearnSkeleton(ci_estimator=ci_estimator)

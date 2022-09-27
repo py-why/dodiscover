@@ -161,7 +161,9 @@ class BaseConstraintDiscovery:
         self.separating_sets_ = self._initialize_sep_sets(self.init_graph_)
 
         # learn skeleton graph and the separating sets per variable
-        graph, self.separating_sets_ = self.learn_skeleton(self.X_, self.context_, self.separating_sets_)
+        graph, self.separating_sets_ = self.learn_skeleton(
+            self.X_, self.context_, self.separating_sets_
+        )
 
         # convert networkx.Graph to relevant causal graph object
         graph = self.convert_skeleton_graph(graph)
