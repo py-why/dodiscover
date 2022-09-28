@@ -151,6 +151,7 @@ numpydoc_xref_aliases = {
     "EquivalenceClass": "dodiscover.EquivalenceClass",
     "Graph": "dodiscover.Graph",
     "Column": "dodiscover.typing.Column",
+    "SeparatingSet": "dodiscover.typing.SeparatingSet",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # numpy

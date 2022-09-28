@@ -78,3 +78,17 @@ Comparing causal discovery algorithms
    :toctree: generated/
 
    confusion_matrix_networks
+
+
+Typing
+======
+
+We define some custom types to allow 3rd party packages
+to work with ``mypy``.
+
+.. currentmodule:: dodiscover.typing
+.. autosummary::
+   :toctree: generated/
+
+   Column
+   SeparatingSet
