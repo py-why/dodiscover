@@ -219,6 +219,7 @@
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">SeparatingSet</span>
 
 <span class="kn">from</span> <span class="nn">..context</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">..context_builder</span> <span class="kn">import</span> <span class="n">make_context</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 
@@ -485,20 +486,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_ci_tests</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span></div>
 
-<div class="viewcode-block" id="LearnSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="LearnSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Run structure learning to learn the skeleton of the causal graph.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        data : pd.DataFrame</span>
+<span class="sd">            The data to learn the causal graph from.</span>
 <span class="sd">        context : Context</span>
 <span class="sd">            A context object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">make_context</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 
         <span class="c1"># get the initialized graph</span>
         <span class="n">adj_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">init_graph</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="c1"># track progress of the algorithm for which edges to remove to ensure stability</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -840,7 +843,7 @@
         <span class="kn">import</span> <span class="nn">pywhy_graphs</span> <span class="k">as</span> <span class="nn">pgraph</span>
 
         <span class="c1"># get PAG from the context object</span>
-        <span class="n">pag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_state_variable</span><span class="p">(</span><span class="s2">&quot;PAG&quot;</span><span class="p">)</span>
+        <span class="n">pag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">state_variable</span><span class="p">(</span><span class="s2">&quot;PAG&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">skeleton_method</span> <span class="o">==</span> <span class="n">SkeletonMethods</span><span class="o">.</span><span class="n">PDS</span><span class="p">:</span>
             <span class="c1"># determine how we want to construct the candidates for separating nodes</span>
@@ -871,8 +874,8 @@
 
         <span class="k">return</span> <span class="n">possible_variables</span>
 
-<div class="viewcode-block" id="LearnSemiMarkovianSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="LearnSemiMarkovianSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div></div>
 </pre></div>
 
               </article>

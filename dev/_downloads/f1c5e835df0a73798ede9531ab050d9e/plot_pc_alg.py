@@ -25,7 +25,7 @@ import networkx as nx
 from scipy import stats
 from pywhy_graphs.viz import draw
 from dodiscover.ci import GSquareCITest, Oracle
-from dodiscover import PC, Context
+from dodiscover import PC, make_context
 import pandas as pd
 from dowhy import gcm
 from dowhy.gcm.util.general import set_random_seed
@@ -133,7 +133,7 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # then addresses identifiability given those assumptions and data. In this sense,
 # the Context class houses both data, apriori assumptions and other relevant data
 # that may be used in downstream structure learning algorithms.
-context = Context(data=data)
+context = make_context().variables(data=data).build()
 
 # Alternatively, one could say specify some fixed edges.
 # Note that when specifying fixed edges, the resulting graph that is
@@ -145,7 +145,7 @@ context = Context(data=data)
 
 # .. code-block::Python
 #   included_edges = nx.Graph([('x', 'y')])
-#   context = Context(data=data, included_edges=included_edges)
+#   context = make_context().edges(include=included_edges).build()
 
 # %%
 # Run structure learning algorithm
@@ -155,7 +155,7 @@ context = Context(data=data)
 # an infinite amount of data.
 
 pc = PC(ci_estimator=oracle)
-pc.fit(context)
+pc.fit(data, context)
 
 # The resulting completely partially directed acyclic graph (CPDAG) that is learned
 # is a "Markov equivalence class", which encodes all the conditional dependences that
@@ -170,7 +170,7 @@ dot_graph.render(outfile="oracle_cpdag.png", view=True)
 # to determine CI in the data. Due to finite data and the presence of noise, there is
 # always a possibility that the CI test makes a mistake.
 pc = PC(ci_estimator=ci_estimator)
-pc.fit(context)
+pc.fit(data, context)
 
 # The resulting completely partially directed acyclic graph (CPDAG) that is learned
 # is a "Markov equivalence class", which encodes all the conditional dependences that
