@@ -3,7 +3,9 @@ from itertools import combinations, permutations
 from typing import List, Optional, Set, Tuple
 
 import networkx as nx
+import pandas as pd
 
+from dodiscover import make_context
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton
@@ -657,12 +659,12 @@ class FCI(BaseConstraintDiscovery):
             idx += 1
 
     def learn_skeleton(
-        self, context: Context, sep_set: Optional[SeparatingSet] = None
+        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
         import pywhy_graphs
 
         # initially learn the skeleton
-        skel_graph, sep_set = super().learn_skeleton(context, sep_set)
+        skel_graph, sep_set = super().learn_skeleton(data, context, sep_set)
 
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
@@ -677,13 +679,12 @@ class FCI(BaseConstraintDiscovery):
         # Update the Context:
         # add the corresponding intermediate PAG now to the context
         # new initialization graph
-        context.add_state_variable("PAG", pag)
         for (_, _, d) in new_init_graph.edges(data=True):
             if "test_stat" in d:
                 d.pop("test_stat")
             if "pvalue" in d:
                 d.pop("pvalue")
-        context.init_graph = new_init_graph
+        context = make_context(context).graph(new_init_graph).state_variable("PAG", pag).build()
 
         # # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(
@@ -698,15 +699,15 @@ class FCI(BaseConstraintDiscovery):
             max_path_length=self.max_path_length,
             **self.ci_estimator_kwargs,
         )
-        skel_alg.fit(context)
+        skel_alg.fit(data, context)
 
         skel_graph = skel_alg.adj_graph_
         sep_set = skel_alg.sep_set_
         self.n_ci_tests += skel_alg.n_ci_tests
         return skel_graph, sep_set
 
-    def fit(self, context: Context) -> None:
-        return super().fit(context)
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
+        return super().fit(data, context)
 
     def orient_edges(self, graph: EquivalenceClass):
         # orient colliders again

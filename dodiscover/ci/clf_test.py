@@ -105,7 +105,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
 
         Shuffles the Y samples, such that if there is any dependence among X and Y,
         they are broken and the resulting samples emulate those which came from
-        the distribution with :math:`X \perp Y`.
+        the distribution with :math:`X \\perp Y`.
 
         Parameters
         ----------
@@ -163,7 +163,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         """Generate dataset for CI testing as binary classification problem.
 
         Implements a nearest-neighbor bootstrap approach for generating samples from
-        the null hypothesis where :math:`X \perp Y | Z`.
+        the null hypothesis where :math:`X \\perp Y | Z`.
 
         Parameters
         ----------

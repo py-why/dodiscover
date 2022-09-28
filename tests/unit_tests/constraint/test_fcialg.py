@@ -5,7 +5,7 @@ import numpy as np
 import pywhy_graphs
 from pywhy_graphs import ADMG, PAG
 
-from dodiscover import FCI, Context
+from dodiscover import FCI, make_context
 from dodiscover.ci import Oracle
 from dodiscover.constraint.utils import dummy_sample
 
@@ -26,14 +26,14 @@ class Test_FCI:
 
     def test_fci_skel_graph(self):
         sample = dummy_sample(self.G)
-        context = Context(data=sample)
-        skel_graph, _ = self.alg.learn_skeleton(context)
+        context = make_context().variables(data=sample).build()
+        skel_graph, _ = self.alg.learn_skeleton(sample, context)
         assert nx.is_isomorphic(skel_graph, nx.Graph([("x", "y"), ("z", "y")]))
 
     def test_fci_basic_collider(self):
         sample = dummy_sample(self.G)
-        context = Context(data=sample)
-        skel_graph, sep_set = self.alg.learn_skeleton(context)
+        context = make_context().variables(data=sample).build()
+        skel_graph, sep_set = self.alg.learn_skeleton(sample, context)
         graph = PAG(incoming_circle_edges=skel_graph)
         self.alg.orient_unshielded_triples(graph, sep_set)
 
@@ -427,12 +427,12 @@ class Test_FCI:
         latent_edge_list = [("x1", "x2")]
         G = ADMG(edge_list, incoming_bidirected_edges=latent_edge_list)
         sample = dummy_sample(G)
-        context = Context(data=sample)
+        context = make_context().variables(data=sample).build()
 
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator)
-        fci.fit(context)
+        fci.fit(sample, context)
         pag = fci.graph_
 
         expected_pag = PAG()
@@ -468,8 +468,8 @@ class Test_FCI:
         graph = ADMG(edge_list, latent_edge_list)
         alg = FCI(ci_estimator=Oracle(graph))
         sample = dummy_sample(graph)
-        context = Context(data=sample)
-        alg.fit(context)
+        context = make_context().variables(data=sample).build()
+        alg.fit(sample, context)
         pag = alg.graph_
         skel_graph = alg.graph_
 
@@ -525,11 +525,11 @@ class Test_FCI:
         latent_edge_list = [("x1", "x2"), ("x4", "x5")]
         G = ADMG(edge_list, latent_edge_list)
         sample = dummy_sample(G)
-        context = Context(data=sample)
+        context = make_context().variables(data=sample).build()
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf)
-        fci.fit(context)
+        fci.fit(sample, context)
         pag = fci.graph_
 
         # double check the m-separation statement and PDS
