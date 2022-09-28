@@ -20,9 +20,7 @@ class ContextBuilder:
     _excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
-    _state_variables: Optional[Dict[str, Any]] = None
-    # flags to skip interpolation, used during copy
-    _variables_already_interpolated = False
+    _state_variables: Dict[str, Any] = dict()
 
     def graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
@@ -88,16 +86,17 @@ class ContextBuilder:
         ContextBuilder
             The builder instance
         """
-        if not self._variables_already_interpolated and data is not None:
-            (observed, latents) = self._interpolate_variables(data, observed, latents)
-
         self._observed_variables = observed
         self._latent_variables = latents
+
+        if data is not None:
+            (observed, latents) = self._interpolate_variables(data, observed, latents)
+            self._observed_variables = observed
+            self._latent_variables = latents
 
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
 
-        self._variables_already_interpolated = True
         return self
 
     def state_variables(self, state_variables: Dict[str, Any]) -> "ContextBuilder":
@@ -129,9 +128,6 @@ class ContextBuilder:
         var : any
             Any state variable.
         """
-        if self._state_variables is None:
-            self._state_variables = dict()
-
         self._state_variables[name] = var
         return self
 
@@ -145,13 +141,17 @@ class ContextBuilder:
         """
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
+
+        empty_graph = lambda: nx.empty_graph(self._observed_variables, create_using=nx.Graph)
+        included_edges = self._included_edges or empty_graph()
+        excluded_edges = self._excluded_edges or empty_graph()
         return Context(
             init_graph=self._interpolate_graph(),
-            included_edges=self._interpolate_included_edges(),
-            excluded_edges=self._interpolate_excluded_edges(),
+            included_edges=included_edges,
+            excluded_edges=excluded_edges,
             variables=self._observed_variables,
             latents=self._latent_variables or set(),
-            state_variables=self._state_variables or dict(),
+            state_variables=self._state_variables,
         )
 
     def _interpolate_variables(
@@ -199,18 +199,6 @@ class ContextBuilder:
                 )
             return graph
 
-    def _interpolate_included_edges(self) -> Union[nx.Graph, nx.DiGraph]:
-        # initialize set of fixed and included edges
-        return self._included_edges or nx.empty_graph(
-            self._observed_variables, create_using=nx.Graph
-        )
-
-    def _interpolate_excluded_edges(self) -> Union[nx.Graph, nx.DiGraph]:
-        # initialize set of fixed and included edges
-        return self._excluded_edges or nx.empty_graph(
-            self._observed_variables, create_using=nx.Graph
-        )
-
 
 def make_context(context: Optional[Context] = None) -> ContextBuilder:
     """Create a new ContextBuilder instance.
@@ -222,7 +210,6 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
     """
     result = ContextBuilder()
     if context is not None:
-        result._variables_already_interpolated = True
         result.graph(deepcopy(context.init_graph))
         result.edges(deepcopy(context.included_edges), deepcopy(context.excluded_edges))
         result.variables(copy(context.observed_variables), copy(context.latent_variables))
