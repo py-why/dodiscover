@@ -129,7 +129,6 @@ def test_learn_pds_skeleton():
 
     See: https://www.cs.cmu.edu/afs/cs.cmu.edu/project/learn-43/lib/photoz/.g/web/.g/scottd/fullbook.pdf
     """  # noqa
-    np.random.seed()
     # reconstruct the PAG the way FCI would
     edge_list = [("D", "A"), ("B", "E"), ("F", "B"), ("C", "F"), ("C", "H"), ("H", "D")]
     latent_edge_list = [("A", "B"), ("D", "E")]

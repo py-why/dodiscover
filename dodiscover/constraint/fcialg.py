@@ -5,7 +5,6 @@ from typing import List, Optional, Set, Tuple
 import networkx as nx
 import pandas as pd
 
-from dodiscover import make_context
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton
@@ -662,6 +661,8 @@ class FCI(BaseConstraintDiscovery):
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
         import pywhy_graphs
+
+        from dodiscover import make_context
 
         # initially learn the skeleton
         skel_graph, sep_set = super().learn_skeleton(data, context, sep_set)
