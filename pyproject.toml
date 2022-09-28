@@ -130,6 +130,8 @@ rm -rf .pytest_cache .mypy_cache .ipynb_checkpoints
 rm junit-results.xml
 rm coverage.xml
 rm .coverage
+rm examples/*.png
+rm examples/*.gv
 """
 
 type_check = 'mypy -p dodiscover --config-file pyproject.toml'

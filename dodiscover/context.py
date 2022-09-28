@@ -9,6 +9,9 @@ from .typing import Column
 class Context:
     """Context of assumptions, domain knowledge and data.
 
+    This should NOT be instantiated directly. One should instead
+    use `dodiscover.make_context` to build a Context data structure.
+
     Parameters
     ----------
     variables : Set

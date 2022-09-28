@@ -27,12 +27,12 @@ class ContextBuilder:
 
         Parameters
         ----------
-        graph : Graph - the new graph instance
-
+        graph : Graph
+            The new graph instance.
 
         Returns
         -------
-        ContextBuilder
+        self : ContextBuilder
             The builder instance
         """
         self._graph = graph
@@ -54,7 +54,7 @@ class ContextBuilder:
 
         Returns
         -------
-        ContextBuilder
+        self : ContextBuilder
             The builder instance
         """
         self._included_edges = include
@@ -75,15 +75,16 @@ class ContextBuilder:
             Set of observed variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
-        latents : Optional[Set[Column]] - variables that are latent
+        latents : Optional[Set[Column]]
             Set of latent "unobserved" variables, by default None. If neither ``latents``,
             nor ``variables`` is set, then it is presumed that ``variables`` consists
             of the columns of ``data`` and ``latents`` is the empty set.
-        data : Optional[pd.DataFrame] - the data to use for variable inference.
+        data : Optional[pd.DataFrame]
+            the data to use for variable inference.
 
         Returns
         -------
-        ContextBuilder
+        self : ContextBuilder
             The builder instance
         """
         self._observed_variables = observed
@@ -109,7 +110,7 @@ class ContextBuilder:
 
         Returns
         -------
-        ContextBuilder
+        self : ContextBuilder
             The builder instance
         """
         self._state_variables = state_variables
@@ -136,8 +137,8 @@ class ContextBuilder:
 
         Returns
         -------
-        Context
-            The populated Context object
+        context : Context
+            The populated Context object.
         """
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
@@ -204,7 +205,7 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
 
     Returns
     -------
-    ContextBuilder
+    result : ContextBuilder
         The new ContextBuilder instance
     """
     result = ContextBuilder()

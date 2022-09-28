@@ -55,7 +55,9 @@ object rather than just data. See docs for ``Context`` for more information.
 .. autosummary::
    :toctree: generated/
 
+   make_context
    Context
+   ContextBuilder
 
 Constraint-based structure learning
 ===================================
