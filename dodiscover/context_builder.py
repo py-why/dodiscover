@@ -184,18 +184,19 @@ class ContextBuilder:
         if self._observed_variables is None:
             raise ValueError("Must set variables() before building Context.")
 
-        variables = self._observed_variables
-        graph = self._graph
+        complete_graph = lambda: nx.complete_graph(self._observed_variables, create_using=nx.Graph)
+        has_all_variables = lambda g: set(g.nodes) == set(self._observed_variables)
+
         # initialize the starting graph
-        if graph is None:
-            return nx.complete_graph(variables, create_using=nx.Graph)
+        if self._graph is None:
+            return complete_graph()
         else:
-            if set(graph.nodes) != set(variables):
+            if not has_all_variables(self._graph):
                 raise ValueError(
-                    f"The nodes within the initial graph, {graph.nodes}, "
-                    f"do not match the nodes in the passed in data, {variables}."
+                    f"The nodes within the initial graph, {self._graph.nodes}, "
+                    f"do not match the nodes in the passed in data, {self._observed_variables}."
                 )
-            return graph
+            return self._graph
 
 
 def make_context(context: Optional[Context] = None) -> ContextBuilder:
