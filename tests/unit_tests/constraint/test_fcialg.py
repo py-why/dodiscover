@@ -1,6 +1,7 @@
+import logging
+
 import networkx as nx
 import numpy as np
-import pytest
 import pywhy_graphs
 from pywhy_graphs import ADMG, PAG
 
@@ -36,8 +37,6 @@ class Test_FCI:
         graph = PAG(incoming_circle_edges=skel_graph)
         self.alg.orient_unshielded_triples(graph, sep_set)
 
-        print(skel_graph)
-        print(sep_set)
         # the PAG learned x o-> y <-o z
         expected_graph = PAG()
         expected_graph.add_edges_from([("x", "y"), ("z", "y")], expected_graph.directed_edge_name)
@@ -237,7 +236,7 @@ class Test_FCI:
         assert not G.has_edge("c", "u", G.circle_edge_name)
         assert G.has_edge("c", "u", G.bidirected_edge_name)
 
-    def test_fci_rule4_early_exit(self):
+    def test_fci_rule4_early_exit(self, caplog):
         G = PAG()
 
         G.add_edge("u", "c", G.circle_edge_name)
@@ -253,9 +252,10 @@ class Test_FCI:
         G.add_edge("d", "b", G.directed_edge_name)
 
         # test error case
-        new_fci = FCI(ci_estimator=self.ci_estimator, max_path_length=1)
-        with pytest.warns(UserWarning, match="Did not finish checking"):
+        with caplog.at_level(logging.WARNING):
+            new_fci = FCI(ci_estimator=self.ci_estimator, max_path_length=1)
             new_fci._apply_rule4(G, "u", "a", "c", sep_set)
+            assert "Did not finish checking" in caplog.text
 
     def test_fci_rule4_wit_sepset(self):
         """Test orienting a discriminating path with a separating set.

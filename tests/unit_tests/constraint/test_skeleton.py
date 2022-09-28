@@ -127,6 +127,7 @@ def test_learn_pds_skeleton():
 
     See: https://www.cs.cmu.edu/afs/cs.cmu.edu/project/learn-43/lib/photoz/.g/web/.g/scottd/fullbook.pdf
     """  # noqa
+    np.random.seed()
     # reconstruct the PAG the way FCI would
     edge_list = [("D", "A"), ("B", "E"), ("F", "B"), ("C", "F"), ("C", "H"), ("H", "D")]
     latent_edge_list = [("A", "B"), ("D", "E")]
@@ -146,13 +147,13 @@ def test_learn_pds_skeleton():
     edge_list = [
         ("A", "B"),
         ("D", "A"),
-        ("A", "E"),
         ("B", "E"),
         ("B", "F"),
         ("F", "C"),
         ("C", "H"),
         ("H", "D"),
         ("D", "E"),
+        ("A", "E"),  # Note: this is the extra edge
     ]
     expected_skel = nx.Graph(edge_list)
     assert nx.is_isomorphic(expected_skel, pag_graph.to_undirected())
@@ -184,8 +185,8 @@ def test_learn_pds_skeleton():
     )
 
     # learn the skeleton of the graph now with the first stage skeleton
+    context.add_state_variable("PAG", first_stage_pag.copy())
     context.init_graph = first_stage_pag.to_undirected()
-    context.add_state_variable("PAG", first_stage_pag)
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
     alg.fit(context)
     skel_graph = alg.adj_graph_

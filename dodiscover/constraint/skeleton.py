@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 from itertools import chain, combinations
-from typing import Any, Dict, Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
+from typing import Iterable, Optional, Set, SupportsFloat, Tuple, Union
 
 import networkx as nx
 import numpy as np
@@ -54,6 +54,24 @@ def _iter_conditioning_set(
 
 
 def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
+    """Find neighbors that are along a path from start to end.
+
+    Parameters
+    ----------
+    G : nx.Graph
+        The graph.
+    start : Node
+        The starting node.
+    end : Node
+        The ending node.
+
+    Returns
+    -------
+    nbrs : Set
+        The set of neighbors that are also along a path towards
+        the 'end' node.
+    """
+
     def _assign_weight(u, v, edge_attr):
         if u == node or v == node:
             return np.inf
@@ -290,7 +308,6 @@ class LearnSkeleton:
 
         # get the initialized graph
         adj_graph = self.context.init_graph
-        nodes = adj_graph.nodes
         X = self.context.data
 
         # track progress of the algorithm for which edges to remove to ensure stability
@@ -314,14 +331,6 @@ class LearnSkeleton:
         nx.set_edge_attributes(adj_graph, np.inf, "test_stat")
         nx.set_edge_attributes(adj_graph, -1e-5, "pvalue")
 
-        # store the list of potential adjacencies for every node
-        # which is tracked and updated in the algorithm
-        adjacency_mapping: Dict[Any, List] = dict()
-        for node in nodes:
-            adjacency_mapping[node] = [
-                other_node for other_node in adj_graph.neighbors(node) if other_node != node
-            ]
-
         logger.info(
             f"\n\nRunning skeleton phase with: \n"
             f"max_combinations: {self.max_combinations_},\n"
@@ -341,10 +350,7 @@ class LearnSkeleton:
             for x_var in adj_graph.nodes:
                 possible_adjacencies = set(adj_graph.neighbors(x_var))
 
-                # keep track of the size of the adjacency set of 'X' without 'Y'
-                size_adjacencies_x = len(possible_adjacencies) - 1
-
-                logger.info(f"On node {x_var}\n\n")
+                logger.info(f"Considering node {x_var}...\n\n")
 
                 for y_var in possible_adjacencies:
                     # a node cannot be a parent to itself in DAGs
@@ -364,8 +370,8 @@ class LearnSkeleton:
                     )
 
                     logger.debug(
-                        f"Adj({x_var}) without {y_var} with size={size_adjacencies_x} with "
-                        f"p={size_cond_set}. The possible variables to condition on are: "
+                        f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
+                        f"with p={size_cond_set}. The possible variables to condition on are: "
                         f"{possible_variables}."
                     )
 
@@ -373,10 +379,10 @@ class LearnSkeleton:
                     # cardinality of the conditioning set
                     if len(possible_variables) < size_cond_set:
                         logger.debug(
-                            f"\n\nBreaking for {x_var}, {y_var}, {size_adjacencies_x}, "
+                            f"\n\nBreaking for {x_var}, {y_var}, {len(possible_adjacencies)}, "
                             f"{size_cond_set}, {possible_variables}"
                         )
-                        break
+                        continue
                     else:
                         cont = True
 
