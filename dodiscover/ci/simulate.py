@@ -20,9 +20,9 @@ def nonlinear_additive_gaussian(
     """Generate samples from a cosine nonlinear model with additive noise.
 
     The data comes in one of three forms:
-    - :math:`X \perp Y | Z`, where ``X <- Z -> Y``
+    - :math:`X \\perp Y | Z`, where ``X <- Z -> Y``
     - all X, Y, Z are independent
-    - ``X -> Y <- Z``, where :math:`X \perp Z`, but :math:`X \not\perp Z | Y`
+    - ``X -> Y <- Z``, where :math:`X \\perp Z`, but :math:`X \\not\\perp Z | Y`
 
     Follows simulation setup of :footcite:`Sen2017model` for
     "post-nonlinear noise" model.

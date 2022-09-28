@@ -12,6 +12,7 @@ from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.typing import Column, SeparatingSet
 
 from ..context import Context
+from ..context_builder import make_context
 
 logger = logging.getLogger()
 
@@ -278,20 +279,22 @@ class LearnSkeleton:
         self.n_ci_tests += 1
         return test_stat, pvalue
 
-    def fit(self, context: Context) -> None:
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
 
         Parameters
         ----------
+        data : pd.DataFrame
+            The data to learn the causal graph from.
         context : Context
             A context object.
         """
-        self.context = context.copy()
+        self.context = make_context(context).build()
 
         # get the initialized graph
         adj_graph = self.context.init_graph
         nodes = adj_graph.nodes
-        X = self.context.data
+        X = data
 
         # track progress of the algorithm for which edges to remove to ensure stability
         self.remove_edges = set()
@@ -633,7 +636,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         import pywhy_graphs as pgraph
 
         # get PAG from the context object
-        pag = self.context.get_state_variable("PAG")
+        pag = self.context.state_variable("PAG")
 
         if skeleton_method == SkeletonMethods.PDS:
             # determine how we want to construct the candidates for separating nodes
@@ -664,5 +667,5 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return possible_variables
 
-    def fit(self, context: Context) -> None:
-        return super().fit(context)
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
+        return super().fit(data, context)

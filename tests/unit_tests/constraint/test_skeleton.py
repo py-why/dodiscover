@@ -3,8 +3,9 @@ import numpy as np
 import pandas as pd
 import pytest
 import pywhy_graphs
+from flaky import flaky
 
-from dodiscover import Context
+from dodiscover import make_context
 from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton, LearnSkeleton
 from dodiscover.constraint.utils import dummy_sample
@@ -92,8 +93,8 @@ def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer):
     """Test PC algorithm for estimating the causal DAG."""
     data_df = pd.DataFrame(data_matrix)
     alg = LearnSkeleton(ci_estimator=indep_test_func)
-    context = Context(data=data_df)
-    alg.fit(context)
+    context = make_context().variables(data=data_df).build()
+    alg.fit(data_df, context)
 
     # obtain the fitted skeleton graph
     skel_graph = alg.adj_graph_
@@ -110,8 +111,8 @@ def test_learn_skeleton_oracle(G):
     oracle = Oracle(G)
     alpha = 0.05
     alg = LearnSkeleton(ci_estimator=oracle, alpha=alpha)
-    context = Context(data=df)
-    alg.fit(context)
+    context = make_context().variables(data=df).build()
+    alg.fit(df, context)
 
     # obtain the fitted skeleton graph
     skel_graph = alg.adj_graph_
@@ -120,6 +121,7 @@ def test_learn_skeleton_oracle(G):
     assert nx.is_isomorphic(skel_graph, G.to_undirected())
 
 
+@flaky
 def test_learn_pds_skeleton():
     """Test example in Causation, Prediction and Search book.
 
@@ -135,11 +137,11 @@ def test_learn_pds_skeleton():
     )
     ci_estimator = Oracle(graph)
     sample = dummy_sample(graph)
-    context = Context(data=sample)
+    context = make_context().variables(data=sample).build()
 
     # after the first stage, we learn a skeleton as in Figure 16
     firstalg = LearnSkeleton(ci_estimator=ci_estimator)
-    firstalg.fit(context)
+    firstalg.fit(sample, context)
     pag_graph = pywhy_graphs.PAG(incoming_circle_edges=firstalg.adj_graph_)
 
     # generate the expected PAG
@@ -184,10 +186,14 @@ def test_learn_pds_skeleton():
     )
 
     # learn the skeleton of the graph now with the first stage skeleton
-    context.init_graph = first_stage_pag.to_undirected()
-    context.add_state_variable("PAG", first_stage_pag)
+    context = (
+        make_context(context)
+        .graph(first_stage_pag.to_undirected())
+        .state_variable("PAG", first_stage_pag)
+        .build()
+    )
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
-    alg.fit(context)
+    alg.fit(sample, context)
     skel_graph = alg.adj_graph_
 
     # generate the expected PAG
