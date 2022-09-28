@@ -143,12 +143,10 @@ class ContextBuilder:
             raise ValueError("Could not infer variables from data or given arguments.")
 
         empty_graph = lambda: nx.empty_graph(self._observed_variables, create_using=nx.Graph)
-        included_edges = self._included_edges or empty_graph()
-        excluded_edges = self._excluded_edges or empty_graph()
         return Context(
             init_graph=self._interpolate_graph(),
-            included_edges=included_edges,
-            excluded_edges=excluded_edges,
+            included_edges=self._included_edges or empty_graph(),
+            excluded_edges=self._excluded_edges or empty_graph(),
             variables=self._observed_variables,
             latents=self._latent_variables or set(),
             state_variables=self._state_variables,
@@ -186,7 +184,7 @@ class ContextBuilder:
         if self._observed_variables is None:
             raise ValueError("Must set variables() before building Context.")
 
-        variables = self._observed_variables or set()
+        variables = self._observed_variables
         graph = self._graph
         # initialize the starting graph
         if graph is None:
