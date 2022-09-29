@@ -137,7 +137,7 @@ rm examples/*.gv
 type_check = 'mypy -p dodiscover --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
-build_docs = 'make -C doc html'
+build_docs = 'make -C doc clean html'
 
 [[tool.poe.tasks.clean]]
 # '_clean_cache', '_clean_pyc', '_clean_so'

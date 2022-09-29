@@ -9,10 +9,10 @@ from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton
 from dodiscover.constraint.utils import is_in_sep_set
-from dodiscover.context import Context
 from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass
+from ..context import Context
 from ._classes import BaseConstraintDiscovery
 
 logger = logging.getLogger()

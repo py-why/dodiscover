@@ -49,15 +49,19 @@ Rather than just data, in many cases structure learning
 has additional "context", in the form of apriori knowledge of
 the structure, or additional datasets from different environments.
 All structure learning algorithms in ``dodiscover`` pass in a ``Context``
-object rather than just data. See docs for ``Context`` for more information.
+object rather than just data. One should use our builder ``make_context``
+API for construction of the Context class. 
+
+See docs for ``Context`` and ``make_context`` for more information.
 
 .. currentmodule:: dodiscover
 .. autosummary::
    :toctree: generated/
 
    make_context
-   Context
    ContextBuilder
+   context.Context
+
 
 Constraint-based structure learning
 ===================================
