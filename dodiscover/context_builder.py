@@ -12,7 +12,9 @@ from .typing import Column
 class ContextBuilder:
     """A builder class for creating Context objects ergonomically.
 
-    The context builder provides a way to capture assumptions, domain knowledge, and data.
+    The context builder provides a way to capture assumptions, domain knowledge,
+    and data. This should NOT be instantiated directly. One should instead use
+    `dodiscover.make_context` to build a Context data structure.
     """
 
     _graph: Optional[Graph] = None
@@ -207,6 +209,13 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
     -------
     result : ContextBuilder
         The new ContextBuilder instance
+
+    Examples
+    --------
+    This creates a context object denoting that there are three observed
+    variables, ``(1, 2, 3)``.
+    >>> context_builder = make_context()
+    >>> context = context_builder.variables([1, 2, 3]).build()
     """
     result = ContextBuilder()
     if context is not None:
