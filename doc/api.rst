@@ -77,3 +77,4 @@ Comparing causal discovery algorithms
    :toctree: generated/
 
    confusion_matrix_networks
+   structure_hamming_dist
