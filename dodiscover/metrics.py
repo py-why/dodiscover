@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import networkx as nx
 import numpy as np
@@ -80,3 +80,69 @@ def confusion_matrix_networks(
     # compute the confusion matrix
     conf_mat = confusion_matrix(y_true, y_pred, labels=labels, normalize=normalize)
     return conf_mat
+
+
+def structure_hamming_dist(
+    true_graph: Union[nx.Graph, nx.DiGraph],
+    pred_graph: Union[nx.Graph, nx.DiGraph],
+    double_for_anticausal: bool = True,
+) -> float:
+    """Compute structural hamming distance.
+
+    The Structural Hamming Distance (SHD) is a standard distance to compare
+    graphs by their adjacency matrix. It consists in computing the difference
+    between the two (binary) adjacency matrixes: every edge that is either
+    missing or not in the target graph is counted as a mistake. Note that
+    for directed graph, two mistakes can be counted as the edge in the wrong
+    direction is false and the edge in the good direction is missing ; the
+    `double_for_anticausal` argument accounts for this remark. Setting it to
+    `False` will count this as a single mistake.
+
+    Parameters
+    ----------
+    true_graph : instance of nx.Graph or nx.DiGraph
+        The true graph as an instance of a MixedEdgeGraph with only one type of
+        edge.
+    pred_graph : instance of nx.Graph or nx.DiGraph
+        The predicted graph. The predicted graph and true graph must be
+        the same type.
+    double_for_anticausal : bool, optional
+        Whether to count incorrect orientations as two mistakes, by default True
+
+    Returns
+    -------
+    shd : float
+        The hamming distance between 0 and infinity.
+
+    Notes
+    -----
+    SHD is only well defined if you have a graph with only undirected edges,
+    or directed edges. That is, we only consider a Bayesian network, or a causal
+    DAG as candidates. If there are more than one type of edge within
+    the network, then SHD can be called on a sub-graph of that edge type. For example,
+    say you would like to compare a PAG, where there are directed, undirected, bidirected
+    and edges with circular endpoints. Currently, there is no known way of comparing
+    two PAGs systematically. Therefore, one can compare PAGs via the number of circle
+    edges, or the SHD of the undirected, bidirected, directed edge subgraphs.
+    """
+    if type(true_graph) != type(pred_graph):
+        raise RuntimeError(
+            f"The type of graphs must be the same: {type(true_graph), type(pred_graph)}"
+        )
+
+    # get the order of the nodes
+    idx = np.argsort(true_graph.nodes)
+    other_idx = np.argsort(pred_graph.nodes)
+
+    # convert graphs to adjacency matrix in numpy array format
+    adj_mat = nx.to_numpy_array(true_graph)[np.ix_(idx, idx)]
+    other_adj_mat = nx.to_numpy_array(pred_graph)[np.ix_(other_idx, other_idx)]
+
+    diff = np.abs(adj_mat - other_adj_mat)
+
+    if double_for_anticausal:
+        return np.sum(diff)
+    else:
+        diff = diff + diff.T
+        diff[diff > 1] = 1  # Ignoring the double edges.
+        return np.sum(diff) / 2
