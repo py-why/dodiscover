@@ -28,7 +28,7 @@ class Test_FCI:
         sample = dummy_sample(self.G)
         context = make_context().variables(data=sample).build()
         skel_graph, _ = self.alg.learn_skeleton(sample, context)
-        assert nx.is_isomorphic(skel_graph, self.G.to_undirected()))
+        assert nx.is_isomorphic(skel_graph, self.G.to_undirected())
 
     def test_fci_basic_collider(self):
         sample = dummy_sample(self.G)
