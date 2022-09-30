@@ -8,7 +8,7 @@ from pywhy_graphs.array.export import clearn_arr_to_graph
 from scipy import stats
 
 from dodiscover import FCI, make_context
-from dodiscover.ci import FisherZCITest
+from dodiscover.ci import FisherZCITest, Oracle
 from dodiscover.metrics import confusion_matrix_networks
 
 
@@ -95,6 +95,12 @@ def test_fci_against_causallearn():
     data_arr = data.to_numpy()
     context = make_context().variables(data=data).build()
 
+    # obtain the PAG that we should get using an oracle
+    oracle = Oracle(causal_model.graph)
+    fci_alg = FCI(ci_estimator=oracle)
+    fci_alg.fit(data, context)
+    true_pag = fci_alg.graph_
+
     # First run causallearn
     clearn_graph, edges = fci(data_arr, independence_test_method="fisherz", alpha=alpha)
 
@@ -102,9 +108,10 @@ def test_fci_against_causallearn():
     ci_test = FisherZCITest()
     fci_alg = FCI(ci_estimator=ci_test, alpha=alpha)
     fci_alg.fit(data, context)
-
     dodiscover_graph = fci_alg.graph_
 
     # first compare the adjacency structure
     clearn_graph = clearn_arr_to_graph(clearn_graph, arr_idx=data.columns, graph_type="pag")
     cm = confusion_matrix_networks(dodiscover_graph, clearn_graph)
+
+    # compare the SHD against the ground-truth graph
