@@ -138,6 +138,8 @@ class BaseConstraintDiscovery:
             as columns and samples as rows, or a dictionary of different sampled
             distributions with keys as the distribution names and values as the dataset
             as a pandas dataframe.
+        context : Context
+            The context of the causal discovery problem.
 
         Raises
         ------

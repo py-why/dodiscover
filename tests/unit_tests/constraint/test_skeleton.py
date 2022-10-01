@@ -148,13 +148,13 @@ def test_learn_pds_skeleton():
     edge_list = [
         ("A", "B"),
         ("D", "A"),
-        ("A", "E"),
         ("B", "E"),
         ("B", "F"),
         ("F", "C"),
         ("C", "H"),
         ("H", "D"),
         ("D", "E"),
+        ("A", "E"),  # Note: this is the extra edge
     ]
     expected_skel = nx.Graph(edge_list)
     assert nx.is_isomorphic(expected_skel, pag_graph.to_undirected())

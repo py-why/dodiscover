@@ -146,11 +146,13 @@ numpydoc_xref_aliases = {
     "CPDAG": "dodiscover.CPDAG",
     "DAG": "dodiscover.DAG",
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
-    "Context": "dodiscover.Context",
+    "Context": "dodiscover.context.Context",
     "PC": "dodiscover.PC",
     "EquivalenceClass": "dodiscover.EquivalenceClass",
     "Graph": "dodiscover.Graph",
     "Column": "dodiscover.typing.Column",
+    "SeparatingSet": "dodiscover.typing.SeparatingSet",
+    "ContextBuilder": "dodiscover.context_builder.ContextBuilder",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # numpy
