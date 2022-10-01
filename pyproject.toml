@@ -130,12 +130,14 @@ rm -rf .pytest_cache .mypy_cache .ipynb_checkpoints
 rm junit-results.xml
 rm coverage.xml
 rm .coverage
+rm examples/*.png
+rm examples/*.gv
 """
 
 type_check = 'mypy -p dodiscover --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
-build_docs = 'make -C doc html'
+build_docs = 'make -C doc clean html'
 
 [[tool.poe.tasks.clean]]
 # '_clean_cache', '_clean_pyc', '_clean_so'
@@ -203,6 +205,8 @@ no_site_packages = true
 minversion = '6.0'
 addopts = '--durations 20 --junit-xml=junit-results.xml --verbose'
 filterwarnings = []
+log_cli = true
+log_cli_level = 'ERROR'
 
 [tool.coverage.run]
 branch = true

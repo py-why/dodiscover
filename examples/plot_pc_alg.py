@@ -122,7 +122,7 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # %%
 # Define the context
 # ------------------
-# In PyWhy, we introduce the :class:`Context` class, which should be a departure from
+# In PyWhy, we introduce the :class:`context.Context` class, which should be a departure from
 # "data-first causal discovery," where users provide data as the primary input to a
 # discovery algorithm. This problem with this approach is that it encourages novice
 # users to see the algorithm as a philosopher's stone that converts data to causal
