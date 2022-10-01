@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 import networkx as nx
 import numpy as np
@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
 from ._protocol import Graph
+from .typing import NetworkxGraph
 
 
 def confusion_matrix_networks(
@@ -83,8 +84,8 @@ def confusion_matrix_networks(
 
 
 def structure_hamming_dist(
-    true_graph: Union[nx.Graph, nx.DiGraph],
-    pred_graph: Union[nx.Graph, nx.DiGraph],
+    true_graph: NetworkxGraph,
+    pred_graph: NetworkxGraph,
     double_for_anticausal: bool = True,
 ) -> float:
     """Compute structural hamming distance.

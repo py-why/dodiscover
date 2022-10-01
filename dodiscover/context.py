@@ -1,9 +1,9 @@
-from typing import Any, Dict, Set, Union
+from typing import Any, Dict, Set
 
 import networkx as nx
 
 from ._protocol import Graph
-from .typing import Column
+from .typing import Column, NetworkxGraph
 
 
 class Context:
@@ -56,8 +56,8 @@ class Context:
         variables: Set[Column],
         latents: Set[Column],
         init_graph: Graph,
-        included_edges: Union[nx.Graph, nx.DiGraph],
-        excluded_edges: Union[nx.Graph, nx.DiGraph],
+        included_edges: NetworkxGraph,
+        excluded_edges: NetworkxGraph,
         state_variables: Dict[str, Any],
     ) -> None:
         # set to class

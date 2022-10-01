@@ -1,12 +1,12 @@
 from copy import copy, deepcopy
-from typing import Any, Dict, Optional, Set, Tuple, Union, cast
+from typing import Any, Dict, Optional, Set, Tuple, cast
 
 import networkx as nx
 import pandas as pd
 
 from ._protocol import Graph
 from .context import Context
-from .typing import Column
+from .typing import Column, NetworkxGraph
 
 
 class ContextBuilder:
@@ -18,8 +18,8 @@ class ContextBuilder:
     """
 
     _graph: Optional[Graph] = None
-    _included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
-    _excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None
+    _included_edges: Optional[NetworkxGraph] = None
+    _excluded_edges: Optional[NetworkxGraph] = None
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
     _state_variables: Dict[str, Any] = dict()
@@ -42,16 +42,16 @@ class ContextBuilder:
 
     def edges(
         self,
-        include: Optional[Union[nx.Graph, nx.DiGraph]] = None,
-        exclude: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+        include: Optional[NetworkxGraph] = None,
+        exclude: Optional[NetworkxGraph] = None,
     ) -> "ContextBuilder":
         """Set edge constraints to apply in discovery.
 
         Parameters
         ----------
-        included : Optional[Union[nx.Graph, nx.DiGraph]]
+        included : Optional[NetworkxGraph]
             Edges that should be included in the resultant graph
-        excluded : Optional[Union[nx.Graph, nx.DiGraph]]
+        excluded : Optional[NetworkxGraph]
             Edges that must be excluded in the resultant graph
 
         Returns
