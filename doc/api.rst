@@ -99,3 +99,4 @@ to work with ``mypy``.
 
    Column
    SeparatingSet
+   NetworkxGraph
