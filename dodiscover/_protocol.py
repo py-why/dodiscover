@@ -36,6 +36,10 @@ class Graph(Protocol):
         """Remove a set of edges from the graph."""
         pass
 
+    def remove_edge(self, u, v, edge_type) -> None:
+        """Remove an edge from the graph."""
+        pass
+
     def neighbors(self, node) -> Iterable:
         """Iterate over all nodes that have any edge connection with 'node'."""
         pass
@@ -65,6 +69,16 @@ class EquivalenceClass(Graph, Protocol):
     @property
     def undirected_edge_name(self) -> str:
         """Name of the undirected edges."""
+        pass
+
+    @property
+    def circle_edge_name(self) -> str:
+        """Name of the circle edge endpoints."""
+        pass
+
+    @property
+    def bidirected_edge_name(self) -> str:
+        """Name of the bidirected edges."""
         pass
 
     def orient_uncertain_edge(self, u, v) -> None:

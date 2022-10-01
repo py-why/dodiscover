@@ -37,10 +37,14 @@ class PC(BaseConstraintDiscovery):
         Maximum size of the conditioning set, by default None. Used to limit
         the computation spent on the algorithm.
     max_combinations : int, optional
-        Maximum number of tries with a conditioning set chosen from the set of possible
-        parents still, by default None. If None, then will not be used. If set, then
-        the conditioning set will be chosen lexographically based on the sorted
-        test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
+        The maximum number of conditional independence tests to run from the set
+        of possible conditioning sets. By default None, which means the algorithm will
+        check all possible conditioning sets. If ``max_combinations=n`` is set, then
+        for every conditioning set size, 'p', there will be at most 'n' CI tests run
+        before the conditioning set size 'p' is incremented. For controlling the size
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
+        in conjunction with ``keep_sorted`` parameter to only test the "strongest"
+        dependences.
     skeleton_method : SkeletonMethods
         The method to use for testing conditional independence. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
