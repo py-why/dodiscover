@@ -6,8 +6,6 @@ from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
-from pywhy_graphs.array.export import graph_to_arr
-
 from ._protocol import Graph
 from .typing import NetworkxGraph
 
@@ -138,7 +136,6 @@ def structure_hamming_dist(
     other_idx = np.argsort(pred_graph.nodes)
 
     # convert graphs to adjacency matrix in numpy array format
-    array_api.
     adj_mat = nx.to_numpy_array(true_graph)[np.ix_(idx, idx)]
     other_adj_mat = nx.to_numpy_array(pred_graph)[np.ix_(other_idx, other_idx)]
 
