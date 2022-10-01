@@ -97,8 +97,8 @@ def structure_hamming_dist(
     between the two (binary) adjacency matrixes: every edge that is either
     missing or not in the target graph is counted as a mistake. Note that
     for directed graph, two mistakes can be counted as the edge in the wrong
-    direction is false and the edge in the good direction is missing ; the
-    `double_for_anticausal` argument accounts for this remark. Setting it to
+    direction is false and the edge in the good direction is missing; the
+    ``double_for_anticausal`` argument accounts for this remark. Setting it to
     `False` will count this as a single mistake.
 
     Parameters
