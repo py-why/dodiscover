@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>dodiscover.ci.BaseConditionalIndependenceTest &#8212; dodiscover v0.0.0</title>
+    <title>dodiscover.make_context &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -47,8 +47,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dodiscover.ci.Oracle" href="dodiscover.ci.Oracle.html" />
-    <link rel="prev" title="API" href="../api.html" />
+    <link rel="next" title="dodiscover.ContextBuilder" href="dodiscover.ContextBuilder.html" />
+    <link rel="prev" title="dodiscover.EquivalenceClass" href="dodiscover.EquivalenceClass.html" />
     <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
@@ -184,9 +184,9 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
-    <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
    dodiscover.ci.BaseConditionalIndependenceTest
   </a>
  </li>
@@ -228,9 +228,9 @@
   </a>
  </li>
 </ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.make_context.html">
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    dodiscover.make_context
   </a>
  </li>
@@ -315,31 +315,20 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dodiscover.ci.BaseConditionalIndependenceTest">
+  <a class="reference internal nav-link" href="#dodiscover.make_context">
    <code class="docutils literal notranslate">
     <span class="pre">
-     BaseConditionalIndependenceTest
+     make_context()
     </span>
    </code>
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#dodiscover.ci.BaseConditionalIndependenceTest.test">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       BaseConditionalIndependenceTest.test()
-      </span>
-     </code>
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#examples-using-dodiscover-ci-baseconditionalindependencetest">
+  <a class="reference internal nav-link" href="#examples-using-dodiscover-make-context">
    Examples using
    <code class="docutils literal notranslate">
     <span class="pre">
-     dodiscover.ci.BaseConditionalIndependenceTest
+     dodiscover.make_context
     </span>
    </code>
   </a>
@@ -363,68 +352,33 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="dodiscover-ci-baseconditionalindependencetest">
-<h1>dodiscover.ci.BaseConditionalIndependenceTest<a class="headerlink" href="#dodiscover-ci-baseconditionalindependencetest" title="Permalink to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="dodiscover.ci.BaseConditionalIndependenceTest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.ci.</span></span><span class="sig-name descname"><span class="pre">BaseConditionalIndependenceTest</span></span><a class="reference internal" href="../_modules/dodiscover/ci/base.html#BaseConditionalIndependenceTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ci.BaseConditionalIndependenceTest" title="Permalink to this definition">#</a></dt>
-<dd><p>Abstract class for any conditional independence test.</p>
-<p>All CI tests are used in constraint-based causal discovery algorithms. This
-class interface is expected to be very lightweight to enable anyone to convert
-a function for CI testing into a class, which has a specific API.</p>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.ci.BaseConditionalIndependenceTest.test" title="dodiscover.ci.BaseConditionalIndependenceTest.test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test</span></code></a>(df, x_vars, y_vars[, z_covariates])</p></td>
-<td><p>Abstract method for all conditional independence tests.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.ci.BaseConditionalIndependenceTest.test">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.6.0.dev0+249.gdc79600574)"><span class="pre">DataFrame</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.10)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.10)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_covariates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.10)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dodiscover/ci/base.html#BaseConditionalIndependenceTest.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ci.BaseConditionalIndependenceTest.test" title="Permalink to this definition">#</a></dt>
-<dd><p>Abstract method for all conditional independence tests.</p>
+  <section id="dodiscover-make-context">
+<h1>dodiscover.make_context<a class="headerlink" href="#dodiscover-make-context" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="dodiscover.make_context">
+<span class="sig-prename descclassname"><span class="pre">dodiscover.</span></span><span class="sig-name descname"><span class="pre">make_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><span class="pre">Context</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#make_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.make_context" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a new ContextBuilder instance.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df</strong> : <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.6.0.dev0+249.gdc79600574)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>result</strong> : <a class="reference internal" href="dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a></p>
 <blockquote>
-<div><p>The dataframe containing the dataset.</p>
-</div></blockquote>
-<p><strong>x_vars</strong> : <code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v1.6.0.dev0+249.gdc79600574)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></p>
-<blockquote>
-<div><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
-</div></blockquote>
-<p><strong>y_vars</strong> : <code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v1.6.0.dev0+249.gdc79600574)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></p>
-<blockquote>
-<div><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
-</div></blockquote>
-<p><strong>z_covariates</strong> : <code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code>, optional</p>
-<blockquote>
-<div><p>A set of columns in <code class="docutils literal notranslate"><span class="pre">df</span></code>, by default None. If None, then
-the test should run a standard independence test.</p>
-</div></blockquote>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>]</p>
-<blockquote>
-<div><p>Test statistic and pvalue.</p>
+<div><p>The new ContextBuilder instance</p>
 </div></blockquote>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>This creates a context object denoting that there are three observed
+variables, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">3)</span></code>.
+&gt;&gt;&gt; context_builder = make_context()
+&gt;&gt;&gt; context = context_builder.variables([1, 2, 3]).build()</p>
 </dd></dl>
 
-</dd></dl>
-
-<section id="examples-using-dodiscover-ci-baseconditionalindependencetest">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">dodiscover.ci.BaseConditionalIndependenceTest</span></code><a class="headerlink" href="#examples-using-dodiscover-ci-baseconditionalindependencetest" title="Permalink to this heading">#</a></h2>
+<section id="examples-using-dodiscover-make-context">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">dodiscover.make_context</span></code><a class="headerlink" href="#examples-using-dodiscover-make-context" title="Permalink to this heading">#</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="PC algorithm for causal discovery from observational data without latent confounders" src="../_images/sphx_glr_plot_pc_alg_thumb.png" />
 <p><a class="reference internal" href="../auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">PC algorithm for causal discovery from observational data without latent confounders</span></a></p>
   <div class="sphx-glr-thumbnail-title">PC algorithm for causal discovery from observational data without latent confounders</div>
-</div></div></section>
+</div></div><div style='clear:both'></div></section>
 </section>
 
 
@@ -435,17 +389,17 @@ the test should run a standard independence test.</p>
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="../api.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="dodiscover.EquivalenceClass.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">API</p>
+          <p class="prev-next-title">dodiscover.EquivalenceClass</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="dodiscover.ci.Oracle.html" title="next page">
+  <a class='right-next' id="next-link" href="dodiscover.ContextBuilder.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">dodiscover.ci.Oracle</p>
+      <p class="prev-next-title">dodiscover.ContextBuilder</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

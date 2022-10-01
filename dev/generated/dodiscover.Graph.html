@@ -230,8 +230,18 @@
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.Context.html">
-   dodiscover.Context
+  <a class="reference internal" href="dodiscover.make_context.html">
+   dodiscover.make_context
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ContextBuilder.html">
+   dodiscover.ContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.context.Context.html">
+   dodiscover.context.Context
   </a>
  </li>
 </ul>
@@ -256,11 +266,28 @@
    dodiscover.constraint.PC
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.FCI.html">
+   dodiscover.constraint.FCI
+  </a>
+ </li>
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.metrics.confusion_matrix_networks.html">
    dodiscover.metrics.confusion_matrix_networks
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.Column.html">
+   dodiscover.typing.Column
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.SeparatingSet.html">
+   dodiscover.typing.SeparatingSet
   </a>
  </li>
 </ul>
@@ -337,6 +364,15 @@
      <code class="docutils literal notranslate">
       <span class="pre">
        Graph.nodes
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.Graph.remove_edge">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Graph.remove_edge()
       </span>
      </code>
     </a>
@@ -422,13 +458,16 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.neighbors" title="dodiscover.Graph.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
 <td><p>Iterate over all nodes that have any edge connection with 'node'.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_edges_from" title="dodiscover.Graph.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_edge" title="dodiscover.Graph.remove_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edge</span></code></a>(u, v, edge_type)</p></td>
+<td><p>Remove an edge from the graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_edges_from" title="dodiscover.Graph.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
 <td><p>Remove a set of edges from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_node" title="dodiscover.Graph.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.remove_node" title="dodiscover.Graph.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
 <td><p>Remove a node from the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.Graph.to_undirected" title="dodiscover.Graph.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.Graph.to_undirected" title="dodiscover.Graph.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
 <td><p>Convert a graph to a fully undirected networkx graph.</p></td>
 </tr>
 </tbody>
@@ -461,6 +500,12 @@
 <dt class="sig sig-object py" id="dodiscover.Graph.nodes">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a></em><a class="headerlink" href="#dodiscover.Graph.nodes" title="Permalink to this definition">#</a></dt>
 <dd><p>Return an iterable over nodes in graph.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.Graph.remove_edge">
+<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#Graph.remove_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.Graph.remove_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>Remove an edge from the graph.</p>
 </dd></dl>
 
 <dl class="py method">

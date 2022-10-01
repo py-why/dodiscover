@@ -230,8 +230,18 @@
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.Context.html">
-   dodiscover.Context
+  <a class="reference internal" href="generated/dodiscover.make_context.html">
+   dodiscover.make_context
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ContextBuilder.html">
+   dodiscover.ContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.context.Context.html">
+   dodiscover.context.Context
   </a>
  </li>
 </ul>
@@ -256,11 +266,28 @@
    dodiscover.constraint.PC
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.constraint.FCI.html">
+   dodiscover.constraint.FCI
+  </a>
+ </li>
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.metrics.confusion_matrix_networks.html">
    dodiscover.metrics.confusion_matrix_networks
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.typing.Column.html">
+   dodiscover.typing.Column
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.typing.SeparatingSet.html">
+   dodiscover.typing.SeparatingSet
   </a>
  </li>
 </ul>
@@ -310,6 +337,11 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#comparing-causal-discovery-algorithms">
    Comparing causal discovery algorithms
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#typing">
+   Typing
   </a>
  </li>
 </ul>
@@ -398,14 +430,22 @@ learning.</p>
 has additional “context”, in the form of apriori knowledge of
 the structure, or additional datasets from different environments.
 All structure learning algorithms in <code class="docutils literal notranslate"><span class="pre">dodiscover</span></code> pass in a <code class="docutils literal notranslate"><span class="pre">Context</span></code>
-object rather than just data. See docs for <code class="docutils literal notranslate"><span class="pre">Context</span></code> for more information.</p>
+object rather than just data. One should use our builder <code class="docutils literal notranslate"><span class="pre">make_context</span></code>
+API for construction of the Context class.</p>
+<p>See docs for <code class="docutils literal notranslate"><span class="pre">Context</span></code> and <code class="docutils literal notranslate"><span class="pre">make_context</span></code> for more information.</p>
 <table class="autosummary longtable table autosummary">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.Context.html#dodiscover.Context" title="dodiscover.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Context</span></code></a>(variables, latents, init_graph, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_context</span></code></a>([context])</p></td>
+<td><p>Create a new ContextBuilder instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a>()</p></td>
+<td><p>A builder class for creating Context objects ergonomically.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context.Context</span></code></a>(variables, latents, ...)</p></td>
 <td><p>Context of assumptions, domain knowledge and data.</p></td>
 </tr>
 </tbody>
@@ -431,6 +471,9 @@ object rather than just data. See docs for <code class="docutils literal notrans
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC" title="dodiscover.constraint.PC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PC</span></code></a>(ci_estimator[, alpha, min_cond_set_size, ...])</p></td>
 <td><p>Peter and Clarke (PC) algorithm for causal discovery.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.FCI.html#dodiscover.constraint.FCI" title="dodiscover.constraint.FCI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FCI</span></code></a>(ci_estimator[, alpha, ...])</p></td>
+<td><p>The Fast Causal Inference (FCI) algorithm for causal discovery.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -444,6 +487,25 @@ object rather than just data. See docs for <code class="docutils literal notrans
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.metrics.confusion_matrix_networks.html#dodiscover.metrics.confusion_matrix_networks" title="dodiscover.metrics.confusion_matrix_networks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confusion_matrix_networks</span></code></a>(true_graph, pred_graph)</p></td>
 <td><p>Compute the confusion matrix comparing a predicted graph from the true graph.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="typing">
+<h2>Typing<a class="headerlink" href="#typing" title="Permalink to this heading">#</a></h2>
+<p>We define some custom types to allow 3rd party packages
+to work with <code class="docutils literal notranslate"><span class="pre">mypy</span></code>.</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.typing.Column.html#dodiscover.typing.Column" title="dodiscover.typing.Column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Column</span></code></a></p></td>
+<td><p>The central part of internal API.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.typing.SeparatingSet.html#dodiscover.typing.SeparatingSet" title="dodiscover.typing.SeparatingSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeparatingSet</span></code></a></p></td>
+<td><p>The central part of internal API.</p></td>
 </tr>
 </tbody>
 </table>

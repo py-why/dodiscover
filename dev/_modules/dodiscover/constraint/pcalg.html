@@ -244,10 +244,14 @@
 <span class="sd">        Maximum size of the conditioning set, by default None. Used to limit</span>
 <span class="sd">        the computation spent on the algorithm.</span>
 <span class="sd">    max_combinations : int, optional</span>
-<span class="sd">        Maximum number of tries with a conditioning set chosen from the set of possible</span>
-<span class="sd">        parents still, by default None. If None, then will not be used. If set, then</span>
-<span class="sd">        the conditioning set will be chosen lexographically based on the sorted</span>
-<span class="sd">        test statistic values of &#39;ith Pa(X) -&gt; X&#39;, for each possible parent node of &#39;X&#39;.</span>
+<span class="sd">        The maximum number of conditional independence tests to run from the set</span>
+<span class="sd">        of possible conditioning sets. By default None, which means the algorithm will</span>
+<span class="sd">        check all possible conditioning sets. If ``max_combinations=n`` is set, then</span>
+<span class="sd">        for every conditioning set size, &#39;p&#39;, there will be at most &#39;n&#39; CI tests run</span>
+<span class="sd">        before the conditioning set size &#39;p&#39; is incremented. For controlling the size</span>
+<span class="sd">        of &#39;p&#39;, see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used</span>
+<span class="sd">        in conjunction with ``keep_sorted`` parameter to only test the &quot;strongest&quot;</span>
+<span class="sd">        dependences.</span>
 <span class="sd">    skeleton_method : SkeletonMethods</span>
 <span class="sd">        The method to use for testing conditional independence. Must be one of</span>
 <span class="sd">        (&#39;neighbors&#39;, &#39;complete&#39;, &#39;neighbors_path&#39;). See Notes for more details.</span>

@@ -1,0 +1,6 @@
+﻿dodiscover.typing.SeparatingSet
+===============================
+
+.. currentmodule:: dodiscover.typing
+
+.. autodata:: SeparatingSet

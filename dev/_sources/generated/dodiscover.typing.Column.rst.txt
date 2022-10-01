@@ -1,0 +1,6 @@
+﻿dodiscover.typing.Column
+========================
+
+.. currentmodule:: dodiscover.typing
+
+.. autodata:: Column

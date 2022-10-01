@@ -1,0 +1,12 @@
+﻿dodiscover.make_context
+=======================
+
+.. currentmodule:: dodiscover
+
+.. autofunction:: make_context
+
+.. include:: dodiscover.make_context.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

@@ -208,7 +208,7 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -262,6 +262,24 @@
 
 
 <span class="k">def</span> <span class="nf">_find_neighbors_along_path</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Find neighbors that are along a path from start to end.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    G : nx.Graph</span>
+<span class="sd">        The graph.</span>
+<span class="sd">    start : Node</span>
+<span class="sd">        The starting node.</span>
+<span class="sd">    end : Node</span>
+<span class="sd">        The ending node.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nbrs : Set</span>
+<span class="sd">        The set of neighbors that are also along a path towards</span>
+<span class="sd">        the &#39;end&#39; node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">_assign_weight</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">edge_attr</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="n">node</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">==</span> <span class="n">node</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
@@ -500,7 +518,6 @@
 
         <span class="c1"># get the initialized graph</span>
         <span class="n">adj_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">init_graph</span>
-        <span class="n">nodes</span> <span class="o">=</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="c1"># track progress of the algorithm for which edges to remove to ensure stability</span>
@@ -524,14 +541,6 @@
         <span class="n">nx</span><span class="o">.</span><span class="n">set_edge_attributes</span><span class="p">(</span><span class="n">adj_graph</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="s2">&quot;test_stat&quot;</span><span class="p">)</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">set_edge_attributes</span><span class="p">(</span><span class="n">adj_graph</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s2">&quot;pvalue&quot;</span><span class="p">)</span>
 
-        <span class="c1"># store the list of potential adjacencies for every node</span>
-        <span class="c1"># which is tracked and updated in the algorithm</span>
-        <span class="n">adjacency_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
-            <span class="n">adjacency_mapping</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">other_node</span> <span class="k">for</span> <span class="n">other_node</span> <span class="ow">in</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">if</span> <span class="n">other_node</span> <span class="o">!=</span> <span class="n">node</span>
-            <span class="p">]</span>
-
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Running skeleton phase with: </span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;max_combinations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_combinations_</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -551,10 +560,7 @@
             <span class="k">for</span> <span class="n">x_var</span> <span class="ow">in</span> <span class="n">adj_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
                 <span class="n">possible_adjacencies</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adj_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">x_var</span><span class="p">))</span>
 
-                <span class="c1"># keep track of the size of the adjacency set of &#39;X&#39; without &#39;Y&#39;</span>
-                <span class="n">size_adjacencies_x</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_adjacencies</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;On node </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Considering node </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">...</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">y_var</span> <span class="ow">in</span> <span class="n">possible_adjacencies</span><span class="p">:</span>
                     <span class="c1"># a node cannot be a parent to itself in DAGs</span>
@@ -574,8 +580,8 @@
                     <span class="p">)</span>
 
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Adj(</span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">) without </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2"> with size=</span><span class="si">{</span><span class="n">size_adjacencies_x</span><span class="si">}</span><span class="s2"> with &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;p=</span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">. The possible variables to condition on are: &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Adj(</span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">) without </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2"> with size=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">possible_adjacencies</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;with p=</span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">. The possible variables to condition on are: &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">possible_variables</span><span class="si">}</span><span class="s2">.&quot;</span>
                     <span class="p">)</span>
 
@@ -583,10 +589,10 @@
                     <span class="c1"># cardinality of the conditioning set</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_variables</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size_cond_set</span><span class="p">:</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Breaking for </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">size_adjacencies_x</span><span class="si">}</span><span class="s2">, &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Breaking for </span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">possible_adjacencies</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">possible_variables</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="p">)</span>
-                        <span class="k">break</span>
+                        <span class="k">continue</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>
 
