@@ -11,11 +11,6 @@ class Graph(Protocol):
         """Return an iterable over nodes in graph."""
         pass
 
-    @property
-    def edge_types(self) -> Iterable:
-        """Return an iterable over edge tuples in graph."""
-        pass
-
     def edges(self, data=None) -> Iterable:
         """Return an iterable over edge tuples in graph."""
         pass
