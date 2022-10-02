@@ -84,9 +84,7 @@ def confusion_matrix_networks(
 
 
 def structure_hamming_dist(
-    true_graph: NetworkxGraph,
-    pred_graph: NetworkxGraph,
-    double_for_anticausal: bool = True
+    true_graph: NetworkxGraph, pred_graph: NetworkxGraph, double_for_anticausal: bool = True
 ) -> float:
     """Compute structural hamming distance.
 
