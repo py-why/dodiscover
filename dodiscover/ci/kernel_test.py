@@ -2,26 +2,34 @@ from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 from scipy import stats
 from sklearn.metrics import pairwise_distances, pairwise_kernels
 from sklearn.metrics.pairwise import PAIRWISE_KERNEL_FUNCTIONS
-
-from numpy.typing import NDArray
 
 from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
 
 
-def compute_kernel(X: NDArray, Y: Optional[NDArray]=None, metric: str='rbf', distance_metric: str='euclidean',
-    kwidth: Optional[float]=None, centered: bool=True, n_jobs: Optional[int]=None) -> Tuple[NDArray, float]:
+def compute_kernel(
+    X: NDArray,
+    Y: Optional[NDArray] = None,
+    metric: str = "rbf",
+    distance_metric: str = "euclidean",
+    kwidth: Optional[float] = None,
+    centered: bool = True,
+    n_jobs: Optional[int] = None,
+) -> Tuple[NDArray, float]:
     """Compute a kernel matrix and corresponding width.
+
+    Also optionally estimates the kernel width parameter.
 
     Parameters
     ----------
-    X : NDArray of shape (n_samples, n_features_x)
+    X : NDArray of shape (n_samples_X, n_features_x)
         The X array.
-    Y : NDArray of shape (n_samples, n_features_y), optional
+    Y : NDArray of shape (n_samples_Y, n_features_y), optional
         The Y array, by default None.
     metric : str, optional
         The metric to compute the kernel function, by default 'rbf'.
@@ -41,7 +49,7 @@ def compute_kernel(X: NDArray, Y: Optional[NDArray]=None, metric: str='rbf', dis
 
     Returns
     -------
-    kernel : NDArray of shape (n_features_x, n_features_x) or (n_features_x, n_features_y)
+    kernel : NDArray of shape (n_samples_X, n_samples_X) or (n_samples_X, n_samples_Y)
         The kernel matrix.
     med : float
         The estimated kernel width.
@@ -99,6 +107,7 @@ def _center_kernel(K: NDArray):
     n = K.shape[0]
     H = np.eye(n) - 1.0 / n
     return H.dot(K).dot(H)
+
 
 class KernelCITest(BaseConditionalIndependenceTest):
     _allow_multivariate_input: bool = True
@@ -240,24 +249,31 @@ class KernelCITest(BaseConditionalIndependenceTest):
             # when running CI, \ddot{X} comprises of (X, Z)
             X = np.concatenate((X, Z), axis=1)
 
-            Kz, sigma_z = self._compute_kernel(
+            Kz, sigma_z = compute_kernel(
                 Z,
-                distance_metric="l2",
+                distance_metric="euclidean",
                 metric=self.kernel_z,
                 kwidth=self.kwidth_z,
                 centered=True,
+                n_jobs=self.n_jobs,
             )
 
         # compute the centralized kernel matrices of each the datasets
-        Kx, sigma_x = self._compute_kernel(
+        Kx, sigma_x = compute_kernel(
             X,
-            distance_metric="l2",
+            distance_metric="euclidean",
             metric=self.kernel_x,
             kwidth=self.kwidth_x,
             centered=True,
+            n_jobs=self.n_jobs,
         )
-        Ky, sigma_y = self._compute_kernel(
-            Y, distance_metric="l2", metric=self.kernel_y, kwidth=self.kwidth_y, centered=True
+        Ky, sigma_y = compute_kernel(
+            Y,
+            distance_metric="euclidean",
+            metric=self.kernel_y,
+            kwidth=self.kwidth_y,
+            centered=True,
+            n_jobs=self.n_jobs,
         )
 
         if Z is None:
@@ -422,48 +438,3 @@ class KernelCITest(BaseConditionalIndependenceTest):
         # of chi-squared random variables weighted by the eigenvalue products
         null_dist = eig_uu.T.dot(f_rand)
         return null_dist
-
-    def _compute_kernel(
-        self, X, Y=None, distance_metric="l2", metric="rbf", kwidth=None, centered=True
-    ):
-        # if the width of the kernel is not set, then use the median trick to set the
-        # kernel width based on the data X
-        if kwidth is None:
-            # Note: sigma = 1 / np.sqrt(kwidth)
-            # compute N x N pairwise distance matrix
-            dists = pairwise_distances(X, metric=distance_metric, n_jobs=self.n_jobs)
-
-            # compute median of off diagonal elements
-            med = np.median(dists[dists > 0])
-
-            # prevents division by zero when used on label vectors
-            med = med if med else 1
-        else:
-            med = kwidth
-
-        extra_kwargs = dict()
-
-        if metric == "rbf":
-            # compute the normalization factor of the width of the Gaussian kernel
-            gamma = 1.0 / (2 * (med**2))
-            extra_kwargs["gamma"] = gamma
-        elif metric == "polynomial":
-            degree = 2
-            extra_kwargs["degree"] = degree
-
-        # compute the potentially pairwise kernel
-        kernel = pairwise_kernels(X, Y=Y, metric=metric, n_jobs=self.n_jobs, **extra_kwargs)
-
-        if centered:
-            kernel = self._center_kernel(kernel)
-        return kernel, med
-
-    def _center_kernel(self, K):
-        """Centers the kernel matrix.
-
-        Applies a transformation H * K * H, where H is a diagonal matrix with 1/n along
-        the diagonal.
-        """
-        n = K.shape[0]
-        H = np.eye(n) - 1.0 / n
-        return H.dot(K).dot(H)
