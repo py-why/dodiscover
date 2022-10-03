@@ -109,9 +109,42 @@ def _estimate_kwidth(data, method="scott"):
 
 
 class BregmanCDTest(BaseConditionalDiscrepancyTest):
+    """Bregman divergence conditional discrepancy test.
+
+    Tests the equality of conditional distributions using a kernel approach
+    to estimate Bregman divergences outlined in :footcite:`Yu2020Bregman`.
+
+    Parameters
+    ----------
+    metric : str, optional
+        _description_, by default 'rbf'
+    distance_metric : str, optional
+        _description_, by default 'euclidean'
+    kwidth : float, optional
+        _description_, by default None
+    null_reps : int, optional
+        _description_, by default 1000
+    n_jobs : int, optional
+        _description_, by default None
+    random_state : _type_, optional
+        _description_, by default None
+
+    References
+    ----------
+    .. footbibliography::
+    """
+
     def __init__(
-        self, kwidth: float = None, null_reps: int = 1000, n_jobs: int = None, random_state=None
+        self,
+        metric: str = "rbf",
+        distance_metric: str = "euclidean",
+        kwidth: float = None,
+        null_reps: int = 1000,
+        n_jobs: int = None,
+        random_state=None,
     ) -> None:
+        self.metric = metric
+        self.distance_metric = distance_metric
         self.kwidth = kwidth
         self.null_reps = null_reps
         self.n_jobs = n_jobs
@@ -158,8 +191,20 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         Cx2y2 = corrent_matrix(np.hstack((X2, Y2)), kwidth=self.kwidth)
 
         # compute the centered correntropy matrices for just C_x^1 and C_x^2
-        Cx1 = corrent_matrix(X1, kwidth=self.kwidth)
-        Cx2 = corrent_matrix(X2, kwidth=self.kwidth)
+        Cx1 = corrent_matrix(
+            X1,
+            metric=self.metric,
+            distance_metric=self.distance_metric,
+            kwidth=self.kwidth,
+            n_jobs=self.n_jobs,
+        )
+        Cx2 = corrent_matrix(
+            X2,
+            metric=self.metric,
+            distance_metric=self.distance_metric,
+            kwidth=self.kwidth,
+            n_jobs=self.n_jobs,
+        )
 
         # compute the conditional divergence with the Von Neumann div
         # D(p_1(y|x) || p_2(y|x))

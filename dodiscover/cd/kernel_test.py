@@ -93,6 +93,35 @@ def _default_regularization(K):
 
 
 class KernelCDTest(BaseConditionalDiscrepancyTest):
+    """Kernel conditional discrepancy test among conditional distributions.
+
+    Tests the equality of conditional distributions using a kernel approach
+    outlined in :footcite:`Park2021conditional`.
+
+    Parameters
+    ----------
+    distance_metric : str, optional
+        _description_, by default "euclidean"
+    metric : str, optional
+        _description_, by default "rbf"
+    l2 : _type_, optional
+        _description_, by default None
+    kwidth_x : _type_, optional
+        _description_, by default None
+    kwidth_y : _type_, optional
+        _description_, by default None
+    null_reps : int, optional
+        _description_, by default 1000
+    n_jobs : _type_, optional
+        _description_, by default None
+    random_state : _type_, optional
+        _description_, by default None
+
+    References
+    ----------
+    .. footbibliography::
+    """
+
     def __init__(
         self,
         distance_metric="euclidean",
