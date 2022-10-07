@@ -140,6 +140,12 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
           cache-version: "v1" # change to clear cache
+          args: "--with docs"
+      - run:
+          name: Check poetry package versions
+          command: |
+            poetry --version
+            poetry show
       - run:
           name: make linkcheck
           command: |
