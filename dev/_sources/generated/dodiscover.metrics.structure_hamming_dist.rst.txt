@@ -1,0 +1,12 @@
+﻿dodiscover.metrics.structure_hamming_dist
+=========================================
+
+.. currentmodule:: dodiscover.metrics
+
+.. autofunction:: structure_hamming_dist
+
+.. include:: dodiscover.metrics.structure_hamming_dist.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

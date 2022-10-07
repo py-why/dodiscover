@@ -35,6 +35,7 @@ Changelog
 - |Feature| Implement PC algorithm, :class:`dodiscover.constraint.PC` for learning causal structure from observational data under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`30`)
 - |Feature| Implement algorithm to learn skeleton using potentially d-separated sets (PDS), :class:`dodiscover.constraint.LearnSemiMarkovianSkeleton` for learning causal structure from observational data with latent confounders, by `Adam Li`_ (:pr:`50`)
 - |Feature| Implement FCI algorithm, :class:`dodiscover.constraint.FCI` for learning causal structure from observational data with latent confounders under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`52`)
+- |Feature| Implement Structural Hamming Distance metric to compare directed graphs, :func:`dodiscover.metrics.structure_hamming_dist`, by `Adam Li`_ (:pr:`55`)
 
 Code and Documentation Contributors
 -----------------------------------

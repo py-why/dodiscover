@@ -1,0 +1,6 @@
+﻿dodiscover.typing.NetworkxGraph
+===============================
+
+.. currentmodule:: dodiscover.typing
+
+.. autodata:: NetworkxGraph
