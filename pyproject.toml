@@ -134,7 +134,7 @@ rm examples/*.png
 rm examples/*.gv
 """
 
-type_check = 'mypy -p dodiscover --config-file pyproject.toml'
+type_check = 'mypy -p dodiscover -p tests --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 build_docs = 'make -C doc clean html'
