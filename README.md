@@ -4,7 +4,28 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![codecov](https://codecov.io/gh/py-why/dodiscover/branch/main/graph/badge.svg?token=H1reh7Qwf4)](https://codecov.io/gh/py-why/dodiscover)
 
-# dodiscover
+# What makes dodiscovery different from other causal discovery libraries?
+
+Why do we need another causal discovery library?  Here are a few design elements that differentiate dodiscover from other causal discovery libraries.
+
+## Ease of use
+
+An analyst should be able to get up and running quickly with causal discovery without having to know algorithmic details.
+dodiscover prioritizes the workflow over the algorithms, and provide defaults to get your workflow up and running quickly.
+
+## Practical 
+
+## Easy interface for causal assumptions
+
+Causal assumptions are required for all causal inferences.
+Modern causal effect inference methods have the user articulate their causal assumptions (e.g., in the form causal DAG) and guide identication and estimation based on those assumptions.
+
+In contrast, causal discovery libraries tend that enable identification of causal inferences attempt to make inferences robust to violations of assumptions, such as the presence of latent confounding variables.
+
+## Default assumption of latent variables
+
+
+In contrast, causal discovery methods
 
 DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a hypothesized causal graph for their situation, then they may use dodiscover to learn causal structure from their data (e.g. in the form of a graph).
 
