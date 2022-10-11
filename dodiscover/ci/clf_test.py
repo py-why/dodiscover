@@ -12,12 +12,13 @@ from sklearn.utils import check_random_state
 from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
+from .typing import Classifier
 
 
 class ClassifierCITest(BaseConditionalIndependenceTest):
     def __init__(
         self,
-        clf: sklearn.base.BaseEstimator,
+        clf: Classifier,
         metric: Callable = sklearn.metrics.accuracy_score,
         bootstrap: bool = False,
         n_iter: int = 20,
@@ -34,8 +35,10 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
 
         Parameters
         ----------
-        clf : instance of sklearn.base.BaseEstimator
-            An instance of a classification model.
+        clf : instance of sklearn.base.BaseEstimator or pytorch model
+            An instance of a classification model. If a PyTorch model is used,
+            then the user must pass the PyTorch model through ``skorch`` to turn
+            the Neural Network into an object that is sklearn-compliant API.
         metric : Callable of sklearn metric
             A metric function to measure the performance of the classification model.
         bootstrap : bool, optional
@@ -47,6 +50,38 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         test_size : Union[int, float], optional
             The size of the teset set, by default 0.25. If less than 1, then
             will take a fraction of ``n_samples``.
+        random_state : int, optional
+            The random seed that is used to seed via ``np.random.defaultrng``.
+
+        Notes
+        -----
+        A general problem with machine-learning prediction based approaches is, that they
+        don't find all kind of dependencies, only when they impact the expectation. For instance,
+        a dependency with respect to the variance would not be captured by the CCIT:
+
+        .. code-block:: python
+            import numpy as np
+            from dowhy.gcm import kernel_based, regression_based
+
+            X = np.random.normal(0, 1, 1000)
+            Y = []
+
+            for x in X:
+                Y.append(np.random.normal(0, abs(x)))
+
+            Y = np.array(Y)
+            Z = np.random.normal(0, 1, 1000)
+
+            print("Correct result:", kernel_based(X, Y, Z))
+            print("Wrong result", regression_based(X, Y, Z))
+
+            clf = RandomForestClassifier()
+            ci_estimator = ClassifierCITest(clf)
+
+            df = pd.DataFrame({'x': X, 'y': Y, 'z': Z})
+
+            _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
+            print("Wrong result", pvalue)
 
         References
         ----------
@@ -59,16 +94,18 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         self.n_iter = n_iter
         self.threshold = threshold
         self.test_size = test_size
+
+        # set the internal random state generator
         self.random_state = check_random_state(random_state)
 
     def _unconditional_shuffle(
         self, x_arr: NDArray, y_arr: NDArray
     ) -> Tuple[NDArray, NDArray, NDArray, NDArray]:
-        """Generate samples to emulate X independent of Y.
+        r"""Generate samples to emulate X independent of Y.
 
         Shuffles the Y samples, such that if there is any dependence among X and Y,
         they are broken and the resulting samples emulate those which came from
-        the distribution with :math:`X \perp Y`.
+        the distribution with :math:`X \\perp Y`.
 
         Parameters
         ----------
@@ -126,7 +163,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         """Generate dataset for CI testing as binary classification problem.
 
         Implements a nearest-neighbor bootstrap approach for generating samples from
-        the null hypothesis where :math:`X \perp Y | Z`.
+        the null hypothesis where :math:`X \\perp Y | Z`.
 
         Parameters
         ----------
@@ -188,11 +225,11 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
         # evaluate on test data and compute metric
         Y_pred = self.clf.predict(X_test)
         metric = self.metric(Y_test, Y_pred)
-        pvalue = 1.0
+        binary_pvalue = 1.0
 
         if not self.correct_bias:
             if metric < 0.5 - self.threshold:
-                pvalue = 0.0
+                binary_pvalue = 0.0
             metric = metric - 0.5
         else:
             n_dims_x = len(x_vars)
@@ -210,9 +247,9 @@ class ClassifierCITest(BaseConditionalIndependenceTest):
             biased_metric = self.metric(Y_test, Y_pred)
 
             if metric < biased_metric - self.threshold:
-                pvalue = 0.0
+                binary_pvalue = 0.0
             metric = metric - biased_metric
-        return metric, pvalue
+        return metric, binary_pvalue
 
     def test(
         self,

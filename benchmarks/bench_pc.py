@@ -17,13 +17,14 @@ to look at the impact of dimensionality on the PC algorithm.
 In the second benchmark, we increase the number of samples and evaluate
 how the PC algorithm performs as a result of increasing sample size.
 """
-import numpy as np
-import matplotlib.pyplot as plt
 import gc
 from datetime import datetime
 
-from dodiscover.constraint import PC
+import matplotlib.pyplot as plt
+import numpy as np
 from causallearn.search.ConstraintBased.PC import pc_alg
+
+from dodiscover.constraint import PC
 
 # to store the results
 scikit_classifier_results = []

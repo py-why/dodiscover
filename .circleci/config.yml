@@ -47,7 +47,7 @@ jobs:
           name: Install the latest version of Poetry
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python -
-            curl -sSL https://install.python-poetry.org | python3 -
+            curl -sSL https://install.python-poetry.org | python3 - --version 1.2.0
       - run:
           name: Set BASH_ENV
           command: |
@@ -67,7 +67,7 @@ jobs:
             sudo apt install libspatialindex-dev xdg-utils
       - python/install-packages:
           pkg-manager: poetry
-          args: "-E graph_func -E viz"
+          args: "-E graph_func -E viz --with docs"
           cache-version: "v1" # change to clear cache
       - run:
           name: Check poetry package versions
@@ -140,6 +140,12 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
           cache-version: "v1" # change to clear cache
+          args: "--with docs"
+      - run:
+          name: Check poetry package versions
+          command: |
+            poetry --version
+            poetry show
       - run:
           name: make linkcheck
           command: |

@@ -125,7 +125,7 @@ class CMITest(BaseConditionalIndependenceTest):
         hxz = scipy.special.digamma(k_xz)
         hyz = scipy.special.digamma(k_yz)
         hz = scipy.special.digamma(k_z)
-        val = (hxyz - (hxz + hyz - hz).mean())
+        val = hxyz - (hxz + hyz - hz).mean()
         return val
 
     def _preprocess_data(self, data: pd.DataFrame) -> pd.DataFrame:
@@ -186,7 +186,7 @@ class CMITest(BaseConditionalIndependenceTest):
         """
         n_samples, _ = data.shape
         if self.k < 1:
-            knn = max(1, int(self.k*n_samples))
+            knn = max(1, int(self.k * n_samples))
         else:
             knn = max(1, int(self.k))
         xz_cols = [x_var]

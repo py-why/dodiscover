@@ -6,7 +6,7 @@ import pandas as pd
 
 from dodiscover.typing import Column
 
-from .._protocol import GraphProtocol
+from .._protocol import Graph
 from .base import BaseConditionalIndependenceTest
 
 
@@ -17,13 +17,13 @@ class Oracle(BaseConditionalIndependenceTest):
 
     Parameters
     ----------
-    graph : nx.DiGraph | GraphProtocol
+    graph : nx.DiGraph | Graph
         The ground-truth causal graph.
     """
 
     _allow_multivariate_input: bool = True
 
-    def __init__(self, graph: GraphProtocol) -> None:
+    def __init__(self, graph: Graph) -> None:
         self.graph = graph
 
     def test(
@@ -72,9 +72,7 @@ class Oracle(BaseConditionalIndependenceTest):
         if isinstance(self.graph, nx.DiGraph):
             is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates)
         else:
-            from graphs import m_separated
-
-            is_sep = m_separated(self.graph, x_vars, y_vars, z_covariates)
+            is_sep = nx.m_separated(self.graph, x_vars, y_vars, z_covariates)
 
         if is_sep:
             pvalue = 1

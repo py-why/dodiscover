@@ -38,8 +38,8 @@ Graph protocols
 .. autosummary::
    :toctree: generated/
 
-   GraphProtocol
-   EquivalenceClassProtocol
+   Graph
+   EquivalenceClass
 
 
 Context for causal discovery
@@ -49,13 +49,19 @@ Rather than just data, in many cases structure learning
 has additional "context", in the form of apriori knowledge of
 the structure, or additional datasets from different environments.
 All structure learning algorithms in ``dodiscover`` pass in a ``Context``
-object rather than just data. See docs for ``Context`` for more information.
+object rather than just data. One should use our builder ``make_context``
+API for construction of the Context class. 
+
+See docs for ``Context`` and ``make_context`` for more information.
 
 .. currentmodule:: dodiscover
 .. autosummary::
    :toctree: generated/
 
-   Context
+   make_context
+   ContextBuilder
+   context.Context
+
 
 Constraint-based structure learning
 ===================================
@@ -65,4 +71,32 @@ Constraint-based structure learning
    :toctree: generated/
 
    LearnSkeleton
+   LearnSemiMarkovianSkeleton
    SkeletonMethods
+   PC
+   FCI
+
+Comparing causal discovery algorithms
+=====================================
+
+.. currentmodule:: dodiscover.metrics
+.. autosummary::
+   :toctree: generated/
+
+   confusion_matrix_networks
+   structure_hamming_dist
+
+
+Typing
+======
+
+We define some custom types to allow 3rd party packages
+to work with ``mypy``.
+
+.. currentmodule:: dodiscover.typing
+.. autosummary::
+   :toctree: generated/
+
+   Column
+   SeparatingSet
+   NetworkxGraph

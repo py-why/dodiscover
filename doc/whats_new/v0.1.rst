@@ -29,8 +29,13 @@ Changelog
 - |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
 - |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
 - |Feature| Implement skeleton learning method, :class:`dodiscover.constraint.LearnSkeleton` under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`20`)
+- |Feature| Add ContextBuilder class and make_context factory function for creating context objects. by `Chris Trevino`_ (:pr:`42`)
+- |Feature| Implement confusion matrix method for comparing networkx-like graphs, :func:`dodiscover.metrics.confusion_matrix_networks`, by `Adam Li`_ (:pr:`48`)
 - |Feature| Implement classification-based CI test (CCIT), :class:`dodiscover.ci.ClassifierCITest` under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`28`)
-
+- |Feature| Implement PC algorithm, :class:`dodiscover.constraint.PC` for learning causal structure from observational data under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`30`)
+- |Feature| Implement algorithm to learn skeleton using potentially d-separated sets (PDS), :class:`dodiscover.constraint.LearnSemiMarkovianSkeleton` for learning causal structure from observational data with latent confounders, by `Adam Li`_ (:pr:`50`)
+- |Feature| Implement FCI algorithm, :class:`dodiscover.constraint.FCI` for learning causal structure from observational data with latent confounders under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`52`)
+- |Feature| Implement Structural Hamming Distance metric to compare directed graphs, :func:`dodiscover.metrics.structure_hamming_dist`, by `Adam Li`_ (:pr:`55`)
 
 Code and Documentation Contributors
 -----------------------------------
@@ -39,3 +44,4 @@ Thanks to everyone who has contributed to the maintenance and improvement of
 the project since version inception, including:
 
 * `Adam Li`_
+* `Chris Trevino`_

@@ -1,11 +1,10 @@
-from typing import Any, Dict, List, Set
-
 import pandas as pd
 
-from dodiscover import GraphProtocol
+from dodiscover import Graph
+from dodiscover.typing import SeparatingSet
 
 
-def dummy_sample(G: GraphProtocol):
+def dummy_sample(G: Graph):
     """Sample an empty dataframe with columns as the nodes.
 
     Used for oracle testing.
@@ -14,7 +13,11 @@ def dummy_sample(G: GraphProtocol):
 
 
 def is_in_sep_set(
-    check_var, sep_set: Dict[str, Dict[str, List[Set[Any]]]], x_var, y_var, mode: str = "any"
+    check_var,
+    sep_set: SeparatingSet,
+    x_var,
+    y_var,
+    mode: str = "any",
 ):
     """Check that a variable is not in any separating set between 'X' and 'Y'.
 

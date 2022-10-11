@@ -111,7 +111,6 @@ numpydoc_xref_ignore = {
     "CPDAG",
     "PAG",
     "ADMG",
-    "GraphProtocol",
     # networkx
     "node",
     "nodes",
@@ -129,6 +128,11 @@ numpydoc_xref_ignore = {
     "n_estimated_nodes",
     "n_samples",
     "n_variables",
+    "n_classes",
+    "NDArray",
+    # deep learning
+    "pytorch",
+    "model",
 }
 numpydoc_xref_aliases = {
     # Networkx
@@ -142,8 +146,14 @@ numpydoc_xref_aliases = {
     "CPDAG": "dodiscover.CPDAG",
     "DAG": "dodiscover.DAG",
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
-    "Context": "dodiscover.Context",
+    "Context": "dodiscover.context.Context",
+    "PC": "dodiscover.PC",
+    "EquivalenceClass": "dodiscover.EquivalenceClass",
+    "Graph": "dodiscover.Graph",
     "Column": "dodiscover.typing.Column",
+    "NetworkxGraph": "dodiscover.typing.NetworkxGraph",
+    "SeparatingSet": "dodiscover.typing.SeparatingSet",
+    "ContextBuilder": "dodiscover.context_builder.ContextBuilder",
     # joblib
     "joblib.Parallel": "joblib.Parallel",
     # numpy
@@ -187,6 +197,7 @@ intersphinx_mapping = {
     "sklearn": ("https://scikit-learn.org/stable", None),
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
+    "torch": ("https://pytorch.org/docs/master/", None),
 }
 intersphinx_timeout = 5
 
@@ -267,4 +278,8 @@ html_context = {
 # resolve.
 
 nitpicky = True
-nitpick_ignore = []
+nitpick_ignore = [
+    ("py:class", "numpy._typing._generic_alias.ScalarType"),
+    ("py:class", "numpy._typing._array_like._SupportsArray"),
+    ("py:class", "numpy._typing._nested_sequence._NestedSequence"),
+]

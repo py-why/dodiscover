@@ -1,32 +1,33 @@
-from typing import Optional, Set, Union
+from typing import Any, Dict, Set
 
 import networkx as nx
-import pandas as pd
 
-from ._protocol import GraphProtocol
+from ._protocol import Graph
+from .typing import Column, NetworkxGraph
 
 
 class Context:
     """Context of assumptions, domain knowledge and data.
 
+    This should NOT be instantiated directly. One should instead
+    use `dodiscover.make_context` to build a Context data structure.
+
     Parameters
     ----------
-    data : pd.DataFrame
-        A dataset, consisting of samples as rows and columns as variables.
-    variables : Optional[Set], optional
-        Set of observed variables, by default None. If neither ``latents``,
+    variables : Set
+        Set of observed variables. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    latents : Optional[Set], optional
-        Set of latent "unobserved" variables, by default None. If neither ``latents``,
+    latents : Set
+        Set of latent "unobserved" variables. If neither ``latents``,
         nor ``variables`` is set, then it is presumed that ``variables`` consists
         of the columns of ``data`` and ``latents`` is the empty set.
-    init_graph : Optional[GraphProtocol], optional
-        The graph to start with, by default None.
-    included_edges : Optional[nx.Graph], optional
-        Included edges without direction, by default None.
-    excluded_edges : Optional[nx.Graph], optional
-        Excluded edges without direction, by default None.
+    init_graph : Graph
+        The graph to start with.
+    included_edges : nx.Graph
+        Included edges without direction.
+    excluded_edges : nx.Graph
+        Excluded edges without direction.
 
     Raises
     ------
@@ -40,66 +41,32 @@ class Context:
     priors and other structured contexts alongside the datasets. This class
     is used in conjunction with a discovery algorithm.
 
-    Setting the apriori explicit direction of an edge is not supported yet.
+    Setting the a priori explicit direction of an edge is not supported yet.
     """
+
+    _variables: Set[Column]
+    _latents: Set[Column]
+    _init_graph: Graph
+    _included_edges: nx.Graph
+    _excluded_edges: nx.Graph
+    _state_variables: Dict[str, Any]
 
     def __init__(
         self,
-        data: pd.DataFrame,
-        variables: Optional[Set] = None,
-        latents: Optional[Set] = None,
-        init_graph: Optional[GraphProtocol] = None,
-        included_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
-        excluded_edges: Optional[Union[nx.Graph, nx.DiGraph]] = None,
+        variables: Set[Column],
+        latents: Set[Column],
+        init_graph: Graph,
+        included_edges: NetworkxGraph,
+        excluded_edges: NetworkxGraph,
+        state_variables: Dict[str, Any],
     ) -> None:
-        # initialize and parse the set of variables, latents and others
-        columns = set(data.columns)
-        if variables is not None and latents is not None:
-            if columns - set(variables) != set(latents):
-                raise ValueError(
-                    "If variables and latents are set, then they must be "
-                    "include all columns in data."
-                )
-        elif variables is None and latents is not None:
-            variables = columns - set(latents)
-        elif latents is None and variables is not None:
-            latents = columns - set(variables)
-        elif variables is None and latents is None:
-            # when neither variables, nor latents is set, it is assumed
-            # that the data is all "not latent"
-            variables = columns
-            latents = set()
-        variables = set(variables)  # type: ignore
-        latents = set(latents)  # type: ignore
-
-        # initialize the starting graph
-        if init_graph is None:
-            graph = nx.complete_graph(variables, create_using=nx.Graph)
-        else:
-            graph = init_graph
-            if graph.nodes != variables:
-                raise ValueError(
-                    f"The nodes within the initial graph, {graph.nodes}, "
-                    f"do not match the nodes in the passed in data, {variables}."
-                )
-
-        # initialize set of fixed and included edges
-        if included_edges is None:
-            included_edges = nx.empty_graph(variables, create_using=nx.Graph)
-        if excluded_edges is None:
-            excluded_edges = nx.empty_graph(variables, create_using=nx.Graph)
-
         # set to class
-        self._data = data
+        self._state_variables = state_variables
         self._variables = variables
         self._latents = latents
-        self._init_graph = graph
+        self._init_graph = init_graph
         self._included_edges = included_edges
         self._excluded_edges = excluded_edges
-
-    @property
-    def data(self) -> pd.DataFrame:
-        return self._data
 
     @property
     def included_edges(self) -> nx.Graph:
@@ -110,5 +77,50 @@ class Context:
         return self._excluded_edges
 
     @property
-    def init_graph(self) -> GraphProtocol:
+    def init_graph(self) -> Graph:
         return self._init_graph
+
+    @property
+    def observed_variables(self) -> Set[Column]:
+        return self._variables
+
+    @property
+    def latent_variables(self) -> Set[Column]:
+        return self._latents
+
+    @property
+    def state_variables(self) -> Dict[str, Any]:
+        return self._state_variables
+
+    def add_state_variable(self, name: str, var: Any) -> None:
+        """Add a state variable.
+
+        Called by an algorithm to persist data objects that
+        are used in intermediate steps.
+
+        Parameters
+        ----------
+        name : str
+            The name of the state variable.
+        var : any
+            Any state variable.
+        """
+        self._state_variables[name] = var
+
+    def state_variable(self, name: str) -> Any:
+        """Get a state variable.
+
+        Parameters
+        ----------
+        name : str
+            The name of the state variable.
+
+        Returns
+        -------
+        state_var : Any
+            The state variable.
+        """
+        if name not in self._state_variables:
+            raise RuntimeError(f"{name} is not a state variable: {self._state_variables}")
+
+        return self._state_variables[name]

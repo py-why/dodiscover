@@ -10,9 +10,9 @@ DoDiscover is a Python library for causal discovery (causal structure learning).
 
 # Documentation
 
-See the [development version documentation](https://pywhy.github.io/dodiscover/dev/index.html).
+See the [development version documentation](https://py-why.github.io/dodiscover/dev/index.html).
 
-Or see [stable version documentation](https://pywhy.github.io/dodiscover/stable/index.html)
+Or see [stable version documentation](https://py-why.github.io/dodiscover/stable/index.html)
 
 # Installation
 

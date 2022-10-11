@@ -1,24 +1,16 @@
-import dowhy.gcm as gcm
 import networkx as nx
-import numpy as np
-import pandas as pd
 import pytest
 
 from dodiscover.ci import FisherZCITest, GSquareCITest, KernelCITest, Oracle
+from dodiscover.constraint.utils import dummy_sample
 
-seed = 12345
-rng = np.random.RandomState(seed=seed)
-func_z = rng.negative_binomial(n=1, p=0.25)
-func_x = rng.binomial(n=1, p=0.4)
-func_y = rng.binomial(n=1, p=0.2)
-data = pd.DataFrame(data=dict(x=func_x, y=func_y, z=func_z))
-
-# construct the SCM and the corresponding causal graph
-graph = nx.DiGraph([("x", "y"), ("z", "y")])
-causal_model = gcm.StructuralCausalModel(graph=graph)
-gcm.auto.assign_causal_mechanisms(causal_model, data)
-gcm.fit(causal_model, data)
-sample_df = gcm.draw_samples(causal_model, num_samples=10)
+ground_truth_graph = nx.DiGraph(
+    [
+        ("x", "y"),
+        ("z", "y"),
+    ]
+)
+sample_df = dummy_sample(ground_truth_graph)
 
 
 @pytest.mark.parametrize(
@@ -27,7 +19,7 @@ sample_df = gcm.draw_samples(causal_model, num_samples=10)
         KernelCITest(),
         GSquareCITest(),
         FisherZCITest(),
-        Oracle(graph),
+        Oracle(ground_truth_graph),
     ],
 )
 def test_ci_tests(ci_estimator):

@@ -4,7 +4,7 @@ from flaky import flaky
 from sklearn.ensemble import RandomForestClassifier
 
 from dodiscover.ci import ClassifierCITest
-from dodiscover.ci.simulate import cos_additive_gaussian
+from dodiscover.ci.simulate import nonlinear_additive_gaussian
 
 seed = 12345
 rng = np.random.RandomState(seed)
@@ -37,7 +37,7 @@ def test_clf_with_nonlinear_cos_additive():
     n_samples = 4000
 
     # create input for the CI test
-    X, Y, Z = cos_additive_gaussian(model_type="ci", n_samples=n_samples, random_state=rng)
+    X, Y, Z = nonlinear_additive_gaussian(model_type="ci", n_samples=n_samples, random_state=rng)
     df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
 
     clf = RandomForestClassifier(random_state=rng)
@@ -50,7 +50,7 @@ def test_clf_with_nonlinear_cos_additive():
     assert pvalue > 0.05
 
     # create input for the ind test
-    X, Y, Z = cos_additive_gaussian(model_type="ind", n_samples=n_samples, random_state=rng)
+    X, Y, Z = nonlinear_additive_gaussian(model_type="ind", n_samples=n_samples, random_state=rng)
     df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
 
     clf = RandomForestClassifier(random_state=rng)
@@ -65,7 +65,7 @@ def test_clf_with_nonlinear_cos_additive():
     assert pvalue > 0.05
 
     # create input for the dep test
-    X, Y, Z = cos_additive_gaussian(model_type="dep", n_samples=n_samples, random_state=rng)
+    X, Y, Z = nonlinear_additive_gaussian(model_type="dep", n_samples=n_samples, random_state=rng)
     df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
 
     clf = RandomForestClassifier(random_state=rng)

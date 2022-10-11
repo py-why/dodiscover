@@ -20,9 +20,13 @@ classifiers = [
 ]
 keywords = ['causality', 'graphs', 'causal-inference', 'graphical-model']
 
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry-dynamic-versioning]
 enable = true
-vcs = "git"
+vsc = "git"
 
 [tool.poetry-dynamic-versioning.substitution]
 files = ["dodiscover/__init__.py"]
@@ -36,38 +40,43 @@ exclude = ['*tests', '*testdata']
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
-beartype = "^0.10.4"
 numpy = "^1.23.0"
 scipy = "^1.9.0"
-networkx = "^2.8.3"
 scikit-learn = "^1.1.0"
-pandas = "^1.1"
+pandas = "^1.5.0"
 importlib-resources = { version = "*", python = "<3.9" }
-graphs = { git = "https://github.com/py-why/graphs.git", branch = 'main', optional = true }
+networkx = { git = "https://github.com/adam2392/networkx.git", branch = 'mixededge' }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
-# pywhy-graphs = { path = "../pywhy-graphs", develop = true }
 pygraphviz = { version = "*", optional = true }
 
-# TODO: the below needs to be refactored into separate dev-dependencies
-# https://github.com/python-poetry/poetry/is
-# it is inefficient to have to install every single dependencey to run
-# e.g. a style check.
-[tool.poetry.dev-dependencies]
-flaky = "^3.7.0"
-pytest = "^7.1.2"
-pytest-cov = "^3.0.0"
-mypy = "^0.971"
+[tool.poetry.group.style]
+optional = true
+[tool.poetry.group.style.dependencies]
 poethepoet = "^0.16.0"
+mypy = "^0.971"
 black = "^22.6.0"
 isort = "^5.10.1"
 flake8 = "^5.0.4"
 bandit = "^1.7.4"
-portray = "^1.7.0"
-semversioner = "^1.1.0"
 pydocstyle = "^6.1.1"
 codespell = "^2.1.0"
-matplotlib = { version = "^3.5" }
+toml = "^0.10.2"
+
+[tool.poetry.group.test]
+optional = true
+[tool.poetry.group.test.dependencies]
+poethepoet = "^0.16.0"
+pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
 memory_profiler = { version = "^0.60.0" }
+flaky = "^3.7.0"
+
+[tool.poetry.group.docs]
+optional = true
+[tool.poetry.group.docs.dependencies]
+poethepoet = "^0.16.0"
+portray = "^1.7.0"
+matplotlib = { version = "^3.5" }
 numpydoc = { version = "^1.4" }
 pydata-sphinx-theme = { version = "^0.9.0" }
 sphinx = { version = "^5.1.1" }
@@ -77,18 +86,16 @@ sphinx-copybutton = { version = "^0.5.0" }
 sphinx-gallery = { version = "^0.11.0" }
 sphinx_rtd_theme = { version = "^1.0.0" }
 graphviz = { version = "^0.20.1" }
-dowhy = { version = "^0.8" }
 ipython = { version = "^7.4.0" }
 nbsphinx = { version = "^0.8" }
+dowhy = { version = "^0.8" }
+typing-extensions = { version = "*" }         # needed in dowhy's package 
+joblib = { version = "^1.1.0" }               # needed in dowhy's package
+tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 
 [tool.poetry.extras]
-graph_func = ['pywhy-graphs', 'graphs']
+graph_func = ['pywhy-graphs']
 viz = ['pygraphviz']
-
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.portray]
 output_dir = ['site']
@@ -106,10 +113,36 @@ _codespell = 'codespell dodiscover/ doc/ examples/ --ignore-words=.codespelligno
 _changelog = 'semversioner changelog > CHANGELOG.md'
 _apply_version = 'semversioner release'
 
-type_check = 'mypy -p dodiscover --config-file pyproject.toml'
+# Note: Shell commands will only work on systems with POSIX, which
+# is not necessarily in Windows
+_clean_pyc.shell = """find . -name "*.pyc" | xargs rm -f"""
+_clean_so.shell = """
+find . -name "*.so" | xargs rm -f
+find . -name "*.pyd" | xargs rm -f
+"""
+_clean_cache.shell = """
+find . -name "__pycache__" | xargs rm -rf
+"""
+_clean_build = 'rm -rf _build build dist dodiscover.egg-info'
+_clean_ctags = 'rm -f tags'
+_clean_test = """
+rm -rf .pytest_cache .mypy_cache .ipynb_checkpoints
+rm junit-results.xml
+rm coverage.xml
+rm .coverage
+rm examples/*.png
+rm examples/*.gv
+"""
+
+type_check = 'mypy -p dodiscover -p tests --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
-build_docs = 'make build-docs'
+build_docs = 'make -C doc clean html'
+
+[[tool.poe.tasks.clean]]
+# '_clean_cache', '_clean_pyc', '_clean_so'
+sequence = ['_clean_cache', '_clean_pyc', '_clean_so', '_clean_build', '_clean_ctags', '_clean_test']
+ignore_fail = 'return_non_zero'
 
 [[tool.poe.tasks.lint]]
 sequence = ['_flake8', '_bandit', '_codespell', '_pydocstyle']
@@ -143,7 +176,6 @@ extend-exclude = '''
     | \.github
     | setup.py
     | docs/
-    | examples/
 )
 '''
 
@@ -173,6 +205,8 @@ no_site_packages = true
 minversion = '6.0'
 addopts = '--durations 20 --junit-xml=junit-results.xml --verbose'
 filterwarnings = []
+log_cli = true
+log_cli_level = 'ERROR'
 
 [tool.coverage.run]
 branch = true

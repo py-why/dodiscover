@@ -5,10 +5,8 @@ import pandas as pd
 import scipy.special
 import sklearn
 import sklearn.metrics
-from numpy.typing import NDArray
-from sklearn.neighbors import NearestNeighbors
 from sklearn.utils import check_random_state
-from sklearn.metrics import accuracy_score
+
 from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest
@@ -22,8 +20,8 @@ def f_divergence_score(y_stat_q, y_stat_p):
     sake of gradient descent.
 
     The f-divergence bound gives an upper bound on KL-divergence:
-    .. math:: 
-    
+    .. math::
+
         $$D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]$$
 
     Parameters
@@ -43,7 +41,8 @@ def f_divergence_score(y_stat_q, y_stat_p):
 
 
 class ClassifierCMITest(BaseConditionalIndependenceTest):
-    def __init__(self, 
+    def __init__(
+        self,
         clf: sklearn.base.BaseEstimator,
         metric: Callable = f_divergence_score,
         bootstrap: bool = False,
@@ -51,7 +50,8 @@ class ClassifierCMITest(BaseConditionalIndependenceTest):
         correct_bias: bool = True,
         threshold: float = 0.03,
         test_size: Union[int, float] = 0.3,
-        random_state: Optional[int] = None,) -> None:
+        random_state: Optional[int] = None,
+    ) -> None:
 
         self.clf = clf
         self.metric = metric
@@ -62,8 +62,13 @@ class ClassifierCMITest(BaseConditionalIndependenceTest):
         self.test_size = test_size
         self.random_state = check_random_state(random_state)
 
-
-    def test(self, df: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], z_covariates: Optional[Set[Column]] = None) -> Tuple[float, float]:
+    def test(
+        self,
+        df: pd.DataFrame,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
+        z_covariates: Optional[Set[Column]] = None,
+    ) -> Tuple[float, float]:
         x_var = x_vars[0]
         y_var = y_vars[0]
 
@@ -72,7 +77,7 @@ class ClassifierCMITest(BaseConditionalIndependenceTest):
         if max(0, cmi_est) < self.threshold:
             pvalue = 0.0
         else:
-            pvalue = 1.0  
+            pvalue = 1.0
 
         return cmi_est, pvalue
 
