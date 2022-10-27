@@ -48,6 +48,7 @@ importlib-resources = { version = "*", python = "<3.9" }
 networkx = "^2.8.8"
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
 pygraphviz = { version = "*", optional = true }
+bnlearn = { git = "https://github.com/erdogant/bnlearn.git", branch = 'master', optional = true }
 
 [tool.poetry.group.style]
 optional = true
@@ -96,6 +97,7 @@ tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 [tool.poetry.extras]
 graph_func = ['pywhy-graphs']
 viz = ['pygraphviz']
+data = ['bnlearn']
 
 [tool.portray]
 output_dir = ['site']
