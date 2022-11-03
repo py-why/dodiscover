@@ -103,3 +103,9 @@ def nonlinear_additive_gaussian(
         Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var))
 
     return X, Y, Z
+
+
+def vector_auto_regressive_from_summary(
+    summary_G, max_lag=1, n_times=1000, random_state: int = None
+):
+    pass

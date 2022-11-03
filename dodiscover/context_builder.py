@@ -1,11 +1,12 @@
-from copy import copy, deepcopy
+from copy import deepcopy
+from itertools import product
 from typing import Any, Dict, Optional, Set, Tuple, cast
 
 import networkx as nx
 import pandas as pd
 
-from ._protocol import Graph
-from .context import Context
+from ._protocol import TimeSeriesGraph
+from .context import Context, TimeSeriesContext
 from .typing import Column, NetworkxGraph
 
 
@@ -17,15 +18,19 @@ class ContextBuilder:
     `dodiscover.make_context` to build a Context data structure.
     """
 
-    _graph: Optional[Graph] = None
+    _graph: Optional[nx.Graph] = None
     _included_edges: Optional[NetworkxGraph] = None
     _excluded_edges: Optional[NetworkxGraph] = None
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
     _state_variables: Dict[str, Any] = dict()
 
-    def graph(self, graph: Graph) -> "ContextBuilder":
-        """Set the partial graph to start with.
+    def init_graph(self, graph: nx.Graph) -> "ContextBuilder":
+        """Set the initial partial undirected graph to start with.
+
+        For example, this could be the complete graph to start with, if there is
+        no prior knowledge. Or this could be a graph that is a continuation of a
+        previous causal discovery algorithm.
 
         Parameters
         ----------
@@ -40,18 +45,12 @@ class ContextBuilder:
         self._graph = graph
         return self
 
-    def edges(
-        self,
-        include: Optional[NetworkxGraph] = None,
-        exclude: Optional[NetworkxGraph] = None,
-    ) -> "ContextBuilder":
-        """Set edge constraints to apply in discovery.
+    def excluded_edges(self, edges: NetworkxGraph) -> "ContextBuilder":
+        """Set excluded non-directional edge constraints to apply in discovery.
 
         Parameters
         ----------
-        included : Optional[NetworkxGraph]
-            Edges that should be included in the resultant graph
-        excluded : Optional[NetworkxGraph]
+        edges : Optional[NetworkxGraph]
             Edges that must be excluded in the resultant graph
 
         Returns
@@ -59,8 +58,33 @@ class ContextBuilder:
         self : ContextBuilder
             The builder instance
         """
-        self._included_edges = include
-        self._excluded_edges = exclude
+        self._excluded_edges = edges
+        return self
+
+    def included_edges(self, edges: NetworkxGraph) -> "ContextBuilder":
+        """Set included non-directional edge constraints to apply in discovery.
+
+        Parameters
+        ----------
+        edges : Optional[NetworkxGraph]
+            Edges that must be included in the resultant graph
+
+        Returns
+        -------
+        self : ContextBuilder
+            The builder instance
+        """
+        self._included_edges = edges
+        return self
+
+    def latent_variables(self, latents: Set[Column]):
+        """Latent variables."""
+        self._latent_variables = latents
+        return self
+
+    def observed_variables(self, observed: Set[Column]):
+        """Observed variables."""
+        self._observed_variables = observed
         return self
 
     def variables(
@@ -145,13 +169,15 @@ class ContextBuilder:
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
 
+        # initialize an empty graph object as the default for included/excluded edges
         empty_graph = lambda: nx.empty_graph(self._observed_variables, create_using=nx.Graph)
+
         return Context(
             init_graph=self._interpolate_graph(),
             included_edges=self._included_edges or empty_graph(),
             excluded_edges=self._excluded_edges or empty_graph(),
-            variables=self._observed_variables,
-            latents=self._latent_variables or set(),
+            observed_variables=self._observed_variables,
+            latent_variables=self._latent_variables or set(),
             state_variables=self._state_variables,
         )
 
@@ -188,7 +214,7 @@ class ContextBuilder:
             raise ValueError("Must set variables() before building Context.")
 
         complete_graph = lambda: nx.complete_graph(self._observed_variables, create_using=nx.Graph)
-        has_all_variables = lambda g: set(g.nodes) == set(self._observed_variables)
+        has_all_variables = lambda g: set(g.nodes) == self._observed_variables
 
         # initialize the starting graph
         if self._graph is None:
@@ -200,6 +226,109 @@ class ContextBuilder:
                     f"do not match the nodes in the passed in data, {self._observed_variables}."
                 )
             return self._graph
+
+
+class TimeSeriesContextBuilder(ContextBuilder):
+    """A builder class for creating TimeSeriesContext objects ergonomically.
+
+    The context builder provides a way to capture assumptions, domain knowledge,
+    and data relevant for time-series. This should NOT be instantiated directly.
+    One should instead use `dodiscover.make_ts_context` to build a TimeSeriesContext
+    data structure.
+    """
+
+    _contemporaneous_edges: Optional[bool] = None
+    _max_lag: Optional[int] = None
+    _included_lag_edges: Optional[TimeSeriesGraph] = None
+    _exccluded_lag_edges: Optional[TimeSeriesGraph] = None
+
+    def _interpolate_graph(self) -> nx.Graph:
+        from pywhy_graphs.classes import StationaryTimeSeriesGraph
+        from pywhy_graphs.classes.timeseries import complete_ts_graph
+
+        if self._observed_variables is None:
+            raise ValueError("Must set variables() before building Context.")
+        if self._max_lag is None:
+            raise ValueError("Must set max_lag before building Context.")
+
+        # initialize the starting graph
+        if self._graph is None:
+            include_contemporaneous = self._contemporaneous_edges or True
+            # create a complete graph over all nodes and time points
+            complete_graph = complete_ts_graph(
+                variables=self._observed_variables,
+                max_lag=self._max_lag,
+                include_contemporaneous=include_contemporaneous,
+                create_using=StationaryTimeSeriesGraph,
+            )
+            return complete_graph
+        else:
+            if set(self._graph.variables) != set(self._observed_variables):
+                raise ValueError(
+                    f"The nodes within the initial graph, {self._graph.nodes}, "
+                    f"do not match the nodes in the passed in data, {self._observed_variables}."
+                )
+            has_all_nodes = lambda g: set(g.nodes) == set(
+                product(self._observed_variables, range(self._max_lag + 1))
+            )
+            if not has_all_nodes(self._graph):
+                raise RuntimeError("Graph does not contain all possible nodes.")
+
+            return self._graph
+
+    def init_graph(self, graph: TimeSeriesGraph) -> "TimeSeriesContextBuilder":
+        """Set the initial time-series graph to begin causal discovery with."""
+        return super().init_graph(graph)
+
+    def max_lag(self, lag: int) -> "TimeSeriesContextBuilder":
+        """Set the maximum time lag."""
+        if lag <= 0:
+            raise ValueError(f"Lag in time-series graphs should be > 0, not {lag}.")
+        self._max_lag = lag
+        return self
+
+    def contemporaneous_edges(self, present: bool) -> "TimeSeriesContextBuilder":
+        """Whether or not to assume contemporaneous edges."""
+        self._contemporaneous_edges = present
+        return self
+
+    def included_lag_edges(self, edges: TimeSeriesGraph) -> "TimeSeriesContextBuilder":
+        """Apriori set lagged edges."""
+        self._included_lag_edges = edges
+        return self
+
+    def excluded_lag_edges(self, edges: TimeSeriesGraph) -> "TimeSeriesContextBuilder":
+        """Apriori excluded lagged edges."""
+        self._excluded_lag_edges = edges
+        return self
+
+    def build(self) -> TimeSeriesContext:
+        """Build a time-series context object."""
+        from pywhy_graphs.classes.timeseries import empty_ts_graph
+
+        if self._observed_variables is None:
+            raise ValueError("Could not infer variables from data or given arguments.")
+
+        if self._max_lag is None:
+            raise ValueError("Max lag must be set before building time-series context")
+
+        # initialize an empty graph object as the default for included/excluded edges
+        empty_graph = lambda: nx.empty_graph(self._observed_variables, create_using=nx.Graph)
+        empty_time_graph = lambda: empty_ts_graph(self._observed_variables, max_lag=self._max_lag)
+
+        # initialize assumption of contemporaneous edges by default
+        return TimeSeriesContext(
+            init_graph=self._interpolate_graph(),
+            included_edges=self._included_edges or empty_graph(),
+            excluded_edges=self._excluded_edges or empty_graph(),
+            observed_variables=self._observed_variables,
+            latent_variables=self._latent_variables or set(),
+            state_variables=self._state_variables,
+            included_lag_edges=self._included_lag_edges or empty_time_graph(),
+            excluded_lag_edges=self._included_lag_edges or empty_time_graph(),
+            max_lag=self._max_lag,
+            contemporaneous_edges=self._contemporaneous_edges or True,
+        )
 
 
 def make_context(context: Optional[Context] = None) -> ContextBuilder:
@@ -219,8 +348,23 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
     """
     result = ContextBuilder()
     if context is not None:
-        result.graph(deepcopy(context.init_graph))
-        result.edges(deepcopy(context.included_edges), deepcopy(context.excluded_edges))
-        result.variables(copy(context.observed_variables), copy(context.latent_variables))
-        result.state_variables(deepcopy(context.state_variables))
+        params = context.get_params()
+        for param, value in params.items():
+            if not hasattr(result, param):
+                raise RuntimeError(f"{param} is not a member of Context and ContexBuilder.")
+            # get the function for parameter
+            getattr(result, param)(deepcopy(value))
+    return result
+
+
+def make_ts_context(context: Optional[TimeSeriesContext] = None) -> TimeSeriesContextBuilder:
+    """Create a time-series context builder."""
+    result = TimeSeriesContextBuilder()
+    if context is not None:
+        params = context.get_params()
+        for param, value in params.items():
+            if not hasattr(result, param):
+                raise RuntimeError(f"{param} is not a member of Context and ContexBuilder.")
+            # get the function for parameter
+            getattr(result, param)(deepcopy(value))
     return result

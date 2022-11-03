@@ -1,6 +1,8 @@
-from typing import Dict, FrozenSet, Iterable, Protocol
+from typing import Dict, FrozenSet, Iterable, List, Protocol
 
 import networkx as nx
+
+from dodiscover.typing import Column
 
 
 class Graph(Protocol):
@@ -27,7 +29,7 @@ class Graph(Protocol):
         """Remove a node from the graph."""
         pass
 
-    def remove_edges_from(self, edges) -> None:
+    def remove_edges_from(self, edges: List) -> None:
         """Remove a set of edges from the graph."""
         pass
 
@@ -45,6 +47,25 @@ class Graph(Protocol):
         All nodes are connected by an undirected edge if there are any
         edges between the two.
         """
+        pass
+
+
+class TimeSeriesGraph(Graph, Protocol):
+    """A protocol for time-series graphs."""
+
+    def lagged_neighbors(self, u: Column) -> Iterable:
+        """Return neighbors of u that are in a previous time point."""
+        pass
+
+    def contemporaneous_neighbors(self, u: Column) -> Iterable:
+        """Return neighbors of u that are in the same time point."""
+        pass
+
+    # TODO: refactor to
+    # 1. remove_forward_homologous_edges(self, u, v)
+    # 2. remove_backward_homologous_edges(self, u, v)
+    def set_auto_removal(self, auto: bool) -> None:
+        """Specify how to auto-remove homologous edges."""
         pass
 
 

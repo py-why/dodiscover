@@ -1,4 +1,4 @@
-from typing import Optional, Set
+from typing import Optional, Set, Union
 
 import networkx as nx
 import numpy as np
@@ -6,7 +6,7 @@ import pandas as pd
 
 from dodiscover.typing import Column
 
-from .._protocol import Graph
+from .._protocol import Graph, TimeSeriesGraph
 from .base import BaseConditionalIndependenceTest
 
 
@@ -23,7 +23,7 @@ class Oracle(BaseConditionalIndependenceTest):
 
     _allow_multivariate_input: bool = True
 
-    def __init__(self, graph: Graph) -> None:
+    def __init__(self, graph: Union[Graph, TimeSeriesGraph]) -> None:
         self.graph = graph
 
     def test(

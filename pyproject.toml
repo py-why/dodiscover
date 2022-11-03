@@ -195,7 +195,7 @@ convention = 'numpy'
 ignore-decorators = '(copy_doc|property|.*setter|.*getter|pyqtSlot|Slot)'
 match = '^(?!setup|__init__|test_).*\.py'
 match-dir = '^dodiscover.*'
-add_ignore = 'D100,D104,D107'
+add_ignore = 'D100,D104,D105,D107'
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -206,7 +206,7 @@ minversion = '6.0'
 addopts = '--durations 20 --junit-xml=junit-results.xml --verbose'
 filterwarnings = []
 log_cli = true
-log_cli_level = 'ERROR'
+log_cli_level = -1
 
 [tool.coverage.run]
 branch = true

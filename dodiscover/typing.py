@@ -8,4 +8,5 @@ Column = Union[int, float, str]
 # The separating set used in constraint-based causal discovery
 SeparatingSet = Dict[Column, Dict[Column, List[Set[Column]]]]
 
+# The relevant networkx graphs accepted in this module
 NetworkxGraph = Union[nx.Graph, nx.DiGraph]
