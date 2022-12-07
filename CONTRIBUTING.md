@@ -86,7 +86,7 @@ When you're ready to contribute code to address an open issue, please follow the
 
     Next, you'll need poetry installed, which is a software dependency manager written in Python. Follow the [official instructions to install poetry](https://python-poetry.org/docs/#installation). Once your virtual environment is activated, you can install your local clone with ``poetry``.
 
-        # the output should show a version greater than 1.2.0 (e.g. "Poetry (version 1.2.0)")
+        # the output should show a version of at least 1.2.2 (e.g. "Poetry (version 1.2.2)")
         poetry --version
 
         # next install dodiscover using poetry
