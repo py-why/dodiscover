@@ -183,7 +183,13 @@ exclude_patterns = [
     ".DS_Store",
     "**.ipynb_checkpoints",
     "auto_examples/*.rst",
+    'tutorials',
 ]
+toc_filter_exclude = ["tutorials/index"]
+if tags.has("build_tutorials"):
+    # Tutorials are excluded by default.  Remove the exclusion since we want to build the tutorials
+    exclude_patterns.remove("tutorials")
+    toc_filter_exclude = []
 
 source_suffix = [".rst", ".md"]
 
