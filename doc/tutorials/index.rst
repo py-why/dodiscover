@@ -1,6 +1,3 @@
-*********
-Tutorials
-*********
 .. toctree::
    :hidden:
 
