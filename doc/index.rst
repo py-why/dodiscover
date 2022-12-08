@@ -21,7 +21,7 @@ Contents
    installation
    api
    use
-   tutorial
+   tutorials/index
    whats_new
 
 .. toctree::

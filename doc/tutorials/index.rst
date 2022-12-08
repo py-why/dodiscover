@@ -1,5 +1,6 @@
-.. toctree::
-   :hidden:
+*********
+Tutorials
+*********
 
 .. _models_tutorials:
 
