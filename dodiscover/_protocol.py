@@ -1,8 +1,8 @@
-from typing import Dict, FrozenSet, Iterable, List, Protocol
+from typing import Dict, FrozenSet, Iterable, List, Optional, Protocol
 
 import networkx as nx
 
-from dodiscover.typing import Column
+from .typing import Column
 
 
 class Graph(Protocol):
@@ -53,19 +53,27 @@ class Graph(Protocol):
 class TimeSeriesGraph(Graph, Protocol):
     """A protocol for time-series graphs."""
 
-    def lagged_neighbors(self, u: Column) -> Iterable:
+    @property
+    def max_lag(self) -> int:
+        pass
+
+    def lagged_neighbors(self, u: Column) -> List[Column]:
         """Return neighbors of u that are in a previous time point."""
         pass
 
-    def contemporaneous_neighbors(self, u: Column) -> Iterable:
+    def contemporaneous_neighbors(self, u: Column) -> List[Column]:
         """Return neighbors of u that are in the same time point."""
         pass
 
     # TODO: refactor to
     # 1. remove_forward_homologous_edges(self, u, v)
     # 2. remove_backward_homologous_edges(self, u, v)
-    def set_auto_removal(self, auto: bool) -> None:
+    def set_auto_removal(self, auto: Optional[str]) -> None:
         """Specify how to auto-remove homologous edges."""
+        pass
+
+    def nodes_at(self, t):
+        """Nodes at specific time point."""
         pass
 
 
@@ -95,6 +103,10 @@ class EquivalenceClass(Graph, Protocol):
     @property
     def bidirected_edge_name(self) -> str:
         """Name of the bidirected edges."""
+        pass
+
+    def get_graphs(self, graph_name: Optional[str] = None):
+        """Get edge sub-graph."""
         pass
 
     def orient_uncertain_edge(self, u, v) -> None:

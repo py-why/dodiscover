@@ -135,7 +135,10 @@ class Context:
             out[key] = value
         return out
 
-    def __eq__(self, context: "Context") -> bool:
+    def __eq__(self, context: object) -> bool:
+        if not isinstance(context, Context):
+            raise RuntimeError(f"Context is not comparable to non-context types {context}.")
+
         context_params = context.get_params()
         self_params = self.get_params()
 

@@ -8,11 +8,11 @@ import pandas as pd
 
 from dodiscover._protocol import TimeSeriesGraph
 from dodiscover.ci import BaseConditionalIndependenceTest
-from dodiscover.constraint.config import SkeletonMethods
-from dodiscover.context import ContextType
+from dodiscover.context import TimeSeriesContext, Context
 from dodiscover.typing import Column, SeparatingSet
 
 from ...context_builder import make_ts_context
+from ..config import SkeletonMethods
 from ..skeleton import LearnSkeleton
 from ..utils import _iter_conditioning_set
 from .utils import convert_ts_df_to_multiindex
@@ -29,6 +29,18 @@ def nodes_in_time_order(G: TimeSeriesGraph) -> Iterator:
 
 class LearnTimeSeriesSkeleton(LearnSkeleton):
     """Learn a skeleton time-series graph from a Markovian causal model.
+
+    Learning time-series causal graph skeletons is a more complex task compared to its
+    iid counterpart. There are a few key differences to be aware of:
+
+    1. Without extending the maximum-lag, there is always latent confounding: Consider as
+    an example, two variable lag-1 ts-causal-graph.
+    
+          t-1   t
+        X  o -> o
+        Y  o -> o
+    
+    with Y(t-1) -> X(t). Assuming stationarity, then 
 
     Parameters
     ----------
@@ -82,7 +94,6 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
         max_combinations: Optional[int] = None,
         skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
         keep_sorted: bool = False,
-        latent_confounding: bool = False,
         max_path_length: Optional[int] = None,
         separate_lag_phase: bool = False,
         contemporaneous_edges: bool = True,
@@ -100,7 +111,6 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
             **ci_estimator_kwargs,
         )
         self.max_path_length = max_path_length
-        self.latent_confounding = latent_confounding
         self.separate_lag_phase = separate_lag_phase
         self.contemporaneous_edges = contemporaneous_edges
 
@@ -118,23 +128,18 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
         size_cond_set = self.min_cond_set_size_
 
         # If there is latent confounding, we need to test all nodes starting from
-        # max-lag. Otherwise, we can
-        if self.latent_confounding:
-            # depends on whether or not there are latent confounders
-            testable_nodes = list(nodes_in_time_order(adj_graph))
+        # max-lag. Because adjacencies are only repeated backwards in time
+        testable_nodes = list(nodes_in_time_order(adj_graph))
 
-            # to do causal discovery of time-series graphs,
-            # homologous edges should not be removed automatically
-            adj_graph.set_auto_removal("forwards")
-        else:
-            # depends on whether or not there are latent confounders
-            testable_nodes = set(adj_graph.nodes_at(0))
+        # to do causal discovery of time-series graphs,
+        # homologous edges should not be removed automatically
+        adj_graph.set_auto_removal("forwards")
+        
+        # # to do causal discovery of time-series graphs,
+        # # homologous edges should not be removed automatically
+        # adj_graph.set_auto_removal("backwards")
 
-            # to do causal discovery of time-series graphs,
-            # homologous edges should not be removed automatically
-            adj_graph.set_auto_removal("backwards")
-
-        print(f"Testable nodes: {testable_nodes}")
+        print(f'Testing nodes in the following order for learning skeleton: {testable_nodes}')
 
         # Outer loop: iterate over 'size_cond_set' until stopping criterion is met
         # - 'size_cond_set' > 'max_cond_set_size' or
@@ -148,22 +153,23 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
             # Note: in time-series graphs, all nodes are defined as a 2-tuple
             # of (<node>, <lag>)
             for y_var in testable_nodes:
-                # we only consider variables with required lab
-                if not self.latent_confounding and y_var[1] != 0:
-                    continue
+                # we only consider variables with required lag
+                # if y_var[1] != 0:
+                #     continue
 
                 # TODO: need more efficient way of querying all possible edges
                 if nbr_search == "all":
                     lagged_nbrs = adj_graph.lagged_neighbors(y_var)
                     contemporaneous_nbrs = adj_graph.contemporaneous_neighbors(y_var)
-                    possible_adjacencies = set(lagged_nbrs).union(set(contemporaneous_nbrs))
+                    possible_adjacencies = list(set(lagged_nbrs).union(set(contemporaneous_nbrs)))
                 elif nbr_search == "lagged":
                     possible_adjacencies = adj_graph.lagged_neighbors(y_var)
                 elif nbr_search == "contemporaneous":
                     possible_adjacencies = adj_graph.contemporaneous_neighbors(y_var)
 
                 logger.info(f"Considering node {y_var}...\n\n")
-
+                print(f'\n\nTesting {y_var} against possible adjacencies {possible_adjacencies}')
+                print(f'size conditioning set p = {size_cond_set}')
                 for x_var in possible_adjacencies:
                     # a node cannot be a parent to itself in DAGs
                     if y_var == x_var:
@@ -223,7 +229,7 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
                         # the null hypothesis, then we will break the loop comparing X and Y
                         # and say X and Y are conditionally independent given 'cond_set'
                         if pvalue > self.alpha:
-                            logger.debug(f"Removing {x_var} - {y_var} with {cond_set}.")
+                            print(f"Removing {x_var} - {y_var} with {cond_set}.")
                             break
 
                     # post-process the CI test results
@@ -244,7 +250,7 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
             to_set = []
             for u, v in self.remove_edges:
                 # the opposite is already in there...
-                if v in from_set and u in to_set:
+                if v in to_set and u in from_set:
                     continue
                 from_set.append(u)
                 to_set.append(v)
@@ -255,7 +261,8 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
             # Remove non-significant links
             # Note: Removing edges at the end ensures "stability" of the algorithm
             # with respect to the randomness choice of pairs of edges considered in the inner loop
-            adj_graph.remove_edges_from(self.remove_edges)
+            print(f'Removing edges {self.remove_edges}')
+            adj_graph.remove_edges_from(list(self.remove_edges))
 
             # increment the conditioning set size
             size_cond_set += 1
@@ -266,7 +273,7 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
 
         return adj_graph
 
-    def fit(self, data: pd.DataFrame, context: ContextType) -> None:
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
 
         Parameters
@@ -284,7 +291,9 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
 
         data, context = self._preprocess_data(data, context)
         self.context = (
-            make_ts_context(context).observed_variables(data.columns.values.tolist()).build()
+            make_ts_context(context)
+            .observed_variables(data.columns.get_level_values("variable").tolist())
+            .build()
         )
 
         # initialize learning parameters
@@ -319,16 +328,16 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
         # no assumption of contemporaneous causal structure
         # TODO: can make sure we don't inner-test the CI relations between contemporaneous edges
         if not self.contemporaneous_edges:
-            auto_removal = adj_graph._auto_removal
+            auto_removal = adj_graph._auto_removal  # type: ignore
             adj_graph.set_auto_removal(None)
-            for u, v in adj_graph.edges:
+            for u, v in adj_graph.edges:  # type: ignore
                 if u[1] == v[1]:
-                    adj_graph.remove_edge(u, v)
+                    adj_graph.remove_edge(u, v)  # type: ignore
             adj_graph.set_auto_removal(auto_removal)
 
         self.adj_graph_ = adj_graph
 
-    def _preprocess_data(self, data: pd.DataFrame, context: ContextType):
+    def _preprocess_data(self, data: pd.DataFrame, context: TimeSeriesContext):
         """Preprocess data and context.
 
         In time-series causal discovery, dataframe of the shape (n_times, n_signals)
@@ -339,7 +348,7 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
         column is variable x at lag 1.
         """
         # first reformat data
-        max_lag = context.max_lag
+        max_lag = context.max_lag  # type: ignore
         data = convert_ts_df_to_multiindex(data, max_lag)
 
         # run preprocessing
@@ -359,3 +368,89 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
             )
 
         return data, context
+
+
+class LearnTimeSeriesSemiMarkovianSkeleton(LearnTimeSeriesSkeleton):
+    def __init__(
+        self,
+        ci_estimator: BaseConditionalIndependenceTest,
+        sep_set: Optional[SeparatingSet] = None,
+        alpha: float = 0.05,
+        min_cond_set_size: int = 0,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
+        skeleton_method: SkeletonMethods = SkeletonMethods.PDS_T,
+        keep_sorted: bool = False,
+        max_path_length: Optional[int] = None,
+        separate_lag_phase: bool = False,
+        contemporaneous_edges: bool = True,
+        **ci_estimator_kwargs,
+    ) -> None:
+        super().__init__(
+            ci_estimator,
+            sep_set,
+            alpha,
+            min_cond_set_size,
+            max_cond_set_size,
+            max_combinations,
+            skeleton_method,
+            keep_sorted,
+            **ci_estimator_kwargs,
+        )
+        if max_path_length is None:
+            max_path_length = np.inf
+        self.max_path_length = max_path_length
+        self.separate_lag_phase = separate_lag_phase
+        self.contemporaneous_edges = contemporaneous_edges
+
+    def _compute_candidate_conditioning_sets(
+        self, adj_graph: nx.Graph, x_var: Column, y_var: Column, skeleton_method: SkeletonMethods
+    ) -> Set[Column]:
+        import pywhy_graphs as pgraph
+
+        # get PAG from the context object
+        pag = self.context.state_variable("PAG")
+
+        if skeleton_method == SkeletonMethods.PDS:
+            # determine how we want to construct the candidates for separating nodes
+            # perform conditioning independence testing on all combinations
+            possible_variables = pgraph.pds(
+                pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+            )
+        elif skeleton_method == SkeletonMethods.PDS_PATH:
+            # determine how we want to construct the candidates for separating nodes
+            # perform conditioning independence testing on all combinations
+            possible_variables = pgraph.pds_path(
+                pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+            )
+        elif skeleton_method == SkeletonMethods.PDS_T:
+            # determine how we want to construct the candidates for separating nodes
+            # perform conditioning independence testing on all combinations
+            possible_variables = pgraph.pds_t(
+                pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+            )
+        elif skeleton_method == SkeletonMethods.PDS_T_PATH:
+            # determine how we want to construct the candidates for separating nodes
+            # perform conditioning independence testing on all combinations
+            possible_variables = pgraph.pds_t_path(
+                pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+            )
+
+        if self.keep_sorted:
+            # Note it is assumed in public API that 'test_stat' is set
+            # inside the adj_graph
+            possible_variables = sorted(
+                possible_variables,
+                key=lambda n: adj_graph.edges[x_var, n]["test_stat"],
+                reverse=True,
+            )  # type: ignore
+
+        if x_var in possible_variables:
+            possible_variables.remove(x_var)
+        if y_var in possible_variables:
+            possible_variables.remove(y_var)
+
+        return possible_variables
+
+    def fit(self, data: pd.DataFrame, context: TimeSeriesContext) -> None:
+        return super().fit(data, context)

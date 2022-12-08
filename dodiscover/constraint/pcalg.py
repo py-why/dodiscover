@@ -1,16 +1,16 @@
 import logging
 from itertools import combinations, permutations
-from typing import Optional
+from typing import Iterator, Optional
 
 import networkx as nx
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass
 from ._classes import BaseConstraintDiscovery
+from .config import SkeletonMethods
 
 logger = logging.getLogger()
 
@@ -121,6 +121,25 @@ class PC(BaseConstraintDiscovery):
         graph = CPDAG(incoming_undirected_edges=graph)
         return graph
 
+    def _orientable_triples(self, graph: EquivalenceClass) -> Iterator:
+        """Iterate through orientable triple edges.
+
+        Used in orientation of colliders.
+        """
+        for u in graph.nodes:
+            for v_i, v_j in combinations(graph.neighbors(u), 2):
+                yield (v_i, u, v_j)
+
+    def _orientable_edges(self, graph: EquivalenceClass) -> Iterator:
+        """Iterate through orientable edges.
+
+        Used in orientation of edges.
+        """
+        for (i, j) in permutations(graph.nodes, 2):
+            if i == j:
+                continue
+            yield (i, j)
+
     def orient_edges(self, graph: EquivalenceClass) -> None:
         """Orient edges in a skeleton graph to estimate the causal DAG, or CPDAG.
 
@@ -134,17 +153,13 @@ class PC(BaseConstraintDiscovery):
             A skeleton graph. If ``None``, then will initialize PC using a
             complete graph. By default None.
         """
-        node_ids = graph.nodes
-
         # For all the combination of nodes i and j, apply the following
         # rules.
         idx = 0
         finished = False
         while idx < self.max_iter and not finished:  # type: ignore
             change_flag = False
-            for (i, j) in permutations(node_ids, 2):
-                if i == j:
-                    continue
+            for (i, j) in self._orientable_edges(graph):
                 # Rule 1: Orient i-j into i->j whenever there is an arrow k->i
                 # such that k and j are nonadjacent.
                 r1_add = self._apply_meek_rule1(graph, i, j)
@@ -178,6 +193,11 @@ class PC(BaseConstraintDiscovery):
     ) -> None:
         """Orient colliders given a graph and separation set.
 
+        Unshielded triples are (i, j, k), such that there is no edge (i, k).
+        This will be oriented as a collider, if 'i' is not conditionally
+        independent to 'j' given 'k', but is conditionally independent without
+        'k'.
+
         Parameters
         ----------
         graph : EquivalenceClass
@@ -186,16 +206,15 @@ class PC(BaseConstraintDiscovery):
             The separating set between any two nodes.
         """
         # for every node in the PAG, evaluate neighbors that have any edge
-        for u in graph.nodes:
-            for v_i, v_j in combinations(graph.neighbors(u), 2):
-                # Check that there is no edge of any type between
-                # v_i and v_j, else this is a "shielded" collider.
-                # Then check to see if 'u' is in "any" separating
-                # set. If it is not, then there is a collider.
-                if v_j not in graph.neighbors(v_i) and not is_in_sep_set(
-                    u, sep_set, v_i, v_j, mode="any"
-                ):
-                    self._orient_collider(graph, v_i, u, v_j)
+        for v_i, u, v_j in self._orientable_triples(graph):
+            # Check that there is no edge of any type between
+            # v_i and v_j, else this is a "shielded" collider.
+            # Then check to see if 'u' is in "any" separating
+            # set. If it is not, then there is a collider.
+            if v_j not in graph.neighbors(v_i) and not is_in_sep_set(
+                u, sep_set, v_i, v_j, mode="any"
+            ):
+                self._orient_collider(graph, v_i, u, v_j)
 
     def _orient_collider(
         self, graph: EquivalenceClass, v_i: Column, u: Column, v_j: Column

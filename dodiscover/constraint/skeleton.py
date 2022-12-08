@@ -221,7 +221,11 @@ class LearnSkeleton:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        try:
+            test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        except Exception as e:
+            print(X, Y, Z)
+            raise (e)
         self.n_ci_tests += 1
         return test_stat, pvalue
 

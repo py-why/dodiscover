@@ -206,7 +206,7 @@ minversion = '6.0'
 addopts = '--durations 20 --junit-xml=junit-results.xml --verbose'
 filterwarnings = []
 log_cli = true
-log_cli_level = -1
+log_cli_level = 'ERROR'
 
 [tool.coverage.run]
 branch = true

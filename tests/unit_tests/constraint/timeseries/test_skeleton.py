@@ -53,6 +53,12 @@ def test_skeleton_evaluate_edge():
     _, pvalue = alg.evaluate_edge(data, ("x3", -1), ("x1", 0), {("x1", -1)})
     assert pvalue == 1.0
 
+    _, pvalue = alg.evaluate_edge(data, ("x2", -1), ("x3", 0), {})
+    assert pvalue == 0.0
+
+    _, pvalue = alg.evaluate_edge(data, ("x2", -1), ("x3", 0), {('x3', -1)})
+    assert pvalue == 0.0
+
 
 def test_markovian_skeleton_oracle():
     r"""Test tsPC's skeleton algorithm  assuming no latent confounders nor contemporaneous edges.
@@ -96,17 +102,11 @@ def test_markovian_skeleton_oracle():
 
     context = make_ts_context().max_lag(max_lag).variables(data=data).build()
 
-    for edge in G.edges:
-        print(edge)
-    print(G.nodes)
     alg.fit(data, context)
     skel_graph = alg.adj_graph_
 
     # all edges in skeleton are inside G
     assert all(edge in skel_graph.edges for edge in G.edges)
-
-    for edge in skel_graph.edges:
-        print(edge)
     assert nx.is_isomorphic(skel_graph.to_undirected(), G.to_undirected())
 
 
@@ -150,16 +150,24 @@ def test_markovian_skeleton_with_contemporaneous_edges():
     )
 
     # create an oracle
-    oracle = Oracle(G)
+    oracle = Oracle(G.copy(double_max_lag=True))
     alg = LearnTimeSeriesSkeleton(ci_estimator=oracle)
-    context = make_ts_context().max_lag(max_lag).variables(data=data).build()
+    context = make_ts_context().max_lag(max_lag + 1).variables(data=data).build()
 
     # learn the graph
     alg.fit(data, context)
     skel_graph = alg.adj_graph_
+    skel_graph.set_max_lag(max_lag)
 
     # all edges in skeleton are inside G
     assert all(edge in skel_graph.edges for edge in G.edges)
+    print(skel_graph)
+    print(G)
+
+    for edge in skel_graph.to_undirected().edges:
+        if not G.to_undirected().has_edge(*edge):
+            print(edge)
+
     assert nx.is_isomorphic(skel_graph.to_undirected(), G.to_undirected())
 
 
@@ -224,8 +232,6 @@ def test_semi_markovian_skeleton_oracle():
     oracle = Oracle(G)
     alg = LearnTimeSeriesSkeleton(
         ci_estimator=oracle,
-        # separate_lag_phase=separate_lag_phase,
-        latent_confounding=True,
     )
 
     context = make_ts_context().max_lag(max_lag).variables(data=data).build()

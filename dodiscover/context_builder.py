@@ -1,5 +1,4 @@
 from copy import deepcopy
-from itertools import product
 from typing import Any, Dict, Optional, Set, Tuple, cast
 
 import networkx as nx
@@ -214,7 +213,7 @@ class ContextBuilder:
             raise ValueError("Must set variables() before building Context.")
 
         complete_graph = lambda: nx.complete_graph(self._observed_variables, create_using=nx.Graph)
-        has_all_variables = lambda g: set(g.nodes) == self._observed_variables
+        has_all_variables = lambda g: set(g.nodes) == set(self._observed_variables)
 
         # initialize the starting graph
         if self._graph is None:
@@ -268,36 +267,39 @@ class TimeSeriesContextBuilder(ContextBuilder):
                     f"The nodes within the initial graph, {self._graph.nodes}, "
                     f"do not match the nodes in the passed in data, {self._observed_variables}."
                 )
-            has_all_nodes = lambda g: set(g.nodes) == set(
-                product(self._observed_variables, range(self._max_lag + 1))
-            )
-            if not has_all_nodes(self._graph):
-                raise RuntimeError("Graph does not contain all possible nodes.")
+
+            for var_name in self._observed_variables:
+                for lag in range(self._max_lag + 1):
+                    if (var_name, -lag) not in self._graph.nodes:
+                        raise RuntimeError(
+                            f"Graph does not contain all possible nodes, "
+                            f"such as {(var_name, -lag)}."
+                        )
 
             return self._graph
 
-    def init_graph(self, graph: TimeSeriesGraph) -> "TimeSeriesContextBuilder":
+    def init_graph(self, graph: TimeSeriesGraph) -> "ContextBuilder":
         """Set the initial time-series graph to begin causal discovery with."""
         return super().init_graph(graph)
 
-    def max_lag(self, lag: int) -> "TimeSeriesContextBuilder":
+    def max_lag(self, lag: int) -> "ContextBuilder":
         """Set the maximum time lag."""
         if lag <= 0:
             raise ValueError(f"Lag in time-series graphs should be > 0, not {lag}.")
         self._max_lag = lag
         return self
 
-    def contemporaneous_edges(self, present: bool) -> "TimeSeriesContextBuilder":
+    def contemporaneous_edges(self, present: bool) -> "ContextBuilder":
         """Whether or not to assume contemporaneous edges."""
         self._contemporaneous_edges = present
         return self
 
-    def included_lag_edges(self, edges: TimeSeriesGraph) -> "TimeSeriesContextBuilder":
+    def included_lag_edges(self, edges: TimeSeriesGraph) -> "ContextBuilder":
         """Apriori set lagged edges."""
         self._included_lag_edges = edges
         return self
 
-    def excluded_lag_edges(self, edges: TimeSeriesGraph) -> "TimeSeriesContextBuilder":
+    def excluded_lag_edges(self, edges: TimeSeriesGraph) -> "ContextBuilder":
         """Apriori excluded lagged edges."""
         self._excluded_lag_edges = edges
         return self
@@ -357,7 +359,7 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
     return result
 
 
-def make_ts_context(context: Optional[TimeSeriesContext] = None) -> TimeSeriesContextBuilder:
+def make_ts_context(context: Optional[Context] = None) -> TimeSeriesContextBuilder:
     """Create a time-series context builder."""
     result = TimeSeriesContextBuilder()
     if context is not None:

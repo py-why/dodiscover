@@ -1,23 +1,24 @@
 import logging
-from typing import Optional, Tuple
+from itertools import combinations, permutations
+from typing import Iterator, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.constraint.config import SkeletonMethods
-from dodiscover.constraint.timeseries import LearnTimeSeriesSkeleton
-from dodiscover.context import TimeSeriesContext
+from dodiscover.context import Context
 from dodiscover.context_builder import make_ts_context
 from dodiscover.typing import SeparatingSet
 
 from ..._protocol import EquivalenceClass
+from ..config import SkeletonMethods
 from ..pcalg import PC
+from .skeleton import LearnTimeSeriesSkeleton
 
 logger = logging.getLogger()
 
 
-class TSPC(PC):
+class TimeSeriesPC(PC):
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
@@ -28,6 +29,7 @@ class TSPC(PC):
         skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
         apply_orientations: bool = True,
         max_iter: int = 1000,
+        separate_lag_phase: bool = False,
         contemporaneous_edges: bool = True,
         **ci_estimator_kwargs,
     ):
@@ -77,12 +79,13 @@ class TSPC(PC):
             max_iter,
             **ci_estimator_kwargs,
         )
+        self.separate_lag_phase = separate_lag_phase
         self.contemporaneous_edges = contemporaneous_edges
 
     def learn_skeleton(
         self,
         data: pd.DataFrame,
-        context: TimeSeriesContext,
+        context: Context,
         sep_set: Optional[SeparatingSet] = None,
     ) -> Tuple[nx.Graph, SeparatingSet]:
         skel_alg = LearnTimeSeriesSkeleton(
@@ -105,7 +108,7 @@ class TSPC(PC):
         self.n_ci_tests += skel_alg.n_ci_tests
         return skel_graph, sep_set
 
-    def fit(self, data: pd.DataFrame, context: TimeSeriesContext) -> None:
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
         self.context_ = make_ts_context(context).build()
         graph = self.context_.init_graph
         self.init_graph_ = graph
@@ -137,18 +140,14 @@ class TSPC(PC):
         # store resulting data structures
         self.graph_ = graph
 
-    def orient_lagged_edges(self, graph):
-        # for every node in the PAG, evaluate neighbors that have any edge
-        for edge in graph.edges:
-            # get the variables in time-order
-            u, v = sorted(edge, key=lambda x: x[1])
-
-            # if we encountered a contemporaneous edge, continue
-            if u[1] == v[1]:
-                continue
-
-            # now orient this edge as u -> v
-            graph.orient_uncertain_edge(u, v)
+    def orient_lagged_edges(self, graph: EquivalenceClass):
+        undirected_subgraph = graph.get_graphs(graph.undirected_edge_name)
+        # get non-lag nodes
+        for node in undirected_subgraph.nodes_at(t=0):
+            # get all lagged nbrs
+            for nbr in undirected_subgraph.lagged_neighbors(node):
+                # now orient this edge as u -> v
+                graph.orient_uncertain_edge(nbr, node)
 
     def orient_contemporaneous_edges(self, graph):
         # for all pairs of non-adjacent variables with a common neighbor
@@ -156,13 +155,22 @@ class TSPC(PC):
         self.orient_unshielded_triples(graph, self.separating_sets_)
         self.orient_edges(graph)
 
-    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
-        # TODO: make this an equivalence class graph
-        from pywhy_graphs import StationaryTimeSeriesGraph
+    def _orientable_edges(self, graph: EquivalenceClass) -> Iterator:
+        for (i, j) in permutations(graph.nodes_at(t=0), 2):  # type: ignore
+            if i == j:
+                continue
+            yield (i, j)
 
-        # TODO: convert to a 1-liner when networkx allows input of tuples as nodes
-        # convert Graph object to a undirected stationary ts-graph
-        edges = graph.edges
-        graph = StationaryTimeSeriesGraph()
-        graph.add_edges_from(edges)
+    def _orientable_triples(self, graph: EquivalenceClass) -> Iterator:
+        # for every node in the PAG, evaluate neighbors that have any edge
+        for u in graph.nodes_at(t=0):  # type: ignore
+            for v_i, v_j in combinations(graph.neighbors(u), 2):
+                yield (v_i, u, v_j)
+
+    def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
+        from pywhy_graphs import StationaryTimeSeriesCPDAG
+
+        # convert Graph object to a CPDAG object with
+        # all undirected edges
+        graph = StationaryTimeSeriesCPDAG(incoming_undirected_edges=graph)
         return graph
