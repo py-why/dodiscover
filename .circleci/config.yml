@@ -47,7 +47,7 @@ jobs:
           name: Install the latest version of Poetry
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python -
-            curl -sSL https://install.python-poetry.org | python3 - --version 1.2.0
+            curl -sSL https://install.python-poetry.org | python3 - --version 1.2.2
       - run:
           name: Set BASH_ENV
           command: |
