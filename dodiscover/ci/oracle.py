@@ -72,7 +72,9 @@ class Oracle(BaseConditionalIndependenceTest):
         if isinstance(self.graph, nx.DiGraph):
             is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates)
         else:
-            is_sep = nx.m_separated(self.graph, x_vars, y_vars, z_covariates)
+            import pywhy_graphs.networkx as pywhy_nx
+
+            is_sep = pywhy_nx.m_separated(self.graph, x_vars, y_vars, z_covariates)
 
         if is_sep:
             pvalue = 1
