@@ -3,6 +3,7 @@ import logging
 import networkx as nx
 import numpy as np
 import pywhy_graphs
+import pywhy_graphs.networkx as pywhy_nx
 from pywhy_graphs import ADMG, PAG
 
 from dodiscover import FCI, make_context
@@ -533,7 +534,7 @@ class Test_FCI:
         pag = fci.graph_
 
         # double check the m-separation statement and PDS
-        assert nx.m_separated(G, {"x1"}, {"x3"}, {"x4"})
+        assert pywhy_nx.m_separated(G, {"x1"}, {"x3"}, {"x4"})
         pdsep = pywhy_graphs.pds(G, "x1", "x3")
         assert "x2" in pdsep
 

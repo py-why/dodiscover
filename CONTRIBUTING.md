@@ -146,6 +146,45 @@ When you're ready to contribute code to address an open issue, please follow the
 We use [Sphinx](https://www.sphinx-doc.org/en/master/index.html) to build our API docs, which automatically parses all docstrings
 of public classes and methods. All docstrings should adhere to the [Numpy styling convention](https://www.sphinx-doc.org/en/master/usage/extensions/example_numpy.html).
 
+### Testing Changes Locally With Poetry
+With poetry installed, we have included a few convenience functions to check your code. These checks must pass and will be checked by the PR's continuous integration services. You can install the various different developer dependencies with poetry:
+
+    poetry install --with style, docs, test
+
+You can verify that your code will pass certain style, formatting and lint checks by running:
+
+    poetry run poe verify
+
+``verify`` runs a sequence of tests that can also be run individually. For example, you can check code formatting with black:
+
+    poetry run poe check_format
+
+If you would like to automatically black format your changes:
+
+    poetry run poe apply_format
+
+You can then check for code style and general linting:
+
+    poetry run poe lint
+
+Finally, you should run some mypy type checks:
+
+    poetry run poe type_check
+
+### Documentation
+
+If you need to build the documentation locally and check for doc errors:
+
+    poetry run poe build_docs
+
+### Dependency Changes
+
+If you need to add new, or remove old dependencies, then you need to modify the ``pyproject.toml`` file and then also update the ``poetry.lock`` file, which version-controls all necessary dependencies. If you alter any dependency in the ``pyproject.toml`` file, you must run:
+
+    poetry update
+
+To update the lock file.
+
 ---
 
 The Project abides by the Organization's [code of conduct](https://github.com/py-why/governance/blob/main/CODE-OF-CONDUCT.md) and [trademark policy](https://github.com/py-why/governance/blob/main/TRADEMARKS.md).
