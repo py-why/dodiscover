@@ -279,7 +279,9 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">):</span>
             <span class="n">is_sep</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">d_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">m_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">pywhy_graphs.networkx</span> <span class="k">as</span> <span class="nn">pywhy_nx</span>
+
+            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">pywhy_nx</span><span class="o">.</span><span class="n">m_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">is_sep</span><span class="p">:</span>
             <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span>
@@ -320,7 +322,7 @@
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
 </p>
   </div>
   

@@ -392,37 +392,29 @@
 use <a class="reference internal" href="dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dodiscover.make_context</span></code></a> to build a Context data structure.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>variables</strong> : <code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></p>
-<blockquote>
-<div><p>Set of observed variables. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
+<dd class="field-odd"><dl>
+<dt><strong>variables</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></span></dt><dd><p>Set of observed variables. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
 nor <code class="docutils literal notranslate"><span class="pre">variables</span></code> is set, then it is presumed that <code class="docutils literal notranslate"><span class="pre">variables</span></code> consists
 of the columns of <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> is the empty set.</p>
-</div></blockquote>
-<p><strong>latents</strong> : <code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></p>
-<blockquote>
-<div><p>Set of latent “unobserved” variables. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
+</dd>
+<dt><strong>latents</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></span></dt><dd><p>Set of latent “unobserved” variables. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
 nor <code class="docutils literal notranslate"><span class="pre">variables</span></code> is set, then it is presumed that <code class="docutils literal notranslate"><span class="pre">variables</span></code> consists
 of the columns of <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> is the empty set.</p>
-</div></blockquote>
-<p><strong>init_graph</strong> : <a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a></p>
-<blockquote>
-<div><p>The graph to start with.</p>
-</div></blockquote>
-<p><strong>included_edges</strong> : <a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0rc2.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></p>
-<blockquote>
-<div><p>Included edges without direction.</p>
-</div></blockquote>
-<p><strong>excluded_edges</strong> : <a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0rc2.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></p>
-<blockquote>
-<div><p>Excluded edges without direction.</p>
-</div></blockquote>
+</dd>
+<dt><strong>init_graph</strong><span class="classifier"><a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a></span></dt><dd><p>The graph to start with.</p>
+</dd>
+<dt><strong>included_edges</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0rc2.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></span></dt><dd><p>Included edges without direction.</p>
+</dd>
+<dt><strong>excluded_edges</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.0rc2.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></span></dt><dd><p>Excluded edges without direction.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">variables</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> if both set, should contain the set of
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p><code class="docutils literal notranslate"><span class="pre">variables</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> if both set, should contain the set of
 all columns in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -465,14 +457,12 @@ is used in conjunction with a discovery algorithm.</p>
 are used in intermediate steps.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> : <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></p>
-<blockquote>
-<div><p>The name of the state variable.</p>
-</div></blockquote>
-<p><strong>var</strong> : <a class="reference external" href="https://docs.python.org/3/library/functions.html#any" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">any</span></code></a></p>
-<blockquote>
-<div><p>Any state variable.</p>
-</div></blockquote>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the state variable.</p>
+</dd>
+<dt><strong>var</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#any" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">any</span></code></a></span></dt><dd><p>Any state variable.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -483,16 +473,16 @@ are used in intermediate steps.</p>
 <dd><p>Get a state variable.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> : <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></p>
-<blockquote>
-<div><p>The name of the state variable.</p>
-</div></blockquote>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the state variable.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>state_var</strong> : <code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></p>
-<blockquote>
-<div><p>The state variable.</p>
-</div></blockquote>
+<dd class="field-even"><dl>
+<dt><strong>state_var</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></span></dt><dd><p>The state variable.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -552,7 +542,7 @@ are used in intermediate steps.</p>
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
 </p>
   </div>
   

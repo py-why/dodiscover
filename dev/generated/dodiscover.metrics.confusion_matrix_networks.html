@@ -362,34 +362,28 @@
 matrix, which are symmetric.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>true_graph</strong> : instance of causal graph</p>
-<blockquote>
-<div><p>The true graph.</p>
-</div></blockquote>
-<p><strong>pred_graph</strong> : instance of causal graph</p>
-<blockquote>
-<div><p>The predicted graph. The predicted graph and true graph must be
+<dd class="field-odd"><dl>
+<dt><strong>true_graph</strong><span class="classifier">instance of causal graph</span></dt><dd><p>The true graph.</p>
+</dd>
+<dt><strong>pred_graph</strong><span class="classifier">instance of causal graph</span></dt><dd><p>The predicted graph. The predicted graph and true graph must be
 the same type.</p>
-</div></blockquote>
-<p><strong>labels</strong> : <a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v1.24)"><span>array_like</span></a> of shape (n_classes), default=None</p>
-<blockquote>
-<div><p>List of labels to index the matrix. This may be used to reorder
+</dd>
+<dt><strong>labels</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v1.24)"><span>array_like</span></a> of shape (n_classes), default=None</span></dt><dd><p>List of labels to index the matrix. This may be used to reorder
 or select a subset of labels.
 If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, those that appear at least once
 in <code class="docutils literal notranslate"><span class="pre">y_true</span></code> or <code class="docutils literal notranslate"><span class="pre">y_pred</span></code> are used in sorted order.</p>
-</div></blockquote>
-<p><strong>normalize</strong> : {‘true’, ‘pred’, ‘all’}, default=None</p>
-<blockquote>
-<div><p>Normalizes confusion matrix over the true (rows), predicted (columns)
+</dd>
+<dt><strong>normalize</strong><span class="classifier">{‘true’, ‘pred’, ‘all’}, default=None</span></dt><dd><p>Normalizes confusion matrix over the true (rows), predicted (columns)
 conditions or all the population. If None, confusion matrix will not be
 normalized.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>cm</strong> : <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (2, 2)</p>
-<blockquote>
-<div><p>The confusion matrix.</p>
-</div></blockquote>
+<dd class="field-even"><dl>
+<dt><strong>cm</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (2, 2)</span></dt><dd><p>The confusion matrix.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -450,7 +444,7 @@ not take into consideration the directionality of edges.</p>
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.2.1.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
 </p>
   </div>
   
