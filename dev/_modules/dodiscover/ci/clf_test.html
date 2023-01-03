@@ -112,8 +112,8 @@
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../../../tutorials.html">
-  Tutorial
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
  </a>
 </li>
 
@@ -234,7 +234,7 @@
         <span class="n">test_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
         <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Classifier conditional independence test (CCIT).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classifier conditional independence test (CCIT).</span>
 
 <span class="sd">        Implements the classifier conditional independence test in :footcite:`Sen2017model`.</span>
 <span class="sd">        If a Z variable is not passed in, then will run a standard independence test</span>
@@ -308,7 +308,7 @@
     <span class="k">def</span> <span class="nf">_unconditional_shuffle</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x_arr</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">:</span> <span class="n">NDArray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate samples to emulate X independent of Y.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate samples to emulate X independent of Y.</span>
 
 <span class="sd">        Shuffles the Y samples, such that if there is any dependence among X and Y,</span>
 <span class="sd">        they are broken and the resulting samples emulate those which came from</span>
@@ -367,7 +367,7 @@
     <span class="k">def</span> <span class="nf">_conditional_shuffle</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x_arr</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">z_arr</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Generate dataset for CI testing as binary classification problem.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate dataset for CI testing as binary classification problem.</span>
 
 <span class="sd">        Implements a nearest-neighbor bootstrap approach for generating samples from</span>
 <span class="sd">        the null hypothesis where :math:`X \\perp Y | Z`.</span>
@@ -510,7 +510,7 @@
         <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
         <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Generate a training and testing dataset for CCIT.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a training and testing dataset for CCIT.</span>
 
 <span class="sd">        This takes a conditional independence problem given a dataset</span>
 <span class="sd">        and converts it to a binary classification problem.</span>

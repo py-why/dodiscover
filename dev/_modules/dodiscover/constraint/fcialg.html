@@ -112,8 +112,8 @@
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../../../tutorials.html">
-  Tutorial
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
  </a>
 </li>
 
@@ -226,7 +226,7 @@
 
 
 <div class="viewcode-block" id="FCI"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.FCI.html#dodiscover.constraint.FCI">[docs]</a><span class="k">class</span> <span class="nc">FCI</span><span class="p">(</span><span class="n">BaseConstraintDiscovery</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The Fast Causal Inference (FCI) algorithm for causal discovery.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Fast Causal Inference (FCI) algorithm for causal discovery.</span>
 
 <span class="sd">    A complete constraint-based causal discovery algorithm that</span>
 <span class="sd">    operates on observational data :footcite:`Zhang2008` assuming there</span>
@@ -322,7 +322,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pds_skeleton_method</span> <span class="o">=</span> <span class="n">pds_skeleton_method</span>
 
 <div class="viewcode-block" id="FCI.orient_unshielded_triples"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.FCI.html#dodiscover.constraint.FCI.orient_unshielded_triples">[docs]</a>    <span class="k">def</span> <span class="nf">orient_unshielded_triples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">sep_set</span><span class="p">:</span> <span class="n">SeparatingSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Orient colliders given a graph and separation set.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Orient colliders given a graph and separation set.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -355,7 +355,7 @@
             <span class="n">graph</span><span class="o">.</span><span class="n">orient_uncertain_edge</span><span class="p">(</span><span class="n">v_j</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_apply_rule1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 1 of the FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 1 of the FCI algorithm.</span>
 
 <span class="sd">        If A *-&gt; u o-* C, A and C are not adjacent,</span>
 <span class="sd">        then we can orient the triple as A *-&gt; u -&gt; C.</span>
@@ -399,7 +399,7 @@
         <span class="k">return</span> <span class="n">added_arrows</span>
 
     <span class="k">def</span> <span class="nf">_apply_rule2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 2 of FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 2 of FCI algorithm.</span>
 
 <span class="sd">        If</span>
 
@@ -459,7 +459,7 @@
         <span class="k">return</span> <span class="n">added_arrows</span>
 
     <span class="k">def</span> <span class="nf">_apply_rule3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 3 of FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 3 of FCI algorithm.</span>
 
 <span class="sd">        If A *-&gt; u &lt;-* C, A *-o v o-* C, A/C are not adjacent,</span>
 <span class="sd">        and v *-o u, then orient v *-&gt; u.</span>
@@ -520,7 +520,7 @@
     <span class="k">def</span> <span class="nf">_apply_rule4</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">sep_set</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 4 of FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 4 of FCI algorithm.</span>
 
 <span class="sd">        If a path, U = &lt;v, ..., a, u, c&gt; is a discriminating</span>
 <span class="sd">        path between v and c for u, u o-* c, u in SepSet(v, c),</span>
@@ -577,7 +577,7 @@
             <span class="n">graph</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_path_length</span>
         <span class="p">)</span>
         <span class="n">disc_path_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">disc_path</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">disc_path</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">disc_path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">disc_path</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">disc_path</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">disc_path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">found_discriminating_path</span><span class="p">:</span>
             <span class="c1"># the last node is the first one on the discriminating path by convention</span>
@@ -606,7 +606,7 @@
         <span class="k">return</span> <span class="n">added_arrows</span><span class="p">,</span> <span class="n">explored_nodes</span>
 
     <span class="k">def</span> <span class="nf">_apply_rule8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 8 of FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 8 of FCI algorithm.</span>
 
 <span class="sd">        If A -&gt; u -&gt; C, or A -o B -&gt; C</span>
 <span class="sd">        and A o-&gt; C, then orient A o-&gt; C as A -&gt; C.</span>
@@ -657,7 +657,7 @@
     <span class="k">def</span> <span class="nf">_apply_rule9</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 9 of FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 9 of FCI algorithm.</span>
 
 <span class="sd">        If A o-&gt; C and p = &lt;A, u, v, ..., C&gt; is an uncovered</span>
 <span class="sd">        possibly directed path from A to C such that u and C</span>
@@ -710,7 +710,7 @@
     <span class="k">def</span> <span class="nf">_apply_rule10</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Column</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Apply rule 10 of FCI algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply rule 10 of FCI algorithm.</span>
 
 <span class="sd">        If A o-&gt; C and u -&gt; C &lt;- v and</span>
 
@@ -853,7 +853,7 @@
                     <span class="p">):</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change_flag</span><span class="si">}</span><span class="s2"> with &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">[</span><span class="n">r1_add</span><span class="p">,</span> <span class="n">r2_add</span><span class="p">,</span> <span class="n">r3_add</span><span class="p">,</span> <span class="n">r4_add</span><span class="p">,</span> <span class="n">r8_add</span><span class="p">,</span> <span class="n">r9_add</span><span class="p">,</span> <span class="n">r10_add</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">[</span><span class="n">r1_add</span><span class="p">,</span><span class="w"> </span><span class="n">r2_add</span><span class="p">,</span><span class="w"> </span><span class="n">r3_add</span><span class="p">,</span><span class="w"> </span><span class="n">r4_add</span><span class="p">,</span><span class="w"> </span><span class="n">r8_add</span><span class="p">,</span><span class="w"> </span><span class="n">r9_add</span><span class="p">,</span><span class="w"> </span><span class="n">r10_add</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="p">)</span>
                         <span class="n">change_flag</span> <span class="o">=</span> <span class="kc">True</span>
 

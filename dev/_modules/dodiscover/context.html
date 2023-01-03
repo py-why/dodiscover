@@ -112,8 +112,8 @@
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../../tutorials.html">
-  Tutorial
+ <a class="reference internal nav-link" href="../../tutorials/index.html">
+  Tutorials
  </a>
 </li>
 
@@ -214,7 +214,7 @@
 
 
 <div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Context of assumptions, domain knowledge and data.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context of assumptions, domain knowledge and data.</span>
 
 <span class="sd">    This should NOT be instantiated directly. One should instead</span>
 <span class="sd">    use `dodiscover.make_context` to build a Context data structure.</span>
@@ -300,7 +300,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_variables</span>
 
 <div class="viewcode-block" id="Context.add_state_variable"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.add_state_variable">[docs]</a>    <span class="k">def</span> <span class="nf">add_state_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Add a state variable.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a state variable.</span>
 
 <span class="sd">        Called by an algorithm to persist data objects that</span>
 <span class="sd">        are used in intermediate steps.</span>
@@ -315,7 +315,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span></div>
 
 <div class="viewcode-block" id="Context.state_variable"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.state_variable">[docs]</a>    <span class="k">def</span> <span class="nf">state_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get a state variable.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a state variable.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

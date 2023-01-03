@@ -112,8 +112,8 @@
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../../../tutorials.html">
-  Tutorial
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
  </a>
 </li>
 
@@ -227,7 +227,7 @@
     <span class="n">nlevels_y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">levels</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Calculate log term for binary G^2 statistic in CI test.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate log term for binary G^2 statistic in CI test.</span>
 
 <span class="sd">    Computes the contingency table and the associated log-term</span>
 <span class="sd">    within the G^2 statistic for binary data.</span>
@@ -293,7 +293,7 @@
     <span class="n">nlevel_x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">nlevels_y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Calculate the contingency table for &quot;large&quot; separating set.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the contingency table for &quot;large&quot; separating set.</span>
 
 <span class="sd">    When separating set is deemed &quot;large&quot;, we use a different approach</span>
 <span class="sd">    to computing the overall contingency table.</span>
@@ -370,7 +370,7 @@
 
 
 <span class="k">def</span> <span class="nf">_calculate_g_statistic</span><span class="p">(</span><span class="n">contingency_tble</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculate a G statistic from contingency table.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate a G statistic from contingency table.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -415,7 +415,7 @@
     <span class="n">y</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span>
     <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;G square test for a binary data.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;G square test for a binary data.</span>
 
 <span class="sd">    When running a conditional-independence test, degrees of freecom</span>
 <span class="sd">    is calculated. It is defined as ``2^|S|``, where ``|S|`` is the</span>
@@ -495,7 +495,7 @@
     <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
     <span class="n">levels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;G square test for discrete data.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;G square test for discrete data.</span>
 
 <span class="sd">    The discrete version of the G^2 test :footcite:`Neapolitan2003`.</span>
 
@@ -581,7 +581,7 @@
 
 <div class="viewcode-block" id="GSquareCITest"><a class="viewcode-back" href="../../../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest">[docs]</a><span class="k">class</span> <span class="nc">GSquareCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;binary&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;G squared CI test for discrete or binary data.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;G squared CI test for discrete or binary data.</span>
 
 <span class="sd">        For details of the test see :footcite:`Neapolitan2003`.</span>
 
@@ -605,7 +605,7 @@
         <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Abstract method for all conditional independence tests.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract method for all conditional independence tests.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

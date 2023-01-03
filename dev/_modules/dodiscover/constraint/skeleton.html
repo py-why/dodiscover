@@ -112,8 +112,8 @@
 </li>
 
 <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../../../tutorials.html">
-  Tutorial
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
  </a>
 </li>
 
@@ -230,7 +230,7 @@
     <span class="n">y_var</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">size_cond_set</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Set</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Iterate function to generate the conditioning set.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate function to generate the conditioning set.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -262,7 +262,7 @@
 
 
 <span class="k">def</span> <span class="nf">_find_neighbors_along_path</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Find neighbors that are along a path from start to end.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find neighbors that are along a path from start to end.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -301,7 +301,7 @@
 
 
 <div class="viewcode-block" id="LearnSkeleton"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton">[docs]</a><span class="k">class</span> <span class="nc">LearnSkeleton</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Learn a skeleton graph from a Markovian causal model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Learn a skeleton graph from a Markovian causal model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -439,7 +439,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_ci_tests</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_initialize_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Initialize parameters for learning skeleton.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize parameters for learning skeleton.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -478,7 +478,7 @@
 <div class="viewcode-block" id="LearnSkeleton.evaluate_edge"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.evaluate_edge">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_edge</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Test any specific edge for X || Y | Z.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test any specific edge for X || Y | Z.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -505,7 +505,7 @@
         <span class="k">return</span> <span class="n">test_stat</span><span class="p">,</span> <span class="n">pvalue</span></div>
 
 <div class="viewcode-block" id="LearnSkeleton.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Run structure learning to learn the skeleton of the causal graph.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run structure learning to learn the skeleton of the causal graph.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -580,7 +580,7 @@
                     <span class="p">)</span>
 
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Adj(</span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">) without </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2"> with size=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">possible_adjacencies</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Adj(</span><span class="si">{</span><span class="n">x_var</span><span class="si">}</span><span class="s2">) without </span><span class="si">{</span><span class="n">y_var</span><span class="si">}</span><span class="s2"> with size=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">possible_adjacencies</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;with p=</span><span class="si">{</span><span class="n">size_cond_set</span><span class="si">}</span><span class="s2">. The possible variables to condition on are: &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">possible_variables</span><span class="si">}</span><span class="s2">.&quot;</span>
                     <span class="p">)</span>
@@ -667,7 +667,7 @@
     <span class="k">def</span> <span class="nf">_compute_candidate_conditioning_sets</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">adj_graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">x_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">y_var</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span> <span class="n">skeleton_method</span><span class="p">:</span> <span class="n">SkeletonMethods</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Compute candidate conditioning sets.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute candidate conditioning sets.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -738,7 +738,7 @@
 
 
 <div class="viewcode-block" id="LearnSemiMarkovianSkeleton"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton">[docs]</a><span class="k">class</span> <span class="nc">LearnSemiMarkovianSkeleton</span><span class="p">(</span><span class="n">LearnSkeleton</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Learning a skeleton from a semi-markovian causal model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Learning a skeleton from a semi-markovian causal model.</span>
 
 <span class="sd">    This proceeds by learning a skeleton by testing edges with candidate</span>
 <span class="sd">    separating sets from the &quot;possibly d-separating&quot; sets (PDS), or PDS</span>
