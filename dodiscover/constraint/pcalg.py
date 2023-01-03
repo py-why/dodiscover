@@ -1,5 +1,5 @@
 import logging
-from itertools import combinations, permutations
+from itertools import combinations
 from typing import Optional
 
 import networkx as nx
@@ -134,37 +134,36 @@ class PC(BaseConstraintDiscovery):
             A skeleton graph. If ``None``, then will initialize PC using a
             complete graph. By default None.
         """
-        node_ids = graph.nodes
-
         # For all the combination of nodes i and j, apply the following
         # rules.
         idx = 0
         finished = False
         while idx < self.max_iter and not finished:  # type: ignore
             change_flag = False
-            for (i, j) in permutations(node_ids, 2):
-                if i == j:
-                    continue
-                # Rule 1: Orient i-j into i->j whenever there is an arrow k->i
-                # such that k and j are nonadjacent.
-                r1_add = self._apply_meek_rule1(graph, i, j)
+            for i in graph.nodes:
+                for j in graph.neighbors(i):
+                    if i == j:
+                        continue
+                    # Rule 1: Orient i-j into i->j whenever there is an arrow k->i
+                    # such that k and j are nonadjacent.
+                    r1_add = self._apply_meek_rule1(graph, i, j)
 
-                # Rule 2: Orient i-j into i->j whenever there is a chain
-                # i->k->j.
-                r2_add = self._apply_meek_rule2(graph, i, j)
+                    # Rule 2: Orient i-j into i->j whenever there is a chain
+                    # i->k->j.
+                    r2_add = self._apply_meek_rule2(graph, i, j)
 
-                # Rule 3: Orient i-j into i->j whenever there are two chains
-                # i-k->j and i-l->j such that k and l are nonadjacent.
-                r3_add = self._apply_meek_rule3(graph, i, j)
+                    # Rule 3: Orient i-j into i->j whenever there are two chains
+                    # i-k->j and i-l->j such that k and l are nonadjacent.
+                    r3_add = self._apply_meek_rule3(graph, i, j)
 
-                # Rule 4: Orient i-j into i->j whenever there are two chains
-                # i-k->l and k->l->j such that k and j are nonadjacent.
-                #
-                # However, this rule is not necessary when the PC-algorithm
-                # is used to estimate a DAG.
+                    # Rule 4: Orient i-j into i->j whenever there are two chains
+                    # i-k->l and k->l->j such that k and j are nonadjacent.
+                    #
+                    # However, this rule is not necessary when the PC-algorithm
+                    # is used to estimate a DAG.
 
-                if any([r1_add, r2_add, r3_add]) and not change_flag:
-                    change_flag = True
+                    if any([r1_add, r2_add, r3_add]) and not change_flag:
+                        change_flag = True
             if not change_flag:
                 finished = True
                 logger.info(f"Finished applying R1-3, with {idx} iterations")

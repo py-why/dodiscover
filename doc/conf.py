@@ -263,6 +263,10 @@ sphinx_gallery_conf = {
     "image_scrapers": scrapers,
 }
 
+# prevent jupyter notebooks from being run even if empty cell
+# nbsphinx_execute = "never"
+nbsphinx_allow_errors = True
+
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
     "index": ["search-field.html"],
