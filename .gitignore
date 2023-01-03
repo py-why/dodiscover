@@ -8,6 +8,10 @@ __pycache__/
 # C extensions
 *.so
 
+# possibly produced from drawing graphs
+*.gv
+*.png
+
 junit-results.xml
 
 # Distribution / packaging

@@ -1,5 +1,5 @@
 import logging
-from itertools import combinations, permutations
+from itertools import combinations
 from typing import Iterator, Optional
 
 import networkx as nx

@@ -49,5 +49,8 @@ To install the package from github, clone the repository and then `cd` into the 
     # for graph functionality
     poetry install --extras graph_func
 
+    # to load datasets used in tutorials
+    poetry install --extras data
+
     # if you would like an editable install of dodiscover for dev purposes
     pip install -e .

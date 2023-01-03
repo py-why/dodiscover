@@ -36,6 +36,8 @@ Changelog
 - |Feature| Implement algorithm to learn skeleton using potentially d-separated sets (PDS), :class:`dodiscover.constraint.LearnSemiMarkovianSkeleton` for learning causal structure from observational data with latent confounders, by `Adam Li`_ (:pr:`50`)
 - |Feature| Implement FCI algorithm, :class:`dodiscover.constraint.FCI` for learning causal structure from observational data with latent confounders under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`52`)
 - |Feature| Implement Structural Hamming Distance metric to compare directed graphs, :func:`dodiscover.metrics.structure_hamming_dist`, by `Adam Li`_ (:pr:`55`)
+- |Fix| Update dependency on networkx, which removes a PR branch dependency with pywhy-graphs having the MixedEdgeGraph class that was causing a dependency conflict, by `Adam Li`_ (:pr:`74`)
+- |Enhancement| Add tutorial for PC algorithm with Asia data, by `Robert Osazuwa Ness`_ (:pr:`67`)
 
 Code and Documentation Contributors
 -----------------------------------
@@ -45,3 +47,4 @@ the project since version inception, including:
 
 * `Adam Li`_
 * `Chris Trevino`_
+* `Robert Osazuwa Ness`_
