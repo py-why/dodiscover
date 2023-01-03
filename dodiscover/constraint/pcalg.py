@@ -135,10 +135,9 @@ class PC(BaseConstraintDiscovery):
 
         Used in orientation of edges.
         """
-        for (i, j) in permutations(graph.nodes, 2):
-            if i == j:
-                continue
-            yield (i, j)
+        for i in graph.nodes:
+            for j in graph.neighbors(j):
+                yield (i, j)
 
     def orient_edges(self, graph: EquivalenceClass) -> None:
         """Orient edges in a skeleton graph to estimate the causal DAG, or CPDAG.
