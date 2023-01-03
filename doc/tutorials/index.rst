@@ -14,5 +14,5 @@ no latent confounders.
    :maxdepth: 1
    :titlesonly:
 
-   markovian/pc
+   markovian/example-pc-algo
 
