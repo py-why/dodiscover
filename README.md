@@ -24,7 +24,7 @@ DoDiscover prioritizes the workflow over the algorithms and provides default arg
 
 Many cutting-edge causal discovery algorithms rely on deep learning frameworks.
 However, deep learning-based causal discovery often requires obscure boilerplate code, complex configuration, and management of large artifacts such as embeddings.
-DoDiscover seeks to create abstractions that address these challenges and make deep causal discovery more broadly accessible.
+DoDiscover seeks to create abstractions that address these challenges and make deep causal discovery more broadly accessible. Current algorithms are a work-in-progress. We will begin by providing a robust API for the fundamental discovery algorithms.
 
 ## Easy interface for articulating causal assumptions
 
