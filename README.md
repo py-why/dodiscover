@@ -6,8 +6,6 @@
 
 # dodiscover
 
-DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a hypothesized causal graph for their situation, then they may use dodiscover to learn causal structure from their data (e.g. in the form of a graph).
-
 DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a causal graph for their modeling problem, they may use DoDiscover to learn causal structure from their data (e.g., in the form of a graph).
 
 # What makes dodiscovery different from other causal discovery libraries?
