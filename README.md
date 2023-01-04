@@ -43,16 +43,6 @@ Further, DoDiscover seeks to help the user feel confident with their assumptions
 Causal representation learning is the task of learning high-level latent variables and the causal structure between them from low-level variables observed in data.
 DoDiscover seeks to support causal representation learning algorithms in the context of traditional causal discovery settings.
 
-## Default assumptions of uncertainty
-
-DoDiscover emphasizes representations of causal uncertainty.
-These include:
-* Representations of equivalent classes of causal graphs
-* Uncertainty representation
-* Work with graph ensembles
-* Bayesian priors and posteriors on graphs
-* The possible presence of latent variables
-
 # Documentation
 
 See the [development version documentation](https://py-why.github.io/dodiscover/dev/index.html).
