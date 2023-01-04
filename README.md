@@ -8,6 +8,51 @@
 
 DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a hypothesized causal graph for their situation, then they may use dodiscover to learn causal structure from their data (e.g. in the form of a graph).
 
+DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a causal graph for their modeling problem, they may use DoDiscover to learn causal structure from their data (e.g., in the form of a graph).
+
+# What makes dodiscovery different from other causal discovery libraries?
+
+Why do we need another causal discovery library?
+Here are some design goals that differentiate DoDiscover from other causal discovery libraries.
+
+## Ease of use
+
+An analyst should be able to get a causal discovery workflow working quickly without intimate knowledge of causal discovery algorithms.
+DoDiscover prioritizes the workflow over the algorithms and provides default arguments to algorithm parameters.
+
+## Democratizing deep causal discovery
+
+Many cutting-edge causal discovery algorithms rely on deep learning frameworks.
+However, deep learning-based causal discovery often requires obscure boilerplate code, complex configuration, and management of large artifacts such as embeddings.
+DoDiscover seeks to create abstractions that address these challenges and make deep causal discovery more broadly accessible.
+
+## Easy interface for articulating causal assumptions
+
+Domain experts bring a large amount of domain knowledge to a problem.
+That domain knowledge can establish causal assumptions that can constrain causal discovery.
+Causal discovery (indeed, all causal inferences) requires causal assumptions.
+
+However, a newly developed causal discovery algorithm has a greater research impact when it can do more with fewer assumptions.
+This "do more with less" orientation tends to deemphasize assumptions in the user interfaces of many causal discovery libraries.
+
+DoDiscover prioritizes the interface for causal assumptions.
+Further, DoDiscover seeks to help the user feel confident with their assumptions by emphasizing testing assumptions, making inferences under uncertainty, and robustness to model misspecification.
+
+## Unite causal discovery and causal representation learning
+
+Causal representation learning is the task of learning high-level latent variables and the causal structure between them from low-level variables observed in data.
+DoDiscover seeks to support causal representation learning algorithms in the context of traditional causal discovery settings.
+
+## Default assumptions of uncertainty
+
+DoDiscover emphasizes representations of causal uncertainty.
+These include:
+* Representations of equivalent classes of causal graphs
+* Uncertainty representation
+* Work with graph ensembles
+* Bayesian priors and posteriors on graphs
+* The possible presence of latent variables
+
 # Documentation
 
 See the [development version documentation](https://py-why.github.io/dodiscover/dev/index.html).
