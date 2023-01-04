@@ -6,8 +6,9 @@ from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
+from dodiscover.typing import NetworkxGraph
+
 from ._protocol import Graph
-from .typing import NetworkxGraph
 
 
 def confusion_matrix_networks(

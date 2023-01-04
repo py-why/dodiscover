@@ -70,6 +70,8 @@ pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 memory_profiler = { version = "^0.60.0" }
 flaky = "^3.7.0"
+causal-learn = "^0.1.3.1"
+bnlearn = "^0.7.12"
 
 [tool.poetry.group.docs]
 optional = true
