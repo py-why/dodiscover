@@ -3,7 +3,8 @@ Wrapper for the GIN algorithm in causal-learn
 TODO: Need type hints
 """
 from causallearn.search.HiddenCausal.GIN.GIN import GIN as GIN_
-
+import pandas as pd
+import numpy.typing as npt
 from pywhy_graphs import CPDAG
 
 class GIN:
@@ -28,7 +29,7 @@ class GIN:
 
     def _causal_learn_to_pdag(self, cl_graph):
         """"""
-        def _extract_edgelists(adj_mat, names):
+        def _extract_edgelists(adj_mat: npt, names:str)-> tuple:
             directed_edges = []
             undirected_edges = []
             for i, row in enumerate(adj_mat):
@@ -51,7 +52,7 @@ class GIN:
         return pdag
 
 
-    def fit(self, data, context):
+    def fit(self, data: pd.core.frame.DataFrame, context):
         """Fit to data.
         TODO: How to apply context constraints?  Need to create issue"""
         causal_learn_graph, ordering = GIN_(
