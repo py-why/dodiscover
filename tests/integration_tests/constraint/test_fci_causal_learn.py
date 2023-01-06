@@ -8,8 +8,8 @@ from pywhy_graphs.array.export import clearn_arr_to_graph
 from scipy import stats
 
 from dodiscover import FCI, make_context
-from dodiscover.ci import FisherZCITest, Oracle
-from dodiscover.metrics import confusion_matrix_networks
+from dodiscover.ci import FisherZCITest, GSquareCITest, Oracle
+from dodiscover.metrics import confusion_matrix_networks, structure_hamming_dist
 
 
 def simulate_gcm():
@@ -56,17 +56,22 @@ def simulate_gcm():
 
         # root node
         random_mean = rng.normal()
-        random_scale = rng.normal()
+        random_scale = rng.uniform()
         gcm_distrib = gcm.ScipyDistribution(stats.norm, loc=random_mean, scale=random_scale)
+
+        p = 0.5
+        gcm_distrib = gcm.ScipyDistribution(stats.binom, n=1, p=p)
+
+        weight_model = rng.normal()
+        weight_model = rng.binomial(n=1, p=p)
+
         if len(parents) == 0:
             causal_model.set_causal_mechanism(node, gcm_distrib)
         else:
-            random_coeff = rng.normal()
-
             causal_model.set_causal_mechanism(
                 node,
                 gcm.AdditiveNoiseModel(
-                    prediction_model=MyCustomModel(random_coeff), noise_model=gcm_distrib
+                    prediction_model=MyCustomModel(weight_model), noise_model=gcm_distrib
                 ),
             )
 
@@ -81,7 +86,7 @@ def simulate_gcm():
 
 
 def test_fci_against_causallearn():
-    n_samples = 5000
+    n_samples = 2000
     alpha = 0.05
     causal_model = simulate_gcm()
 
@@ -89,7 +94,7 @@ def test_fci_against_causallearn():
     data = gcm.draw_samples(causal_model, num_samples=n_samples)
 
     # drop latent confounders
-    data.drop(["x45", "x12"], inplace=True)
+    data.drop(["x45", "x12"], axis=1, inplace=True)
 
     # setup input data for algorithms
     data_arr = data.to_numpy()
@@ -99,19 +104,51 @@ def test_fci_against_causallearn():
     oracle = Oracle(causal_model.graph)
     fci_alg = FCI(ci_estimator=oracle)
     fci_alg.fit(data, context)
-    true_pag = fci_alg.graph_
+    # true_pag = fci_alg.graph_
+
+    ci_test = FisherZCITest()
+    ci_test = GSquareCITest(data_type="discrete")
+    clearn_ci_test = "gsq"
 
     # First run causallearn
-    clearn_graph, edges = fci(data_arr, independence_test_method="fisherz", alpha=alpha)
+    clearn_graph, edges = fci(data_arr, independence_test_method=clearn_ci_test, alpha=alpha)
 
     # Second run FCI
-    ci_test = FisherZCITest()
     fci_alg = FCI(ci_estimator=ci_test, alpha=alpha)
     fci_alg.fit(data, context)
     dodiscover_graph = fci_alg.graph_
 
     # first compare the adjacency structure
-    clearn_graph = clearn_arr_to_graph(clearn_graph, arr_idx=data.columns, graph_type="pag")
+    clearn_graph = clearn_arr_to_graph(clearn_graph.graph, arr_idx=data.columns, graph_type="pag")
     cm = confusion_matrix_networks(dodiscover_graph, clearn_graph)
 
+    dia = np.diag_indices(cm.shape[0])  # indices of diagonal elements
+    dia_sum = sum(cm[dia])  # sum of diagonal elements
+    off_dia_sum = np.sum(cm) - dia_sum  # subtract the diagonal sum from total array sum
+
+    print(cm)
+    assert off_dia_sum == 0
+
     # compare the SHD against the ground-truth graph
+    assert (
+        structure_hamming_dist(
+            dodiscover_graph.sub_directed_graph(), clearn_graph.sub_directed_graph()
+        )
+        == 0
+    )
+    assert (
+        structure_hamming_dist(
+            dodiscover_graph.sub_bidirected_graph(), clearn_graph.sub_bidirected_graph()
+        )
+        == 0
+    )
+    assert (
+        structure_hamming_dist(
+            dodiscover_graph.sub_undirected_graph(), clearn_graph.sub_undirected_graph()
+        )
+        == 0
+    )
+    assert (
+        structure_hamming_dist(dodiscover_graph.sub_circle_graph(), clearn_graph.sub_circle_graph())
+        == 0
+    )

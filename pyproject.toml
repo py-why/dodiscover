@@ -90,7 +90,7 @@ sphinx_rtd_theme = { version = "^1.0.0" }
 graphviz = { version = "^0.20.1" }
 ipython = { version = "^7.4.0" }
 nbsphinx = { version = "^0.8" }
-bnlearn = { git = "https://github.com/erdogant/bnlearn.git", branch = 'master', optional = true }
+bnlearn = { git = "https://github.com/erdogant/bnlearn.git", branch = 'master' }
 dowhy = { version = "^0.8" }
 typing-extensions = { version = "*" }         # needed in dowhy's package 
 joblib = { version = "^1.1.0" }               # needed in dowhy's package
@@ -143,7 +143,6 @@ integration_test = 'pytest tests/integration_tests'
 build_docs = 'make -C doc clean html'
 
 [[tool.poe.tasks.clean]]
-# '_clean_cache', '_clean_pyc', '_clean_so'
 sequence = ['_clean_cache', '_clean_pyc', '_clean_so', '_clean_build', '_clean_ctags', '_clean_test']
 ignore_fail = 'return_non_zero'
 
