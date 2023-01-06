@@ -130,7 +130,6 @@ description = "Python package for learning the graphical structure of Bayesian n
 category = "dev"
 optional = false
 python-versions = ">=3"
-develop = false
 
 [package.dependencies]
 df2onehot = "*"
@@ -152,12 +151,6 @@ statsmodels = "*"
 tabulate = "*"
 tqdm = "*"
 wget = "*"
-
-[package.source]
-type = "git"
-url = "https://github.com/erdogant/bnlearn.git"
-reference = 'master'
-resolved_reference = "172c209d1d64278b0b58573910805aad167f37e0"
 
 [[package]]
 name = "causal-learn"
@@ -2434,7 +2427,7 @@ viz = ["pygraphviz"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "32d6878230e3c7a580d15b59a82228587c9b364a73b0af88d1191d6742e76aa3"
+content-hash = "a3344f33f579e305ced7458b46ab483ceca598ea2c71922a12230284a8c6d94e"
 
 [metadata.files]
 alabaster = [
@@ -2483,7 +2476,10 @@ bleach = [
     {file = "bleach-5.0.1-py3-none-any.whl", hash = "sha256:085f7f33c15bd408dd9b17a4ad77c577db66d76203e5984b1bd59baeee948b2a"},
     {file = "bleach-5.0.1.tar.gz", hash = "sha256:0d03255c47eb9bd2f26aa9bb7f2107732e7e8fe195ca2f64709fcf3b0a4a085c"},
 ]
-bnlearn = []
+bnlearn = [
+    {file = "bnlearn-0.7.12-py3-none-any.whl", hash = "sha256:ed69fb1170fa6048c8fb0ea7b123e36db7eb51fc2840295717299c62e752b68a"},
+    {file = "bnlearn-0.7.12.tar.gz", hash = "sha256:7eb04bcb0da8f527c0a8a1a80a92aab782cff69835ddb7580ab947f11a84edf5"},
+]
 causal-learn = [
     {file = "causal-learn-0.1.3.1.tar.gz", hash = "sha256:0345affa8bc9236c6f8fa1adc45e0e9b7bddf8e54ebb8e08d421a3e4754faf85"},
     {file = "causal_learn-0.1.3.1-py3-none-any.whl", hash = "sha256:6aa4a66f2231d425801562ac142da33054e3ee4cc8d10e9e04695cb4af172db2"},

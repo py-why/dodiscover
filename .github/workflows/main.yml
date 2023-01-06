@@ -124,7 +124,7 @@ jobs:
         python-version: [3.8, "3.10"]  # oldest and newest supported versions
         poetry-version: [1.3.0]
         networkx: [stable, main]
-    name: pytest ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
+    name: Unit-test ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
     runs-on: ${{ matrix.os }}-latest
     defaults:
       run:
@@ -168,7 +168,7 @@ jobs:
         python-version: ["3.10"]  # oldest and newest supported versions
         poetry-version: [1.3.0]
         networkx: [main]
-    name: pytest ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
+    name: Integration test ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
     runs-on: ${{ matrix.os }}-latest
     defaults:
       run:
@@ -189,7 +189,7 @@ jobs:
         run: pip install poetry-dynamic-versioning
       - name: Install packages via poetry
         run: |
-          poetry install --with test
+          poetry install --with test,docs
       - name: Run pytest  # headless via Xvfb on linux
         run: poetry run poe integration_test
 
