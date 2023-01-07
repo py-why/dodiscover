@@ -189,7 +189,7 @@ jobs:
         run: pip install poetry-dynamic-versioning
       - name: Install packages via poetry
         run: |
-          poetry install --with test,docs
+          poetry install --with test,docs --extras graph_func
       - name: Run pytest  # headless via Xvfb on linux
         run: poetry run poe integration_test
 
