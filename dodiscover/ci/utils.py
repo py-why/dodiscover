@@ -3,7 +3,7 @@ from numpy.typing import ArrayLike
 
 
 def _restricted_permutation(
-    nbrs: ArrayLike[np.int], n_shuffle_nbrs: int, n_samples: int, random_state=None
+    nbrs: ArrayLike, n_shuffle_nbrs: int, n_samples: int, random_state=None
 ) -> ArrayLike:
     if random_state is None:
         random_state = np.random.RandomState(seed=random_state)

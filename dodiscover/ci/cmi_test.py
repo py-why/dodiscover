@@ -14,7 +14,7 @@ from .utils import _restricted_permutation
 
 
 class CMITest(BaseConditionalIndependenceTest):
-    """Conditional mutual information independence test.
+    r"""Conditional mutual information independence test.
 
     Implements the conditional independence test using conditional
     mutual information proposed in :footcite:`Runge2018cmi`.
@@ -40,16 +40,20 @@ class CMITest(BaseConditionalIndependenceTest):
     -----
     Conditional mutual information (CMI) is defined as:
 
-    .. math:: I(X;Y|Z) = \iiint p(z) p(x,y|z) \log
-        \frac{ p(x,y|z)}{p(x|z)\cdot p(y |z)} \,dx dy dz
+    .. math::
+
+        I(X;Y|Z) = \iiint p(z) p(x,y|z)
+        \log \frac{ p(x,y|z)}{p(x|z)\cdot p(y |z)} \,dx dy dz
 
     It can be seen that when :math:`X \perp Y | Z`, then CMI is equal to 0.
     Hence, CMI is a general measure for conditional dependence. The
     estimator for CMI proposed in :footcite:`Runge2018cmi` is a
     k-nearest-neighbor based estimator:
 
-    .. math:: \widehat{I}(X;Y|Z) = \psi (k) + \frac{1}{T} \sum_{t=1}^T
-            (\psi(k_{Z,t}) - \psi(k_{XZ,t}) - \psi(k_{YZ,t}))
+    .. math::
+
+        \widehat{I}(X;Y|Z) = \psi (k) + \frac{1}{T} \sum_{t=1}^T
+        (\psi(k_{Z,t}) - \psi(k_{XZ,t}) - \psi(k_{YZ,t}))
 
     where :math:`\psi` is the Digamma (i.e. see `scipy.special.digamma`)
     function. :math:`k` determines the
@@ -310,4 +314,4 @@ class CMITest(BaseConditionalIndependenceTest):
             data_copy[x_var] = shuffled_x
             shuffle_dist[idx] = self._compute_cmi(data_copy, x_var, y_var, z_covariates)
 
-    return shuffle_dist
+        return shuffle_dist
