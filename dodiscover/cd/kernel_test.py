@@ -3,93 +3,12 @@ from typing import Set, Tuple
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
-from numpy.typing import NDArray
-from scipy.optimize import minimize_scalar
-from sklearn.linear_model import LogisticRegression
+from numpy.typing import ArrayLike
 
-from dodiscover.ci.kernel_test import compute_kernel
+from dodiscover.ci.utils import _default_regularization, _estimate_propensity_scores, compute_kernel
 from dodiscover.typing import Column
 
 from .base import BaseConditionalDiscrepancyTest
-
-
-def _compute_W_matrix(K: NDArray, z, l0, l1):
-    """Compute W matrices as done in KCD test.
-
-    Parameters
-    ----------
-    K : NDArray of shape (n_samples, n_samples)
-        The kernel matrix.
-    z : NDArray of shape (n_samples)
-        The indicator variable of 1's and 0's for which samples belong
-        to which group.
-    l0 : float
-        The l2 regularization penalty applied to the inverse problem for the
-        ``W_0`` matrix.
-    l1 : float
-        The l2 regularization penalty applied to the inverse problem for the
-        ``W_1`` matrix.
-
-    Returns
-    -------
-    W0 : NDArray
-
-    W1 : NDArray
-
-    Notes
-    -----
-    Compute the W matrix for the estimated conditional average in
-    the KCD test :footcite:`Park2021conditional`.
-
-    References
-    ----------
-    .. footbibliography::
-    """
-    # compute kernel matrices
-    first_mask = np.array(1 - z, dtype=bool)
-    second_mask = np.array(z, dtype=bool)
-
-    K0 = K[first_mask, first_mask]
-    K1 = K[second_mask, second_mask]
-
-    # compute the number of samples in each
-    n0 = int(np.sum(1 - z))
-    n1 = int(np.sum(z))
-
-    W0 = np.linalg.inv(K0 + l0 * np.identity(n0))
-    W1 = np.linalg.inv(K1 + l1 * np.identity(n1))
-    return W0, W1
-
-
-def _estimate_propensity_scores(K, z, penalty=None, n_jobs=None, random_state=None):
-    if penalty is None:
-        penalty = _default_regularization(K)
-
-    clf = LogisticRegression(
-        penalty="l2",
-        n_jobs=n_jobs,
-        warm_start=True,
-        solver="lbfgs",
-        random_state=random_state,
-        C=1 / (2 * penalty),
-    )
-
-    # fit and then obtain the probabilities of treatment
-    # for each sample (i.e. the propensity scores)
-    e_hat = clf.fit(K, z).predict_proba(K)[:, 1]
-
-    return e_hat
-
-
-def _default_regularization(K):
-    n_samples = K.shape[0]
-    svals = np.linalg.svd(K, compute_uv=False, hermitian=True)
-    res = minimize_scalar(
-        lambda reg: np.sum(svals**2 / (svals + reg) ** 2) / n_samples + reg,
-        bounds=(0.0001, 1000),
-        method="bounded",
-    )
-    return res.x
 
 
 class KernelCDTest(BaseConditionalDiscrepancyTest):
@@ -104,18 +23,24 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         _description_, by default "euclidean"
     metric : str, optional
         _description_, by default "rbf"
-    l2 : _type_, optional
-        _description_, by default None
-    kwidth_x : _type_, optional
-        _description_, by default None
-    kwidth_y : _type_, optional
-        _description_, by default None
+    l2 : float | tuple of float, optional
+        The l2 regularization to apply for inverting the kernel matrices of 'x' and 'y'
+        respectively, by default None. If a single number, then the same l2 regularization
+        will be applied to inverting both matrices. If ``None``, then a default
+        regularization will be computed that chooses the value that minimizes the upper bound
+        on the mean squared prediction error.
+    kwidth_x : float, optional
+        Kernel width among X variables, by default None, which we will then estimate
+        using the median l2 distance between the X variables.
+    kwidth_y : float, optional
+        Kernel width among Y variables, by default None, which we will then estimate
+        using the median l2 distance between the Y variables.
     null_reps : int, optional
-        _description_, by default 1000
-    n_jobs : _type_, optional
-        _description_, by default None
-    random_state : _type_, optional
-        _description_, by default None
+        Number of times to sample the null distribution, by default 1000.
+    n_jobs : int, optional
+        Number of jobs to run computations in parallel, by default None.
+    random_state : int, optional
+        Random seed, by default None.
 
     References
     ----------
@@ -150,6 +75,34 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         y_vars: Set[Column],
         group_col: Column,
     ) -> Tuple[float, float]:
+        """Compute k-sample test statistic and pvalue.
+
+        Tests the null hypothesis::
+
+            H_0: P(Y|X) = P'(Y|X)
+
+        where the different distributions arise from the different datasets
+        collected denoted by the ``group_col`` parameter.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The dataset containing the columns denoted by ``x_vars``, ``y_vars``,
+            and the ``group_col``.
+        x_vars : Set[Column]
+            Set of X variables.
+        y_vars : Set[Column]
+            Set of Y variables.
+        group_col : Column
+            The column denoting, which group (i.e. environment) each sample belongs to.
+
+        Returns
+        -------
+        stat : float
+            The computed test statistic.
+        pvalue : float
+            The computed p-value.
+        """
         x_cols = list(x_vars)
         y_cols = list(y_vars)
 
@@ -157,7 +110,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         if set(np.unique(group_ind)) != {0, 1}:
             raise RuntimeError(f"Group indications in {group_col} column should be all 1 or 0.")
 
-        # compute kernel
+        # compute kernel for the X and Y data
         X = df[x_cols].to_numpy()
         Y = df[y_cols].to_numpy()
         K, sigma_x = compute_kernel(
@@ -202,31 +155,87 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1 + np.sum(null_dist >= stat)) / (1 + self.null_reps)
         return stat, pvalue
 
-    def _statistic(self, K: NDArray, L: NDArray, group_ind: NDArray) -> float:
+    def _statistic(self, K: ArrayLike, L: ArrayLike, group_ind: ArrayLike) -> float:
         n_samples = len(K)
 
-        # compute W matrices from K
-        W0, W1 = _compute_W_matrix(K, group_ind, l0=self.l2, l1=self.l2)
+        # compute W matrices from K and z
+        W0, W1 = self._compute_inverse_kernel(K, group_ind)
 
         # compute L kernels
         first_mask = np.array(1 - group_ind, dtype=bool)
         second_mask = np.array(group_ind, dtype=bool)
-        L0 = L[first_mask, first_mask]
-        L1 = L[second_mask, second_mask]
-        L01 = L[first_mask, second_mask]
+        L0 = L[np.ix_(first_mask, first_mask)]
+        L1 = L[np.ix_(second_mask, second_mask)]
+        L01 = L[np.ix_(first_mask, second_mask)]
 
         # compute the final test statistic
         K0 = K[:, first_mask]
         K1 = K[:, second_mask]
+        KW0 = K0 @ W0
+        KW1 = K1 @ W1
 
         # compute the three terms in Lemma 4.4
-        first_term = np.trace((K0 @ W0).T @ L0 @ (K0 @ W0))
-        second_term = np.trace((K1 @ W1).T @ L01 @ (K0 @ W0))
-        third_term = np.trace((K1 @ W1).T @ L1 @ (K1 @ W1))
+        first_term = np.trace(KW0.T @ KW0 @ L0)
+        second_term = np.trace(KW1.T @ KW0 @ L01)
+        third_term = np.trace(KW1.T @ KW1 @ L1)
 
         # compute final statistic
         stat = (first_term - 2 * second_term + third_term) / n_samples
         return stat
+
+    def _compute_inverse_kernel(self, K, z) -> Tuple[ArrayLike, ArrayLike]:
+        """Compute W matrices as done in KCD test.
+
+        Parameters
+        ----------
+        K : ArrayLike of shape (n_samples, n_samples)
+            The kernel matrix.
+        z : ArrayLike of shape (n_samples)
+            The indicator variable of 1's and 0's for which samples belong
+            to which group.
+
+        Returns
+        -------
+        W0 : ArrayLike of shape (n_samples_i, n_samples_i)
+            The inverse of the kernel matrix from the first group.
+        W1 : NDArraArrayLike of shape (n_samples_j, n_samples_j)
+            The inverse of the kernel matrix from the second group.
+
+        Notes
+        -----
+        Compute the W matrix for the estimated conditional average in
+        the KCD test :footcite:`Park2021conditional`.
+
+        References
+        ----------
+        .. footbibliography::
+        """
+        # compute kernel matrices
+        first_mask = np.array(1 - z, dtype=bool)
+        second_mask = np.array(z, dtype=bool)
+
+        # TODO: CHECK THAT THIS IS CORRECT
+        K0 = K[np.ix_(first_mask, first_mask)]
+        K1 = K[np.ix_(second_mask, second_mask)]
+
+        # compute the number of samples in each
+        n0 = int(np.sum(1 - z))
+        n1 = int(np.sum(z))
+
+        if isinstance(self.l2, (int, float)):
+            l0 = self.l2
+            l1 = self.l2
+            self.regs_ = (l0, l1)
+        elif self.l2 is None:
+            self.regs_ = (_default_regularization(K0), _default_regularization(K1))
+        else:
+            if len(self.l2) != 2:
+                raise RuntimeError(f"l2 regularization {self.l2} must be a 2-tuple, or a number.")
+            self.regs_ = self.l2
+
+        W0 = np.linalg.inv(K0 + self.regs_[0] * np.identity(n0))
+        W1 = np.linalg.inv(K1 + self.regs_[1] * np.identity(n1))
+        return W0, W1
 
     def compute_null(self, e_hat, K, L, null_reps=1000, random_state=None):
         rng = np.random.default_rng(random_state)

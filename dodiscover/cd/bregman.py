@@ -3,109 +3,12 @@ from typing import Set, Tuple
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
-from numpy.typing import NDArray
-from scipy.linalg import logm
-from scipy.stats import gaussian_kde
+from numpy.typing import ArrayLike
 
-from dodiscover.ci.kernel_test import compute_kernel
+from dodiscover.ci.utils import corrent_matrix, von_neumann_divergence
 from dodiscover.typing import Column
 
 from .base import BaseConditionalDiscrepancyTest
-
-
-def von_neumann_divergence(A: NDArray, B: NDArray) -> float:
-    """Compute Von Neumann divergence between two PSD matrices.
-
-    Parameters
-    ----------
-    A : NDArray of shape (n, n)
-        The first PSD matrix.
-    B : NDArray of shape (n, n)
-        The second PSD matrix
-
-    Returns
-    -------
-    div : float
-        The divergence value.
-
-    Notes
-    -----
-    The Von Neumann divergence, or what is known as the Bregman divergence in
-    :footcite:`Yu2020Bregman` is computed as follows with
-    :math:`D(A || B) = Tr(A (log(A) - log(B)) - A + B)`.
-    """
-    div = np.trace(A.dot(logm(A) - logm(B)) - A + B)
-    return div
-
-
-def corrent_matrix(
-    data: NDArray,
-    metric: str = "rbf",
-    kwidth: float = None,
-    distance_metric="euclidean",
-    n_jobs=None,
-) -> NDArray:
-    """Compute the centered correntropy of a matrix.
-
-    Parameters
-    ----------
-    data : NDArray of shape (n_samples, n_features)
-        The data.
-    metric : str
-        The kernel metric.
-    kwidth : float
-        The kernel width.
-    distance_metric : str
-        The distance metric to infer kernel width.
-    n_jobs : int, optional
-        The number of jobs to run computations in parallel, by default None.
-
-    Returns
-    -------
-    data : NDArray of shape (n_features, n_features)
-        A symmetric centered correntropy matrix of the data.
-
-    Notes
-    -----
-    The estimator for the correntropy array is given by the formula
-    :math:`1 / N \\sum_{i=1}^N k(x_i, y_i) - 1 / N**2 \\sum_{i=1}^N \\sum_{j=1}^N k(x_i, y_j)`.
-    The first term is the estimate, and the second term is the bias, and together they form
-    an unbiased estimate.
-    """
-    n_samples, n_features = data.shape
-    corren_arr = np.zeros(shape=(n_features, n_features))
-
-    # compute kernel between each feature, which is now (n_features, n_features) array
-    for idx in range(n_features):
-        for jdx in range(idx + 1):
-            K, kwidth = compute_kernel(
-                data[:, idx],
-                data[:, jdx],
-                metric=metric,
-                distance_metric=distance_metric,
-                kwidth=kwidth,
-                centered=False,
-                n_jobs=n_jobs,
-            )
-
-            # compute the bias due to finite-samples
-            bias = np.sum(K) / n_samples**2
-
-            # compute the sample centered correntropy
-            corren = (1.0 / n_samples) * np.trace(K) - bias
-
-            corren_arr[idx, jdx] = corren_arr[jdx, idx] = corren
-    return corren_arr
-
-
-def _estimate_kwidth(data, method="scott"):
-    kde = gaussian_kde(data)
-
-    if method == "scott":
-        kwidth = kde.scotts_factor()
-    elif method == "silverman":
-        kwidth = kde.silverman_factor()
-    return kwidth
 
 
 class BregmanCDTest(BaseConditionalDiscrepancyTest):
@@ -117,17 +20,18 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
     Parameters
     ----------
     metric : str, optional
-        _description_, by default 'rbf'
+        The kernel metric, by default 'rbf'.
     distance_metric : str, optional
-        _description_, by default 'euclidean'
+        The distance metric, by default 'euclidean'.
     kwidth : float, optional
-        _description_, by default None
+        The width of the kernel, by default None, which we will then estimate
+        using the default procedure in :func:`dodiscover.ci.utils.compute_kernel`.
     null_reps : int, optional
-        _description_, by default 1000
+        Number of times to sample null distribution, by default 1000.
     n_jobs : int, optional
-        _description_, by default None
-    random_state : _type_, optional
-        _description_, by default None
+        Number of CPUs to use, by default None.
+    random_state : int, optional
+        Random seed, by default None.
 
     References
     ----------
@@ -141,7 +45,7 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         kwidth: float = None,
         null_reps: int = 1000,
         n_jobs: int = None,
-        random_state=None,
+        random_state: int = None,
     ) -> None:
         self.metric = metric
         self.distance_metric = distance_metric
@@ -178,7 +82,7 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1.0 + np.sum(null_dist >= conditional_div)) / (1 + self.null_reps)
         return conditional_div, pvalue
 
-    def _statistic(self, X: NDArray, Y: NDArray, group_ind: NDArray) -> float:
+    def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:
         first_group = group_ind == 0
         second_group = group_ind == 1
         X1 = X[first_group, :]
@@ -218,7 +122,9 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         conditional_div = 1.0 / 2 * (joint_div1 - x_div1 + joint_div2 - x_div2)
         return conditional_div
 
-    def compute_null(self, X: NDArray, Y: NDArray, null_reps: int = 1000, random_state: int = None):
+    def compute_null(
+        self, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state: int = None
+    ):
         rng = np.random.default_rng(random_state)
 
         p = 0.5
