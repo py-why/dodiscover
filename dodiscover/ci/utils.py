@@ -3,9 +3,95 @@ from typing import Optional, Tuple
 import numpy as np
 from numpy.typing import ArrayLike
 from scipy.optimize import minimize_scalar
+from scipy.linalg import logm
 from scipy.stats import gaussian_kde
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import pairwise_distances, pairwise_kernels
+
+
+def von_neumann_divergence(A: ArrayLike, B: ArrayLike) -> float:
+    """Compute Von Neumann divergence between two PSD matrices.
+
+    Parameters
+    ----------
+    A : ArrayLike of shape (n, n)
+        The first PSD matrix.
+    B : ArrayLike of shape (n, n)
+        The second PSD matrix
+
+    Returns
+    -------
+    div : float
+        The divergence value.
+
+    Notes
+    -----
+    The Von Neumann divergence, or what is known as the Bregman divergence in
+    :footcite:`Yu2020Bregman` is computed as follows with
+    :math:`D(A || B) = Tr(A (log(A) - log(B)) - A + B)`.
+    """
+    div = np.trace(A.dot(logm(A) - logm(B)) - A + B)
+    return div
+
+
+def corrent_matrix(
+    data: ArrayLike,
+    metric: str = "rbf",
+    kwidth: float = None,
+    distance_metric="euclidean",
+    n_jobs=None,
+) -> ArrayLike:
+    """Compute the centered correntropy of a matrix.
+
+    Parameters
+    ----------
+    data : ArrayLike of shape (n_samples, n_features)
+        The data.
+    metric : str
+        The kernel metric.
+    kwidth : float
+        The kernel width.
+    distance_metric : str
+        The distance metric to infer kernel width.
+    n_jobs : int, optional
+        The number of jobs to run computations in parallel, by default None.
+
+    Returns
+    -------
+    data : ArrayLike of shape (n_features, n_features)
+        A symmetric centered correntropy matrix of the data.
+
+    Notes
+    -----
+    The estimator for the correntropy array is given by the formula
+    :math:`1 / N \\sum_{i=1}^N k(x_i, y_i) - 1 / N**2 \\sum_{i=1}^N \\sum_{j=1}^N k(x_i, y_j)`.
+    The first term is the estimate, and the second term is the bias, and together they form
+    an unbiased estimate.
+    """
+    n_samples, n_features = data.shape
+    corren_arr = np.zeros(shape=(n_features, n_features))
+
+    # compute kernel between each feature, which is now (n_features, n_features) array
+    for idx in range(n_features):
+        for jdx in range(idx + 1):
+            K, kwidth = compute_kernel(
+                data[:, idx][:, np.newaxis],
+                data[:, jdx][:, np.newaxis],
+                metric=metric,
+                distance_metric=distance_metric,
+                kwidth=kwidth,
+                centered=False,
+                n_jobs=n_jobs,
+            )
+
+            # compute the bias due to finite-samples
+            bias = np.sum(K) / n_samples**2
+
+            # compute the sample centered correntropy
+            corren = (1.0 / n_samples) * np.trace(K) - bias
+
+            corren_arr[idx, jdx] = corren_arr[jdx, idx] = corren
+    return corren_arr
 
 
 def compute_kernel(
