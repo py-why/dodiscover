@@ -46,8 +46,8 @@ jobs:
       - run:
           name: Install the latest version of Poetry
           command: |
-            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python -
-            curl -sSL https://install.python-poetry.org | python3 - --version 1.2.0
+            curl -sSL https://install.python-poetry.org | python3 - --version 1.3.0
+            poetry --version
       - run:
           name: Set BASH_ENV
           command: |
@@ -140,6 +140,12 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
           cache-version: "v1" # change to clear cache
+          args: "--with docs"
+      - run:
+          name: Check poetry package versions
+          command: |
+            poetry --version
+            poetry show
       - run:
           name: make linkcheck
           command: |
