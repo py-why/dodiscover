@@ -21,9 +21,9 @@ class KernelCITest(BaseConditionalIndependenceTest):
         kernel_z: str = "rbf",
         null_size: int = 1000,
         approx_with_gamma: bool = True,
-        kwidth_x=None,
-        kwidth_y=None,
-        kwidth_z=None,
+        kwidth_x: float = None,
+        kwidth_y: float = None,
+        kwidth_z: float = None,
         threshold: float = 1e-5,
         n_jobs: int = None,
     ):
@@ -46,11 +46,11 @@ class KernelCITest(BaseConditionalIndependenceTest):
         approx_with_gamma : bool, optional
             Whether to use the Gamma distribution approximation for the pvalue,
             by default True.
-        kwidth_x : _type_, optional
+        kwidth_x : float, optional
             The width of the kernel to be applied to the X variable, by default None.
-        kwidth_y : _type_, optional
+        kwidth_y : float, optional
             The width of the kernel to be applied to the Y variable, by default None.
-        kwidth_z : _type_, optional
+        kwidth_z : float, optional
             The width of the kernel to be applied to the Z variable, by default None.
         threshold : float, optional
             The threshold set on the value of eigenvalues, by default 1e-5. Used
@@ -193,7 +193,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
         else:
             # compute the centralizing matrix for the kernels according to
             # conditioning set Z
-            epsilon = 1e-7
+            epsilon = 1e-6
             n = Kx.shape[0]
             Rz = epsilon * np.linalg.pinv(Kz + epsilon * np.eye(n))
 
