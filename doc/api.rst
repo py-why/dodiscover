@@ -13,35 +13,6 @@ for classes (``CamelCase`` names) and functions
 (``underscore_case`` names) of dodiscover, grouped thematically by analysis
 stage.
 
-Conditional Independence Testing
-================================
-
-Testing for conditional independence among variables is a core part
-of many causal inference procedures, such as constraint-based structure
-learning.
-
-.. currentmodule:: dodiscover.ci
-.. autosummary::
-   :toctree: generated/
-
-   BaseConditionalIndependenceTest
-   Oracle
-   KernelCITest
-   GSquareCITest
-   FisherZCITest
-   ClassifierCITest
-
-Graph protocols
-===============
-
-.. currentmodule:: dodiscover
-.. autosummary::
-   :toctree: generated/
-
-   Graph
-   EquivalenceClass
-
-
 Context for causal discovery
 ============================
 
@@ -100,3 +71,66 @@ to work with ``mypy``.
    Column
    SeparatingSet
    NetworkxGraph
+
+
+Graph protocols
+===============
+
+.. currentmodule:: dodiscover
+.. autosummary::
+   :toctree: generated/
+
+   Graph
+   EquivalenceClass
+
+********************
+ Conditional Testing
+********************
+Dodiscover experimentally provides an interface for conditional independence
+testing and conditional discrepancy testing (also known as k-sample conditional
+independence testing).
+
+Conditional Independence Testing
+================================
+
+Testing for conditional independence among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.
+
+.. currentmodule:: dodiscover.ci
+.. autosummary::
+   :toctree: generated/
+
+   BaseConditionalIndependenceTest
+   Oracle
+   KernelCITest
+   GSquareCITest
+   FisherZCITest
+   ClassifierCITest
+
+Conditional k-sample testing
+ ============================
+
+ Testing for conditional discrepancy among variables is a core part
+ of many causal inference procedures, such as constraint-based structure
+ learning.
+
+ .. currentmodule:: dodiscover.cd
+ .. autosummary::
+    :toctree: generated/
+
+    BaseConditionalDiscrepancyTest
+    KernelCDTest
+
+Utilities
+=========
+
+Testing for conditional discrepancy among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.
+
+.. currentmodule:: dodiscover.ci.utils
+.. autosummary::
+   :toctree: generated/
+
+   compute_kernel
