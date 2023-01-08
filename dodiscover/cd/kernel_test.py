@@ -106,6 +106,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         x_cols = list(x_vars)
         y_cols = list(y_vars)
 
+        # check test input
+        self._check_test_input(df, x_vars, y_vars, group_col)
+
         group_ind = df[group_col].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:
             raise RuntimeError(f"Group indications in {group_col} column should be all 1 or 0.")
