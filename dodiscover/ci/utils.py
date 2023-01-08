@@ -2,8 +2,8 @@ from typing import Optional, Tuple
 
 import numpy as np
 from numpy.typing import ArrayLike
-from scipy.optimize import minimize_scalar
 from scipy.linalg import logm
+from scipy.optimize import minimize_scalar
 from scipy.stats import gaussian_kde
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import pairwise_distances, pairwise_kernels
