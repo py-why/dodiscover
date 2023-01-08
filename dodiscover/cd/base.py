@@ -19,14 +19,14 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         df: pd.DataFrame,
         x_vars: Set[Column],
         y_vars: Set[Column],
-        group_col: Optional[Set[Column]],
+        group_col: Column,
     ):
         if any(col not in df.columns for col in x_vars):
             raise ValueError("The x variables are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
             raise ValueError("The y variables are not all in the DataFrame.")
         if group_col not in df.columns:
-            raise ValueError("The group column {group_col} is not in the DataFrame.")
+            raise ValueError(f"The group column {group_col} is not in the DataFrame.")
 
     @abstractmethod
     def test(
