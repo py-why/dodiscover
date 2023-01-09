@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Optional, Set, Tuple
+from typing import Set, Tuple
 
 import pandas as pd
 
