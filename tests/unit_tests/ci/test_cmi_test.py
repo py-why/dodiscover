@@ -1,17 +1,21 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from dodiscover.ci import CMITest
 
 seed = 12345
 
 
-def test_cmi_with_nonlinear_gaussian_data():
-    ci_estimator = CMITest(k=0.2, n_shuffle_nbrs=5, n_shuffle=100, n_jobs=-1, random_seed=seed)
+@pytest.mark.parametrize("transform", ["rank", "standardize", "uniform"])
+def test_cmi_with_nonlinear_gaussian_data(transform):
+    ci_estimator = CMITest(
+        k=0.2, n_shuffle_nbrs=5, n_shuffle=100, transform=transform, n_jobs=-1, random_seed=seed
+    )
 
     # X -> Y <- X1; Y -> Z
     rng = np.random.default_rng(seed)
-    n_samples = 1000
+    n_samples = 500
     X = rng.standard_normal((n_samples, 1))
     X1 = rng.uniform(low=0.0, high=1.0, size=(n_samples, 1))
     Y = np.exp(X + X1)

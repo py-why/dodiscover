@@ -1,5 +1,4 @@
 from typing import Optional, Set, Tuple
-from warnings import warn
 
 import numpy as np
 import pandas as pd
@@ -8,6 +7,7 @@ import scipy.spatial
 import scipy.special
 import sklearn.utils
 from numpy.typing import ArrayLike
+from sklearn.preprocessing import StandardScaler
 
 from .base import BaseConditionalIndependenceTest
 from .utils import _restricted_permutation
@@ -29,7 +29,7 @@ class CMITest(BaseConditionalIndependenceTest):
         Number of nearest-neighbors within the Z covariates for shuffling, by default 5.
     transform : str, optional
         Transform the data by standardizing the data, by default 'rank', which converts
-        data to ranks.
+        data to ranks. Can be 'rank', 'uniform', 'standardize'.
     n_shuffle : int
         The number of samples to shuffle for a significance test.
     n_jobs : int, optional
@@ -151,20 +151,13 @@ class CMITest(BaseConditionalIndependenceTest):
         if self.transform == "standardize":
             # standardize with standard scaling
             data = data.astype(np.float64)
-            data -= data.mean(axis=0).reshape(n_dims, 1)
-            std = data.std(axis=0)
-            for i in range(n_dims):
-                if std[i] != 0.0:
-                    data[i] /= std[i]
-
-            if np.any(std == 0.0):
-                warn("Possibly constant data!")
+            scaler = StandardScaler()
+            data[data.columns] = scaler.fit_transform(data[data.columns])
         elif self.transform == "uniform":
             data = self._trafo2uniform(data)
         elif self.transform == "rank":
             # rank transform each column
             data = data.rank(axis=0)
-
         return data
 
     def _get_knn(
@@ -322,15 +315,15 @@ class CMITest(BaseConditionalIndependenceTest):
 
         return shuffle_dist
 
-    def _trafo2uniform(self, x):
+    def _trafo2uniform(self, df):
         """Transforms input array to uniform marginals.
 
         Assumes x.shape = (dim, T)
 
         Parameters
         ----------
-        x : array-like
-            Input array.
+        df : pandas.DataFrame
+            The input data with (n_samples,) rows and (n_features,) columns.
 
         Returns
         -------
@@ -343,10 +336,8 @@ class CMITest(BaseConditionalIndependenceTest):
             yi = np.linspace(1.0 / len(xi), 1, len(xi))
             return np.interp(xi, xisorted, yi)
 
-        if np.ndim(x) == 1:
-            u = trafo(x)
-        else:
-            u = np.empty(x.shape)
-            for i in range(x.shape[0]):
-                u[i] = trafo(x[i])
-        return u
+        # apply a uniform transformation for each feature
+        for idx in range(len(df.columns)):
+            marginalized_feature = trafo(df.iloc[:, idx].to_numpy().squeeze())
+            df.iloc[:, idx] = marginalized_feature
+        return df
