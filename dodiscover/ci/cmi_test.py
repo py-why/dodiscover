@@ -35,6 +35,11 @@ class CMITest(BaseConditionalIndependenceTest):
     n_jobs : int, optional
         The number of CPUs to use, by default -1, which corresponds to
         using all CPUs available.
+    n_shuffle : int
+        The number of times to shuffle the dataset to generate the null distribution.
+        By default, 1000.
+    random_state : int, optional
+        The random seed that is used to seed via ``np.random.defaultrng``.
 
     Notes
     -----
@@ -82,14 +87,15 @@ class CMITest(BaseConditionalIndependenceTest):
         transform: str = "rank",
         n_jobs: int = -1,
         n_shuffle: int = 1000,
-        random_state=None,
+        random_seed: int = None,
     ) -> None:
         self.k = k
         self.n_shuffle_nbrs = n_shuffle_nbrs
         self.transform = transform
         self.n_jobs = n_jobs
         self.n_shuffle = n_shuffle
-        self.random_state = np.random.default_rng(random_state)
+        self.random_seed = random_seed
+        self.random_state = np.random.default_rng(self.random_seed)
 
     def test(
         self, df: pd.DataFrame, x_var, y_var, z_covariates: Optional[Set] = None
@@ -261,7 +267,7 @@ class CMITest(BaseConditionalIndependenceTest):
 
         if len(z_covariates) > 0 and self.n_shuffle_nbrs < n_samples:
             # Get nearest neighbors around each sample point in Z subspace
-            z_array = data[z_covariates].to_numpy()
+            z_array = data[list(z_covariates)].to_numpy()
             tree_xyz = scipy.spatial.cKDTree(z_array)
             nbrs = tree_xyz.query(z_array, k=self.n_shuffle_nbrs, p=np.inf, eps=0.0)[1].astype(
                 np.int32
@@ -308,7 +314,7 @@ class CMITest(BaseConditionalIndependenceTest):
         shuffle_dist = np.zeros((n_shuffle,))
         for idx in range(n_shuffle):
             # compute a shuffled version of the data
-            shuffled_x = sklearn.utils.shuffle(data[x_var], random_state=self.random_state)
+            shuffled_x = sklearn.utils.shuffle(data[x_var], random_state=self.random_seed)
 
             # compute now the test statistic on the shuffle data
             data_copy[x_var] = shuffled_x
