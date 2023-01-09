@@ -3,7 +3,7 @@ from typing import Optional, Set, Tuple
 
 import pandas as pd
 
-from dodiscover.typing import Column
+from ..typing import Column
 
 
 class BaseConditionalIndependenceTest(metaclass=ABCMeta):
