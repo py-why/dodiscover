@@ -106,6 +106,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         x_cols = list(x_vars)
         y_cols = list(y_vars)
 
+        # check test input
+        self._check_test_input(df, x_vars, y_vars, group_col)
+
         group_ind = df[group_col].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:
             raise RuntimeError(f"Group indications in {group_col} column should be all 1 or 0.")
@@ -218,10 +221,19 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         K0 = K[np.ix_(first_mask, first_mask)]
         K1 = K[np.ix_(second_mask, second_mask)]
 
+        # compute regularization factors
+        self._get_regs(K0, K1)
+
         # compute the number of samples in each
         n0 = int(np.sum(1 - z))
         n1 = int(np.sum(z))
 
+        W0 = np.linalg.inv(K0 + self.regs_[0] * np.identity(n0))
+        W1 = np.linalg.inv(K1 + self.regs_[1] * np.identity(n1))
+        return W0, W1
+
+    def _get_regs(self, K0: ArrayLike, K1: ArrayLike):
+        """Compute regularization factors."""
         if isinstance(self.l2, (int, float)):
             l0 = self.l2
             l1 = self.l2
@@ -232,10 +244,6 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             if len(self.l2) != 2:
                 raise RuntimeError(f"l2 regularization {self.l2} must be a 2-tuple, or a number.")
             self.regs_ = self.l2
-
-        W0 = np.linalg.inv(K0 + self.regs_[0] * np.identity(n0))
-        W1 = np.linalg.inv(K1 + self.regs_[1] * np.identity(n1))
-        return W0, W1
 
     def compute_null(self, e_hat, K, L, null_reps=1000, random_state=None):
         rng = np.random.default_rng(random_state)
