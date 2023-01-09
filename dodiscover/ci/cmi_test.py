@@ -321,3 +321,32 @@ class CMITest(BaseConditionalIndependenceTest):
             shuffle_dist[idx] = self._compute_cmi(data_copy, x_var, y_var, z_covariates)
 
         return shuffle_dist
+
+    def _trafo2uniform(self, x):
+        """Transforms input array to uniform marginals.
+
+        Assumes x.shape = (dim, T)
+
+        Parameters
+        ----------
+        x : array-like
+            Input array.
+
+        Returns
+        -------
+        u : array-like
+            array with uniform marginals.
+        """
+
+        def trafo(xi):
+            xisorted = np.sort(xi)
+            yi = np.linspace(1.0 / len(xi), 1, len(xi))
+            return np.interp(xi, xisorted, yi)
+
+        if np.ndim(x) == 1:
+            u = trafo(x)
+        else:
+            u = np.empty(x.shape)
+            for i in range(x.shape[0]):
+                u[i] = trafo(x[i])
+        return u
