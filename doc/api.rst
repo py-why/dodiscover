@@ -30,6 +30,7 @@ learning.
    GSquareCITest
    FisherZCITest
    ClassifierCITest
+   ClassifierCMITest
 
 Graph protocols
 ===============
