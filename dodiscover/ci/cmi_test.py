@@ -309,7 +309,7 @@ class CMITest(BaseConditionalIndependenceTest):
         for idx in range(n_shuffle):
             # compute a shuffled version of the data
             x_data = data[x_var]
-            shuffled_x = sklearn.utils.shuffle(x_data, random_state=self.random_seed + idx)
+            shuffled_x = sklearn.utils.shuffle(x_data, random_state=self.random_seed)
 
             # compute now the test statistic on the shuffle data
             data_copy[x_var] = shuffled_x.values
