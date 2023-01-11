@@ -39,6 +39,7 @@ Changelog
 - |Fix| Update dependency on networkx, which removes a PR branch dependency with pywhy-graphs having the MixedEdgeGraph class that was causing a dependency conflict, by `Adam Li`_ (:pr:`74`)
 - |Enhancement| Add tutorial for PC algorithm with Asia data, by `Robert Osazuwa Ness`_ (:pr:`67`)
 - |Enhancement| Add wrapper for GIN algorithm from causal-learn, by `Robert Osazuwa Ness`_ (:pr:`72`)
+- |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.KernelCDTest`, by `Adam Li`_ (:pr:`81`)
 
 Code and Documentation Contributors
 -----------------------------------

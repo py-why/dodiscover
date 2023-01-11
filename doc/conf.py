@@ -130,6 +130,10 @@ numpydoc_xref_ignore = {
     "n_variables",
     "n_classes",
     "NDArray",
+    "n_samples_X",
+    "n_samples_Y",
+    "n_features_X",
+    "n_features_Y",
     # deep learning
     "pytorch",
     "model",
