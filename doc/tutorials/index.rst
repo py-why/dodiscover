@@ -18,7 +18,7 @@ no latent confounders.
 
 [Experimental] Time-series causal discovery
 ===========================================
-We 
+We include some tutorials on novel time-series causal discovery algorithms.
 
 .. toctree::
    :maxdepth: 1
