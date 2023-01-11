@@ -38,6 +38,7 @@ Changelog
 - |Feature| Implement Structural Hamming Distance metric to compare directed graphs, :func:`dodiscover.metrics.structure_hamming_dist`, by `Adam Li`_ (:pr:`55`)
 - |Fix| Update dependency on networkx, which removes a PR branch dependency with pywhy-graphs having the MixedEdgeGraph class that was causing a dependency conflict, by `Adam Li`_ (:pr:`74`)
 - |Enhancement| Add tutorial for PC algorithm with Asia data, by `Robert Osazuwa Ness`_ (:pr:`67`)
+- |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.KernelCDTest`, by `Adam Li`_ (:pr:`81`)
 - |Feature| Add conditional mutual information test, :class:`dodiscover.ci.CMITest`, by `Adam Li`_ (:pr:`83`)
 
 Code and Documentation Contributors
