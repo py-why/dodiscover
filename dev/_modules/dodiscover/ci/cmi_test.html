@@ -1,0 +1,592 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dodiscover.ci.cmi_test &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../api.html">
+  API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../use.html">
+  Using dodiscover
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <h1>Source code for dodiscover.ci.cmi_test</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">scipy.spatial</span>
+<span class="kn">import</span> <span class="nn">scipy.special</span>
+<span class="kn">import</span> <span class="nn">sklearn.utils</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_restricted_permutation</span>
+
+
+<div class="viewcode-block" id="CMITest"><a class="viewcode-back" href="../../../generated/dodiscover.ci.CMITest.html#dodiscover.ci.CMITest">[docs]</a><span class="k">class</span> <span class="nc">CMITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conditional mutual information independence test.</span>
+
+<span class="sd">    Implements the conditional independence test using conditional</span>
+<span class="sd">    mutual information proposed in :footcite:`Runge2018cmi`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    k : float, optional</span>
+<span class="sd">        Number of nearest-neighbors for each sample point. If the number is</span>
+<span class="sd">        smaller than 1, it is computed as a fraction of the number of</span>
+<span class="sd">        samples, by default 0.2.</span>
+<span class="sd">    n_shuffle_nbrs : int, optional</span>
+<span class="sd">        Number of nearest-neighbors within the Z covariates for shuffling, by default 5.</span>
+<span class="sd">    transform : str, optional</span>
+<span class="sd">        Transform the data by standardizing the data, by default &#39;rank&#39;, which converts</span>
+<span class="sd">        data to ranks. Can be &#39;rank&#39;, &#39;uniform&#39;, &#39;standardize&#39;.</span>
+<span class="sd">    n_shuffle : int</span>
+<span class="sd">        The number of samples to shuffle for a significance test.</span>
+<span class="sd">    n_jobs : int, optional</span>
+<span class="sd">        The number of CPUs to use, by default -1, which corresponds to</span>
+<span class="sd">        using all CPUs available.</span>
+<span class="sd">    n_shuffle : int</span>
+<span class="sd">        The number of times to shuffle the dataset to generate the null distribution.</span>
+<span class="sd">        By default, 1000.</span>
+<span class="sd">    random_state : int, optional</span>
+<span class="sd">        The random seed that is used to seed via ``np.random.defaultrng``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Conditional mutual information (CMI) is defined as:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        I(X;Y|Z) = \iiint p(z) p(x,y|z)</span>
+<span class="sd">        \log \frac{ p(x,y|z)}{p(x|z)\cdot p(y |z)} \,dx dy dz</span>
+
+<span class="sd">    It can be seen that when :math:`X \perp Y | Z`, then CMI is equal to 0.</span>
+<span class="sd">    Hence, CMI is a general measure for conditional dependence. The</span>
+<span class="sd">    estimator for CMI proposed in :footcite:`Runge2018cmi` is a</span>
+<span class="sd">    k-nearest-neighbor based estimator:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \widehat{I}(X;Y|Z) = \psi (k) + \frac{1}{T} \sum_{t=1}^T</span>
+<span class="sd">        (\psi(k_{Z,t}) - \psi(k_{XZ,t}) - \psi(k_{YZ,t}))</span>
+
+<span class="sd">    where :math:`\psi` is the Digamma (i.e. see `scipy.special.digamma`)</span>
+<span class="sd">    function. :math:`k` determines the</span>
+<span class="sd">    size of hyper-cubes around each (high-dimensional) sample point. Then</span>
+<span class="sd">    :math:`k_{Z,},k_{XZ},k_{YZ}` are the numbers of neighbors in the respective</span>
+<span class="sd">    subspaces. :math:`k` can be viewed as a density smoothing parameter (although</span>
+<span class="sd">    it is data-adaptive unlike fixed-bandwidth estimators). For large :math:`k`, the</span>
+<span class="sd">    underlying dependencies are more smoothed and CMI has a larger bias,</span>
+<span class="sd">    but lower variance, which is more important for significance testing. Note</span>
+<span class="sd">    that the estimated CMI values can be slightly negative while CMI is a non-</span>
+<span class="sd">    negative quantity.</span>
+
+<span class="sd">    The estimator implemented here assumes the data is continuous.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. footbibliography::</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">random_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">n_shuffle_nbrs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">transform</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rank&quot;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">n_shuffle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span> <span class="o">=</span> <span class="n">n_shuffle_nbrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle</span> <span class="o">=</span> <span class="n">n_shuffle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span> <span class="o">=</span> <span class="n">random_seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CMITest.test"><a class="viewcode-back" href="../../../generated/dodiscover.ci.CMITest.html#dodiscover.ci.CMITest.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">z_covariates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># preprocess and transform the data; called here only once</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="c1"># compute the estimate of the CMI</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="c1"># compute the significance of the CMI value</span>
+        <span class="n">null_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_null_dist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="c1"># compute pvalue</span>
+        <span class="n">pvalue</span> <span class="o">=</span> <span class="p">(</span><span class="n">null_dist</span> <span class="o">&gt;=</span> <span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat_</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pvalue_</span> <span class="o">=</span> <span class="n">pvalue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">null_dist_</span> <span class="o">=</span> <span class="n">null_dist</span>
+        <span class="k">return</span> <span class="n">val</span><span class="p">,</span> <span class="n">pvalue</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_cmi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span><span class="p">):</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">knn_here</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">knn_here</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="c1"># compute the K nearest neighbors in sub-spaces</span>
+        <span class="n">k_xz</span><span class="p">,</span> <span class="n">k_yz</span><span class="p">,</span> <span class="n">k_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_knn</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="c1"># compute the final CMI value</span>
+        <span class="n">hxyz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">digamma</span><span class="p">(</span><span class="n">knn_here</span><span class="p">)</span>
+        <span class="n">hxz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">digamma</span><span class="p">(</span><span class="n">k_xz</span><span class="p">)</span>
+        <span class="n">hyz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">digamma</span><span class="p">(</span><span class="n">k_yz</span><span class="p">)</span>
+        <span class="n">hz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">digamma</span><span class="p">(</span><span class="n">k_z</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">hxyz</span> <span class="o">-</span> <span class="p">(</span><span class="n">hxz</span> <span class="o">+</span> <span class="n">hyz</span> <span class="o">-</span> <span class="n">hz</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">_preprocess_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_dims</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># make a copy of the data to prevent changing it</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># add minor noise to make sure there are no ties</span>
+        <span class="n">random_noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_dims</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">+=</span> <span class="mf">1e-5</span> <span class="o">*</span> <span class="n">random_noise</span> <span class="o">@</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_dims</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;standardize&quot;</span><span class="p">:</span>
+            <span class="c1"># standardize with standard scaling</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trafo2uniform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;rank&quot;</span><span class="p">:</span>
+            <span class="c1"># rank transform each column</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_get_knn</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the nearest neighbor in the variable subspaces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : pd.DataFrame</span>
+<span class="sd">            The dataset.</span>
+<span class="sd">        x_var : column</span>
+<span class="sd">            The X variable column.</span>
+<span class="sd">        y_var : column</span>
+<span class="sd">            The Y variable column.</span>
+<span class="sd">        z_covariates : set of column</span>
+<span class="sd">            The Z variable column(s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        k_xz : np.ArrayLike of shape (n_samples,)</span>
+<span class="sd">            Nearest neighbors in subspace of ``x_var`` and the</span>
+<span class="sd">            ``z_covariates``.</span>
+<span class="sd">        k_yz : np.ArrayLike of shape (n_samples,)</span>
+<span class="sd">            Nearest neighbors in subspace of ``y_var`` and the</span>
+<span class="sd">            ``z_covariates``.</span>
+<span class="sd">        k_z : np.ArrayLike of shape (n_samples,)</span>
+<span class="sd">            Nearest neighbors in subspace of ``z_covariates``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">knn</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">knn</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span>
+        <span class="n">xz_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_var</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">z_var</span> <span class="ow">in</span> <span class="n">z_covariates</span><span class="p">:</span>
+            <span class="n">xz_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_var</span><span class="p">)</span>
+        <span class="n">yz_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_var</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">z_var</span> <span class="ow">in</span> <span class="n">z_covariates</span><span class="p">:</span>
+            <span class="n">yz_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_var</span><span class="p">)</span>
+        <span class="n">z_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">xz_cols</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">yz_cols</span><span class="p">)))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
+
+        <span class="n">tree_xyz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+        <span class="n">epsarray</span> <span class="o">=</span> <span class="n">tree_xyz</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">k</span><span class="o">=</span><span class="p">[</span><span class="n">knn</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="c1"># To search neighbors &lt; eps</span>
+        <span class="n">epsarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">epsarray</span><span class="p">,</span> <span class="mf">0.99999</span><span class="p">)</span>
+
+        <span class="c1"># Find nearest neighbors in subspaces of X and Z</span>
+        <span class="n">xz</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">xz_cols</span><span class="p">]</span>
+        <span class="n">tree_xz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">xz</span><span class="p">)</span>
+        <span class="n">k_xz</span> <span class="o">=</span> <span class="n">tree_xz</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
+            <span class="n">xz</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">epsarray</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_length</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Find nearest neighbors in subspaces of Y and Z</span>
+        <span class="n">yz</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">yz_cols</span><span class="p">]</span>
+        <span class="n">tree_yz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">yz</span><span class="p">)</span>
+        <span class="n">k_yz</span> <span class="o">=</span> <span class="n">tree_yz</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
+            <span class="n">yz</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">epsarray</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_length</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Find nearest neighbors in subspaces of just the Z covariates</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">z_columns</span><span class="p">]</span>
+            <span class="n">tree_z</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">k_z</span> <span class="o">=</span> <span class="n">tree_z</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
+                <span class="n">z</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">epsarray</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_length</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Number of neighbors is n_samples when estimating just standard MI</span>
+            <span class="n">k_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">k_xz</span><span class="p">,</span> <span class="n">k_yz</span><span class="p">,</span> <span class="n">k_z</span>
+
+    <span class="k">def</span> <span class="nf">_estimate_null_dist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pvalue by performing a nearest-neighbor shuffle test.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : pd.DataFrame</span>
+<span class="sd">            The dataset.</span>
+<span class="sd">        x_var : column</span>
+<span class="sd">            The X variable column.</span>
+<span class="sd">        y_var : column</span>
+<span class="sd">            The Y variable column.</span>
+<span class="sd">        z_covariates : column</span>
+<span class="sd">            The Z variable column(s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pvalue : float</span>
+<span class="sd">            The pvalue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span> <span class="o">&lt;</span> <span class="n">n_samples</span><span class="p">:</span>
+            <span class="c1"># Get nearest neighbors around each sample point in Z subspace</span>
+            <span class="n">z_array</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="n">tree_xyz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">z_array</span><span class="p">)</span>
+            <span class="n">nbrs</span> <span class="o">=</span> <span class="n">tree_xyz</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">z_array</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">int32</span>
+            <span class="p">)</span>
+
+            <span class="n">null_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle</span><span class="p">)</span>
+
+            <span class="c1"># create a copy of the data to store the shuffled array</span>
+            <span class="n">data_copy</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># we will now compute a shuffled distribution, where X_i is replaced</span>
+            <span class="c1"># by X_j only if the corresponding Z_i and Z_j are &quot;nearby&quot;, computed</span>
+            <span class="c1"># using the spatial tree query</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle</span><span class="p">):</span>
+                <span class="c1"># Shuffle neighbor indices for each sample index</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">nbrs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+                <span class="c1"># Select a series of neighbor indices that contains as few as</span>
+                <span class="c1"># possible duplicates</span>
+                <span class="n">restricted_permutation</span> <span class="o">=</span> <span class="n">_restricted_permutation</span><span class="p">(</span>
+                    <span class="n">nbrs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span>
+                <span class="p">)</span>
+
+                <span class="c1"># update the X variable column</span>
+                <span class="n">data_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">x_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">restricted_permutation</span><span class="p">,</span> <span class="n">x_var</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+                <span class="c1"># compute the CMI on the shuffled array</span>
+                <span class="n">null_dist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">data_copy</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">null_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_shuffle_dist</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">,</span> <span class="n">n_shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">null_dist</span>
+
+    <span class="k">def</span> <span class="nf">_compute_shuffle_dist</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span> <span class="n">n_shuffle</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a shuffled distribution of the test statistic.&quot;&quot;&quot;</span>
+        <span class="n">data_copy</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># initialize the shuffle distribution</span>
+        <span class="n">shuffle_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_shuffle</span><span class="p">,))</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_shuffle</span><span class="p">):</span>
+            <span class="c1"># compute a shuffled version of the data</span>
+            <span class="n">x_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">x_var</span><span class="p">]</span>
+            <span class="n">shuffled_x</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span><span class="p">)</span>
+
+            <span class="c1"># compute now the test statistic on the shuffle data</span>
+            <span class="n">data_copy</span><span class="p">[</span><span class="n">x_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">shuffled_x</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">shuffle_dist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">data_copy</span><span class="p">,</span> <span class="n">x_var</span><span class="p">,</span> <span class="n">y_var</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shuffle_dist</span>
+
+    <span class="k">def</span> <span class="nf">_trafo2uniform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms input array to uniform marginals.</span>
+
+<span class="sd">        Assumes x.shape = (dim, T)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df : pandas.DataFrame</span>
+<span class="sd">            The input data with (n_samples,) rows and (n_features,) columns.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u : array-like</span>
+<span class="sd">            array with uniform marginals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">trafo</span><span class="p">(</span><span class="n">xi</span><span class="p">):</span>
+            <span class="n">xisorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+            <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xi</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xi</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">xisorted</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+
+        <span class="c1"># apply a uniform transformation for each feature</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="n">marginalized_feature</span> <span class="o">=</span> <span class="n">trafo</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">marginalized_feature</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+</pre></div>
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
