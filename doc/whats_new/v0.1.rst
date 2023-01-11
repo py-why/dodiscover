@@ -40,6 +40,7 @@ Changelog
 - |Enhancement| Add tutorial for PC algorithm with Asia data, by `Robert Osazuwa Ness`_ (:pr:`67`)
 - |Enhancement| Add wrapper for GIN algorithm from causal-learn, by `Robert Osazuwa Ness`_ (:pr:`72`)
 - |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.KernelCDTest`, by `Adam Li`_ (:pr:`81`)
+- |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.BregmanCDTest`, by `Adam Li`_ (:pr:`82`)
 
 Code and Documentation Contributors
 -----------------------------------
