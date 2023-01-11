@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from dodiscover.cd import KernelCDTest
+from dodiscover.cd import BregmanCDTest, KernelCDTest
 
 seed = 12345
 
@@ -38,16 +38,51 @@ def multi_env_scm():
 
 
 @pytest.mark.parametrize(
+    "cd_estimator",
+    [
+        KernelCDTest(),
+        BregmanCDTest(),
+    ],
+)
+def test_cd_tests_error(cd_estimator):
+    x = "x"
+    y = "y"
+
+    sample_df = single_env_scm()
+    with pytest.raises(ValueError, match="The group col"):
+        cd_estimator.test(sample_df, {x}, {y}, group_col="blah")
+
+    with pytest.raises(ValueError, match="The x variables are not all"):
+        cd_estimator.test(sample_df, {"blah"}, y_vars={y}, group_col="group")
+
+    with pytest.raises(ValueError, match="The y variables are not all"):
+        cd_estimator.test(sample_df, {x}, y_vars={"blah"}, group_col="group")
+
+    # all the group indicators have different values now from 0/1
+    sample_df["group"] = sample_df["group"] + 3
+    with pytest.raises(RuntimeError, match="Group indications in*should be all 1 or 0."):
+        cd_estimator.test(sample_df, {x}, {y}, group_col="group")
+
+
+@pytest.mark.parametrize(
+    ["cd_func", "cd_kwargs"],
+    [
+        [KernelCDTest, {"l2": 1e-5}],
+        [KernelCDTest, {"l2": (1e-5, 2e-5)}],
+        [BregmanCDTest, dict()],
+    ],
+)
+@pytest.mark.parametrize(
     ["df", "env_type"],
     [
         [single_env_scm(), "single"],
         [multi_env_scm(), "multi"],
     ],
 )
-def test_kernel_cd(df, env_type):
+def test_kernel_cd(cd_func, df, env_type, cd_kwargs):
     """Test Fisher Z test for Gaussian data."""
     random_state = 12345
-    cd_estimator = KernelCDTest(random_state=random_state, null_reps=100, n_jobs=-1)
+    cd_estimator = cd_func(random_state=random_state, null_reps=100, n_jobs=-1, **cd_kwargs)
 
     group_col = "group"
 

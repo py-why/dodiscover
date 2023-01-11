@@ -58,6 +58,9 @@ def _calculate_contingency_tble(
     y_idx = data[y]  # [:, y]
     sep_set = list(sep_set)
 
+    # print(contingency_tble.shape)
+    # print(x_idx)
+    # print(x)
     # sum all co-occurrences of x and y conditioned on z
     for row_idx, (idx, jdx) in enumerate(zip(x_idx, y_idx)):
         kdx = 0
@@ -82,7 +85,7 @@ def _calculate_highdim_contingency(
     x: Column,
     y: Column,
     sep_set: Set,
-    data: NDArray,
+    data: pd.DataFrame,
     nlevel_x: int,
     nlevels_y: int,
 ) -> NDArray:
@@ -101,8 +104,8 @@ def _calculate_highdim_contingency(
         'y' must be in the columns of ``data``.
     sep_set : set
         The set of neighboring nodes of x and y (as a set()).
-    data : np.ndarray of shape (n_samples, n_variables)
-        The input data matrix.
+    data : pandas.DataFrame of shape (n_samples, n_variables)
+        The input dataframe.
     nlevel_x : int
         Number of levels of the 'x' variable in the data matrix.
     nlevels_y : int
@@ -118,28 +121,31 @@ def _calculate_highdim_contingency(
 
     # keep track of all variables in the separating set
     sep_set = list(sep_set)  # type: ignore
-    k = data[:, sep_set]
+    sep_col_inds = [ind for ind, col in enumerate(data.columns) if col in sep_set]
+    x_col_inds = [ind for ind, col in enumerate(data.columns) if col == x]
+    y_col_inds = [ind for ind, col in enumerate(data.columns) if col == y]
+    k = data.iloc[:, sep_col_inds]
 
     # count number of value combinations for sepset variables
     # observed in the data
     dof_count = 1
-    parents_val = np.array([k[0, :]])
+    parents_val = np.array([k.iloc[0, :]])
 
     # initialize the contingency table
     contingency_tble = np.zeros((2, 2, 1))
-    xdx = data[0, x]
-    ydx = data[0, y]
+    xdx = data.iloc[0, x_col_inds]
+    ydx = data.iloc[0, y_col_inds]
     contingency_tble[xdx, ydx, dof_count - 1] = 1
 
     # check how many parents we can create from the rest of the dataset
     for idx in range(1, n_samples):
         is_new = True
-        xdx = data[idx, x]
-        ydx = data[idx, y]
+        xdx = data.iloc[idx, x_col_inds]
+        ydx = data.iloc[idx, y_col_inds]
 
         # comparing the current values of the subset variables to all
         # already existing combinations of subset variables values
-        tcomp = parents_val[:dof_count, :] == k[idx, :]
+        tcomp = parents_val[:dof_count, :] == k.iloc[idx, :].values
         for it_parents in range(dof_count):
             if np.all(tcomp[it_parents, :]):
                 contingency_tble[xdx, ydx, it_parents] += 1
@@ -150,7 +156,7 @@ def _calculate_highdim_contingency(
         # contingency table
         if is_new:
             dof_count += 1
-            parents_val = np.r_[parents_val, [k[idx, :]]]
+            parents_val = np.r_[parents_val, [k.iloc[idx, :]]]
 
             # create a new contingnecy table and update cell counts
             # using the original table up to the last value
@@ -195,8 +201,14 @@ def _calculate_g_statistic(contingency_tble):
 
         # compute the final term in the log
         tdijk = tx.dot(ty)
+
+        # to prevent dividing by 0
+        tdijk += 1e-8
+
         tlog[:, :, k] = contingency_tble[:, :, k] * nk[k] / tdijk
 
+    # to prevent logging by 0
+    tlog += 1e-8
     log_tlog = np.log(tlog)
     G2 = np.nansum(2 * contingency_tble * log_tlog)
     return G2
@@ -383,6 +395,19 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         data_type : str, optional
             The type of data, which can be "binary", or "discrete".
             By default "binary".
+
+        Notes
+        -----
+        G^2 test statistics requires exponentially more samples as the conditioning
+        set size grows. The exact requirements in this implementation for binary data
+        is :math:`10 * 2^|S|`, where :math:`|S|` is the cardinality of the conditioning
+        set :math:`S`. For example, if S is comprised of three variables, then you need
+        at least 80 samples.
+
+        For discrete data, the requirement is :math:`|Y| * |X| * \prod_i |S_i|`, where
+        :math:`|X|` and :math:`|Y|` are the number of different discrete categories in
+        the X and Y columns, and :math:`\prod_i |S_i|` is the product of the number
+        of different categories in each of the conditioning set columns.
 
         References
         ----------
