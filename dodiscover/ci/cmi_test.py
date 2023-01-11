@@ -102,6 +102,10 @@ class CMITest(BaseConditionalIndependenceTest):
     ) -> Tuple[float, float]:
         if z_covariates is None:
             z_covariates = set()
+
+        # preprocess and transform the data; called here only once
+        df = self._preprocess_data(df)
+
         # compute the estimate of the CMI
         val = self._compute_cmi(df, x_var, y_var, z_covariates)
 
@@ -118,9 +122,6 @@ class CMITest(BaseConditionalIndependenceTest):
 
     def _compute_cmi(self, df, x_var, y_var, z_covariates: Set):
         n_samples, _ = df.shape
-
-        # preprocess and transform the data
-        df = self._preprocess_data(df)
 
         if self.k < 1:
             knn_here = max(1, int(self.k * n_samples))
@@ -146,7 +147,7 @@ class CMITest(BaseConditionalIndependenceTest):
 
         # add minor noise to make sure there are no ties
         random_noise = self.random_state.random((n_samples, n_dims))
-        data += 1e-6 * random_noise @ data.std(axis=0).to_numpy().reshape(n_dims, 1)
+        data += 1e-5 * random_noise @ data.std(axis=0).to_numpy().reshape(n_dims, 1)
 
         if self.transform == "standardize":
             # standardize with standard scaling
@@ -307,10 +308,11 @@ class CMITest(BaseConditionalIndependenceTest):
         shuffle_dist = np.zeros((n_shuffle,))
         for idx in range(n_shuffle):
             # compute a shuffled version of the data
-            shuffled_x = sklearn.utils.shuffle(data[x_var], random_state=self.random_seed)
+            x_data = data[x_var]
+            shuffled_x = sklearn.utils.shuffle(x_data, random_state=self.random_seed + idx)
 
             # compute now the test statistic on the shuffle data
-            data_copy[x_var] = shuffled_x
+            data_copy[x_var] = shuffled_x.values
             shuffle_dist[idx] = self._compute_cmi(data_copy, x_var, y_var, z_covariates)
 
         return shuffle_dist
