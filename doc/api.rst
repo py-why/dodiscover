@@ -83,15 +83,14 @@ Graph protocols
    Graph
    EquivalenceClass
 
-
-*******************
-Conditional Testing
-*******************
+********************
+ Conditional Testing
+********************
 Dodiscover experimentally provides an interface for conditional independence
 testing and conditional discrepancy testing (also known as k-sample conditional
 independence testing).
 
-Conditional independence testing
+Conditional Independence Testing
 ================================
 
 Testing for conditional independence among variables is a core part
@@ -108,6 +107,7 @@ learning.
    GSquareCITest
    FisherZCITest
    ClassifierCITest
+   CMITest
 
 Conditional k-sample testing
 ============================
