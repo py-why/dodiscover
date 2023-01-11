@@ -47,7 +47,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="dodiscover.ci.BaseConditionalIndependenceTest" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html" />
+    <link rel="next" title="dodiscover.make_context" href="generated/dodiscover.make_context.html" />
     <link rel="prev" title="Installation" href="installation.html" />
     <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
     <script type="text/javascript" src="_static/copybutton.js"></script>
@@ -186,50 +186,6 @@
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html">
-   dodiscover.ci.BaseConditionalIndependenceTest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.Oracle.html">
-   dodiscover.ci.Oracle
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html">
-   dodiscover.ci.KernelCITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html">
-   dodiscover.ci.GSquareCITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html">
-   dodiscover.ci.FisherZCITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html">
-   dodiscover.ci.ClassifierCITest
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.Graph.html">
-   dodiscover.Graph
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.EquivalenceClass.html">
-   dodiscover.EquivalenceClass
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.make_context.html">
    dodiscover.make_context
   </a>
@@ -301,6 +257,69 @@
   </a>
  </li>
 </ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.Graph.html">
+   dodiscover.Graph
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.EquivalenceClass.html">
+   dodiscover.EquivalenceClass
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html">
+   dodiscover.ci.BaseConditionalIndependenceTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.Oracle.html">
+   dodiscover.ci.Oracle
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html">
+   dodiscover.ci.KernelCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html">
+   dodiscover.ci.GSquareCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html">
+   dodiscover.ci.FisherZCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html">
+   dodiscover.ci.ClassifierCITest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.cd.BaseConditionalDiscrepancyTest.html">
+   dodiscover.cd.BaseConditionalDiscrepancyTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.cd.KernelCDTest.html">
+   dodiscover.cd.KernelCDTest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.utils.compute_kernel.html">
+   dodiscover.ci.utils.compute_kernel
+  </a>
+ </li>
+</ul>
 
   </div>
 </nav>
@@ -325,16 +344,6 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#conditional-independence-testing">
-   Conditional Independence Testing
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#graph-protocols">
-   Graph protocols
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#context-for-causal-discovery">
    Context for causal discovery
   </a>
@@ -352,6 +361,33 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#typing">
    Typing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#graph-protocols">
+   Graph protocols
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conditional-testing">
+     Conditional Testing
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conditional-independence-testing">
+   Conditional Independence Testing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conditional-k-sample-testing">
+   Conditional k-sample testing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#utilities">
+   Utilities
   </a>
  </li>
 </ul>
@@ -381,59 +417,6 @@
 for classes (<code class="docutils literal notranslate"><span class="pre">CamelCase</span></code> names) and functions
 (<code class="docutils literal notranslate"><span class="pre">underscore_case</span></code> names) of dodiscover, grouped thematically by analysis
 stage.</p>
-<section id="conditional-independence-testing">
-<h2>Conditional Independence Testing<a class="headerlink" href="#conditional-independence-testing" title="Permalink to this heading">#</a></h2>
-<p>Testing for conditional independence among variables is a core part
-of many causal inference procedures, such as constraint-based structure
-learning.</p>
-<table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a>()</p></td>
-<td><p>Abstract class for any conditional independence test.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle" title="dodiscover.ci.Oracle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Oracle</span></code></a>(graph)</p></td>
-<td><p>Oracle conditional independence testing.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html#dodiscover.ci.KernelCITest" title="dodiscover.ci.KernelCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KernelCITest</span></code></a>([kernel_x, kernel_y, kernel_z, ...])</p></td>
-<td><p><p class="rubric">Methods</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GSquareCITest</span></code></a>([data_type])</p></td>
-<td><p><p class="rubric">Methods</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html#dodiscover.ci.FisherZCITest" title="dodiscover.ci.FisherZCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FisherZCITest</span></code></a>([correlation_matrix])</p></td>
-<td><p><p class="rubric">Methods</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html#dodiscover.ci.ClassifierCITest" title="dodiscover.ci.ClassifierCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCITest</span></code></a>(clf, ...)</p></td>
-<td><p><p class="rubric">Methods</p>
-</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="graph-protocols">
-<h2>Graph protocols<a class="headerlink" href="#graph-protocols" title="Permalink to this heading">#</a></h2>
-<table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.Graph.html#dodiscover.Graph" title="dodiscover.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a>(*args, **kwargs)</p></td>
-<td><p>Protocol for graphs to work with dodiscover algorithms.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass" title="dodiscover.EquivalenceClass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EquivalenceClass</span></code></a>(*args, **kwargs)</p></td>
-<td><p>Protocol for equivalence class of graphs.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="context-for-causal-discovery">
 <h2>Context for causal discovery<a class="headerlink" href="#context-for-causal-discovery" title="Permalink to this heading">#</a></h2>
 <p>Rather than just data, in many cases structure learning
@@ -526,6 +509,102 @@ to work with <code class="docutils literal notranslate"><span class="pre">mypy</
 </tbody>
 </table>
 </section>
+<section id="graph-protocols">
+<h2>Graph protocols<a class="headerlink" href="#graph-protocols" title="Permalink to this heading">#</a></h2>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.Graph.html#dodiscover.Graph" title="dodiscover.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Protocol for graphs to work with dodiscover algorithms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass" title="dodiscover.EquivalenceClass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EquivalenceClass</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Protocol for equivalence class of graphs.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="conditional-testing">
+<h3>Conditional Testing<a class="headerlink" href="#conditional-testing" title="Permalink to this heading">#</a></h3>
+<p>Dodiscover experimentally provides an interface for conditional independence
+testing and conditional discrepancy testing (also known as k-sample conditional
+independence testing).</p>
+</section>
+</section>
+<section id="conditional-independence-testing">
+<h2>Conditional Independence Testing<a class="headerlink" href="#conditional-independence-testing" title="Permalink to this heading">#</a></h2>
+<p>Testing for conditional independence among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a>()</p></td>
+<td><p>Abstract class for any conditional independence test.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle" title="dodiscover.ci.Oracle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Oracle</span></code></a>(graph)</p></td>
+<td><p>Oracle conditional independence testing.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html#dodiscover.ci.KernelCITest" title="dodiscover.ci.KernelCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KernelCITest</span></code></a>([kernel_x, kernel_y, kernel_z, ...])</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GSquareCITest</span></code></a>([data_type])</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html#dodiscover.ci.FisherZCITest" title="dodiscover.ci.FisherZCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FisherZCITest</span></code></a>([correlation_matrix])</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html#dodiscover.ci.ClassifierCITest" title="dodiscover.ci.ClassifierCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCITest</span></code></a>(clf, ...)</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="conditional-k-sample-testing">
+<h2>Conditional k-sample testing<a class="headerlink" href="#conditional-k-sample-testing" title="Permalink to this heading">#</a></h2>
+<p>Testing for conditional discrepancy among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.cd.BaseConditionalDiscrepancyTest.html#dodiscover.cd.BaseConditionalDiscrepancyTest" title="dodiscover.cd.BaseConditionalDiscrepancyTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalDiscrepancyTest</span></code></a>()</p></td>
+<td><p>Abstract class for any conditional discrepancy test.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.cd.KernelCDTest.html#dodiscover.cd.KernelCDTest" title="dodiscover.cd.KernelCDTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KernelCDTest</span></code></a>([distance_metric, metric, l2, ...])</p></td>
+<td><p>Kernel conditional discrepancy test among conditional distributions.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">#</a></h2>
+<p>Testing for conditional discrepancy among variables is a core part
+of many causal inference procedures, such as constraint-based structure
+learning.</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.utils.compute_kernel.html#dodiscover.ci.utils.compute_kernel" title="dodiscover.ci.utils.compute_kernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kernel</span></code></a>(X[, Y, metric, ...])</p></td>
+<td><p>Compute a kernel matrix and corresponding width.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 
 
@@ -543,10 +622,10 @@ to work with <code class="docutils literal notranslate"><span class="pre">mypy</
           <p class="prev-next-title">Installation</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html" title="next page">
+  <a class='right-next' id="next-link" href="generated/dodiscover.make_context.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">dodiscover.ci.BaseConditionalIndependenceTest</p>
+      <p class="prev-next-title">dodiscover.make_context</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

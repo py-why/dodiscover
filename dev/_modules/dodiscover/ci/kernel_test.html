@@ -210,9 +210,9 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">pairwise_distances</span><span class="p">,</span> <span class="n">pairwise_kernels</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">PAIRWISE_KERNEL_FUNCTIONS</span>
 
+<span class="kn">from</span> <span class="nn">dodiscover.ci.utils</span> <span class="kn">import</span> <span class="n">compute_kernel</span>
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
@@ -228,9 +228,9 @@
         <span class="n">kernel_z</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
         <span class="n">null_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="n">approx_with_gamma</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">kwidth_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">kwidth_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">kwidth_z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kwidth_x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kwidth_y</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kwidth_z</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
@@ -253,11 +253,11 @@
 <span class="sd">        approx_with_gamma : bool, optional</span>
 <span class="sd">            Whether to use the Gamma distribution approximation for the pvalue,</span>
 <span class="sd">            by default True.</span>
-<span class="sd">        kwidth_x : _type_, optional</span>
+<span class="sd">        kwidth_x : float, optional</span>
 <span class="sd">            The width of the kernel to be applied to the X variable, by default None.</span>
-<span class="sd">        kwidth_y : _type_, optional</span>
+<span class="sd">        kwidth_y : float, optional</span>
 <span class="sd">            The width of the kernel to be applied to the Y variable, by default None.</span>
-<span class="sd">        kwidth_z : _type_, optional</span>
+<span class="sd">        kwidth_z : float, optional</span>
 <span class="sd">            The width of the kernel to be applied to the Z variable, by default None.</span>
 <span class="sd">        threshold : float, optional</span>
 <span class="sd">            The threshold set on the value of eigenvalues, by default 1e-5. Used</span>
@@ -358,24 +358,31 @@
             <span class="c1"># when running CI, \ddot{X} comprises of (X, Z)</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-            <span class="n">Kz</span><span class="p">,</span> <span class="n">sigma_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span>
+            <span class="n">Kz</span><span class="p">,</span> <span class="n">sigma_z</span> <span class="o">=</span> <span class="n">compute_kernel</span><span class="p">(</span>
                 <span class="n">Z</span><span class="p">,</span>
                 <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
                 <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_z</span><span class="p">,</span>
                 <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_z</span><span class="p">,</span>
                 <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># compute the centralized kernel matrices of each the datasets</span>
-        <span class="n">Kx</span><span class="p">,</span> <span class="n">sigma_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span>
+        <span class="n">Kx</span><span class="p">,</span> <span class="n">sigma_x</span> <span class="o">=</span> <span class="n">compute_kernel</span><span class="p">(</span>
             <span class="n">X</span><span class="p">,</span>
             <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
             <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_x</span><span class="p">,</span>
             <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_x</span><span class="p">,</span>
             <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">Ky</span><span class="p">,</span> <span class="n">sigma_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_kernel</span><span class="p">(</span>
-            <span class="n">Y</span><span class="p">,</span> <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_y</span><span class="p">,</span> <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_y</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">Ky</span><span class="p">,</span> <span class="n">sigma_y</span> <span class="o">=</span> <span class="n">compute_kernel</span><span class="p">(</span>
+            <span class="n">Y</span><span class="p">,</span>
+            <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+            <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_y</span><span class="p">,</span>
+            <span class="n">kwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwidth_y</span><span class="p">,</span>
+            <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -393,7 +400,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># compute the centralizing matrix for the kernels according to</span>
             <span class="c1"># conditioning set Z</span>
-            <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-7</span>
+            <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-6</span>
             <span class="n">n</span> <span class="o">=</span> <span class="n">Kx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">Rz</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Kz</span> <span class="o">+</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
@@ -539,52 +546,7 @@
         <span class="c1"># compute the null distribution consisting now of (n_samples)</span>
         <span class="c1"># of chi-squared random variables weighted by the eigenvalue products</span>
         <span class="n">null_dist</span> <span class="o">=</span> <span class="n">eig_uu</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f_rand</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">null_dist</span>
-
-    <span class="k">def</span> <span class="nf">_compute_kernel</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="n">kwidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">):</span>
-        <span class="c1"># if the width of the kernel is not set, then use the median trick to set the</span>
-        <span class="c1"># kernel width based on the data X</span>
-        <span class="k">if</span> <span class="n">kwidth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Note: sigma = 1 / np.sqrt(kwidth)</span>
-            <span class="c1"># compute N x N pairwise distance matrix</span>
-            <span class="n">dists</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">distance_metric</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span>
-
-            <span class="c1"># compute median of off diagonal elements</span>
-            <span class="n">med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">dists</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
-
-            <span class="c1"># prevents division by zero when used on label vectors</span>
-            <span class="n">med</span> <span class="o">=</span> <span class="n">med</span> <span class="k">if</span> <span class="n">med</span> <span class="k">else</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">med</span> <span class="o">=</span> <span class="n">kwidth</span>
-
-        <span class="n">extra_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;rbf&quot;</span><span class="p">:</span>
-            <span class="c1"># compute the normalization factor of the width of the Gaussian kernel</span>
-            <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">med</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-            <span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gamma</span>
-        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;polynomial&quot;</span><span class="p">:</span>
-            <span class="n">degree</span> <span class="o">=</span> <span class="mi">2</span>
-            <span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">degree</span>
-
-        <span class="c1"># compute the potentially pairwise kernel</span>
-        <span class="n">kernel</span> <span class="o">=</span> <span class="n">pairwise_kernels</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_kwargs</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">centered</span><span class="p">:</span>
-            <span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center_kernel</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">med</span>
-
-    <span class="k">def</span> <span class="nf">_center_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Centers the kernel matrix.</span>
-
-<span class="sd">        Applies a transformation H * K * H, where H is a diagonal matrix with 1/n along</span>
-<span class="sd">        the diagonal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n</span>
-        <span class="k">return</span> <span class="n">H</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">H</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">null_dist</span></div>
 </pre></div>
 
               </article>
