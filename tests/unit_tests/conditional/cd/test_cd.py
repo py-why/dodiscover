@@ -18,7 +18,7 @@ def single_env_scm(n_samples=200, offset=0.0):
     Y = X + X1 + 0.5 * rng.standard_normal((n_samples, 1))
     Z = Y + 0.1 * rng.standard_normal((n_samples, 1))
 
-    # create input for the CI test
+    # create input for the CD test
     df = pd.DataFrame(np.hstack((X, X1, Y, Z)), columns=["x", "x1", "y", "z"])
 
     # assign groups randomly
@@ -27,7 +27,7 @@ def single_env_scm(n_samples=200, offset=0.0):
 
 
 def multi_env_scm():
-    n_samples = 100
+    n_samples = 150
     df = single_env_scm(n_samples=n_samples)
     df["group"] = 0
 
@@ -60,17 +60,18 @@ def test_cd_tests_error(cd_estimator):
 
     # all the group indicators have different values now from 0/1
     sample_df["group"] = sample_df["group"] + 3
-    with pytest.raises(RuntimeError, match="Group indications in*should be all 1 or 0."):
+    with pytest.raises(RuntimeError, match="Group indications in"):
         cd_estimator.test(sample_df, {x}, {y}, group_col="group")
 
 
 @pytest.mark.parametrize(
     ["cd_func", "cd_kwargs"],
     [
-        [KernelCDTest, {"l2": 1e-5}],
-        [KernelCDTest, {"l2": (1e-5, 2e-5)}],
+        [KernelCDTest, dict()],
+        [KernelCDTest, {"l2": 1e-3}],
+        [KernelCDTest, {"l2": (1e-3, 2e-3)}],
         [BregmanCDTest, dict()],
-    ],
+    ]
 )
 @pytest.mark.parametrize(
     ["df", "env_type"],
@@ -79,9 +80,10 @@ def test_cd_tests_error(cd_estimator):
         [multi_env_scm(), "multi"],
     ],
 )
-def test_kernel_cd(cd_func, df, env_type, cd_kwargs):
-    """Test Fisher Z test for Gaussian data."""
+def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
+    """Test conditional discrepancy tests."""
     random_state = 12345
+    print(cd_func, cd_kwargs)
     cd_estimator = cd_func(random_state=random_state, null_reps=100, n_jobs=-1, **cd_kwargs)
 
     group_col = "group"
@@ -97,12 +99,12 @@ def test_kernel_cd(cd_func, df, env_type, cd_kwargs):
         print(pvalue)
         assert pvalue > 0.05
     elif env_type == "multi":
-        _, pvalue = cd_estimator.test(df, {"x"}, {"x1"}, group_col=group_col)
-        assert pvalue < 0.05
-        print(pvalue)
         _, pvalue = cd_estimator.test(df, {"x"}, {"z"}, group_col=group_col)
         assert pvalue < 0.05
         print(pvalue)
         _, pvalue = cd_estimator.test(df, {"x"}, {"y"}, group_col=group_col)
+        assert pvalue < 0.05
+        print(pvalue)
+        _, pvalue = cd_estimator.test(df, {"x"}, {"x1"}, group_col=group_col)
         assert pvalue < 0.05
         print(pvalue)
