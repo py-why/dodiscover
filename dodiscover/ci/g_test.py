@@ -54,13 +54,10 @@ def _calculate_contingency_tble(
     # define contingency table as a 2 by 2 table relating 'x' and 'y'
     # across different separating set variables
     contingency_tble = np.zeros((nlevels_x, nlevels_y, dof))
-    x_idx = data[x]  # [:, x]
-    y_idx = data[y]  # [:, y]
+    x_idx = data[x]
+    y_idx = data[y]
     sep_set = list(sep_set)
 
-    # print(contingency_tble.shape)
-    # print(x_idx)
-    # print(x)
     # sum all co-occurrences of x and y conditioned on z
     for row_idx, (idx, jdx) in enumerate(zip(x_idx, y_idx)):
         kdx = 0
