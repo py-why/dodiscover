@@ -123,6 +123,7 @@ learning.
 
    BaseConditionalDiscrepancyTest
    KernelCDTest
+   BregmanCDTest
 
 Utilities
 =========
