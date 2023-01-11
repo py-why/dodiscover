@@ -209,10 +209,96 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">logm</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">pairwise_distances</span><span class="p">,</span> <span class="n">pairwise_kernels</span>
+
+
+<span class="k">def</span> <span class="nf">von_neumann_divergence</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Von Neumann divergence between two PSD matrices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : ArrayLike of shape (n, n)</span>
+<span class="sd">        The first PSD matrix.</span>
+<span class="sd">    B : ArrayLike of shape (n, n)</span>
+<span class="sd">        The second PSD matrix</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    div : float</span>
+<span class="sd">        The divergence value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Von Neumann divergence, or what is known as the Bregman divergence in</span>
+<span class="sd">    :footcite:`Yu2020Bregman` is computed as follows with</span>
+<span class="sd">    :math:`D(A || B) = Tr(A (log(A) - log(B)) - A + B)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">div</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">logm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">-</span> <span class="n">logm</span><span class="p">(</span><span class="n">B</span><span class="p">))</span> <span class="o">-</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">div</span>
+
+
+<span class="k">def</span> <span class="nf">corrent_matrix</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
+    <span class="n">kwidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the centered correntropy of a matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : ArrayLike of shape (n_samples, n_features)</span>
+<span class="sd">        The data.</span>
+<span class="sd">    metric : str</span>
+<span class="sd">        The kernel metric.</span>
+<span class="sd">    kwidth : float</span>
+<span class="sd">        The kernel width.</span>
+<span class="sd">    distance_metric : str</span>
+<span class="sd">        The distance metric to infer kernel width.</span>
+<span class="sd">    n_jobs : int, optional</span>
+<span class="sd">        The number of jobs to run computations in parallel, by default None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : ArrayLike of shape (n_features, n_features)</span>
+<span class="sd">        A symmetric centered correntropy matrix of the data.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The estimator for the correntropy array is given by the formula</span>
+<span class="sd">    :math:`1 / N \\sum_{i=1}^N k(x_i, y_i) - 1 / N**2 \\sum_{i=1}^N \\sum_{j=1}^N k(x_i, y_j)`.</span>
+<span class="sd">    The first term is the estimate, and the second term is the bias, and together they form</span>
+<span class="sd">    an unbiased estimate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">corren_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+
+    <span class="c1"># compute kernel between each feature, which is now (n_features, n_features) array</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">jdx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">K</span><span class="p">,</span> <span class="n">kwidth</span> <span class="o">=</span> <span class="n">compute_kernel</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">][:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
+                <span class="n">data</span><span class="p">[:,</span> <span class="n">jdx</span><span class="p">][:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
+                <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span>
+                <span class="n">distance_metric</span><span class="o">=</span><span class="n">distance_metric</span><span class="p">,</span>
+                <span class="n">kwidth</span><span class="o">=</span><span class="n">kwidth</span><span class="p">,</span>
+                <span class="n">centered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># compute the bias due to finite-samples</span>
+            <span class="n">bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span><span class="o">**</span><span class="mi">2</span>
+
+            <span class="c1"># compute the sample centered correntropy</span>
+            <span class="n">corren</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_samples</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">-</span> <span class="n">bias</span>
+
+            <span class="n">corren_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="n">corren_arr</span><span class="p">[</span><span class="n">jdx</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">corren</span>
+    <span class="k">return</span> <span class="n">corren_arr</span>
 
 
 <div class="viewcode-block" id="compute_kernel"><a class="viewcode-back" href="../../../generated/dodiscover.ci.utils.compute_kernel.html#dodiscover.ci.utils.compute_kernel">[docs]</a><span class="k">def</span> <span class="nf">compute_kernel</span><span class="p">(</span>
