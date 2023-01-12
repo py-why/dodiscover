@@ -247,16 +247,16 @@ def _estimate_propensity_scores(K, z, penalty=None, n_jobs=None, random_state=No
 
 
 def _restricted_permutation(
-    nbrs: ArrayLike, n_shuffle_nbrs: int, n_samples: int, random_state=None
+    nbrs: ArrayLike, n_shuffle_nbrs: int, n_samples: int, random_seed=None
 ) -> ArrayLike:
-    if random_state is None:
-        random_state = np.random.RandomState(seed=random_state)
+    if random_seed is None:
+        rng = np.random.default_rng(seed=random_seed)
 
     # initialize the final permutation order
     restricted_perm = np.zeros((n_samples,))
 
     # generate a random order of samples to go through
-    random_order = random_state.permutation(n_samples)
+    random_order = rng.permutation(n_samples)
 
     # keep track of values we have already used
     used = set()
