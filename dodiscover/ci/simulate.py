@@ -93,12 +93,15 @@ def nonlinear_additive_gaussian(
 
     # compute nonlinear model
     if model_type == "ci":
+        # X <- Z -> Y
         X = nonlinear_func(freq * (Z * Azx + std * X_noise + cause_var))
         Y = nonlinear_func(freq * (Z * Azy + std * Y_noise + cause_var))
     elif model_type == "ind":
+        # X, Y, Z
         X = nonlinear_func(freq * (std * X_noise + cause_var))
         Y = nonlinear_func(freq * (std * Y_noise + cause_var))
     elif model_type == "dep":
+        # X -> Y <- Z
         X = nonlinear_func(freq * (std * X_noise + cause_var))
         Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var))
 
