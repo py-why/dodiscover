@@ -119,10 +119,10 @@ def test_g_binary_highdim():
     n_samples = 1000
     df = binary_scm(n_samples=n_samples)
     for i in range(10):
-        df[i] = rng.binomial(1, p=1.0, size=n_samples)
+        df[i] = rng.binomial(1, p=0.8, size=n_samples)
     ci_estimator = GSquareCITest(data_type="binary")
 
     _, pvalue = ci_estimator.test(df, {"x"}, {"x1"}, set(range(6)))
     assert pvalue > 0.05
-    _, pvalue = ci_estimator.test(df, {"x"}, {"y"}, set(range(6)))
+    _, pvalue = ci_estimator.test(df, {"x"}, {"y"}, set(range(5)).union({"x1"}))
     assert pvalue < 0.05
