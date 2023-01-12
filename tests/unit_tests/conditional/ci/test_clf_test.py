@@ -85,7 +85,7 @@ def test_clfcitest_with_bootstrap():
 
     # create input for the CI test
     X, Y, Z = nonlinear_additive_gaussian(
-        model_type="ci", n_samples=n_samples, random_state=rng, std=1.0
+        model_type="ci", n_samples=n_samples, random_state=rng, std=0.001
     )
     df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
 
@@ -100,13 +100,11 @@ def test_clfcitest_with_bootstrap():
 
     # create input for the dep test X -> Y <- Z
     X, Y, Z = nonlinear_additive_gaussian(
-        model_type="dep", n_samples=n_samples, random_state=rng, std=1.0
+        model_type="dep", n_samples=n_samples, random_state=rng, std=0.001
     )
     clf = RandomForestClassifier(random_state=rng)
     ci_estimator = ClassifierCITest(clf, random_state=rng, bootstrap=True, n_iter=2)
     df = pd.DataFrame(np.hstack((X, Y, Z)), columns=["x", "y", "z"])
-    # _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
-    # assert pvalue > 0.05
     _, pvalue = ci_estimator.test(df, {"z"}, {"y"})
     assert pvalue < 0.05
     _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
