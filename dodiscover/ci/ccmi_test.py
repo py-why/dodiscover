@@ -1,11 +1,11 @@
 from typing import Callable, Optional, Set, Tuple, Union
 
 import numpy as np
-from numpy.typing import ArrayLike
 import pandas as pd
 import scipy.special
 import sklearn
 import sklearn.metrics
+from numpy.typing import ArrayLike
 from sklearn.utils import check_random_state
 
 from dodiscover.typing import Column
@@ -15,7 +15,7 @@ from .base import BaseConditionalIndependenceTest
 
 def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
     """Compute f-divergence upper bound on KL-divergence.
-    
+
     See definition 4 in :footcite:`Mukherjee2020ccmi`, where
     the function is reversed to give an upper-bound for the
     sake of gradient descent.

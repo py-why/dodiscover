@@ -13,6 +13,7 @@ for classes (``CamelCase`` names) and functions
 (``underscore_case`` names) of dodiscover, grouped thematically by analysis
 stage.
 
+
 Context for causal discovery
 ============================
 
@@ -107,6 +108,7 @@ learning.
    GSquareCITest
    FisherZCITest
    ClassifierCITest
+   CMITest
    ClassifierCMITest
 
 Conditional k-sample testing
