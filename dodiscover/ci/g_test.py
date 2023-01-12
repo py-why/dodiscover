@@ -383,7 +383,7 @@ def g_square_discrete(
 
 class GSquareCITest(BaseConditionalIndependenceTest):
     def __init__(self, data_type: str = "binary"):
-        """G squared CI test for discrete or binary data.
+        r"""G squared CI test for discrete or binary data.
 
         For details of the test see :footcite:`Neapolitan2003`.
 

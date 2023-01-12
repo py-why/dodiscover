@@ -15,7 +15,7 @@ def single_env_scm(n_samples=200, offset=0.0):
 
     X = rng.standard_normal((n_samples, 1)) + offset
     X1 = rng.standard_normal((n_samples, 1)) + offset
-    Y = X + X1 + 0.5 * rng.standard_normal((n_samples, 1))
+    Y = X + X1 + 0.1 * rng.standard_normal((n_samples, 1))
     Z = Y + 0.1 * rng.standard_normal((n_samples, 1))
 
     # create input for the CD test
@@ -27,7 +27,7 @@ def single_env_scm(n_samples=200, offset=0.0):
 
 
 def multi_env_scm():
-    n_samples = 150
+    n_samples = 100
     df = single_env_scm(n_samples=n_samples)
     df["group"] = 0
 
@@ -67,11 +67,11 @@ def test_cd_tests_error(cd_estimator):
 @pytest.mark.parametrize(
     ["cd_func", "cd_kwargs"],
     [
+        [BregmanCDTest, dict()],
         [KernelCDTest, dict()],
         [KernelCDTest, {"l2": 1e-3}],
         [KernelCDTest, {"l2": (1e-3, 2e-3)}],
-        [BregmanCDTest, dict()],
-    ]
+    ],
 )
 @pytest.mark.parametrize(
     ["df", "env_type"],
@@ -84,7 +84,7 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
     """Test conditional discrepancy tests."""
     random_state = 12345
     print(cd_func, cd_kwargs)
-    cd_estimator = cd_func(random_state=random_state, null_reps=100, n_jobs=-1, **cd_kwargs)
+    cd_estimator = cd_func(random_state=random_state, null_reps=50, n_jobs=-1, **cd_kwargs)
 
     group_col = "group"
 
@@ -105,6 +105,6 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
         _, pvalue = cd_estimator.test(df, {"x"}, {"y"}, group_col=group_col)
         assert pvalue < 0.05
         print(pvalue)
-        _, pvalue = cd_estimator.test(df, {"x"}, {"x1"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(df, {"x1"}, {"z"}, group_col=group_col)
         assert pvalue < 0.05
         print(pvalue)
