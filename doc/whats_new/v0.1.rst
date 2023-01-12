@@ -41,6 +41,7 @@ Changelog
 - |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.KernelCDTest`, by `Adam Li`_ (:pr:`81`)
 - |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.BregmanCDTest`, by `Adam Li`_ (:pr:`82`)
 - |Feature| Add conditional mutual information test, :class:`dodiscover.ci.CMITest`, by `Adam Li`_ (:pr:`83`)
+- |Feature| Add classifier conditional mutual information test, :class:`dodiscover.ci.ClassifierCMITest`, by `Adam Li`_ (:pr:`85`)
 
 Code and Documentation Contributors
 -----------------------------------
