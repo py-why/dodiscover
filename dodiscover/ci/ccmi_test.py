@@ -42,11 +42,10 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
             The size, or proportion of the samples to use for the test
             dataset, by default 0.3.
         threshold : float, optional
-            Threshold to state conditional independence, by default 0.03.
-            If threshold is set to ``None``, then the null distribution will
-            be estimated via permutation tests ``n_shuffle`` times to compute
-            a pvalue. This may be computationally expensive due to refitting
-            a new classifier for each null distribution instance.
+            Threshold to state conditional independence by binarizing the
+            returned pvalue, by default 0.03. If threshold is set to ``None``,
+            then the null distribution will be estimated via permutation tests
+            ``n_shuffle`` times to compute a pvalue.
         n_jobs : int, optional
             The number of CPUs to use, by default -1, which corresponds to
             using all CPUs available.
@@ -83,6 +82,14 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
         is a special case of KL-divergence. The ``f-divergence`` is a lower bound on
         the KL-divergence, which can be more stable in certain cases. The user may choose
         which metric to compute from the classifier output.
+
+        **Estimating the pvalue**
+        If threshold is set, then the estimated CMI value is compared with
+        ``0 + threshold`` to determine if the query is "conditionally dependent" and the
+        resulting pvalue returned will be either 0 or 1. If the threshold is set to ``None``,
+        then the pvalue is estimated via a permutation testing step, which estimates the
+        null distribution of CMI values. This may be computationally expensive due to refitting
+        a new classifier for each null distribution instance ``n_shuffle`` times.
         """
         self.clf = clf
         self.metric = metric

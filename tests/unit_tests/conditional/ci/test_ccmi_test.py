@@ -12,7 +12,7 @@ def test_ccmi_with_nonlinear_data_null():
     """Test kl-divergence with computing null distribution."""
 
     threshold = None
-    alpha = 0.1
+    alpha = 0.15
     rng = np.random.default_rng(seed)
 
     clf = RandomForestClassifier(random_state=seed)
