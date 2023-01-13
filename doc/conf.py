@@ -132,6 +132,9 @@ numpydoc_xref_ignore = {
     "NDArray",
     "n_samples_X",
     "n_samples_Y",
+    "n_features",
+    "n_features_z",
+    "k",
     "n_features_X",
     "n_features_Y",
     # deep learning

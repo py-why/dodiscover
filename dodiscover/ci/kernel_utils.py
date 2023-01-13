@@ -14,10 +14,10 @@ def von_neumann_divergence(A: ArrayLike, B: ArrayLike) -> float:
 
     Parameters
     ----------
-    A : ArrayLike of shape (n, n)
+    A : ArrayLike of shape (n_features, n_features)
         The first PSD matrix.
-    B : ArrayLike of shape (n, n)
-        The second PSD matrix
+    B : ArrayLike of shape (n_features, n_features)
+        The second PSD matrix.
 
     Returns
     -------
@@ -32,6 +32,70 @@ def von_neumann_divergence(A: ArrayLike, B: ArrayLike) -> float:
     """
     div = np.trace(A.dot(logm(A) - logm(B)) - A + B)
     return div
+
+
+def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
+    r"""Compute f-divergence upper bound on KL-divergence.
+
+    See definition 4 in :footcite:`Mukherjee2020ccmi`, where
+    the function is reversed to give an upper-bound for the
+    sake of gradient descent.
+
+    The f-divergence bound gives an upper bound on KL-divergence:
+    .. math::
+
+        D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]
+
+    Parameters
+    ----------
+    y_stat_q : ArrayLike of shape (n_samples_q,)
+        Samples from the distribution Q, the variational class.
+    y_stat_p : : ArrayLike of shape (n_samples_p,)
+        Samples from the distribution P, the joint distribution.
+
+    Returns
+    -------
+    f_div : float
+        The f-divergence score.
+    """
+    f_div = np.mean(np.exp(y_stat_q - 1)) - np.mean(y_stat_p)
+    return f_div
+
+
+def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) -> float:
+    r"""Compute f-divergence upper bound on KL-divergence.
+
+    See definition 4 in :footcite:`Mukherjee2020ccmi`, where
+    the function is reversed to give an upper-bound for the
+    sake of gradient descent.
+
+    The KL-divergence can be estimated with the following formula:
+    .. math::
+
+        \hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -
+        log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))
+
+    Parameters
+    ----------
+    y_stat_q : ArrayLike of shape (n_samples_q,)
+        Samples from the distribution Q, the variational class.
+        This corresponds to :math:`Y_j^q` samples.
+    y_stat_p : : ArrayLike of shape (n_samples_p,)
+        Samples from the distribution P, the joint distribution.
+        This corresponds to :math:`Y_i^p` samples.
+
+    Returns
+    -------
+    metric : float
+        The KL-divergence score.
+    """
+    # compute point-wise likelihood ratio for each prediction
+    p_l_ratio = (y_stat_p + eps) / np.abs(1 - y_stat_p - eps)
+    q_l_ratio = (y_stat_q + eps) / np.abs(1 - y_stat_q - eps)
+
+    # now compute KL-divergence estimate
+    kldiv = np.mean(np.log(p_l_ratio)) - np.log(np.mean(q_l_ratio))
+    return kldiv
 
 
 def corrent_matrix(
@@ -205,6 +269,54 @@ def _estimate_kwidth(
     return kwidth
 
 
+def _kernel_estimate_propensity_scores(
+    K: ArrayLike,
+    group_ind: ArrayLike,
+    penalty: float = None,
+    n_jobs: int = None,
+    random_state: int = None,
+) -> ArrayLike:
+    """Estimate propensity scores given kernel and propensities.
+
+    Parameters
+    ----------
+    K : ArrayLike of shape (n_samples, n_samples)
+        The kernel matrix generated.
+    group_ind : ArrayLike of shape (n_samples,)
+        Group indicator (empirical labels). Must be comprised of only
+        1's and 0's (i.e. binary groups).
+    penalty : float, optional
+        L2 regularization, by default None.
+    n_jobs : int, optional
+        Joblib parallelization, by default None.
+    random_state : int, optional
+        Random seed, by default None.
+
+    Returns
+    -------
+    e_hat : ArrayLike of shape (n_samples)
+        The predicted propensities (i.e. probabilities) of samples falling
+        into ``group_ind = 1``.
+    """
+    if penalty is None:
+        penalty = _default_regularization(K)
+
+    clf = LogisticRegression(
+        penalty="l2",
+        n_jobs=n_jobs,
+        warm_start=True,
+        solver="lbfgs",
+        random_state=random_state,
+        C=1 / (2 * penalty),
+    )
+
+    # fit and then obtain the probabilities of treatment
+    # for each sample (i.e. the propensity scores)
+    e_hat = clf.fit(K, group_ind).predict_proba(K)[:, 1]
+
+    return e_hat
+
+
 def _center_kernel(K: ArrayLike):
     """Centers a kernel matrix.
 
@@ -226,58 +338,19 @@ def _center_kernel(K: ArrayLike):
     return H.dot(K).dot(H)
 
 
-def _estimate_propensity_scores(K, z, penalty=None, n_jobs=None, random_state=None):
-    if penalty is None:
-        penalty = _default_regularization(K)
+def _default_regularization(K: ArrayLike) -> float:
+    """Computes a default regularization for Kernel Logistic Regression.
 
-    clf = LogisticRegression(
-        penalty="l2",
-        n_jobs=n_jobs,
-        warm_start=True,
-        solver="lbfgs",
-        random_state=random_state,
-        C=1 / (2 * penalty),
-    )
+    Parameters
+    ----------
+    K : ArrayLike of shape (n_samples, n_samples)
+        The kernel matrix.
 
-    # fit and then obtain the probabilities of treatment
-    # for each sample (i.e. the propensity scores)
-    e_hat = clf.fit(K, z).predict_proba(K)[:, 1]
-
-    return e_hat
-
-
-def _restricted_permutation(
-    nbrs: ArrayLike, n_shuffle_nbrs: int, n_samples: int, random_seed=None
-) -> ArrayLike:
-    rng = np.random.default_rng(seed=random_seed)
-
-    # initialize the final permutation order
-    restricted_perm = np.zeros((n_samples,))
-
-    # generate a random order of samples to go through
-    random_order = rng.permutation(n_samples)
-
-    # keep track of values we have already used
-    used = set()
-
-    # go through the random order
-    for idx in random_order:
-        m = 0
-        use_idx = nbrs[idx, m]
-
-        # if the current nbr is already used, continue incrementing
-        # until we have either found a new sample to use, or if
-        # we have reach the maximum number of shuffles to consider
-        while (use_idx in used) and (m < n_shuffle_nbrs - 1):
-            m += 1
-            use_idx = nbrs[idx, m]
-
-        restricted_perm[idx] = use_idx
-        used.add(use_idx)
-    return restricted_perm
-
-
-def _default_regularization(K):
+    Returns
+    -------
+    x : float
+        The default l2 regularization term.
+    """
     n_samples = K.shape[0]
     svals = np.linalg.svd(K, compute_uv=False, hermitian=True)
     res = minimize_scalar(

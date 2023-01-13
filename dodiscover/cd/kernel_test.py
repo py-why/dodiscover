@@ -5,7 +5,11 @@ import pandas as pd
 from joblib import Parallel, delayed
 from numpy.typing import ArrayLike
 
-from dodiscover.ci.utils import _default_regularization, _estimate_propensity_scores, compute_kernel
+from dodiscover.ci.kernel_utils import (
+    _default_regularization,
+    _kernel_estimate_propensity_scores,
+    compute_kernel,
+)
 from dodiscover.typing import Column
 
 from .base import BaseConditionalDiscrepancyTest
@@ -140,7 +144,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
 
         # compute propensity scores
         self.propensity_penalty_ = _default_regularization(K)
-        e_hat = _estimate_propensity_scores(
+        e_hat = _kernel_estimate_propensity_scores(
             K,
             group_ind,
             penalty=self.propensity_penalty_,

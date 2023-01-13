@@ -3,15 +3,12 @@ from typing import Optional, Set, Tuple, Union
 
 import numpy as np
 import pandas as pd
-import scipy
-import scipy.spatial
 import sklearn.utils
 from numpy.typing import ArrayLike
-from sklearn.neighbors import NearestNeighbors
 
 from dodiscover.typing import Column
 
-from .utils import _restricted_permutation
+from .monte_carlo import generate_knn_in_subspace, restricted_nbr_permutation
 
 
 class BaseConditionalIndependenceTest(metaclass=ABCMeta):
@@ -82,6 +79,7 @@ class ClassifierCIMixin:
         x_vars: Set[Column],
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
+        k: int = 1,
     ) -> Tuple:
         """Generate a training and testing dataset for CCIT.
 
@@ -99,10 +97,14 @@ class ClassifierCIMixin:
         z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
             the test should run a standard independence test.
+        k : int
+            The K nearest-neighbors in subspaces for the conditional permutation
+            step to generate distribution with conditional independence. By
+            default, 1.
 
         Returns
         -------
-        Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
+        X_train, Y_train, X_test, Y_test : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
             The X_train, y_train, X_test, y_test to be used in
             binary classification, where each dataset comprises
             of samples from the joint and conditionally independent
@@ -162,14 +164,14 @@ class ClassifierCIMixin:
 
             # generate the training dataset
             X_ind, y_ind, X_joint, y_joint = self._conditional_shuffle(
-                x_arr_train, y_arr_train, z_arr_train
+                x_arr_train, y_arr_train, z_arr_train, k=k
             )
             X_train = np.vstack((X_ind, X_joint))
             Y_train = np.vstack((y_ind, y_joint))
 
             # generate the testing dataset
             X_ind, y_ind, X_joint, y_joint = self._conditional_shuffle(
-                x_arr_test, y_arr_test, z_arr_test
+                x_arr_test, y_arr_test, z_arr_test, k=k
             )
             X_test = np.vstack((X_ind, X_joint))
             Y_test = np.vstack((y_ind, y_joint))
@@ -181,9 +183,9 @@ class ClassifierCIMixin:
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         r"""Generate samples to emulate X independent of Y.
 
-        Shuffles the Y samples, such that if there is any dependence among X and Y,
-        they are broken and the resulting samples emulate those which came from
-        the distribution with :math:`X \\perp Y`.
+        Based on input data ``(X, Y)``, partitions the dataset into halves, where
+        one-half represents the joint distribution of ``P(X, Y)`` and the other
+        represents the independent distribution of ``P(X)P(Y)``.
 
         Parameters
         ----------
@@ -194,13 +196,20 @@ class ClassifierCIMixin:
 
         Returns
         -------
-        Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
+        X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
             The X_ind, y_ind, X_joint, y_joint to be used in
             binary classification, where ``X_ind`` is the data features
             that are from the generated independent data and ``X_joint``
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
+
+        Notes
+        -----
+        Shuffles the Y samples, such that if there is any dependence among X and Y,
+        they are broken and the resulting samples emulate those which came from
+        the distribution with :math:`X \\perp Y`. This essentially takes input
+        data and generates a null distribution.
         """
         n_samples_x, _ = x_arr.shape
 
@@ -236,12 +245,19 @@ class ClassifierCIMixin:
         return X_ind, y_ind, X_joint, y_joint
 
     def _conditional_shuffle(
-        self, x_arr: ArrayLike, y_arr: ArrayLike, z_arr: ArrayLike, k: int = 1
+        self,
+        x_arr: ArrayLike,
+        y_arr: ArrayLike,
+        z_arr: ArrayLike,
+        method="knn",
+        k: int = 1,
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         """Generate dataset for CI testing as binary classification problem.
 
-        Implements a nearest-neighbor bootstrap approach for generating samples from
-        the null hypothesis where :math:`X \\perp Y | Z`.
+        Based on input data ``(X, Y, Z)``, partitions the dataset into halves, where
+        one-half represents the joint distribution of ``P(X, Y, Z)`` and the other
+        represents the conditionally independent distribution of ``P(X | Z)P(Y)``.
+        This is done by a nearest-neighbor bootstrap approach.
 
         Parameters
         ----------
@@ -251,24 +267,28 @@ class ClassifierCIMixin:
             The input Y variable data.
         z_arr : ArrayLike of shape (n_samples, n_dims_x)
             The input Z variable data.
+        method : str, optional
+            Method to use, by default 'knn'. Can be ('knn', 'kdtree').
         k : int, optional
-            _description_, by default 1
+            Number of nearest neighbors to swap, by default 1.
 
         Returns
         -------
-        Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
+        X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
             The X_ind, y_ind, X_joint, y_joint to be used in
             binary classification, where ``X_ind`` is the data features
             that are from the generated independent data and ``X_joint``
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
-        """
-        # compute the nearest neighbors in the space of "Z training" using ball-tree alg.
-        nbrs = NearestNeighbors(n_neighbors=k + 1, algorithm="ball_tree", metric="l2").fit(z_arr)
 
-        # then get the K nearest nbrs in the Z space
-        _, indices = nbrs.kneighbors(z_arr)
+        Notes
+        -----
+        This algorithm implements a nearest-neighbor bootstrap approach for generating
+        samples from the null hypothesis where :math:`X \\perp Y | Z`.
+        """
+        # use a method to generate k-nearest-neighbors in subspace of Z
+        indices = generate_knn_in_subspace(z_arr, method=method, k=k)
 
         # Get the index of the sample kth closest to the 'idx' sample of Z
         # Then we will swap those samples in the Y variable
@@ -287,6 +307,7 @@ class ClassifierCIMixin:
 class CMIMixin:
     random_state: np.random.Generator
     random_seed: Optional[int]
+    n_jobs: Optional[int]
 
     def _estimate_null_dist(
         self,
@@ -325,15 +346,16 @@ class CMIMixin:
 
         x_cols = list(x_vars)
         if len(z_covariates) > 0 and n_shuffle_nbrs < n_samples:
-            # Get nearest neighbors around each sample point in Z subspace
-            z_array = data[list(z_covariates)].to_numpy()
-            tree_xyz = scipy.spatial.cKDTree(z_array)
-            nbrs = tree_xyz.query(z_array, k=n_shuffle_nbrs, p=np.inf, eps=0.0)[1].astype(np.int32)
-
             null_dist = np.zeros(n_shuffle)
 
             # create a copy of the data to store the shuffled array
             data_copy = data.copy()
+
+            # Get nearest neighbors around each sample point in Z subspace
+            z_array = data[list(z_covariates)].to_numpy()
+            nbrs = generate_knn_in_subspace(
+                z_array, method="kdtree", k=n_shuffle_nbrs, n_jobs=self.n_jobs
+            )
 
             # we will now compute a shuffled distribution, where X_i is replaced
             # by X_j only if the corresponding Z_i and Z_j are "nearby", computed
@@ -345,8 +367,8 @@ class CMIMixin:
 
                 # Select a series of neighbor indices that contains as few as
                 # possible duplicates
-                restricted_permutation = _restricted_permutation(
-                    nbrs, n_shuffle_nbrs, n_samples=n_samples, random_seed=self.random_seed
+                restricted_permutation = restricted_nbr_permutation(
+                    nbrs, random_seed=self.random_seed
                 )
 
                 # update the X variable column

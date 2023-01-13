@@ -5,7 +5,7 @@ import pandas as pd
 from joblib import Parallel, delayed
 from numpy.typing import ArrayLike
 
-from dodiscover.ci.utils import corrent_matrix, von_neumann_divergence
+from dodiscover.ci.kernel_utils import corrent_matrix, von_neumann_divergence
 from dodiscover.typing import Column
 
 from .base import BaseConditionalDiscrepancyTest
@@ -25,7 +25,7 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         The distance metric, by default 'euclidean'.
     kwidth : float, optional
         The width of the kernel, by default None, which we will then estimate
-        using the default procedure in :func:`dodiscover.ci.utils.compute_kernel`.
+        using the default procedure in :func:`dodiscover.ci.kernel_utils.compute_kernel`.
     null_reps : int, optional
         Number of times to sample null distribution, by default 1000.
     n_jobs : int, optional

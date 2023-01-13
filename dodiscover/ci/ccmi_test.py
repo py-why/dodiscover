@@ -4,73 +4,11 @@ import numpy as np
 import pandas as pd
 import sklearn
 import sklearn.metrics
-from numpy.typing import ArrayLike
 
 from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest, ClassifierCIMixin, CMIMixin
-
-
-def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
-    r"""Compute f-divergence upper bound on KL-divergence.
-
-    See definition 4 in :footcite:`Mukherjee2020ccmi`, where
-    the function is reversed to give an upper-bound for the
-    sake of gradient descent.
-
-    The f-divergence bound gives an upper bound on KL-divergence:
-    .. math::
-        D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]
-
-    Parameters
-    ----------
-    y_stat_q : arraylike of shape (n_samples_q,)
-        Samples from the distribution Q, the variational class.
-    y_stat_p : : arraylike of shape (n_samples_p,)
-        Samples from the distribution P, the joint distribution.
-
-    Returns
-    -------
-    f_div : float
-        The f-divergence score.
-    """
-    f_div = np.mean(np.exp(y_stat_q - 1)) - np.mean(y_stat_p)
-    return f_div
-
-
-def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) -> float:
-    r"""Compute f-divergence upper bound on KL-divergence.
-
-    See definition 4 in :footcite:`Mukherjee2020ccmi`, where
-    the function is reversed to give an upper-bound for the
-    sake of gradient descent.
-
-    The KL-divergence can be estimated with the following formula:
-    .. math::
-        \hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -
-        log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))
-
-    Parameters
-    ----------
-    y_stat_q : arraylike of shape (n_samples_q,)
-        Samples from the distribution Q, the variational class.
-        This corresponds to :math:`Y_j^q` samples.
-    y_stat_p : : arraylike of shape (n_samples_p,)
-        Samples from the distribution P, the joint distribution.
-        This corresponds to :math:`Y_i^p` samples.
-
-    Returns
-    -------
-    metric : float
-        The KL-divergence score.
-    """
-    # compute point-wise likelihood ratio for each prediction
-    p_l_ratio = (y_stat_p + eps) / np.abs(1 - y_stat_p - eps)
-    q_l_ratio = (y_stat_q + eps) / np.abs(1 - y_stat_q - eps)
-
-    # now compute KL-divergence estimate
-    kldiv = np.mean(np.log(p_l_ratio)) - np.log(np.mean(q_l_ratio))
-    return kldiv
+from .kernel_utils import f_divergence_score, kl_divergence_score
 
 
 class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIMixin):
@@ -227,10 +165,12 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
 
             # compute pvalue as the number of times our metric is smaller
             # than the resulting null distribution of metrics
+            print("Computing null metric... ", metric)
+            print(null_dist)
             pvalue = (null_dist >= metric).mean()
             self.null_dist_ = null_dist
         else:
-            print('Computing metric... ', metric)
+            print("Computing metric... ", metric)
             if max(0, metric) < self.threshold:
                 pvalue = 0.0
             else:
@@ -308,7 +248,9 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
             or f-divergence.
         """
         # generate training and testing data by shuffling X and Y
-        X_train, Y_train, X_test, Y_test = self.generate_train_test_data(df, x_vars, y_vars)
+        X_train, Y_train, X_test, Y_test = self.generate_train_test_data(
+            df, x_vars, y_vars, k=self.n_shuffle_nbrs
+        )
         Y_train = Y_train.ravel()
         Y_test = Y_test.ravel()
 
@@ -329,7 +271,7 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
         # estimate the metric
         kwargs = dict()
         if self.metric == kl_divergence_score:
-            kwargs['eps'] =self.eps
+            kwargs["eps"] = self.eps
         metric = self.metric(Y_pred_q, Y_pred_p, **kwargs)
         return metric
 
