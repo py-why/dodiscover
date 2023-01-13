@@ -33,9 +33,9 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         z_covariates: Optional[Set[Column]],
     ):
         if any(col not in df.columns for col in x_vars):
-            raise ValueError("The x variables are not all in the DataFrame.")
+            raise ValueError(f"The x variables {x_vars} are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
-            raise ValueError("The y variables are not all in the DataFrame.")
+            raise ValueError(f"The y variables {y_vars} are not all in the DataFrame.")
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
             raise ValueError("The z conditioning set variables are not all in the DataFrame.")
 
@@ -323,6 +323,7 @@ class CMIMixin:
         """
         n_samples, _ = data.shape
 
+        x_cols = list(x_vars)
         if len(z_covariates) > 0 and n_shuffle_nbrs < n_samples:
             # Get nearest neighbors around each sample point in Z subspace
             z_array = data[list(z_covariates)].to_numpy()
@@ -349,7 +350,7 @@ class CMIMixin:
                 )
 
                 # update the X variable column
-                data_copy.loc[:, x_vars] = data.loc[restricted_permutation, x_vars].to_numpy()
+                data_copy.loc[:, x_cols] = data.loc[restricted_permutation, x_cols].to_numpy()
 
                 # compute the CMI on the shuffled array
                 null_dist[idx] = self._compute_cmi(data_copy, x_vars, y_vars, z_covariates)
@@ -370,16 +371,16 @@ class CMIMixin:
     ) -> ArrayLike:
         """Compute a shuffled distribution of the test statistic."""
         data_copy = data.copy()
-
+        x_cols = list(x_vars)
         # initialize the shuffle distribution
         shuffle_dist = np.zeros((n_shuffle,))
         for idx in range(n_shuffle):
             # compute a shuffled version of the data
-            x_data = data[x_vars]
+            x_data = data[x_cols]
             shuffled_x = sklearn.utils.shuffle(x_data, random_state=self.random_seed)
 
             # compute now the test statistic on the shuffle data
-            data_copy[x_vars] = shuffled_x.values
+            data_copy[x_cols] = shuffled_x.values
             shuffle_dist[idx] = self._compute_cmi(data_copy, x_vars, y_vars, z_covariates)
 
         return shuffle_dist

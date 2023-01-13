@@ -24,24 +24,24 @@ def test_cmi_with_nonlinear_gaussian_data(transform):
     # create input for the CI test
     df = pd.DataFrame(np.hstack((X, X1, Y, Z)), columns=["x", "x1", "y", "z"])
 
-    _, pvalue = ci_estimator.test(df, "x", "x1")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"})
     print(pvalue)
     assert pvalue > 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z", {"y"})
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"y"})
     print(pvalue)
     assert pvalue > 0.05
-    _, pvalue = ci_estimator.test(df, "x1", "z", {"y", "x"})
+    _, pvalue = ci_estimator.test(df, {"x1"}, {"z"}, {"y", "x"})
     print(pvalue)
     assert pvalue > 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z", {"x1"})
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"}, {"x1"})
     print(pvalue)
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "y")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"y"})
     print(pvalue)
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "z")
+    _, pvalue = ci_estimator.test(df, {"x"}, {"z"})
     print(pvalue)
     assert pvalue < 0.05
-    _, pvalue = ci_estimator.test(df, "x", "x1", {"z"})
+    _, pvalue = ci_estimator.test(df, {"x"}, {"x1"}, {"z"})
     print(pvalue)
     assert pvalue < 0.05

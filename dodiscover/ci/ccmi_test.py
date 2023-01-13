@@ -12,7 +12,7 @@ from .base import BaseConditionalIndependenceTest, ClassifierCIMixin, CMIMixin
 
 
 def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
-    """Compute f-divergence upper bound on KL-divergence.
+    r"""Compute f-divergence upper bound on KL-divergence.
 
     See definition 4 in :footcite:`Mukherjee2020ccmi`, where
     the function is reversed to give an upper-bound for the
@@ -39,7 +39,7 @@ def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
 
 
 def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) -> float:
-    """Compute f-divergence upper bound on KL-divergence.
+    r"""Compute f-divergence upper bound on KL-divergence.
 
     See definition 4 in :footcite:`Mukherjee2020ccmi`, where
     the function is reversed to give an upper-bound for the
@@ -104,7 +104,11 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
             The size, or proportion of the samples to use for the test
             dataset, by default 0.3.
         threshold : float, optional
-            Threshold to state whether, by default 0.03
+            Threshold to state conditional independence, by default 0.03.
+            If threshold is set to ``None``, then the null distribution will
+            be estimated via permutation tests ``n_shuffle`` times to compute
+            a pvalue. This may be computationally expensive due to refitting
+            a new classifier for each null distribution instance.
         n_jobs : int, optional
             The number of CPUs to use, by default -1, which corresponds to
             using all CPUs available.
@@ -226,6 +230,7 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
             pvalue = (null_dist >= metric).mean()
             self.null_dist_ = null_dist
         else:
+            print('Computing metric... ', metric)
             if max(0, metric) < self.threshold:
                 pvalue = 0.0
             else:
@@ -322,7 +327,10 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
         Y_pred_q = Y_pred[q_idx]
 
         # estimate the metric
-        metric = self.metric(Y_pred_q, Y_pred_p, eps=self.eps)
+        kwargs = dict()
+        if self.metric == kl_divergence_score:
+            kwargs['eps'] =self.eps
+        metric = self.metric(Y_pred_q, Y_pred_p, **kwargs)
         return metric
 
     def _compute_cmi_with_diff(self, I_xyz: float, I_xz: float) -> float:
