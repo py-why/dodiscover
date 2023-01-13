@@ -171,7 +171,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest, ClassifierCIMixin):
 
             # compute final pvalue
             metric = np.mean(boot_metrics)
-            std_metric = np.std(boot_metrics)
+            std_metric = np.std(boot_metrics) + 1e-8
             sigma = std_metric / np.sqrt(self.n_iter)
         else:
             metric, pvalue = self._compute_test_statistic(df, x_vars, y_vars, z_covariates)
