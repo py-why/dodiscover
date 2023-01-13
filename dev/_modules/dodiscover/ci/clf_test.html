@@ -487,7 +487,7 @@
 
             <span class="c1"># compute final pvalue</span>
             <span class="n">metric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">boot_metrics</span><span class="p">)</span>
-            <span class="n">std_metric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">boot_metrics</span><span class="p">)</span>
+            <span class="n">std_metric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">boot_metrics</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span>
             <span class="n">sigma</span> <span class="o">=</span> <span class="n">std_metric</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">metric</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_test_statistic</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>

@@ -144,7 +144,7 @@ are conditionally independent.
 
  .. code-block:: none
 
-    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1817.09it/s]
+    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1752.19it/s]
        x  ...  w
     0  0  ...  1
     1  1  ...  2
@@ -159,7 +159,7 @@ are conditionally independent.
     w    [1, 2, 0]
     dtype: object
 
-    <graphviz.graphs.Digraph object at 0x7fe936187eb0>
+    <graphviz.graphs.Digraph object at 0x7f43352d2100>
 
 
 
@@ -306,10 +306,6 @@ always a possibility that the CI test makes a mistake.
 
  .. code-block:: none
 
-    /home/circleci/project/dodiscover/ci/g_test.py:200: RuntimeWarning: divide by zero encountered in log
-      log_tlog = np.log(tlog)
-    /home/circleci/project/dodiscover/ci/g_test.py:201: RuntimeWarning: invalid value encountered in multiply
-      G2 = np.nansum(2 * contingency_tble * log_tlog)
 
     'ci_cpdag.png'
 
@@ -318,7 +314,7 @@ always a possibility that the CI test makes a mistake.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.390 seconds)
+   **Total running time of the script:** ( 0 minutes  1.301 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_pc_alg.py:

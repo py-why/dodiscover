@@ -261,8 +261,8 @@
     <span class="c1"># define contingency table as a 2 by 2 table relating &#39;x&#39; and &#39;y&#39;</span>
     <span class="c1"># across different separating set variables</span>
     <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nlevels_x</span><span class="p">,</span> <span class="n">nlevels_y</span><span class="p">,</span> <span class="n">dof</span><span class="p">))</span>
-    <span class="n">x_idx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>  <span class="c1"># [:, x]</span>
-    <span class="n">y_idx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">]</span>  <span class="c1"># [:, y]</span>
+    <span class="n">x_idx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="n">y_idx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">]</span>
     <span class="n">sep_set</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span>
 
     <span class="c1"># sum all co-occurrences of x and y conditioned on z</span>
@@ -289,7 +289,7 @@
     <span class="n">x</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">Column</span><span class="p">,</span>
     <span class="n">sep_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">nlevel_x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">nlevels_y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
@@ -308,8 +308,8 @@
 <span class="sd">        &#39;y&#39; must be in the columns of ``data``.</span>
 <span class="sd">    sep_set : set</span>
 <span class="sd">        The set of neighboring nodes of x and y (as a set()).</span>
-<span class="sd">    data : np.ndarray of shape (n_samples, n_variables)</span>
-<span class="sd">        The input data matrix.</span>
+<span class="sd">    data : pandas.DataFrame of shape (n_samples, n_variables)</span>
+<span class="sd">        The input dataframe.</span>
 <span class="sd">    nlevel_x : int</span>
 <span class="sd">        Number of levels of the &#39;x&#39; variable in the data matrix.</span>
 <span class="sd">    nlevels_y : int</span>
@@ -325,28 +325,31 @@
 
     <span class="c1"># keep track of all variables in the separating set</span>
     <span class="n">sep_set</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sep_set</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">sep_set</span><span class="p">]</span>
+    <span class="n">sep_col_inds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ind</span> <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sep_set</span><span class="p">]</span>
+    <span class="n">x_col_inds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ind</span> <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">x</span><span class="p">]</span>
+    <span class="n">y_col_inds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ind</span> <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">y</span><span class="p">]</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">sep_col_inds</span><span class="p">]</span>
 
     <span class="c1"># count number of value combinations for sepset variables</span>
     <span class="c1"># observed in the data</span>
     <span class="n">dof_count</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">parents_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]])</span>
+    <span class="n">parents_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">k</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]])</span>
 
     <span class="c1"># initialize the contingency table</span>
     <span class="n">contingency_tble</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">xdx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
-    <span class="n">ydx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+    <span class="n">xdx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_col_inds</span><span class="p">]</span>
+    <span class="n">ydx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_col_inds</span><span class="p">]</span>
     <span class="n">contingency_tble</span><span class="p">[</span><span class="n">xdx</span><span class="p">,</span> <span class="n">ydx</span><span class="p">,</span> <span class="n">dof_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="c1"># check how many parents we can create from the rest of the dataset</span>
     <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
         <span class="n">is_new</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">xdx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
-        <span class="n">ydx</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+        <span class="n">xdx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">x_col_inds</span><span class="p">]</span>
+        <span class="n">ydx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">y_col_inds</span><span class="p">]</span>
 
         <span class="c1"># comparing the current values of the subset variables to all</span>
         <span class="c1"># already existing combinations of subset variables values</span>
-        <span class="n">tcomp</span> <span class="o">=</span> <span class="n">parents_val</span><span class="p">[:</span><span class="n">dof_count</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">k</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">tcomp</span> <span class="o">=</span> <span class="n">parents_val</span><span class="p">[:</span><span class="n">dof_count</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">k</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
         <span class="k">for</span> <span class="n">it_parents</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dof_count</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tcomp</span><span class="p">[</span><span class="n">it_parents</span><span class="p">,</span> <span class="p">:]):</span>
                 <span class="n">contingency_tble</span><span class="p">[</span><span class="n">xdx</span><span class="p">,</span> <span class="n">ydx</span><span class="p">,</span> <span class="n">it_parents</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -357,7 +360,7 @@
         <span class="c1"># contingency table</span>
         <span class="k">if</span> <span class="n">is_new</span><span class="p">:</span>
             <span class="n">dof_count</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">parents_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">parents_val</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]]]</span>
+            <span class="n">parents_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">parents_val</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]]]</span>
 
             <span class="c1"># create a new contingnecy table and update cell counts</span>
             <span class="c1"># using the original table up to the last value</span>
@@ -402,8 +405,14 @@
 
         <span class="c1"># compute the final term in the log</span>
         <span class="n">tdijk</span> <span class="o">=</span> <span class="n">tx</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ty</span><span class="p">)</span>
+
+        <span class="c1"># to prevent dividing by 0</span>
+        <span class="n">tdijk</span> <span class="o">+=</span> <span class="mf">1e-8</span>
+
         <span class="n">tlog</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">contingency_tble</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">nk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">tdijk</span>
 
+    <span class="c1"># to prevent logging by 0</span>
+    <span class="n">tlog</span> <span class="o">+=</span> <span class="mf">1e-8</span>
     <span class="n">log_tlog</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">tlog</span><span class="p">)</span>
     <span class="n">G2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">contingency_tble</span> <span class="o">*</span> <span class="n">log_tlog</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">G2</span>
@@ -581,7 +590,7 @@
 
 <div class="viewcode-block" id="GSquareCITest"><a class="viewcode-back" href="../../../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest">[docs]</a><span class="k">class</span> <span class="nc">GSquareCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;binary&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;G squared CI test for discrete or binary data.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;G squared CI test for discrete or binary data.</span>
 
 <span class="sd">        For details of the test see :footcite:`Neapolitan2003`.</span>
 
@@ -590,6 +599,19 @@
 <span class="sd">        data_type : str, optional</span>
 <span class="sd">            The type of data, which can be &quot;binary&quot;, or &quot;discrete&quot;.</span>
 <span class="sd">            By default &quot;binary&quot;.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        G^2 test statistics requires exponentially more samples as the conditioning</span>
+<span class="sd">        set size grows. The exact requirements in this implementation for binary data</span>
+<span class="sd">        is :math:`10 * 2^|S|`, where :math:`|S|` is the cardinality of the conditioning</span>
+<span class="sd">        set :math:`S`. For example, if S is comprised of three variables, then you need</span>
+<span class="sd">        at least 80 samples.</span>
+
+<span class="sd">        For discrete data, the requirement is :math:`|Y| * |X| * \prod_i |S_i|`, where</span>
+<span class="sd">        :math:`|X|` and :math:`|Y|` are the number of different discrete categories in</span>
+<span class="sd">        the X and Y columns, and :math:`\prod_i |S_i|` is the product of the number</span>
+<span class="sd">        of different categories in each of the conditioning set columns.</span>
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
