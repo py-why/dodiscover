@@ -109,6 +109,7 @@ learning.
    FisherZCITest
    ClassifierCITest
    CMITest
+   ClassifierCMITest
 
 Conditional k-sample testing
 ============================
@@ -132,8 +133,23 @@ Testing for conditional discrepancy among variables is a core part
 of many causal inference procedures, such as constraint-based structure
 learning.
 
-.. currentmodule:: dodiscover.ci.utils
+.. currentmodule:: dodiscover.ci.kernel_utils
 .. autosummary::
    :toctree: generated/
 
    compute_kernel
+   corrent_matrix
+   von_neumann_divergence
+   f_divergence_score
+   kl_divergence_score
+
+
+Other utilities include support for Monte-Carlo testing for conditional
+independence.
+
+.. currentmodule:: dodiscover.ci.monte_carlo
+.. autosummary::
+   :toctree: generated/
+
+   generate_knn_in_subspace
+   restricted_nbr_permutation

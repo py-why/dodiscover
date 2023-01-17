@@ -5,7 +5,7 @@ import pandas as pd
 from scipy import stats
 from sklearn.metrics.pairwise import PAIRWISE_KERNEL_FUNCTIONS
 
-from dodiscover.ci.utils import compute_kernel
+from dodiscover.ci.kernel_utils import compute_kernel
 from dodiscover.typing import Column
 
 from .base import BaseConditionalIndependenceTest

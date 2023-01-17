@@ -1,4 +1,5 @@
 from .base import BaseConditionalIndependenceTest
+from .ccmi_test import ClassifierCMITest
 from .clf_test import ClassifierCITest
 from .cmi_test import CMITest
 from .fisher_z_test import FisherZCITest

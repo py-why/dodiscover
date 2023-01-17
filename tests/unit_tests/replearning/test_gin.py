@@ -9,8 +9,7 @@ from dodiscover.replearning.gin import GIN
 
 
 def test_estimate_gin_testdata():
-    """Test the wrapper to the causal-learn GIN algorithm for estimating the causal DAG.
-    """
+    """Test the wrapper to the causal-learn GIN algorithm for estimating the causal DAG."""
 
     # Sim data
     np.random.seed(123)
@@ -18,16 +17,18 @@ def test_estimate_gin_testdata():
     # First latent is a uniform
     latent_var_1 = np.random.uniform(0, 100, num_samples)
     # Second latent is caused by first via nonlinear transform
-    latent_var_2 = np.array(list(map(
-        lambda u: 100 * .03 * u / (1 + .03 * u),
-        latent_var_1)))
+    latent_var_2 = np.array(list(map(lambda u: 100 * 0.03 * u / (1 + 0.03 * u), latent_var_1)))
     # Observed variables. X1 and X2 are caused by L1, X3 and X4 are caused by L2
-    observed_vars = np.array([
-        latent_var_1 + np.random.normal(0, 1, num_samples),  # X1 caused by L1
-        (100 - latent_var_1) + np.random.normal(0, 1, num_samples),  # X2 caused by L1, mirros X1
-        latent_var_2 + np.random.normal(0, 1, num_samples),  # X3 caused by L2
-        (100 - latent_var_2) + np.random.normal(0, 1, num_samples),  # X4 caused by L2, mirrors X3
-    ]).transpose()
+    observed_vars = np.array(
+        [
+            latent_var_1 + np.random.normal(0, 1, num_samples),  # X1 caused by L1
+            (100 - latent_var_1)
+            + np.random.normal(0, 1, num_samples),  # X2 caused by L1, mirros X1
+            latent_var_2 + np.random.normal(0, 1, num_samples),  # X3 caused by L2
+            (100 - latent_var_2)
+            + np.random.normal(0, 1, num_samples),  # X4 caused by L2, mirrors X3
+        ]
+    ).transpose()
     data = pd.DataFrame(observed_vars, columns=["X1", "X2", "X3", "X4"])
 
     g_answer = CPDAG(
@@ -36,9 +37,10 @@ def test_estimate_gin_testdata():
             ("L1", "X2"),
             ("L2", "X3"),
             ("L2", "X4"),
-        ], [
+        ],
+        [
             ("L1", "L2"),
-        ]
+        ],
     )
 
     context = make_context().variables(data=data).build()

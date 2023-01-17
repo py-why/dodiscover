@@ -5,15 +5,15 @@ import pandas as pd
 import scipy
 import scipy.spatial
 import scipy.special
-import sklearn.utils
 from numpy.typing import ArrayLike
 from sklearn.preprocessing import StandardScaler
 
-from .base import BaseConditionalIndependenceTest
-from .utils import _restricted_permutation
+from dodiscover.typing import Column
+
+from .base import BaseConditionalIndependenceTest, CMIMixin
 
 
-class CMITest(BaseConditionalIndependenceTest):
+class CMITest(BaseConditionalIndependenceTest, CMIMixin):
     r"""Conditional mutual information independence test.
 
     Implements the conditional independence test using conditional
@@ -25,20 +25,18 @@ class CMITest(BaseConditionalIndependenceTest):
         Number of nearest-neighbors for each sample point. If the number is
         smaller than 1, it is computed as a fraction of the number of
         samples, by default 0.2.
-    n_shuffle_nbrs : int, optional
-        Number of nearest-neighbors within the Z covariates for shuffling, by default 5.
     transform : str, optional
         Transform the data by standardizing the data, by default 'rank', which converts
         data to ranks. Can be 'rank', 'uniform', 'standardize'.
-    n_shuffle : int
-        The number of samples to shuffle for a significance test.
     n_jobs : int, optional
         The number of CPUs to use, by default -1, which corresponds to
         using all CPUs available.
+    n_shuffle_nbrs : int, optional
+        Number of nearest-neighbors within the Z covariates for shuffling, by default 5.
     n_shuffle : int
         The number of times to shuffle the dataset to generate the null distribution.
         By default, 1000.
-    random_state : int, optional
+    random_seed : int, optional
         The random seed that is used to seed via ``np.random.defaultrng``.
 
     Notes
@@ -83,10 +81,10 @@ class CMITest(BaseConditionalIndependenceTest):
     def __init__(
         self,
         k: float = 0.2,
-        n_shuffle_nbrs: int = 5,
         transform: str = "rank",
         n_jobs: int = -1,
-        n_shuffle: int = 1000,
+        n_shuffle_nbrs: int = 5,
+        n_shuffle: int = 100,
         random_seed: int = None,
     ) -> None:
         self.k = k
@@ -98,19 +96,32 @@ class CMITest(BaseConditionalIndependenceTest):
         self.random_state = np.random.default_rng(self.random_seed)
 
     def test(
-        self, df: pd.DataFrame, x_var, y_var, z_covariates: Optional[Set] = None
+        self,
+        df: pd.DataFrame,
+        x_vars: Set[Column],
+        y_vars: Set[Column],
+        z_covariates: Optional[Set] = None,
     ) -> Tuple[float, float]:
         if z_covariates is None:
             z_covariates = set()
+
+        self._check_test_input(df, x_vars, y_vars, z_covariates)
 
         # preprocess and transform the data; called here only once
         df = self._preprocess_data(df)
 
         # compute the estimate of the CMI
-        val = self._compute_cmi(df, x_var, y_var, z_covariates)
+        val = self._compute_cmi(df, x_vars, y_vars, z_covariates)
 
         # compute the significance of the CMI value
-        null_dist = self._estimate_null_dist(df, x_var, y_var, z_covariates)
+        null_dist = self._estimate_null_dist(
+            df,
+            x_vars,
+            y_vars,
+            z_covariates,
+            n_shuffle_nbrs=self.n_shuffle_nbrs,
+            n_shuffle=self.n_shuffle,
+        )
 
         # compute pvalue
         pvalue = (null_dist >= val).mean()
@@ -120,7 +131,7 @@ class CMITest(BaseConditionalIndependenceTest):
         self.null_dist_ = null_dist
         return val, pvalue
 
-    def _compute_cmi(self, df, x_var, y_var, z_covariates: Set):
+    def _compute_cmi(self, df, x_vars, y_vars, z_covariates: Set):
         n_samples, _ = df.shape
 
         if self.k < 1:
@@ -129,7 +140,7 @@ class CMITest(BaseConditionalIndependenceTest):
             knn_here = max(1, int(self.k))
 
         # compute the K nearest neighbors in sub-spaces
-        k_xz, k_yz, k_z = self._get_knn(df, x_var, y_var, z_covariates)
+        k_xz, k_yz, k_z = self._get_knn(df, x_vars, y_vars, z_covariates)
 
         # compute the final CMI value
         hxyz = scipy.special.digamma(knn_here)
@@ -162,7 +173,7 @@ class CMITest(BaseConditionalIndependenceTest):
         return data
 
     def _get_knn(
-        self, data: pd.DataFrame, x_var, y_var, z_covariates: Set
+        self, data: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], z_covariates: Set
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike]:
         """Compute the nearest neighbor in the variable subspaces.
 
@@ -170,11 +181,11 @@ class CMITest(BaseConditionalIndependenceTest):
         ----------
         data : pd.DataFrame
             The dataset.
-        x_var : column
-            The X variable column.
-        y_var : column
-            The Y variable column.
-        z_covariates : set of column
+        x_var : Set[Column]
+            The X variable column(s).
+        y_var : Set[Column]
+            The Y variable column(s).
+        z_covariates : Set[Column]
             The Z variable column(s).
 
         Returns
@@ -193,10 +204,10 @@ class CMITest(BaseConditionalIndependenceTest):
             knn = max(1, int(self.k * n_samples))
         else:
             knn = max(1, int(self.k))
-        xz_cols = [x_var]
+        xz_cols = list(x_vars)
         for z_var in z_covariates:
             xz_cols.append(z_var)
-        yz_cols = [y_var]
+        yz_cols = list(y_vars)
         for z_var in z_covariates:
             yz_cols.append(z_var)
         z_columns = list(z_covariates)
@@ -237,85 +248,6 @@ class CMITest(BaseConditionalIndependenceTest):
             k_z = np.full(n_samples, n_samples, dtype=np.float64)
 
         return k_xz, k_yz, k_z
-
-    def _estimate_null_dist(self, data: pd.DataFrame, x_var, y_var, z_covariates: Set) -> float:
-        """Compute pvalue by performing a nearest-neighbor shuffle test.
-
-        Parameters
-        ----------
-        data : pd.DataFrame
-            The dataset.
-        x_var : column
-            The X variable column.
-        y_var : column
-            The Y variable column.
-        z_covariates : column
-            The Z variable column(s).
-
-        Returns
-        -------
-        pvalue : float
-            The pvalue.
-        """
-        n_samples, _ = data.shape
-
-        if len(z_covariates) > 0 and self.n_shuffle_nbrs < n_samples:
-            # Get nearest neighbors around each sample point in Z subspace
-            z_array = data[list(z_covariates)].to_numpy()
-            tree_xyz = scipy.spatial.cKDTree(z_array)
-            nbrs = tree_xyz.query(z_array, k=self.n_shuffle_nbrs, p=np.inf, eps=0.0)[1].astype(
-                np.int32
-            )
-
-            null_dist = np.zeros(self.n_shuffle)
-
-            # create a copy of the data to store the shuffled array
-            data_copy = data.copy()
-
-            # we will now compute a shuffled distribution, where X_i is replaced
-            # by X_j only if the corresponding Z_i and Z_j are "nearby", computed
-            # using the spatial tree query
-            for idx in range(self.n_shuffle):
-                # Shuffle neighbor indices for each sample index
-                for i in range(len(nbrs)):
-                    self.random_state.shuffle(nbrs[i])
-
-                # Select a series of neighbor indices that contains as few as
-                # possible duplicates
-                restricted_permutation = _restricted_permutation(
-                    nbrs, self.n_shuffle_nbrs, n_samples=n_samples, random_state=self.random_state
-                )
-
-                # update the X variable column
-                data_copy.loc[:, x_var] = data.loc[restricted_permutation, x_var].to_numpy()
-
-                # compute the CMI on the shuffled array
-                null_dist[idx] = self._compute_cmi(data_copy, x_var, y_var, z_covariates)
-        else:
-            null_dist = self._compute_shuffle_dist(
-                data, x_var, y_var, z_covariates, n_shuffle=self.n_shuffle
-            )
-
-        return null_dist
-
-    def _compute_shuffle_dist(
-        self, data: pd.DataFrame, x_var, y_var, z_covariates: Set, n_shuffle: int
-    ) -> ArrayLike:
-        """Compute a shuffled distribution of the test statistic."""
-        data_copy = data.copy()
-
-        # initialize the shuffle distribution
-        shuffle_dist = np.zeros((n_shuffle,))
-        for idx in range(n_shuffle):
-            # compute a shuffled version of the data
-            x_data = data[x_var]
-            shuffled_x = sklearn.utils.shuffle(x_data, random_state=self.random_seed)
-
-            # compute now the test statistic on the shuffle data
-            data_copy[x_var] = shuffled_x.values
-            shuffle_dist[idx] = self._compute_cmi(data_copy, x_var, y_var, z_covariates)
-
-        return shuffle_dist
 
     def _trafo2uniform(self, df):
         """Transforms input array to uniform marginals.
