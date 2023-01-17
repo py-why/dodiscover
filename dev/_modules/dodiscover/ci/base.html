@@ -206,11 +206,16 @@
                 
   <h1>Source code for dodiscover.ci.base</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn.utils</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
 
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
+
+<span class="kn">from</span> <span class="nn">.monte_carlo</span> <span class="kn">import</span> <span class="n">generate_knn_in_subspace</span><span class="p">,</span> <span class="n">restricted_nbr_permutation</span>
 
 
 <div class="viewcode-block" id="BaseConditionalIndependenceTest"><a class="viewcode-back" href="../../../generated/dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest">[docs]</a><span class="k">class</span> <span class="nc">BaseConditionalIndependenceTest</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
@@ -232,9 +237,9 @@
         <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]],</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x_vars</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The x variables are not all in the DataFrame.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The x variables </span><span class="si">{</span><span class="n">x_vars</span><span class="si">}</span><span class="s2"> are not all in the DataFrame.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">y_vars</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The y variables are not all in the DataFrame.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The y variables </span><span class="si">{</span><span class="n">y_vars</span><span class="si">}</span><span class="s2"> are not all in the DataFrame.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">z_covariates</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The z conditioning set variables are not all in the DataFrame.&quot;</span><span class="p">)</span>
 
@@ -269,6 +274,350 @@
 <span class="sd">            Test statistic and pvalue.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">ClassifierCIMixin</span><span class="p">:</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+    <span class="n">test_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">generate_train_test_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a training and testing dataset for CCIT.</span>
+
+<span class="sd">        This takes a conditional independence problem given a dataset</span>
+<span class="sd">        and converts it to a binary classification problem.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df : pd.DataFrame</span>
+<span class="sd">            The dataframe containing the dataset.</span>
+<span class="sd">        x_vars : Set of column</span>
+<span class="sd">            A column in ``df``.</span>
+<span class="sd">        y_vars : Set of column</span>
+<span class="sd">            A column in ``df``.</span>
+<span class="sd">        z_covariates : Set, optional</span>
+<span class="sd">            A set of columns in ``df``, by default None. If None, then</span>
+<span class="sd">            the test should run a standard independence test.</span>
+<span class="sd">        k : int</span>
+<span class="sd">            The K nearest-neighbors in subspaces for the conditional permutation</span>
+<span class="sd">            step to generate distribution with conditional independence. By</span>
+<span class="sd">            default, 1.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_train, Y_train, X_test, Y_test : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]</span>
+<span class="sd">            The X_train, y_train, X_test, y_test to be used in</span>
+<span class="sd">            binary classification, where each dataset comprises</span>
+<span class="sd">            of samples from the joint and conditionally independent</span>
+<span class="sd">            distributions. ``y_train`` and ``y_test`` are comprised of</span>
+<span class="sd">            1&#39;s and 0&#39;s only. Indices with value 1 indicate the original</span>
+<span class="sd">            joint distribution, and indices with value 0 indicate</span>
+<span class="sd">            the shuffled distribution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">z_covariates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">x_arr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">x_vars</span><span class="p">)]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">y_arr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">y_vars</span><span class="p">)]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+        <span class="n">n_samples_x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">test_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_size</span>
+        <span class="k">if</span> <span class="n">test_size</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">test_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">test_size</span> <span class="o">*</span> <span class="n">n_samples_x</span><span class="p">)</span>
+        <span class="n">train_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_samples_x</span> <span class="o">-</span> <span class="n">test_size</span><span class="p">)</span>
+
+        <span class="c1"># now slice the arrays to produce a training and testing dataset</span>
+        <span class="n">x_arr_train</span> <span class="o">=</span> <span class="n">x_arr</span><span class="p">[:</span><span class="n">train_size</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">y_arr_train</span> <span class="o">=</span> <span class="n">y_arr</span><span class="p">[:</span><span class="n">train_size</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x_arr_test</span> <span class="o">=</span> <span class="n">x_arr</span><span class="p">[</span><span class="n">train_size</span><span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">y_arr_test</span> <span class="o">=</span> <span class="n">y_arr</span><span class="p">[</span><span class="n">train_size</span><span class="p">:,</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_samples_y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">y_arr</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">if</span> <span class="n">n_samples_y</span> <span class="o">!=</span> <span class="n">n_samples_x</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;There is unequal number of samples in x and y array: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_samples_x</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">n_samples_y</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># generate the training dataset</span>
+            <span class="n">X_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">,</span> <span class="n">y_joint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unconditional_shuffle</span><span class="p">(</span><span class="n">x_arr_train</span><span class="p">,</span> <span class="n">y_arr_train</span><span class="p">)</span>
+            <span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">))</span>
+            <span class="n">Y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">y_ind</span><span class="p">,</span> <span class="n">y_joint</span><span class="p">))</span>
+
+            <span class="c1"># generate the testing dataset</span>
+            <span class="n">X_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">,</span> <span class="n">y_joint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unconditional_shuffle</span><span class="p">(</span><span class="n">x_arr_test</span><span class="p">,</span> <span class="n">y_arr_test</span><span class="p">)</span>
+            <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">))</span>
+            <span class="n">Y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">y_ind</span><span class="p">,</span> <span class="n">y_joint</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z_arr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="n">z_arr_train</span> <span class="o">=</span> <span class="n">z_arr</span><span class="p">[:</span><span class="n">train_size</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">z_arr_test</span> <span class="o">=</span> <span class="n">z_arr</span><span class="p">[</span><span class="n">train_size</span><span class="p">:,</span> <span class="p">:]</span>
+
+            <span class="n">n_samples_x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">n_samples_y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">y_arr</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">n_samples_z</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">z_arr</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">if</span> <span class="n">n_samples_y</span> <span class="o">!=</span> <span class="n">n_samples_x</span> <span class="ow">or</span> <span class="n">n_samples_z</span> <span class="o">!=</span> <span class="n">n_samples_x</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;There is unequal number of samples in x, y and z array: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_samples_x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">n_samples_y</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">n_samples_z</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># generate the training dataset</span>
+            <span class="n">X_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">,</span> <span class="n">y_joint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conditional_shuffle</span><span class="p">(</span>
+                <span class="n">x_arr_train</span><span class="p">,</span> <span class="n">y_arr_train</span><span class="p">,</span> <span class="n">z_arr_train</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span>
+            <span class="p">)</span>
+            <span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">))</span>
+            <span class="n">Y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">y_ind</span><span class="p">,</span> <span class="n">y_joint</span><span class="p">))</span>
+
+            <span class="c1"># generate the testing dataset</span>
+            <span class="n">X_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">,</span> <span class="n">y_joint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conditional_shuffle</span><span class="p">(</span>
+                <span class="n">x_arr_test</span><span class="p">,</span> <span class="n">y_arr_test</span><span class="p">,</span> <span class="n">z_arr_test</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span>
+            <span class="p">)</span>
+            <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">))</span>
+            <span class="n">Y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">y_ind</span><span class="p">,</span> <span class="n">y_joint</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span>
+
+    <span class="k">def</span> <span class="nf">_unconditional_shuffle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x_arr</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">:</span> <span class="n">ArrayLike</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate samples to emulate X independent of Y.</span>
+
+<span class="sd">        Based on input data ``(X, Y)``, partitions the dataset into halves, where</span>
+<span class="sd">        one-half represents the joint distribution of ``P(X, Y)`` and the other</span>
+<span class="sd">        represents the independent distribution of ``P(X)P(Y)``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x_arr : ArrayLike of shape (n_samples, n_dims_x)</span>
+<span class="sd">            The input X variable data.</span>
+<span class="sd">        y_arr : ArrayLike of shape (n_samples, n_dims_y)</span>
+<span class="sd">            The input Y variable data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]</span>
+<span class="sd">            The X_ind, y_ind, X_joint, y_joint to be used in</span>
+<span class="sd">            binary classification, where ``X_ind`` is the data features</span>
+<span class="sd">            that are from the generated independent data and ``X_joint``</span>
+<span class="sd">            is the data features from the original jointly distributed data.</span>
+<span class="sd">            ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1</span>
+<span class="sd">            respectively.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Shuffles the Y samples, such that if there is any dependence among X and Y,</span>
+<span class="sd">        they are broken and the resulting samples emulate those which came from</span>
+<span class="sd">        the distribution with :math:`X \\perp Y`. This essentially takes input</span>
+<span class="sd">        data and generates a null distribution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_samples_x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x_arr</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># number of samples we will generate from the independent distribution</span>
+        <span class="n">n_ind_samples</span> <span class="o">=</span> <span class="n">n_samples_x</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">n_joint_samples</span> <span class="o">=</span> <span class="n">n_samples_x</span> <span class="o">-</span> <span class="n">n_ind_samples</span>
+
+        <span class="c1"># generate half of the indices at random to generate the independent dataset</span>
+        <span class="n">rand_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_samples_x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_ind_samples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_samples_x</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">rand_indices</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># subset the data into halves that maintain the joint distribution</span>
+        <span class="c1"># and half that we will permute to create independence</span>
+        <span class="n">x_arr_ind</span> <span class="o">=</span> <span class="n">x_arr</span><span class="p">[</span><span class="n">rand_indices</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x_arr_joint</span> <span class="o">=</span> <span class="n">x_arr</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">y_arr_ind</span> <span class="o">=</span> <span class="n">y_arr</span><span class="p">[</span><span class="n">rand_indices</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">y_arr_joint</span> <span class="o">=</span> <span class="n">y_arr</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># now create independence in half of the data, while keeping</span>
+        <span class="c1"># the joint distribution in the other half of the data</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_ind_samples</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+        <span class="n">y_arr_ind</span> <span class="o">=</span> <span class="n">y_arr_ind</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># joint distributed data and independent data with their</span>
+        <span class="c1"># corresponding class labels</span>
+        <span class="n">X_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x_arr_ind</span><span class="p">,</span> <span class="n">y_arr_ind</span><span class="p">])</span>
+        <span class="n">y_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_ind_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">X_joint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x_arr_joint</span><span class="p">,</span> <span class="n">y_arr_joint</span><span class="p">])</span>
+        <span class="n">y_joint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_joint_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">X_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">,</span> <span class="n">y_joint</span>
+
+    <span class="k">def</span> <span class="nf">_conditional_shuffle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x_arr</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">y_arr</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">z_arr</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;knn&quot;</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate dataset for CI testing as binary classification problem.</span>
+
+<span class="sd">        Based on input data ``(X, Y, Z)``, partitions the dataset into halves, where</span>
+<span class="sd">        one-half represents the joint distribution of ``P(X, Y, Z)`` and the other</span>
+<span class="sd">        represents the conditionally independent distribution of ``P(X | Z)P(Y)``.</span>
+<span class="sd">        This is done by a nearest-neighbor bootstrap approach.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x_arr : ArrayLike of shape (n_samples, n_dims_x)</span>
+<span class="sd">            The input X variable data.</span>
+<span class="sd">        y_arr : ArrayLike of shape (n_samples, n_dims_y)</span>
+<span class="sd">            The input Y variable data.</span>
+<span class="sd">        z_arr : ArrayLike of shape (n_samples, n_dims_x)</span>
+<span class="sd">            The input Z variable data.</span>
+<span class="sd">        method : str, optional</span>
+<span class="sd">            Method to use, by default &#39;knn&#39;. Can be (&#39;knn&#39;, &#39;kdtree&#39;).</span>
+<span class="sd">        k : int, optional</span>
+<span class="sd">            Number of nearest neighbors to swap, by default 1.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]</span>
+<span class="sd">            The X_ind, y_ind, X_joint, y_joint to be used in</span>
+<span class="sd">            binary classification, where ``X_ind`` is the data features</span>
+<span class="sd">            that are from the generated independent data and ``X_joint``</span>
+<span class="sd">            is the data features from the original jointly distributed data.</span>
+<span class="sd">            ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1</span>
+<span class="sd">            respectively.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This algorithm implements a nearest-neighbor bootstrap approach for generating</span>
+<span class="sd">        samples from the null hypothesis where :math:`X \\perp Y | Z`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># use a method to generate k-nearest-neighbors in subspace of Z</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">generate_knn_in_subspace</span><span class="p">(</span><span class="n">z_arr</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="c1"># Get the index of the sample kth closest to the &#39;idx&#39; sample of Z</span>
+        <span class="c1"># Then we will swap those samples in the Y variable</span>
+        <span class="n">y_prime</span> <span class="o">=</span> <span class="n">y_arr</span><span class="o">.</span><span class="n">copy</span><span class="p">()[</span><span class="n">indices</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="p">:]</span>
+
+        <span class="c1"># construct the joint and conditionally independent distributions</span>
+        <span class="c1"># and their corresponding class labels</span>
+        <span class="n">X_joint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_arr</span><span class="p">,</span> <span class="n">z_arr</span><span class="p">])</span>
+        <span class="n">X_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">y_prime</span><span class="p">,</span> <span class="n">z_arr</span><span class="p">])</span>
+        <span class="n">y_joint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">X_joint</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">y_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">X_ind</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">X_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">X_joint</span><span class="p">,</span> <span class="n">y_joint</span>
+
+
+<span class="k">class</span> <span class="nc">CMIMixin</span><span class="p">:</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+    <span class="n">random_seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_estimate_null_dist</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
+        <span class="n">n_shuffle_nbrs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_shuffle</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pvalue by performing a nearest-neighbor shuffle test.</span>
+
+<span class="sd">        XXX: improve with parallelization with joblib</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : pd.DataFrame</span>
+<span class="sd">            The dataset.</span>
+<span class="sd">        x_vars : Set[Column]</span>
+<span class="sd">            The X variable column(s).</span>
+<span class="sd">        y_var : Set[Column]</span>
+<span class="sd">            The Y variable column(s).</span>
+<span class="sd">        z_covariates : Set[Column]</span>
+<span class="sd">            The Z variable column(s).</span>
+<span class="sd">        n_shuffle_nbrs : int</span>
+<span class="sd">            The number of nearest-neighbors in feature space to shuffle.</span>
+<span class="sd">        n_shuffle : int</span>
+<span class="sd">            The number of times to generate the shuffled distribution.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pvalue : float</span>
+<span class="sd">            The pvalue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_samples</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="n">x_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x_vars</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_shuffle_nbrs</span> <span class="o">&lt;</span> <span class="n">n_samples</span><span class="p">:</span>
+            <span class="n">null_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_shuffle</span><span class="p">)</span>
+
+            <span class="c1"># create a copy of the data to store the shuffled array</span>
+            <span class="n">data_copy</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># Get nearest neighbors around each sample point in Z subspace</span>
+            <span class="n">z_array</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="n">nbrs</span> <span class="o">=</span> <span class="n">generate_knn_in_subspace</span><span class="p">(</span>
+                <span class="n">z_array</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kdtree&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_shuffle_nbrs</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
+            <span class="p">)</span>
+
+            <span class="c1"># we will now compute a shuffled distribution, where X_i is replaced</span>
+            <span class="c1"># by X_j only if the corresponding Z_i and Z_j are &quot;nearby&quot;, computed</span>
+            <span class="c1"># using the spatial tree query</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_shuffle</span><span class="p">):</span>
+                <span class="c1"># Shuffle neighbor indices for each sample index</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">nbrs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+                <span class="c1"># Select a series of neighbor indices that contains as few as</span>
+                <span class="c1"># possible duplicates</span>
+                <span class="n">restricted_permutation</span> <span class="o">=</span> <span class="n">restricted_nbr_permutation</span><span class="p">(</span>
+                    <span class="n">nbrs</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span>
+                <span class="p">)</span>
+
+                <span class="c1"># update the X variable column</span>
+                <span class="n">data_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">x_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">restricted_permutation</span><span class="p">,</span> <span class="n">x_cols</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+                <span class="c1"># compute the CMI on the shuffled array</span>
+                <span class="n">null_dist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">data_copy</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">null_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_shuffle_dist</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">,</span> <span class="n">n_shuffle</span><span class="o">=</span><span class="n">n_shuffle</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">null_dist</span>
+
+    <span class="k">def</span> <span class="nf">_compute_shuffle_dist</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span><span class="p">,</span>
+        <span class="n">n_shuffle</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a shuffled distribution of the test statistic.&quot;&quot;&quot;</span>
+        <span class="n">data_copy</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">x_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x_vars</span><span class="p">)</span>
+        <span class="c1"># initialize the shuffle distribution</span>
+        <span class="n">shuffle_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_shuffle</span><span class="p">,))</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_shuffle</span><span class="p">):</span>
+            <span class="c1"># compute a shuffled version of the data</span>
+            <span class="n">x_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">x_cols</span><span class="p">]</span>
+            <span class="n">shuffled_x</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span><span class="p">)</span>
+
+            <span class="c1"># compute now the test statistic on the shuffle data</span>
+            <span class="n">data_copy</span><span class="p">[</span><span class="n">x_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">shuffled_x</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">shuffle_dist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">data_copy</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shuffle_dist</span>
+
+    <span class="k">def</span> <span class="nf">_compute_cmi</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span> <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span> <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;All CMI methods must implement a _compute_cmi function.&quot;</span><span class="p">)</span>
 </pre></div>
 
               </article>

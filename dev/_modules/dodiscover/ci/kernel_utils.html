@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dodiscover.ci.utils &#8212; dodiscover v0.0.0</title>
+    <title>dodiscover.ci.kernel_utils &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -204,7 +204,7 @@
               
               <article class="bd-article" role="main">
                 
-  <h1>Source code for dodiscover.ci.utils</h1><div class="highlight"><pre>
+  <h1>Source code for dodiscover.ci.kernel_utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -216,15 +216,15 @@
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">pairwise_distances</span><span class="p">,</span> <span class="n">pairwise_kernels</span>
 
 
-<span class="k">def</span> <span class="nf">von_neumann_divergence</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="von_neumann_divergence"><a class="viewcode-back" href="../../../generated/dodiscover.ci.kernel_utils.von_neumann_divergence.html#dodiscover.ci.kernel_utils.von_neumann_divergence">[docs]</a><span class="k">def</span> <span class="nf">von_neumann_divergence</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Von Neumann divergence between two PSD matrices.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    A : ArrayLike of shape (n, n)</span>
+<span class="sd">    A : ArrayLike of shape (n_features, n_features)</span>
 <span class="sd">        The first PSD matrix.</span>
-<span class="sd">    B : ArrayLike of shape (n, n)</span>
-<span class="sd">        The second PSD matrix</span>
+<span class="sd">    B : ArrayLike of shape (n_features, n_features)</span>
+<span class="sd">        The second PSD matrix.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -238,10 +238,74 @@
 <span class="sd">    :math:`D(A || B) = Tr(A (log(A) - log(B)) - A + B)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">div</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">logm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">-</span> <span class="n">logm</span><span class="p">(</span><span class="n">B</span><span class="p">))</span> <span class="o">-</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">div</span>
+    <span class="k">return</span> <span class="n">div</span></div>
 
 
-<span class="k">def</span> <span class="nf">corrent_matrix</span><span class="p">(</span>
+<div class="viewcode-block" id="f_divergence_score"><a class="viewcode-back" href="../../../generated/dodiscover.ci.kernel_utils.f_divergence_score.html#dodiscover.ci.kernel_utils.f_divergence_score">[docs]</a><span class="k">def</span> <span class="nf">f_divergence_score</span><span class="p">(</span><span class="n">y_stat_q</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">y_stat_p</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute f-divergence upper bound on KL-divergence.</span>
+
+<span class="sd">    See definition 4 in :footcite:`Mukherjee2020ccmi`, where</span>
+<span class="sd">    the function is reversed to give an upper-bound for the</span>
+<span class="sd">    sake of gradient descent.</span>
+
+<span class="sd">    The f-divergence bound gives an upper bound on KL-divergence:</span>
+<span class="sd">    .. math::</span>
+
+<span class="sd">        D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_stat_q : ArrayLike of shape (n_samples_q,)</span>
+<span class="sd">        Samples from the distribution Q, the variational class.</span>
+<span class="sd">    y_stat_p : : ArrayLike of shape (n_samples_p,)</span>
+<span class="sd">        Samples from the distribution P, the joint distribution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    f_div : float</span>
+<span class="sd">        The f-divergence score.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f_div</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y_stat_q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_stat_p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f_div</span></div>
+
+
+<div class="viewcode-block" id="kl_divergence_score"><a class="viewcode-back" href="../../../generated/dodiscover.ci.kernel_utils.kl_divergence_score.html#dodiscover.ci.kernel_utils.kl_divergence_score">[docs]</a><span class="k">def</span> <span class="nf">kl_divergence_score</span><span class="p">(</span><span class="n">y_stat_q</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">y_stat_p</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute f-divergence upper bound on KL-divergence.</span>
+
+<span class="sd">    See definition 4 in :footcite:`Mukherjee2020ccmi`, where</span>
+<span class="sd">    the function is reversed to give an upper-bound for the</span>
+<span class="sd">    sake of gradient descent.</span>
+
+<span class="sd">    The KL-divergence can be estimated with the following formula:</span>
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -</span>
+<span class="sd">        log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_stat_q : ArrayLike of shape (n_samples_q,)</span>
+<span class="sd">        Samples from the distribution Q, the variational class.</span>
+<span class="sd">        This corresponds to :math:`Y_j^q` samples.</span>
+<span class="sd">    y_stat_p : : ArrayLike of shape (n_samples_p,)</span>
+<span class="sd">        Samples from the distribution P, the joint distribution.</span>
+<span class="sd">        This corresponds to :math:`Y_i^p` samples.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    metric : float</span>
+<span class="sd">        The KL-divergence score.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># compute point-wise likelihood ratio for each prediction</span>
+    <span class="n">p_l_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_stat_p</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_stat_p</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">q_l_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_stat_q</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_stat_q</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
+
+    <span class="c1"># now compute KL-divergence estimate</span>
+    <span class="n">kldiv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_l_ratio</span><span class="p">))</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">q_l_ratio</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">kldiv</span></div>
+
+
+<div class="viewcode-block" id="corrent_matrix"><a class="viewcode-back" href="../../../generated/dodiscover.ci.kernel_utils.corrent_matrix.html#dodiscover.ci.kernel_utils.corrent_matrix">[docs]</a><span class="k">def</span> <span class="nf">corrent_matrix</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
     <span class="n">kwidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -298,10 +362,10 @@
             <span class="n">corren</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_samples</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">-</span> <span class="n">bias</span>
 
             <span class="n">corren_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="n">corren_arr</span><span class="p">[</span><span class="n">jdx</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">corren</span>
-    <span class="k">return</span> <span class="n">corren_arr</span>
+    <span class="k">return</span> <span class="n">corren_arr</span></div>
 
 
-<div class="viewcode-block" id="compute_kernel"><a class="viewcode-back" href="../../../generated/dodiscover.ci.utils.compute_kernel.html#dodiscover.ci.utils.compute_kernel">[docs]</a><span class="k">def</span> <span class="nf">compute_kernel</span><span class="p">(</span>
+<div class="viewcode-block" id="compute_kernel"><a class="viewcode-back" href="../../../generated/dodiscover.ci.kernel_utils.compute_kernel.html#dodiscover.ci.kernel_utils.compute_kernel">[docs]</a><span class="k">def</span> <span class="nf">compute_kernel</span><span class="p">(</span>
     <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
@@ -412,6 +476,54 @@
     <span class="k">return</span> <span class="n">kwidth</span>
 
 
+<span class="k">def</span> <span class="nf">_kernel_estimate_propensity_scores</span><span class="p">(</span>
+    <span class="n">K</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">group_ind</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate propensity scores given kernel and propensities.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    K : ArrayLike of shape (n_samples, n_samples)</span>
+<span class="sd">        The kernel matrix generated.</span>
+<span class="sd">    group_ind : ArrayLike of shape (n_samples,)</span>
+<span class="sd">        Group indicator (empirical labels). Must be comprised of only</span>
+<span class="sd">        1&#39;s and 0&#39;s (i.e. binary groups).</span>
+<span class="sd">    penalty : float, optional</span>
+<span class="sd">        L2 regularization, by default None.</span>
+<span class="sd">    n_jobs : int, optional</span>
+<span class="sd">        Joblib parallelization, by default None.</span>
+<span class="sd">    random_state : int, optional</span>
+<span class="sd">        Random seed, by default None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    e_hat : ArrayLike of shape (n_samples)</span>
+<span class="sd">        The predicted propensities (i.e. probabilities) of samples falling</span>
+<span class="sd">        into ``group_ind = 1``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">penalty</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="n">_default_regularization</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+        <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">C</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">penalty</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># fit and then obtain the probabilities of treatment</span>
+    <span class="c1"># for each sample (i.e. the propensity scores)</span>
+    <span class="n">e_hat</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">group_ind</span><span class="p">)</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">K</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">e_hat</span>
+
+
 <span class="k">def</span> <span class="nf">_center_kernel</span><span class="p">(</span><span class="n">K</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Centers a kernel matrix.</span>
 
@@ -433,59 +545,19 @@
     <span class="k">return</span> <span class="n">H</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_estimate_propensity_scores</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">penalty</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">penalty</span> <span class="o">=</span> <span class="n">_default_regularization</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_default_regularization</span><span class="p">(</span><span class="n">K</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes a default regularization for Kernel Logistic Regression.</span>
 
-    <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
-        <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
-        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
-        <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-        <span class="n">C</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">penalty</span><span class="p">),</span>
-    <span class="p">)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    K : ArrayLike of shape (n_samples, n_samples)</span>
+<span class="sd">        The kernel matrix.</span>
 
-    <span class="c1"># fit and then obtain the probabilities of treatment</span>
-    <span class="c1"># for each sample (i.e. the propensity scores)</span>
-    <span class="n">e_hat</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">K</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">e_hat</span>
-
-
-<span class="k">def</span> <span class="nf">_restricted_permutation</span><span class="p">(</span>
-    <span class="n">nbrs</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">n_shuffle_nbrs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">random_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">random_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-
-    <span class="c1"># initialize the final permutation order</span>
-    <span class="n">restricted_perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,))</span>
-
-    <span class="c1"># generate a random order of samples to go through</span>
-    <span class="n">random_order</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
-
-    <span class="c1"># keep track of values we have already used</span>
-    <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="c1"># go through the random order</span>
-    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">random_order</span><span class="p">:</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">use_idx</span> <span class="o">=</span> <span class="n">nbrs</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
-
-        <span class="c1"># if the current nbr is already used, continue incrementing</span>
-        <span class="c1"># until we have either found a new sample to use, or if</span>
-        <span class="c1"># we have reach the maximum number of shuffles to consider</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">use_idx</span> <span class="ow">in</span> <span class="n">used</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">m</span> <span class="o">&lt;</span> <span class="n">n_shuffle_nbrs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">m</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">use_idx</span> <span class="o">=</span> <span class="n">nbrs</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
-
-        <span class="n">restricted_perm</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_idx</span>
-        <span class="n">used</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">use_idx</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">restricted_perm</span>
-
-
-<span class="k">def</span> <span class="nf">_default_regularization</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : float</span>
+<span class="sd">        The default l2 regularization term.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_samples</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">svals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">compute_uv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hermitian</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span>

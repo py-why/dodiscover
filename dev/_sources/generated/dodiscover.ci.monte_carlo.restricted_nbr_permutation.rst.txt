@@ -1,0 +1,12 @@
+﻿dodiscover.ci.monte_carlo.restricted_nbr_permutation
+====================================================
+
+.. currentmodule:: dodiscover.ci.monte_carlo
+
+.. autofunction:: restricted_nbr_permutation
+
+.. include:: dodiscover.ci.monte_carlo.restricted_nbr_permutation.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

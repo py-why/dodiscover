@@ -212,7 +212,7 @@
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 <span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
 
-<span class="kn">from</span> <span class="nn">dodiscover.ci.utils</span> <span class="kn">import</span> <span class="n">corrent_matrix</span><span class="p">,</span> <span class="n">von_neumann_divergence</span>
+<span class="kn">from</span> <span class="nn">dodiscover.ci.kernel_utils</span> <span class="kn">import</span> <span class="n">corrent_matrix</span><span class="p">,</span> <span class="n">von_neumann_divergence</span>
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalDiscrepancyTest</span>
@@ -232,7 +232,7 @@
 <span class="sd">        The distance metric, by default &#39;euclidean&#39;.</span>
 <span class="sd">    kwidth : float, optional</span>
 <span class="sd">        The width of the kernel, by default None, which we will then estimate</span>
-<span class="sd">        using the default procedure in :func:`dodiscover.ci.utils.compute_kernel`.</span>
+<span class="sd">        using the default procedure in :func:`dodiscover.ci.kernel_utils.compute_kernel`.</span>
 <span class="sd">    null_reps : int, optional</span>
 <span class="sd">        Number of times to sample null distribution, by default 1000.</span>
 <span class="sd">    n_jobs : int, optional</span>

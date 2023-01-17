@@ -1,0 +1,12 @@
+﻿dodiscover.ci.kernel_utils.corrent_matrix
+=========================================
+
+.. currentmodule:: dodiscover.ci.kernel_utils
+
+.. autofunction:: corrent_matrix
+
+.. include:: dodiscover.ci.kernel_utils.corrent_matrix.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

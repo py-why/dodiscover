@@ -305,6 +305,11 @@
    dodiscover.ci.CMITest
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html">
+   dodiscover.ci.ClassifierCMITest
+  </a>
+ </li>
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -325,8 +330,40 @@
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.ci.utils.compute_kernel.html">
-   dodiscover.ci.utils.compute_kernel
+  <a class="reference internal" href="generated/dodiscover.ci.kernel_utils.compute_kernel.html">
+   dodiscover.ci.kernel_utils.compute_kernel
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.kernel_utils.corrent_matrix.html">
+   dodiscover.ci.kernel_utils.corrent_matrix
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.kernel_utils.von_neumann_divergence.html">
+   dodiscover.ci.kernel_utils.von_neumann_divergence
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.kernel_utils.f_divergence_score.html">
+   dodiscover.ci.kernel_utils.f_divergence_score
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.kernel_utils.kl_divergence_score.html">
+   dodiscover.ci.kernel_utils.kl_divergence_score
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.monte_carlo.generate_knn_in_subspace.html">
+   dodiscover.ci.monte_carlo.generate_knn_in_subspace
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.ci.monte_carlo.restricted_nbr_permutation.html">
+   dodiscover.ci.monte_carlo.restricted_nbr_permutation
   </a>
  </li>
 </ul>
@@ -399,6 +436,8 @@
   <a class="reference internal nav-link" href="#utilities">
    Utilities
   </a>
+  <ul class="nav section-nav flex-column">
+  </ul>
  </li>
 </ul>
 
@@ -575,8 +614,12 @@ learning.</p>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.CMITest.html#dodiscover.ci.CMITest" title="dodiscover.ci.CMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CMITest</span></code></a>([k, n_shuffle_nbrs, transform, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.CMITest.html#dodiscover.ci.CMITest" title="dodiscover.ci.CMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CMITest</span></code></a>([k, transform, n_jobs, ...])</p></td>
 <td><p>Conditional mutual information independence test.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest" title="dodiscover.ci.ClassifierCMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCMITest</span></code></a>(clf, metric, bootstrap, ...)</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
 </tr>
 </tbody>
 </table>
@@ -615,8 +658,36 @@ learning.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.utils.compute_kernel.html#dodiscover.ci.utils.compute_kernel" title="dodiscover.ci.utils.compute_kernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kernel</span></code></a>(X[, Y, metric, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.kernel_utils.compute_kernel.html#dodiscover.ci.kernel_utils.compute_kernel" title="dodiscover.ci.kernel_utils.compute_kernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kernel</span></code></a>(X[, Y, metric, ...])</p></td>
 <td><p>Compute a kernel matrix and corresponding width.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.kernel_utils.corrent_matrix.html#dodiscover.ci.kernel_utils.corrent_matrix" title="dodiscover.ci.kernel_utils.corrent_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">corrent_matrix</span></code></a>(data[, metric, kwidth, ...])</p></td>
+<td><p>Compute the centered correntropy of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.kernel_utils.von_neumann_divergence.html#dodiscover.ci.kernel_utils.von_neumann_divergence" title="dodiscover.ci.kernel_utils.von_neumann_divergence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">von_neumann_divergence</span></code></a>(A, B)</p></td>
+<td><p>Compute Von Neumann divergence between two PSD matrices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.kernel_utils.f_divergence_score.html#dodiscover.ci.kernel_utils.f_divergence_score" title="dodiscover.ci.kernel_utils.f_divergence_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f_divergence_score</span></code></a>(y_stat_q, y_stat_p)</p></td>
+<td><p>Compute f-divergence upper bound on KL-divergence.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.kernel_utils.kl_divergence_score.html#dodiscover.ci.kernel_utils.kl_divergence_score" title="dodiscover.ci.kernel_utils.kl_divergence_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kl_divergence_score</span></code></a>(y_stat_q, y_stat_p, eps)</p></td>
+<td><p>Compute f-divergence upper bound on KL-divergence.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Other utilities include support for Monte-Carlo testing for conditional
+independence.</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.monte_carlo.generate_knn_in_subspace.html#dodiscover.ci.monte_carlo.generate_knn_in_subspace" title="dodiscover.ci.monte_carlo.generate_knn_in_subspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_knn_in_subspace</span></code></a>(z_arr[, method, k, ...])</p></td>
+<td><p>Generate kNN in subspace.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.monte_carlo.restricted_nbr_permutation.html#dodiscover.ci.monte_carlo.restricted_nbr_permutation" title="dodiscover.ci.monte_carlo.restricted_nbr_permutation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restricted_nbr_permutation</span></code></a>(nbrs[, random_seed])</p></td>
+<td><p>Compute a permutation of neighbors with restrictions.</p></td>
 </tr>
 </tbody>
 </table>

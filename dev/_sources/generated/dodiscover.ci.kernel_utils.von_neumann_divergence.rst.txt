@@ -1,0 +1,12 @@
+﻿dodiscover.ci.kernel_utils.von_neumann_divergence
+=================================================
+
+.. currentmodule:: dodiscover.ci.kernel_utils
+
+.. autofunction:: von_neumann_divergence
+
+.. include:: dodiscover.ci.kernel_utils.von_neumann_divergence.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

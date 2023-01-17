@@ -1,0 +1,12 @@
+﻿dodiscover.ci.kernel_utils.compute_kernel
+=========================================
+
+.. currentmodule:: dodiscover.ci.kernel_utils
+
+.. autofunction:: compute_kernel
+
+.. include:: dodiscover.ci.kernel_utils.compute_kernel.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

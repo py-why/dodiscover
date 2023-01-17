@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dodiscover.ci.ccmi_test &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../api.html">
+  API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../use.html">
+  Using dodiscover
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <h1>Source code for dodiscover.ci.ccmi_test</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span>
+
+<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span> <span class="n">ClassifierCIMixin</span><span class="p">,</span> <span class="n">CMIMixin</span>
+<span class="kn">from</span> <span class="nn">.kernel_utils</span> <span class="kn">import</span> <span class="n">f_divergence_score</span><span class="p">,</span> <span class="n">kl_divergence_score</span>
+
+
+<div class="viewcode-block" id="ClassifierCMITest"><a class="viewcode-back" href="../../../generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest">[docs]</a><span class="k">class</span> <span class="nc">ClassifierCMITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">,</span> <span class="n">ClassifierCIMixin</span><span class="p">,</span> <span class="n">CMIMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">clf</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">f_divergence_score</span><span class="p">,</span>
+        <span class="n">bootstrap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">n_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.03</span><span class="p">,</span>
+        <span class="n">test_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">n_shuffle_nbrs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">n_shuffle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classifier based CMI estimation for CI testing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clf : sklearn.base.BaseEstimator</span>
+<span class="sd">            A scikit-learn classifier.</span>
+<span class="sd">        metric : Callable, optional</span>
+<span class="sd">            The metric, by default f_divergence_score</span>
+<span class="sd">        bootstrap : bool, optional</span>
+<span class="sd">            Whether to take bootstrap samples, by default False.</span>
+<span class="sd">        n_iter : int, optional</span>
+<span class="sd">            Number of bootstrap iterations, by default 20.</span>
+<span class="sd">        test_size : Union[int, float], optional</span>
+<span class="sd">            The size, or proportion of the samples to use for the test</span>
+<span class="sd">            dataset, by default 0.3.</span>
+<span class="sd">        threshold : float, optional</span>
+<span class="sd">            Threshold to state conditional independence by binarizing the</span>
+<span class="sd">            returned pvalue, by default 0.03. If threshold is set to ``None``,</span>
+<span class="sd">            then the null distribution will be estimated via permutation tests</span>
+<span class="sd">            ``n_shuffle`` times to compute a pvalue.</span>
+<span class="sd">        n_jobs : int, optional</span>
+<span class="sd">            The number of CPUs to use, by default -1, which corresponds to</span>
+<span class="sd">            using all CPUs available.</span>
+<span class="sd">        n_shuffle_nbrs : int, optional</span>
+<span class="sd">            Number of nearest-neighbors within the Z covariates for shuffling, by default 5.</span>
+<span class="sd">        n_shuffle : int</span>
+<span class="sd">            The number of times to shuffle the dataset to generate the null distribution.</span>
+<span class="sd">            By default, 1000.</span>
+<span class="sd">        eps : float</span>
+<span class="sd">            The epsilon term to add to all predicted values of the classifier to</span>
+<span class="sd">            prevent divisions by 0. By default 1e-8.</span>
+<span class="sd">        random_state : Optional[int], optional</span>
+<span class="sd">            Random seed, by default None.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This implementation differs from the original reference in :footcite:`Mukherjee2020ccmi`</span>
+<span class="sd">        because we do not have a generator and discriminator implementation.</span>
+
+<span class="sd">        The test proceeds similarly to the</span>
+<span class="sd">        :class:`dodiscocver.ci.ClassifierCITest`. The test proceeds by</span>
+<span class="sd">        first splitting the dataset randomly into two parts. One dataset</span>
+<span class="sd">        performs a restricted permutation. This dataset is used to label</span>
+<span class="sd">        samples that are guaranteed to not have conditional dependence, since</span>
+<span class="sd">        the samples are shuffled. We then train our classifier on this dataset</span>
+<span class="sd">        and evaluate it on the other dataset. We then estimate the KL-divergence</span>
+<span class="sd">        by comparing the evalutions on the shuffled vs unshuffled dataset.</span>
+
+<span class="sd">        We estimate a metric using the classifier, such as:</span>
+<span class="sd">        - KL-divergence</span>
+<span class="sd">        - f-divergence</span>
+
+<span class="sd">        We are in general interested in the KL-divergence because mutual information</span>
+<span class="sd">        is a special case of KL-divergence. The ``f-divergence`` is a lower bound on</span>
+<span class="sd">        the KL-divergence, which can be more stable in certain cases. The user may choose</span>
+<span class="sd">        which metric to compute from the classifier output.</span>
+
+<span class="sd">        **Estimating the pvalue**</span>
+<span class="sd">        If threshold is set, then the estimated CMI value is compared with</span>
+<span class="sd">        ``0 + threshold`` to determine if the query is &quot;conditionally dependent&quot; and the</span>
+<span class="sd">        resulting pvalue returned will be either 0 or 1. If the threshold is set to ``None``,</span>
+<span class="sd">        then the pvalue is estimated via a permutation testing step, which estimates the</span>
+<span class="sd">        null distribution of CMI values. This may be computationally expensive due to refitting</span>
+<span class="sd">        a new classifier for each null distribution instance ``n_shuffle`` times.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clf</span> <span class="o">=</span> <span class="n">clf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap</span> <span class="o">=</span> <span class="n">bootstrap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_size</span> <span class="o">=</span> <span class="n">test_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle</span> <span class="o">=</span> <span class="n">n_shuffle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span> <span class="o">=</span> <span class="n">n_shuffle_nbrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span> <span class="o">=</span> <span class="n">random_seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ClassifierCMITest.test"><a class="viewcode-back" href="../../../generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test conditional independence by estimating CMI.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df : pd.DataFrame</span>
+<span class="sd">            The dataframe containing the dataset.</span>
+<span class="sd">        x_vars : Set of column</span>
+<span class="sd">            A column in ``df``.</span>
+<span class="sd">        y_vars : Set of column</span>
+<span class="sd">            A column in ``df``.</span>
+<span class="sd">        z_covariates : Set, optional</span>
+<span class="sd">            A set of columns in ``df``, by default None. If None, then</span>
+<span class="sd">            the test should run a standard independence test.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[float, float]</span>
+<span class="sd">            Test statistic and pvalue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">z_covariates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">:</span>
+            <span class="n">boot_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># run test generation on bootstrapped dataset N times</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">):</span>
+                <span class="n">sampled_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                    <span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span>
+                <span class="p">)</span>
+
+                <span class="c1"># estimate CMI</span>
+                <span class="n">cmi_metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">sampled_df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+                <span class="n">boot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmi_metric</span><span class="p">)</span>
+
+            <span class="c1"># compute final pvalue</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">boot_metrics</span><span class="p">)</span>
+            <span class="n">std_metric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">boot_metrics</span><span class="p">)</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">std_metric</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+
+        <span class="c1"># actually compute the cmi estimated value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># estimate null distribution to compute a pvalue</span>
+            <span class="n">null_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_null_dist</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">,</span>
+                <span class="n">x_vars</span><span class="p">,</span>
+                <span class="n">y_vars</span><span class="p">,</span>
+                <span class="n">z_covariates</span><span class="p">,</span>
+                <span class="n">n_shuffle_nbrs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span><span class="p">,</span>
+                <span class="n">n_shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># compute pvalue as the number of times our metric is smaller</span>
+            <span class="c1"># than the resulting null distribution of metrics</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing null metric... &quot;</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">null_dist</span><span class="p">)</span>
+            <span class="n">pvalue</span> <span class="o">=</span> <span class="p">(</span><span class="n">null_dist</span> <span class="o">&gt;=</span> <span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">null_dist_</span> <span class="o">=</span> <span class="n">null_dist</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing metric... &quot;</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
+                <span class="n">pvalue</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pvalue</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat_</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat_sigma_</span> <span class="o">=</span> <span class="n">sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pvalue_</span> <span class="o">=</span> <span class="n">pvalue</span>
+        <span class="k">return</span> <span class="n">metric</span><span class="p">,</span> <span class="n">pvalue</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_cmi</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute test statistic, the conditional mutual information.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df : pd.DataFrame</span>
+<span class="sd">            Dataset</span>
+<span class="sd">        x_vars : Set[Column]</span>
+<span class="sd">            X variables.</span>
+<span class="sd">        y_vars : Set[Column]</span>
+<span class="sd">            Y variables.</span>
+<span class="sd">        z_covariates : Optional[Set], optional</span>
+<span class="sd">            Z conditioning variables, by default None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cmi_metric : float</span>
+<span class="sd">            The estimated CMI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># first estimate I(X; Y, Z)</span>
+            <span class="n">I_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_mi</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">))</span>
+
+            <span class="c1"># next estimate I(X; Y)</span>
+            <span class="n">I_xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_mi</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">)</span>
+
+            <span class="c1"># compute CMI estimate using the difference</span>
+            <span class="n">cmi_metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_cmi_with_diff</span><span class="p">(</span><span class="n">I_xyz</span><span class="p">,</span> <span class="n">I_xy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># next estimate just the mutual information I(X; Y)</span>
+            <span class="n">cmi_metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_mi</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cmi_metric</span>
+
+    <span class="k">def</span> <span class="nf">_estimate_mi</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimate mutual information.</span>
+
+<span class="sd">        Estimates mutual information via permutation and shuffling</span>
+<span class="sd">        classification.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df : pd.DataFrame</span>
+<span class="sd">            Dataset.</span>
+<span class="sd">        x_vars : Set[Column]</span>
+<span class="sd">            X variables.</span>
+<span class="sd">        y_vars : Set[Column]</span>
+<span class="sd">            Y variables.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metric : float</span>
+<span class="sd">            Estimate of the mutual information, either using KL-divergence,</span>
+<span class="sd">            or f-divergence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># generate training and testing data by shuffling X and Y</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_train_test_data</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_shuffle_nbrs</span>
+        <span class="p">)</span>
+        <span class="n">Y_train</span> <span class="o">=</span> <span class="n">Y_train</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">Y_test</span> <span class="o">=</span> <span class="n">Y_test</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+        <span class="c1"># fit the classifier on training data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+
+        <span class="c1"># evaluate on test data and compute metric</span>
+        <span class="n">Y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+        <span class="c1"># get the indices of Y_test being 0, or 1</span>
+        <span class="n">p_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">Y_test</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># joint</span>
+        <span class="n">q_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">Y_test</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># (conditionally) independent</span>
+
+        <span class="c1"># get the predictions for the two distributions</span>
+        <span class="n">Y_pred_p</span> <span class="o">=</span> <span class="n">Y_pred</span><span class="p">[</span><span class="n">p_idx</span><span class="p">]</span>
+        <span class="n">Y_pred_q</span> <span class="o">=</span> <span class="n">Y_pred</span><span class="p">[</span><span class="n">q_idx</span><span class="p">]</span>
+
+        <span class="c1"># estimate the metric</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">==</span> <span class="n">kl_divergence_score</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">Y_pred_q</span><span class="p">,</span> <span class="n">Y_pred_p</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">metric</span>
+
+    <span class="k">def</span> <span class="nf">_compute_cmi_with_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I_xyz</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">I_xz</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">I_xyz</span> <span class="o">-</span> <span class="n">I_xz</span></div>
+</pre></div>
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

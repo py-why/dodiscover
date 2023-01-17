@@ -1,0 +1,12 @@
+﻿dodiscover.ci.monte_carlo.generate_knn_in_subspace
+==================================================
+
+.. currentmodule:: dodiscover.ci.monte_carlo
+
+.. autofunction:: generate_knn_in_subspace
+
+.. include:: dodiscover.ci.monte_carlo.generate_knn_in_subspace.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

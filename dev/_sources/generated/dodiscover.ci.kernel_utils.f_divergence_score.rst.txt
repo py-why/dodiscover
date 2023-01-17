@@ -1,0 +1,12 @@
+﻿dodiscover.ci.kernel_utils.f_divergence_score
+=============================================
+
+.. currentmodule:: dodiscover.ci.kernel_utils
+
+.. autofunction:: f_divergence_score
+
+.. include:: dodiscover.ci.kernel_utils.f_divergence_score.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
