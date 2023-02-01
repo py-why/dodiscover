@@ -309,6 +309,42 @@ class Test_FCI:
         assert not G.has_edge("c", "u", G.directed_edge_name)
         assert G.has_edge("u", "c", G.directed_edge_name)
 
+    def test_fci_rule6(self):
+        # If A - B o-* C then A - B -* C
+
+        # Check for directed edge: if A - B o-> C then A - B -> C
+        G = PAG()
+        G.add_edge("A", "B", G.undirected_edge_name)
+        G.add_edge("C", "B", G.circle_edge_name)
+        G.add_edge("B", "C", G.directed_edge_name)
+
+        added_tails = self.alg._apply_rule6(G, "A", "B", "C")
+
+        assert G.has_edge("B", "C", G.directed_edge_name)
+        assert not G.has_edge("C", "B", G.circle_edge_name)
+        # Check for birected edge: if A - B o- C then A - B - C
+        G = PAG()
+        G.add_edge("A", "B", G.undirected_edge_name)
+        G.add_edge("C", "B", G.circle_edge_name)
+
+        added_tails = self.alg._apply_rule6(G, "A", "B", "C")
+        assert added_tails
+
+        assert G.has_edge("B", "C", G.undirected_edge_name)
+        assert not G.has_edge("C", "B", G.circle_edge_name)
+
+        # Check for birected edge: if A - B o-o C then A - B -o C
+        G = PAG()
+        G.add_edge("A", "B", G.undirected_edge_name)
+        G.add_edge("C", "B", G.circle_edge_name)
+        G.add_edge("B", "C", G.circle_edge_name)
+
+        added_tails = self.alg._apply_rule6(G, "A", "B", "C")
+
+        assert added_tails
+        assert G.has_edge("B", "C", G.circle_edge_name)
+        assert not G.has_edge("C", "B", G.circle_edge_name)
+
     def test_fci_rule8_without_selection_bias(self):
         # If A -> u -> C and A o-> C
         # orient A o-> C as A -> C

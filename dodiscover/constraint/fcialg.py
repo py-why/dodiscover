@@ -398,6 +398,45 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, explored_nodes
 
+    def _apply_rule5(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+        """Apply rule 5 of FCI algorithm.
+
+        For each A o-o B, if there is an uncovered (e.g. every triple is unshielded) circle path p = <A, C, ..., D, B> such that A, D are not adjacent and C, B are not adjacent, then orient A o-o B and every edge on p as -
+        """
+
+        raise NotImplementedError
+
+    def _apply_rule6(self, graph: EquivalenceClass, a: Column, u: Column, c: Column) -> bool:
+        """Apply rule 6 of FCI algorithm.
+
+        If A - u o-* C then orient u o-* C as u -* C
+
+        """
+
+        # Check A - u
+        added_tails = False
+        if graph.has_edge(a, u, graph.undirected_edge_name):
+            # Check u o-* C
+            if graph.has_edge(c, u, graph.circle_edge_name):
+                added_tails = True
+                graph.remove_edge(c, u, graph.circle_edge_name)
+
+                # If u o- c then put the undirected edge in
+                if not graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(
+                    u, c, graph.bidirected_edge_name
+                ):
+                    graph.add_edge(c, u, graph.undirected_edge_name)
+
+        return added_tails
+
+    def _apply_rule7(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+        """Apply rule 7 of FCI algorithm.
+
+        If a -o u o-* c and a, c are not adjacent, then u o-* c is oriented as u -* c
+        """
+        if c not in graph.neighbors(a):
+            pass
+
     def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 8 of FCI algorithm.
 
