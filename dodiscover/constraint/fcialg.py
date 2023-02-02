@@ -63,7 +63,7 @@ class FCI(BaseConstraintDiscovery):
         The maximum length of any discriminating path, or None if unlimited.
     selection_bias : bool
         Whether or not to account for selection bias within the causal PAG.
-        See :footcite:`Zhang2008`. Currently not implemented.
+        See :footcite:`Zhang2008`.
     pds_skeleton_method : SkeletonMethods
         The method to use for learning the skeleton using PDS. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
@@ -398,19 +398,72 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, explored_nodes
 
-    def _apply_rule5(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
+    def _apply_rule5(self, graph: EquivalenceClass, u: Column, a: Column) -> bool:
         """Apply rule 5 of FCI algorithm.
 
-        For each A o-o B, if there is an uncovered (e.g. every triple is unshielded) circle path p = <A, C, ..., D, B> such that A, D are not adjacent and C, B are not adjacent, then orient A o-o B and every edge on p as -
+        For each A o-o U, if there is an uncovered (e.g. every triple is unshielded)
+        circle path p = <A, B, ..., D, U> such that A, D are not adjacent and U, B are
+        not adjacent, then orient A o-o U and every edge on p as undirected.
+
+        Note that unlike the other rules, R5 is a binary operator.
+
+        Parameters
+        ----------
+        graph : PAG
+            The causal graph to apply rules to.
+        u : node
+            A node in the graph.
+        a : node
+            A node in the graph.
+
+        Returns
+        -------
+        added_tails : bool
+            Whether or not tails were modified in the graph.
         """
+        import pywhy_graphs as pgraphs
 
-        raise NotImplementedError
+        added_tails = False
+        if graph.has_edge(a, u, graph.circle_edge_name) and graph.has_edge(
+            u, a, graph.circle_edge_name
+        ):
+            circle_path, found_circle_path = pgraphs.uncovered_circle_path(
+                graph, a, u, self.max_path_length, forbid_node=u
+            )
 
-    def _apply_rule6(self, graph: EquivalenceClass, a: Column, u: Column, c: Column) -> bool:
+            if found_circle_path:
+                added_tails = True
+                rotated_circle_path = circle_path.copy()
+                rotated_circle_path.append(rotated_circle_path.pop(0))
+
+                for x, y in zip(circle_path, rotated_circle_path):
+
+                    graph.remove_edge(x, y, graph.circle_edge_name)
+                    graph.remove_edge(y, x, graph.circle_edge_name)
+                    graph.add_edge(x, y, graph.undirected_edge_name)
+
+        return added_tails
+
+    def _apply_rule6(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 6 of FCI algorithm.
 
         If A - u o-* C then orient u o-* C as u -* C
 
+        Parameters
+        ----------
+        graph : PAG
+            The causal graph to apply rules to.
+        u : node
+            A node in the graph.
+        a : node
+            A node in the graph.
+        c : node
+            A node in the graph.
+
+        Returns
+        -------
+        added_tails : bool
+            Whether or not tails were modified in the graph.
         """
 
         # Check A - u
@@ -433,18 +486,47 @@ class FCI(BaseConstraintDiscovery):
         """Apply rule 7 of FCI algorithm.
 
         If a -o u o-* c and a, c are not adjacent, then u o-* c is oriented as u -* c
+
+        Parameters
+        ----------
+        graph : PAG
+            The causal graph to apply rules to.
+        u : node
+            A node in the graph.
+        a : node
+            A node in the graph.
+        c : node
+            A node in the graph.
+
+        Returns
+        -------
+        added_tails : bool
+            Whether or not tails were modified in the graph.
         """
-        if c not in graph.neighbors(a):
-            pass
+        added_tails = False
+        if c not in graph.neighbors(a) and a not in graph.neighbors(c):
+            if (
+                graph.has_edge(a, u, graph.circle_edge_name)
+                and not graph.has_edge(u, a, graph.circle_edge_name)
+                and not graph.has_edge(u, a, graph.directed_edge_name)
+                and graph.has_edge(c, u, graph.circle_edge_name)
+            ):
+                added_tails = True
+                graph.remove_edge(c, u, graph.circle_edge_name)
+                # If u o- c then put the undirected edge in
+                if not graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(
+                    u, c, graph.bidirected_edge_name
+                ):
+                    graph.add_edge(c, u, graph.undirected_edge_name)
+
+        return added_tails
 
     def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 8 of FCI algorithm.
 
-        If A -> u -> C, or A -o B -> C
+        If A -> u -> C, or A -o u -> C
         and A o-> C, then orient A o-> C as A -> C.
 
-        Without dealing with selection bias, we ignore
-        A -o B -> C condition.
 
         Parameters
         ----------
@@ -462,7 +544,7 @@ class FCI(BaseConstraintDiscovery):
         added_arrows : bool
             Whether or not arrows were modified in the graph.
         """
-        # If A -> u -> C,
+        # If A -> u -> C, or A -o u -> C
         # and A o-> C, then orient A o-> C as A -> C.
         added_arrows = False
 
@@ -470,10 +552,11 @@ class FCI(BaseConstraintDiscovery):
         if graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(
             a, c, graph.directed_edge_name
         ):
-            # check that A -> u -> C
-            condition_one = graph.has_edge(a, u, graph.directed_edge_name) and not graph.has_edge(
-                u, a, graph.circle_edge_name
+            # check that A -> u or A -o u
+            condition_one = graph.has_edge(a, u, graph.directed_edge_name) or graph.has_edge(
+                a, u, graph.circle_edge_name
             )
+            # check that u -> C
             condition_two = graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(
                 c, u, graph.circle_edge_name
             )
@@ -669,6 +752,16 @@ class FCI(BaseConstraintDiscovery):
                     # apply R4, orienting discriminating paths
                     r4_add, _ = self._apply_rule4(graph, u, a, c, sep_set)
 
+                    # apply R5-7 to handle cases where selection bias is present
+                    if self.selection_bias:
+                        r5_add = self._apply_rule5(graph, u, a)
+                        r6_add = self._apply_rule6(graph, u, a, c)
+                        r7_add = self._apply_rule7(graph, u, a, c)
+                    else:
+                        r5_add = False
+                        r6_add = False
+                        r7_add = False
+
                     # apply R8 to orient more tails
                     r8_add = self._apply_rule8(graph, u, a, c)
 
@@ -680,19 +773,35 @@ class FCI(BaseConstraintDiscovery):
 
                     # see if there was a change flag
                     if (
-                        any([r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add])
+                        any(
+                            [
+                                r1_add,
+                                r2_add,
+                                r3_add,
+                                r4_add,
+                                r5_add,
+                                r6_add,
+                                r7_add,
+                                r8_add,
+                                r9_add,
+                                r10_add,
+                            ]
+                        )
                         and not change_flag
                     ):
                         logger.info(
                             f"{change_flag} with "
-                            f"{[r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add]}"
+                            f"{[r1_add, r2_add, r3_add, r4_add, r5_add, r6_add, r7_add, r8_add, r9_add, r10_add]}"
                         )
                         change_flag = True
 
             # check if we should continue or not
             if not change_flag:
                 finished = True
-                logger.info(f"Finished applying R1-4, and R8-10 with {idx} iterations")
+                if not self.selection_bias:
+                    logger.info(f"Finished applying R1-4, and R8-10 with {idx} iterations")
+                if self.selection_bias:
+                    logger.info(f"Finished applying R1-10 with {idx} iterations")
                 break
             idx += 1
 

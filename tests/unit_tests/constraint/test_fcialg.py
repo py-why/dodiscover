@@ -102,6 +102,12 @@ class Test_FCI:
         assert not G.has_edge("C", "u", G.directed_edge_name)
         assert G.has_edge("u", "A", G.circle_edge_name)
 
+        # check that no orientation happens if A, C are adjacent
+        G = G_copy.copy()
+        G.add_edge("A", "C", G.directed_edge_name)
+        added_arrows = self.alg._apply_rule1(G, "u", "A", "C")
+        assert not added_arrows
+
     def test_fci_rule2(self):
         # If A -> u *-> C, or A *-> u -> C, and A *-o C, then
         # orient A *-> C.
@@ -309,6 +315,22 @@ class Test_FCI:
         assert not G.has_edge("c", "u", G.directed_edge_name)
         assert G.has_edge("u", "c", G.directed_edge_name)
 
+    def test_fci_rule5(self):
+        # Let A o-o B, and uncovered circle path A o-o G o-o M o-o T o-o B where A, T are not adjacent, and B, G are not adjacent. Then A - G - M - T - B - A.
+        G = PAG()
+        circled_edges = [("A", "G"), ("G", "M"), ("M", "T"), ("T", "B"), ("A", "B")]
+        for a, b in circled_edges:
+            G.add_edge(a, b, G.circle_edge_name)
+            G.add_edge(b, a, G.circle_edge_name)
+
+        added_tails = self.alg._apply_rule5(G, "B", "A")
+
+        assert added_tails
+        for a, b in circled_edges:
+            assert G.has_edge(a, b, G.undirected_edge_name)
+            assert not G.has_edge(a, b, G.circle_edge_name)
+            assert not G.has_edge(b, a, G.circle_edge_name)
+
     def test_fci_rule6(self):
         # If A - B o-* C then A - B -* C
 
@@ -318,7 +340,7 @@ class Test_FCI:
         G.add_edge("C", "B", G.circle_edge_name)
         G.add_edge("B", "C", G.directed_edge_name)
 
-        added_tails = self.alg._apply_rule6(G, "A", "B", "C")
+        added_tails = self.alg._apply_rule6(G, "B", "A", "C")
 
         assert G.has_edge("B", "C", G.directed_edge_name)
         assert not G.has_edge("C", "B", G.circle_edge_name)
@@ -327,7 +349,7 @@ class Test_FCI:
         G.add_edge("A", "B", G.undirected_edge_name)
         G.add_edge("C", "B", G.circle_edge_name)
 
-        added_tails = self.alg._apply_rule6(G, "A", "B", "C")
+        added_tails = self.alg._apply_rule6(G, "B", "A", "C")
         assert added_tails
 
         assert G.has_edge("B", "C", G.undirected_edge_name)
@@ -339,11 +361,31 @@ class Test_FCI:
         G.add_edge("C", "B", G.circle_edge_name)
         G.add_edge("B", "C", G.circle_edge_name)
 
-        added_tails = self.alg._apply_rule6(G, "A", "B", "C")
+        added_tails = self.alg._apply_rule6(G, "B", "A", "C")
 
         assert added_tails
         assert G.has_edge("B", "C", G.circle_edge_name)
         assert not G.has_edge("C", "B", G.circle_edge_name)
+
+    def test_fci_rule7(self):
+        # Check for directed edge: if A -o B o-> C then A -o B -> C
+        G = PAG()
+        G.add_edge("A", "U", G.circle_edge_name)
+        G.add_edge("U", "C", G.directed_edge_name)
+        G.add_edge("C", "U", G.circle_edge_name)
+        G_copy = G.copy()
+
+        added_tails = self.alg._apply_rule7(G, "U", "A", "C")
+
+        assert added_tails
+        assert not G.has_edge("C", "U", G.circle_edge_name)
+
+        # Check for directed edge: if A -o B o-> C but A -> C then nothing happens
+        G = G_copy.copy()
+        G.add_edge("A", "C", G.directed_edge_name)
+        added_tails = self.alg._apply_rule7(G, "U", "A", "C")
+        assert not added_tails
+        assert G.has_edge("C", "U", G.circle_edge_name)
 
     def test_fci_rule8_without_selection_bias(self):
         # If A -> u -> C and A o-> C
@@ -352,6 +394,20 @@ class Test_FCI:
 
         # create a chain for A, u, C
         G.add_edges_from([("A", "u"), ("u", "C")], G.directed_edge_name)
+        G.add_edge("A", "C", G.directed_edge_name)
+        G.add_edge("C", "A", G.circle_edge_name)
+        self.alg._apply_rule8(G, "u", "A", "C")
+
+        assert G.has_edge("A", "C", G.directed_edge_name)
+        assert not G.has_edge("C", "A", G.circle_edge_name)
+
+    def test_fci_rule8_with_selection_bias(self):
+        # If A -o u -> C and A o-> C then orient A o-> C as A -> C
+        G = PAG()
+
+        # create a chain for A, u, C
+        G.add_edge("u", "C", G.directed_edge_name)
+        G.add_edge("A", "u", G.circle_edge_name)
         G.add_edge("A", "C", G.directed_edge_name)
         G.add_edge("C", "A", G.circle_edge_name)
         self.alg._apply_rule8(G, "u", "A", "C")
@@ -595,3 +651,12 @@ class Test_FCI:
         expected_pag.add_edge("x4", "x5", expected_pag.bidirected_edge_name)
 
         assert set(pag.edges()) == set(expected_pag.edges())
+
+    def test_fci_selection_bias(self):
+        edge_list = [("A", "Ef"), ("Ef", "Sel")]
+        bidirected_edge_list = [("Ef", "R")]
+        G = ADMG(edge_list, latent_edge_list)
+        sample = dummy_sample(G)
+        context = make_context().variables(data=sample).build()
+        oracle = Oracle(G)
+        pass
