@@ -64,7 +64,6 @@ Minimally, dodiscover requires:
 For explicit graph functionality for representing various causal graphs, such as ADMG, or CPDAGs, you will also need:
 
     * pywhy-graphs
-    * graphs  # this is a development version for PRable MixedEdgeGraph to networkx
 
 For explicitly representing causal graphs, we recommend using `pywhy-graphs` package, but if you have a graph library that adheres to the graph protocols we require, then you can in principle use those graphs.
 

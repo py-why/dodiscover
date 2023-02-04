@@ -5,7 +5,7 @@ Installation
 
 ## Installing with ``pip``, or ``poetry``.
 
-**dodiscover** is available [on PyPI](https://pypi.org/project/dodiscover/). Just run
+TBD **dodiscover** is available [on PyPI](https://pypi.org/project/dodiscover/). Just run
 
     pip install dodiscover
 
@@ -14,7 +14,7 @@ Installation
 
 ## Installing from source
 
-To install **dodiscover** from source, first clone [the repository](https://github.com/pywhy/dodiscover):
+To install **dodiscover** from source, first clone [the repository](https://github.com/py-why/dodiscover):
 
     git clone https://github.com/py-why/dodiscover.git
     cd dodiscover
