@@ -24,9 +24,11 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     Parameters
     ----------
     distance_metric : str, optional
-        _description_, by default "euclidean"
+        Distance metric to use, by default "euclidean". For others, see
+        :class:`~sklearn.metrics.DistanceMetric` for supported list of metrics.
     metric : str, optional
-        _description_, by default "rbf"
+        Kernel metric, by default "rbf". For others, see :mod:`~sklearn.metrics.pairwise`
+        for supported kernel metrics.
     l2 : float | tuple of float, optional
         The l2 regularization to apply for inverting the kernel matrices of 'x' and 'y'
         respectively, by default None. If a single number, then the same l2 regularization
@@ -43,6 +45,13 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         Number of times to sample the null distribution, by default 1000.
     n_jobs : int, optional
         Number of jobs to run computations in parallel, by default None.
+    propensity_model : callable, optional
+        The propensity model to estimate propensity scores among the groups. If `None`
+        (default) will use :class:`sklearn.linear_model.LogisticRegression`.
+    propensity_est : array-like of shape (n_groups,), optional
+        The propensity estimates for each group. Must match the cardinality of the
+        ``group_col`` in the data passed to ``test`` function. If `None` (default),
+        will build a propensity model using the argument in `propensity_model`.
     random_state : int, optional
         Random seed, by default None.
 
@@ -60,6 +69,8 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         kwidth_y=None,
         null_reps: int = 1000,
         n_jobs=None,
+        propensity_model=None,
+        propensity_est=None,
         random_state=None,
     ) -> None:
         self.l2 = l2
@@ -71,6 +82,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         self.kwidth_y = kwidth_y
         self.metric = metric
         self.distance_metric = distance_metric
+
+        self.propensity_model = propensity_model
+        self.propensity_est = propensity_est
 
     def test(
         self,
