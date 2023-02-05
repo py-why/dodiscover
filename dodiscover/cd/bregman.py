@@ -2,7 +2,6 @@ from typing import Set, Tuple
 
 import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
 from numpy.typing import ArrayLike
 
 from dodiscover.ci.kernel_utils import corrent_matrix, von_neumann_divergence
@@ -30,8 +29,20 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         Number of times to sample null distribution, by default 1000.
     n_jobs : int, optional
         Number of CPUs to use, by default None.
+    propensity_model : callable, optional
+        The propensity model to estimate propensity scores among the groups. If `None`
+        (default) will use :class:`sklearn.linear_model.LogisticRegression`.
+    propensity_est : array-like of shape (n_samples, n_groups,), optional
+        The propensity estimates for each group. Must match the cardinality of the
+        ``group_col`` in the data passed to ``test`` function. If `None` (default),
+        will build a propensity model using the argument in ``propensity_model``.
     random_state : int, optional
         Random seed, by default None.
+
+    Notes
+    -----
+    Currently only testing among two groups are supported. Therefore ``df[group_col]`` must
+    only contain binary indicators and ``propensity_est`` must contain only two columns.
 
     References
     ----------
@@ -45,6 +56,8 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         kwidth: float = None,
         null_reps: int = 1000,
         n_jobs: int = None,
+        propensity_model=None,
+        propensity_est=None,
         random_state: int = None,
     ) -> None:
         self.metric = metric
@@ -54,9 +67,13 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         self.n_jobs = n_jobs
         self.random_state = random_state
 
+        self.propensity_model = propensity_model
+        self.propensity_est = propensity_est
+
     def test(
         self, df: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], group_col: Column
     ) -> Tuple[float, float]:
+        # check test input
         self._check_test_input(df, x_vars, y_vars, group_col)
 
         x_cols = list(x_vars)
@@ -74,9 +91,12 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         # 1/2 * (D(p_1(y|x) || p_2(y|x)) + D(p_2(y|x) || p_1(y|x)))
         conditional_div = self._statistic(X, Y, group_ind)
 
+        # compute propensity scores
+        e_hat = self._compute_propensity_scores(group_ind, K=X)
+
         # now compute null distribution
         null_dist = self.compute_null(
-            X, Y, null_reps=self.null_reps, random_state=self.random_state
+            e_hat, X, Y, null_reps=self.null_reps, random_state=self.random_state
         )
         self.null_dist_ = null_dist
 
@@ -123,22 +143,3 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         # 1/2 * (D(p_1(y|x) || p_2(y|x)) + D(p_2(y|x) || p_1(y|x)))
         conditional_div = 1.0 / 2 * (joint_div1 - x_div1 + joint_div2 - x_div2)
         return conditional_div
-
-    def compute_null(
-        self, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state: int = None
-    ):
-        rng = np.random.default_rng(random_state)
-
-        p = 0.5
-        n_samps = X.shape[0]
-
-        # compute the test statistic on the conditionally permuted
-        # dataset, where each group label is resampled for each sample
-        # according to its propensity score
-        null_dist = Parallel(n_jobs=self.n_jobs)(
-            [
-                delayed(self._statistic)(X, Y, rng.binomial(1, p, size=n_samps))
-                for _ in range(null_reps)
-            ]
-        )
-        return null_dist

@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Tuple
+from typing import Optional, Tuple
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -266,37 +266,6 @@ def _estimate_kwidth(
         # prevents division by zero when used on label vectors
         kwidth = med if med else 1
     return kwidth
-
-
-def _kernel_estimate_propensity_scores(
-    K: ArrayLike, group_ind: ArrayLike, clf: Callable
-) -> ArrayLike:
-    """Estimate propensity scores given kernel and propensities.
-
-    Uses logistic regression.
-
-    Parameters
-    ----------
-    K : ArrayLike of shape (n_samples, n_samples)
-        The kernel matrix generated.
-    group_ind : ArrayLike of shape (n_samples,)
-        Group indicator (empirical labels). Must be comprised of only
-        1's and 0's (i.e. binary groups).
-    clf : Callable
-        The classifier used to estimate propensity scores. The classifier
-        must have the ``predict_proba`` method implemented.
-
-    Returns
-    -------
-    e_hat : ArrayLike of shape (n_samples)
-        The predicted propensities (i.e. probabilities) of samples falling
-        into ``group_ind = 1``.
-    """
-    # fit and then obtain the probabilities of treatment
-    # for each sample (i.e. the propensity scores)
-    e_hat = clf.fit(K, group_ind).predict_proba(K)[:, 1]
-
-    return e_hat
 
 
 def _center_kernel(K: ArrayLike):

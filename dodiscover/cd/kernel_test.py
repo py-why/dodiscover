@@ -2,9 +2,7 @@ from typing import Set, Tuple
 
 import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
 from numpy.typing import ArrayLike
-from sklearn.linear_model import LogisticRegression
 
 from dodiscover.ci.kernel_utils import _default_regularization, compute_kernel
 from dodiscover.typing import Column
@@ -17,8 +15,6 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
 
     Tests the equality of conditional distributions using a kernel approach
     outlined in :footcite:`Park2021conditional`.
-
-    TODO: only supports two groups right now.
 
     Parameters
     ----------
@@ -53,6 +49,11 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         will build a propensity model using the argument in ``propensity_model``.
     random_state : int, optional
         Random seed, by default None.
+
+    Notes
+    -----
+    Currently only testing among two groups are supported. Therefore ``df[group_col]`` must
+    only contain binary indicators and ``propensity_est`` must contain only two columns.
 
     References
     ----------
@@ -112,6 +113,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             Set of Y variables.
         group_col : Column
             The column denoting, which group (i.e. environment) each sample belongs to.
+            Must be binary.
 
         Returns
         -------
@@ -120,27 +122,11 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         pvalue : float
             The computed p-value.
         """
-        if self.propensity_model is not None and self.propensity_est is not None:
-            raise ValueError(
-                "Both propensity model and propensity estimates are specified. " "Only use one."
-            )
-        if self.propensity_est is not None:
-            if self.propensity_est.shape[0] != len(df[group_col]):
-                raise ValueError(
-                    f"There are {self.propensity_est.shape[0]} pre-defined estimates, while "
-                    f"there are {len(df[group_col])} unique groups."
-                )
-            if self.propensity_est.shape[1] != len(df[group_col].unique()):
-                raise ValueError(
-                    f"There are {self.propensity_est.shape[1]} group pre-defined estimates, while "
-                    f"there are {len(df[group_col].unique())} samples."
-                )
+        # check test input
+        self._check_test_input(df, x_vars, y_vars, group_col)
 
         x_cols = list(x_vars)
         y_cols = list(y_vars)
-
-        # check test input
-        self._check_test_input(df, x_vars, y_vars, group_col)
 
         group_ind = df[group_col].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:
@@ -172,31 +158,11 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         stat = self._statistic(K, L, group_ind)
 
         # compute propensity scores
-        self.propensity_penalty_ = _default_regularization(K)
-
-        if self.propensity_model is None:
-            self.propensity_model_ = LogisticRegression(
-                penalty="l2",
-                n_jobs=self.n_jobs,
-                warm_start=True,
-                solver="lbfgs",
-                random_state=self.random_state,
-                C=1 / (2 * self.propensity_penalty_),
-            )
-        else:
-            self.propensity_model_ = self.propensity_model
-
-        # either use pre-defined propensity weights, or estimate them
-        if self.propensity_est is None:
-            # fit and then obtain the probabilities of treatment
-            # for each sample (i.e. the propensity scores)
-            self.propensity_est_ = self.propensity_model_.fit(K, group_ind).predict_proba(K)[:, 1]
-        else:
-            self.propensity_est_ = self.propensity_est[:, 1]
+        e_hat = self._compute_propensity_scores(group_ind, K=K)
 
         # now compute null distribution
         null_dist = self.compute_null(
-            self.propensity_est_, K, L, null_reps=self.null_reps, random_state=self.random_state
+            e_hat, K, L, null_reps=self.null_reps, random_state=self.random_state
         )
         self.null_dist_ = null_dist
 
@@ -290,14 +256,3 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             if len(self.l2) != 2:
                 raise RuntimeError(f"l2 regularization {self.l2} must be a 2-tuple, or a number.")
             self.regs_ = self.l2
-
-    def compute_null(self, e_hat, K, L, null_reps=1000, random_state=None):
-        rng = np.random.default_rng(random_state)
-
-        # compute the test statistic on the conditionally permuted
-        # dataset, where each group label is resampled for each sample
-        # according to its propensity score
-        null_dist = Parallel(n_jobs=self.n_jobs)(
-            [delayed(self._statistic)(K, L, rng.binomial(1, e_hat)) for _ in range(null_reps)]
-        )
-        return null_dist
