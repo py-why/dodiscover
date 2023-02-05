@@ -50,7 +50,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     propensity_est : array-like of shape (n_groups,), optional
         The propensity estimates for each group. Must match the cardinality of the
         ``group_col`` in the data passed to ``test`` function. If `None` (default),
-        will build a propensity model using the argument in `propensity_model`.
+        will build a propensity model using the argument in ``propensity_model``.
     random_state : int, optional
         Random seed, by default None.
 
