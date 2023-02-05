@@ -1,11 +1,10 @@
-from typing import Optional, Tuple
+from typing import Callable, Optional, Tuple
 
 import numpy as np
 from numpy.typing import ArrayLike
 from scipy.linalg import logm
 from scipy.optimize import minimize_scalar
 from scipy.stats import gaussian_kde
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import pairwise_distances, pairwise_kernels
 
 
@@ -270,13 +269,11 @@ def _estimate_kwidth(
 
 
 def _kernel_estimate_propensity_scores(
-    K: ArrayLike,
-    group_ind: ArrayLike,
-    penalty: float = None,
-    n_jobs: int = None,
-    random_state: int = None,
+    K: ArrayLike, group_ind: ArrayLike, clf: Callable
 ) -> ArrayLike:
     """Estimate propensity scores given kernel and propensities.
+
+    Uses logistic regression.
 
     Parameters
     ----------
@@ -285,12 +282,9 @@ def _kernel_estimate_propensity_scores(
     group_ind : ArrayLike of shape (n_samples,)
         Group indicator (empirical labels). Must be comprised of only
         1's and 0's (i.e. binary groups).
-    penalty : float, optional
-        L2 regularization, by default None.
-    n_jobs : int, optional
-        Joblib parallelization, by default None.
-    random_state : int, optional
-        Random seed, by default None.
+    clf : Callable
+        The classifier used to estimate propensity scores. The classifier
+        must have the ``predict_proba`` method implemented.
 
     Returns
     -------
@@ -298,18 +292,6 @@ def _kernel_estimate_propensity_scores(
         The predicted propensities (i.e. probabilities) of samples falling
         into ``group_ind = 1``.
     """
-    if penalty is None:
-        penalty = _default_regularization(K)
-
-    clf = LogisticRegression(
-        penalty="l2",
-        n_jobs=n_jobs,
-        warm_start=True,
-        solver="lbfgs",
-        random_state=random_state,
-        C=1 / (2 * penalty),
-    )
-
     # fit and then obtain the probabilities of treatment
     # for each sample (i.e. the propensity scores)
     e_hat = clf.fit(K, group_ind).predict_proba(K)[:, 1]

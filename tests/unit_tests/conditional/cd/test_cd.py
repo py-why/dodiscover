@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.ensemble import RandomForestClassifier
 
 from dodiscover.cd import BregmanCDTest, KernelCDTest
 
@@ -64,11 +65,35 @@ def test_cd_tests_error(cd_estimator):
         cd_estimator.test(sample_df, {x}, {y}, group_col="group")
 
 
+def test_kernel_cd_errors():
+    x = "x"
+    y = "y"
+
+    sample_df = single_env_scm()
+    with pytest.raises(
+        ValueError, match="Both propensity model and propensity estimates are specified"
+    ):
+        cd_estimator = KernelCDTest(
+            propensity_model=RandomForestClassifier(), propensity_est=[0.5, 0.5]
+        )
+        cd_estimator.test(sample_df, {x}, y_vars={y}, group_col="group")
+
+    with pytest.raises(ValueError, match="There are 3 group pre-defined estimates"):
+        cd_estimator = KernelCDTest(propensity_est=np.ones((200, 3)) * 0.5)
+        cd_estimator.test(sample_df, {x}, y_vars={y}, group_col="group")
+
+    with pytest.raises(ValueError, match="There are 100 pre-defined estimates"):
+        cd_estimator = KernelCDTest(propensity_est=np.ones((100, 2)) * 0.5)
+        cd_estimator.test(sample_df, {x}, y_vars={y}, group_col="group")
+
+
 @pytest.mark.parametrize(
     ["cd_func", "cd_kwargs"],
     [
         [BregmanCDTest, dict()],
         [KernelCDTest, dict()],
+        [KernelCDTest, {"propensity_model": RandomForestClassifier()}],
+        [KernelCDTest, {"propensity_est": np.ones((200, 2)) * 0.5}],
         [KernelCDTest, {"l2": 1e-3}],
         [KernelCDTest, {"l2": (1e-3, 2e-3)}],
     ],
@@ -83,7 +108,6 @@ def test_cd_tests_error(cd_estimator):
 def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
     """Test conditional discrepancy tests."""
     random_state = 12345
-    print(cd_func, cd_kwargs)
     cd_estimator = cd_func(random_state=random_state, null_reps=50, n_jobs=-1, **cd_kwargs)
 
     group_col = "group"
