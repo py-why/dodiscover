@@ -47,7 +47,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     propensity_model : callable, optional
         The propensity model to estimate propensity scores among the groups. If `None`
         (default) will use :class:`sklearn.linear_model.LogisticRegression`.
-    propensity_est : array-like of shape (n_groups,), optional
+    propensity_est : array-like of shape (n_samples, n_groups,), optional
         The propensity estimates for each group. Must match the cardinality of the
         ``group_col`` in the data passed to ``test`` function. If `None` (default),
         will build a propensity model using the argument in ``propensity_model``.
