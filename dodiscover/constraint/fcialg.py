@@ -427,8 +427,8 @@ class FCI(BaseConstraintDiscovery):
         if graph.has_edge(a, u, graph.circle_edge_name) and graph.has_edge(
             u, a, graph.circle_edge_name
         ):
-            circle_path, found_circle_path = pgraphs.uncovered_circle_path(
-                graph, a, u, self.max_path_length, forbid_node=u
+            circle_path, found_circle_path = pgraphs.uncovered_pd_path(
+                graph, a, u, self.max_path_length, forbid_node=u, force_circle=True
             )
 
             if found_circle_path:

@@ -653,10 +653,39 @@ class Test_FCI:
         assert set(pag.edges()) == set(expected_pag.edges())
 
     def test_fci_selection_bias(self):
-        edge_list = [("A", "Ef"), ("Ef", "Sel")]
-        bidirected_edge_list = [("Ef", "R")]
-        G = ADMG(edge_list, latent_edge_list)
+        """
+        Based on Figure 1 from :footcite:`Zhang2008`, with extra edge R -> D
+
+        The DAG (over observed and selected variables) is A -> Ef <-> R -> D, Ef -> Sel, where Sel is a selection variable.
+
+        The MAG is A - Ef <-> R -> D.
+
+        The PAG is A o-o Ef o-o R o-o D.
+
+        References
+        ----------
+        .. footbibliography::
+
+        """
+        G = PAG()
+        G.add_edge("A", "Ef", G.undirected_edge_name)
+        G.add_edge("Ef", "R", G.bidirected_edge_name)
+        G.add_edge("R", "D", G.directed_edge_name)
+        # G.add_edge("A", "D", G.directed_edge_name)
         sample = dummy_sample(G)
         context = make_context().variables(data=sample).build()
         oracle = Oracle(G)
-        pass
+        ci_estimator = oracle
+        fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=True)
+        fci.fit(sample, context)
+        pag = fci.graph_
+
+        expected_pag = PAG()
+        expected_pag.add_edge("A", "Ef", expected_pag.circle_edge_name)
+        expected_pag.add_edge("Ef", "A", expected_pag.circle_edge_name)
+        expected_pag.add_edge("Ef", "R", expected_pag.circle_edge_name)
+        expected_pag.add_edge("R", "Ef", expected_pag.circle_edge_name)
+        expected_pag.add_edge("R", "D", expected_pag.circle_edge_name)
+        expected_pag.add_edge("D", "R", expected_pag.circle_edge_name)
+        assert pag.nodes() == expected_pag.nodes()
+        assert pag.edges() == expected_pag.edges()
