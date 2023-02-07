@@ -458,6 +458,24 @@ class Test_FCI:
         assert uncov_pd_path == ["A", "u", "x", "y", "z", "C"]
         assert not G.has_edge("C", "A", G.circle_edge_name)
 
+        # test fig 6 Zhang 2008
+        G = PAG()
+        G.add_edges_from(
+            [("A", "B"), ("B", "A"), ("A", "C"), ("C", "A"), ("D", "B"), ("D", "C")],
+            G.circle_edge_name,
+        )
+        G.add_edges_from([("B", "D"), ("C", "D")], G.directed_edge_name)
+        self.alg._apply_rule9(G, "A", "B", "D")
+
+        expected_G = PAG()
+        expected_G.add_edges_from(
+            [("A", "B"), ("B", "A"), ("A", "C"), ("C", "A"), ("D", "C")],
+            expected_G.circle_edge_name,
+        )
+        expected_G.add_edges_from([("B", "D"), ("C", "D")], expected_G.directed_edge_name)
+
+        assert G.edges() == expected_G.edges()
+
     def test_fci_rule10(self):
         # If A o-> C and u -> C <- v and:
         # - there is an uncovered pd path from A to u, p1
@@ -652,13 +670,94 @@ class Test_FCI:
 
         assert set(pag.edges()) == set(expected_pag.edges())
 
+    def test_fci_fig6(self):
+        """
+        Based on Figure 6 from :footcite:`Zhang2008`
+
+        """
+
+        import pywhy_graphs
+
+        # Pretend this is a MAG - refactor if MAGs are developed
+        # logging.getLogger().setLevel(logging.DEBUG)
+        G = ADMG()
+        G.add_edge("A", "C", G.directed_edge_name)
+        G.add_edge("A", "B", G.bidirected_edge_name)
+        G.add_edge("B", "D", G.directed_edge_name)
+        G.add_edge("C", "D", G.directed_edge_name)
+        assert pywhy_graphs.networkx.m_separated(G, {"A"}, {"D"}, {"B", "C"})
+
+        sample = dummy_sample(G)
+        context = make_context().variables(data=sample).build()
+        oracle = Oracle(G)
+        ci_estimator = oracle
+        fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=False)
+
+        # Manually implement FCI fit
+        fci.context_ = make_context(context).build()
+        graph = fci.context_.init_graph
+        fci.init_graph_ = graph
+        fci.fixed_edges_ = fci.context_.included_edges
+
+        # create a reference to the underlying data to be used
+        fci.X_ = sample
+
+        # initialize graph object to apply learning
+        fci.separating_sets_ = fci._initialize_sep_sets(fci.init_graph_)
+
+        # learn skeleton graph and the separating sets per variable
+        graph, fci.separating_sets_ = fci.learn_skeleton(fci.X_, fci.context_, fci.separating_sets_)
+
+        # convert networkx.Graph to relevant causal graph object
+        graph = fci.convert_skeleton_graph(graph)
+
+        expected_graph = PAG()
+        expected_graph.add_edges_from(
+            [
+                ("A", "B"),
+                ("B", "A"),
+                ("C", "D"),
+                ("D", "C"),
+                ("A", "C"),
+                ("C", "A"),
+                ("B", "D"),
+                ("D", "B"),
+            ],
+            expected_graph.circle_edge_name,
+        )
+
+        assert graph.edges() == expected_graph.edges()
+        # fci.fit(sample, context)
+        print(fci.separating_sets_["A"])
+        print(fci.separating_sets_["B"])
+
+        fci.orient_unshielded_triples(graph, fci.separating_sets_)
+        print(graph.edges())
+
+        fci.orient_edges(graph)
+        print(graph.edges())
+        fci.fit(sample, context)
+
+        pag = fci.graph_
+
+        expected_G = PAG()
+        expected_G.add_edge("A", "B", expected_G.circle_edge_name)
+        expected_G.add_edge("B", "A", expected_G.circle_edge_name)
+        expected_G.add_edge("C", "A", expected_G.circle_edge_name)
+        expected_G.add_edge("A", "C", expected_G.circle_edge_name)
+        expected_G.add_edge("B", "D", expected_G.directed_edge_name)
+        expected_G.add_edge("C", "D", expected_G.directed_edge_name)
+
+        assert pag.nodes() == expected_G.nodes()
+        assert pag.edges() == expected_G.edges()
+
     def test_fci_selection_bias(self):
         """
         Based on Figure 1 from :footcite:`Zhang2008`, with extra edge R -> D
 
         The DAG (over observed and selected variables) is A -> Ef <-> R -> D, Ef -> Sel, where Sel is a selection variable.
 
-        The MAG is A - Ef <-> R -> D.
+        The MAG is A - Ef -> R -> D.
 
         The PAG is A o-o Ef o-o R o-o D.
 
@@ -667,11 +766,14 @@ class Test_FCI:
         .. footbibliography::
 
         """
+
+        # Pretend we have a MAG - refactor if in future MAGs are implemented
         G = PAG()
         G.add_edge("A", "Ef", G.undirected_edge_name)
-        G.add_edge("Ef", "R", G.bidirected_edge_name)
+        G.add_edge("Ef", "R", G.directed_edge_name)
         G.add_edge("R", "D", G.directed_edge_name)
-        # G.add_edge("A", "D", G.directed_edge_name)
+        G._edge_graphs.pop("circle")
+
         sample = dummy_sample(G)
         context = make_context().variables(data=sample).build()
         oracle = Oracle(G)

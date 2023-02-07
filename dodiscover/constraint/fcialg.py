@@ -606,19 +606,17 @@ class FCI(BaseConstraintDiscovery):
             graph.has_edge(c, a, graph.circle_edge_name)
             and graph.has_edge(a, c, graph.directed_edge_name)
         ) and c not in graph.neighbors(u):
-            # check that <a, u> is potentially directed
-            if graph.has_edge(a, u, graph.directed_edge_name):
-                # check that A - u - v, ..., c is an uncovered pd path
-                uncov_path, path_exists = pgraph.uncovered_pd_path(
-                    graph, u, c, max_path_length=self.max_path_length, first_node=a
-                )
+            # check that A - u - v, ..., c is an uncovered pd path
+            uncov_path, path_exists = pgraph.uncovered_pd_path(
+                graph, u, c, max_path_length=self.max_path_length, first_node=a
+            )
 
-                # orient A o-> C to A -> C
-                if path_exists:
-                    logger.info(f"Rule 9: Orienting edge {a} o-> {c} to {a} -> {c}.")
-                    if graph.has_edge(c, a, graph.circle_edge_name):
-                        graph.remove_edge(c, a, graph.circle_edge_name)
-                        added_arrows = True
+            # orient A o-> C to A -> C
+            if path_exists:
+                logger.info(f"Rule 9: Orienting edge {a} o-> {c} to {a} -> {c}.")
+                if graph.has_edge(c, a, graph.circle_edge_name):
+                    graph.remove_edge(c, a, graph.circle_edge_name)
+                    added_arrows = True
 
         return added_arrows, uncov_path
 
@@ -762,13 +760,17 @@ class FCI(BaseConstraintDiscovery):
                         r6_add = False
                         r7_add = False
 
-                    # apply R8 to orient more tails
+                    r8_add = False
+                    r9_add = False
+                    r10_add = False
+
+                    ## apply R8 to orient more tails
                     r8_add = self._apply_rule8(graph, u, a, c)
 
-                    # apply R9-10 to orient uncovered potentially directed paths
+                    ## apply R9-10 to orient uncovered potentially directed paths
                     r9_add, _ = self._apply_rule9(graph, u, a, c)
 
-                    # a and c are neighbors of u, so u is the endpoint desired
+                    ## a and c are neighbors of u, so u is the endpoint desired
                     r10_add, _, _ = self._apply_rule10(graph, a, c, u)
 
                     # see if there was a change flag
