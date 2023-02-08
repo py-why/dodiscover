@@ -400,6 +400,15 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.add_edge">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EquivalenceClass.add_edge()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#dodiscover.EquivalenceClass.add_node">
      <code class="docutils literal notranslate">
       <span class="pre">
@@ -613,44 +622,53 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.add_node" title="dodiscover.EquivalenceClass.add_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code></a>(node_for_adding, **attr)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.add_edge" title="dodiscover.EquivalenceClass.add_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_edge</span></code></a>(u, v, edge_type)</p></td>
+<td><p>Add an edge to the graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.add_node" title="dodiscover.EquivalenceClass.add_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code></a>(node_for_adding, **attr)</p></td>
 <td><p>Add a node to the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.edges" title="dodiscover.EquivalenceClass.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>([data])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.edges" title="dodiscover.EquivalenceClass.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>([data])</p></td>
 <td><p>Return an iterable over edge tuples in graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.has_edge" title="dodiscover.EquivalenceClass.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v, edge_type)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.has_edge" title="dodiscover.EquivalenceClass.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v, edge_type)</p></td>
 <td><p>Check if graph has an edge for a specific edge type.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple" title="dodiscover.EquivalenceClass.mark_unfaithful_triple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mark_unfaithful_triple</span></code></a>(v_i, u, v_j)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple" title="dodiscover.EquivalenceClass.mark_unfaithful_triple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mark_unfaithful_triple</span></code></a>(v_i, u, v_j)</p></td>
 <td><p>Mark a triple as unfaithful, and put it in the excluded triple set.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.neighbors" title="dodiscover.EquivalenceClass.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.neighbors" title="dodiscover.EquivalenceClass.neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code></a>(node)</p></td>
 <td><p>Iterate over all nodes that have any edge connection with 'node'.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.orient_uncertain_edge" title="dodiscover.EquivalenceClass.orient_uncertain_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orient_uncertain_edge</span></code></a>(u, v)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.orient_uncertain_edge" title="dodiscover.EquivalenceClass.orient_uncertain_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orient_uncertain_edge</span></code></a>(u, v)</p></td>
 <td><p>Orients an uncertain edge in the equivalence class to directed <code class="docutils literal notranslate"><span class="pre">'u'*-&gt;'v'</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.predecessors" title="dodiscover.EquivalenceClass.predecessors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predecessors</span></code></a>(node)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.predecessors" title="dodiscover.EquivalenceClass.predecessors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predecessors</span></code></a>(node)</p></td>
 <td><p>Nodes with directed edges pointing to 'node'.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_edge" title="dodiscover.EquivalenceClass.remove_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edge</span></code></a>(u, v, edge_type)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_edge" title="dodiscover.EquivalenceClass.remove_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edge</span></code></a>(u, v, edge_type)</p></td>
 <td><p>Remove an edge from the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_edges_from" title="dodiscover.EquivalenceClass.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_edges_from" title="dodiscover.EquivalenceClass.remove_edges_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code></a>(edges)</p></td>
 <td><p>Remove a set of edges from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_node" title="dodiscover.EquivalenceClass.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.remove_node" title="dodiscover.EquivalenceClass.remove_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code></a>(u)</p></td>
 <td><p>Remove a node from the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.successors" title="dodiscover.EquivalenceClass.successors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">successors</span></code></a>(node)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.successors" title="dodiscover.EquivalenceClass.successors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">successors</span></code></a>(node)</p></td>
 <td><p>Nodes with directed edges pointing from 'node'.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.to_undirected" title="dodiscover.EquivalenceClass.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.EquivalenceClass.to_undirected" title="dodiscover.EquivalenceClass.to_undirected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code></a>()</p></td>
 <td><p>Convert a graph to a fully undirected networkx graph.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.EquivalenceClass.add_edge">
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>Add an edge to the graph.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.add_node">
 <span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_node" title="Permalink to this definition">#</a></dt>
