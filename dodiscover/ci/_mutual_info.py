@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 import scipy.stats
 from scipy.special import digamma
 
@@ -33,21 +33,25 @@ def _estimate_entropy_c(x, y=None, n_nbrs=3, base=None, axis=0, random_state=Non
     n_samples, n_dims = x.shape
 
     # add noise along each dimension to prevent ties
-    x = x + rng.random(size=(n_samples, n_dims)) * 1.e-8
-    
+    x = x + rng.random(size=(n_samples, n_dims)) * 1.0e-8
+
     if base is None:
         base = 2
 
     if y is not None:
         # repeat the analysis but with the joint and marginal
-        xy = np.hstack((x,y))
-        ent_xy = _estimate_entropy_c(xy, n_nbrs=n_nbrs, base=base, axis=axis, random_state=random_state)
-        ent_y = _estimate_entropy_c(y, n_nbrs=n_nbrs, base=base, axis=axis, random_state=random_state)
+        xy = np.hstack((x, y))
+        ent_xy = _estimate_entropy_c(
+            xy, n_nbrs=n_nbrs, base=base, axis=axis, random_state=random_state
+        )
+        ent_y = _estimate_entropy_c(
+            y, n_nbrs=n_nbrs, base=base, axis=axis, random_state=random_state
+        )
         ent = ent_xy - ent_y
     else:
         # then build a tree
         nn_tree = scipy.stats.cKDTree(x)
-        nn = [nn_tree.query(x_point, n_nbrs+1, p='inf')[0][n_nbrs] for x_point in x]
+        nn = [nn_tree.query(x_point, n_nbrs + 1, p="inf")[0][n_nbrs] for x_point in x]
 
         const = digamma(n_samples) - digamma(n_nbrs) + n_dims * np.log(2)
         ent = (const + n_dims * np.log(nn).mean()) / np.log(base)

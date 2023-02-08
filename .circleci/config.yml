@@ -150,12 +150,12 @@ jobs:
       - run:
           name: make linkcheck
           command: |
-            make -C doc linkcheck
+            poetry run make -C doc linkcheck
       - run:
           name: make linkcheck-grep
           when: always
           command: |
-            make -C doc linkcheck-grep
+            poetry run make -C doc linkcheck-grep
       - store_artifacts:
           path: doc/_build/linkcheck
           destination: linkcheck

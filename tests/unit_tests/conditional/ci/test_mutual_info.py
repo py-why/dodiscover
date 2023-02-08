@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def multivariate_gaussian():
     """Multivariate gaussian data for testing MI/CMI estimators.
 
@@ -11,7 +12,7 @@ def multivariate_gaussian():
 
 def nonlinear_gaussian_with_additive_noise():
     """Nonlinear no-noise function with additive Gaussian noise.
-    
+
     See: https://github.com/BiuBiuBiLL/NPEET_LNC/issues/4
     """
     # first simulate multivariate Gaussian without noise
@@ -22,6 +23,7 @@ def nonlinear_gaussian_with_additive_noise():
     # H(Y|X) = log(noise_std)
     # H(X) = kNN K-L estimate with large # of samples
     pass
+
 
 def main():
     d1 = [1, 1, 0]
@@ -35,7 +37,6 @@ def main():
     print("covariance matrix")
     print(cov)
     print(tmat)
-
 
 
 def test_mi():

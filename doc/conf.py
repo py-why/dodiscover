@@ -294,3 +294,15 @@ nitpick_ignore = [
     ("py:class", "numpy._typing._array_like._SupportsArray"),
     ("py:class", "numpy._typing._nested_sequence._NestedSequence"),
 ]
+
+
+# -- Other extension configuration -------------------------------------------
+
+linkcheck_request_headers = dict(
+    user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+)  # noqa: E501
+linkcheck_anchors = False  # saves a bit of time
+linkcheck_timeout = 15  # some can be quite slow
+linkcheck_ignore = [
+    "https://github.com/{group}/{project}/pull/",  # sphinx-issues will render this properly
+]

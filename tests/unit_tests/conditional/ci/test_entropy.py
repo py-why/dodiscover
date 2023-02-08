@@ -1,5 +1,3 @@
-
-
 def test_entropy():
     pass
 
