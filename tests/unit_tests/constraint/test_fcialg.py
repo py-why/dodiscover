@@ -683,8 +683,6 @@ class Test_FCI:
 
         import pywhy_graphs
 
-        logging.getLogger().setLevel(logging.DEBUG)
-
         # Pretend this is a MAG - refactor if MAGs are developed
         G = ADMG()
         G.add_edge("A", "C", G.directed_edge_name)
