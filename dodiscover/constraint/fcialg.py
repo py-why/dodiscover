@@ -95,7 +95,7 @@ class FCI(BaseConstraintDiscovery):
         apply_orientations: bool = True,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
-        selection_bias: bool = False,
+        selection_bias: bool = True,
         pds_skeleton_method: SkeletonMethods = SkeletonMethods.PDS,
         **ci_estimator_kwargs,
     ):
@@ -742,6 +742,7 @@ class FCI(BaseConstraintDiscovery):
 
             for u in graph.nodes:
                 for (a, c) in permutations(graph.neighbors(u), 2):
+                    logger.debug(f"Check {u} {a} {c}")
                     # apply R1-3 to orient triples and arrowheads
                     r1_add = self._apply_rule1(graph, u, a, c)
                     r2_add = self._apply_rule2(graph, u, a, c)
@@ -760,41 +761,30 @@ class FCI(BaseConstraintDiscovery):
                         r6_add = False
                         r7_add = False
 
-                    r8_add = False
-                    r9_add = False
-                    r10_add = False
-
-                    ## apply R8 to orient more tails
+                    # apply R8 to orient more tails
                     r8_add = self._apply_rule8(graph, u, a, c)
 
-                    ## apply R9-10 to orient uncovered potentially directed paths
-                    r9_add, _ = self._apply_rule9(graph, u, a, c)
+                    # apply R9-10 to orient uncovered potentially directed paths
+                    r9_add, _ = self._apply_rule9(graph, a, u, c)
 
-                    ## a and c are neighbors of u, so u is the endpoint desired
+                    # a and c are neighbors of u, so u is the endpoint desired
                     r10_add, _, _ = self._apply_rule10(graph, a, c, u)
 
                     # see if there was a change flag
-                    if (
-                        any(
-                            [
-                                r1_add,
-                                r2_add,
-                                r3_add,
-                                r4_add,
-                                r5_add,
-                                r6_add,
-                                r7_add,
-                                r8_add,
-                                r9_add,
-                                r10_add,
-                            ]
-                        )
-                        and not change_flag
-                    ):
-                        logger.info(
-                            f"{change_flag} with "
-                            f"{[r1_add, r2_add, r3_add, r4_add, r5_add, r6_add, r7_add, r8_add, r9_add, r10_add]}"
-                        )
+                    all_flags = [
+                        r1_add,
+                        r2_add,
+                        r3_add,
+                        r4_add,
+                        r5_add,
+                        r6_add,
+                        r7_add,
+                        r8_add,
+                        r9_add,
+                        r10_add,
+                    ]
+                    if any(all_flags) and not change_flag:
+                        logger.info(f"{change_flag} with " f"{all_flags}")
                         change_flag = True
 
             # check if we should continue or not

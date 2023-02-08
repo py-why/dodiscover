@@ -316,7 +316,8 @@ class Test_FCI:
         assert G.has_edge("u", "c", G.directed_edge_name)
 
     def test_fci_rule5(self):
-        # Let A o-o B, and uncovered circle path A o-o G o-o M o-o T o-o B where A, T are not adjacent, and B, G are not adjacent. Then A - G - M - T - B - A.
+        # Let A o-o B, and uncovered circle path A o-o G o-o M o-o T o-o B where A, T are
+        # not adjacent, and B, G are not adjacent. Then A - G - M - T - B - A.
         G = PAG()
         circled_edges = [("A", "G"), ("G", "M"), ("M", "T"), ("T", "B"), ("A", "B")]
         for a, b in circled_edges:
@@ -473,6 +474,10 @@ class Test_FCI:
             expected_G.circle_edge_name,
         )
         expected_G.add_edges_from([("B", "D"), ("C", "D")], expected_G.directed_edge_name)
+
+        assert G.edges() == expected_G.edges()
+        self.alg._apply_rule9(G, "A", "C", "D")
+        expected_G.remove_edge("D", "C", expected_G.circle_edge_name)
 
         assert G.edges() == expected_G.edges()
 
@@ -678,8 +683,9 @@ class Test_FCI:
 
         import pywhy_graphs
 
+        logging.getLogger().setLevel(logging.DEBUG)
+
         # Pretend this is a MAG - refactor if MAGs are developed
-        # logging.getLogger().setLevel(logging.DEBUG)
         G = ADMG()
         G.add_edge("A", "C", G.directed_edge_name)
         G.add_edge("A", "B", G.bidirected_edge_name)
@@ -692,52 +698,7 @@ class Test_FCI:
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=False)
-
-        # Manually implement FCI fit
-        fci.context_ = make_context(context).build()
-        graph = fci.context_.init_graph
-        fci.init_graph_ = graph
-        fci.fixed_edges_ = fci.context_.included_edges
-
-        # create a reference to the underlying data to be used
-        fci.X_ = sample
-
-        # initialize graph object to apply learning
-        fci.separating_sets_ = fci._initialize_sep_sets(fci.init_graph_)
-
-        # learn skeleton graph and the separating sets per variable
-        graph, fci.separating_sets_ = fci.learn_skeleton(fci.X_, fci.context_, fci.separating_sets_)
-
-        # convert networkx.Graph to relevant causal graph object
-        graph = fci.convert_skeleton_graph(graph)
-
-        expected_graph = PAG()
-        expected_graph.add_edges_from(
-            [
-                ("A", "B"),
-                ("B", "A"),
-                ("C", "D"),
-                ("D", "C"),
-                ("A", "C"),
-                ("C", "A"),
-                ("B", "D"),
-                ("D", "B"),
-            ],
-            expected_graph.circle_edge_name,
-        )
-
-        assert graph.edges() == expected_graph.edges()
-        # fci.fit(sample, context)
-        print(fci.separating_sets_["A"])
-        print(fci.separating_sets_["B"])
-
-        fci.orient_unshielded_triples(graph, fci.separating_sets_)
-        print(graph.edges())
-
-        fci.orient_edges(graph)
-        print(graph.edges())
         fci.fit(sample, context)
-
         pag = fci.graph_
 
         expected_G = PAG()
@@ -755,7 +716,8 @@ class Test_FCI:
         """
         Based on Figure 1 from :footcite:`Zhang2008`, with extra edge R -> D
 
-        The DAG (over observed and selected variables) is A -> Ef <-> R -> D, Ef -> Sel, where Sel is a selection variable.
+        The DAG (over observed and selected variables) is
+        A -> Ef <-> R -> D, Ef -> Sel, where Sel is a selection variable.
 
         The MAG is A - Ef -> R -> D.
 
