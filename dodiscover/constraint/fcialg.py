@@ -405,7 +405,7 @@ class FCI(BaseConstraintDiscovery):
         circle path p = <A, B, ..., D, U> such that A, D are not adjacent and U, B are
         not adjacent, then orient A o-o U and every edge on p as undirected.
 
-        Note that unlike the other rules, R5 is a binary operator.
+        Note that unlike the other rules, R5 is a binary operator and operates on two nodes, rather than a triplet.
 
         Parameters
         ----------
