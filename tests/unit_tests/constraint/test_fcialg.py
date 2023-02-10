@@ -102,6 +102,12 @@ class Test_FCI:
         assert not G.has_edge("C", "u", G.directed_edge_name)
         assert G.has_edge("u", "A", G.circle_edge_name)
 
+        # check that no orientation happens if A, C are adjacent
+        G = G_copy.copy()
+        G.add_edge("A", "C", G.directed_edge_name)
+        added_arrows = self.alg._apply_rule1(G, "u", "A", "C")
+        assert not added_arrows
+
     def test_fci_rule2(self):
         # If A -> u *-> C, or A *-> u -> C, and A *-o C, then
         # orient A *-> C.
@@ -309,6 +315,79 @@ class Test_FCI:
         assert not G.has_edge("c", "u", G.directed_edge_name)
         assert G.has_edge("u", "c", G.directed_edge_name)
 
+    def test_fci_rule5(self):
+        # Let A o-o B, and uncovered circle path A o-o G o-o M o-o T o-o B where A, T are
+        # not adjacent, and B, G are not adjacent. Then A - G - M - T - B - A.
+        G = PAG()
+        circled_edges = [("A", "G"), ("G", "M"), ("M", "T"), ("T", "B"), ("A", "B")]
+        for a, b in circled_edges:
+            G.add_edge(a, b, G.circle_edge_name)
+            G.add_edge(b, a, G.circle_edge_name)
+
+        added_tails = self.alg._apply_rule5(G, "B", "A")
+
+        assert added_tails
+        for a, b in circled_edges:
+            assert G.has_edge(a, b, G.undirected_edge_name)
+            assert not G.has_edge(a, b, G.circle_edge_name)
+            assert not G.has_edge(b, a, G.circle_edge_name)
+
+    def test_fci_rule6(self):
+        # If A - B o-* C then A - B -* C
+
+        # Check for directed edge: if A - B o-> C then A - B -> C
+        G = PAG()
+        G.add_edge("A", "B", G.undirected_edge_name)
+        G.add_edge("C", "B", G.circle_edge_name)
+        G.add_edge("B", "C", G.directed_edge_name)
+
+        added_tails = self.alg._apply_rule6(G, "B", "A", "C")
+
+        assert G.has_edge("B", "C", G.directed_edge_name)
+        assert not G.has_edge("C", "B", G.circle_edge_name)
+        # Check for birected edge: if A - B o- C then A - B - C
+        G = PAG()
+        G.add_edge("A", "B", G.undirected_edge_name)
+        G.add_edge("C", "B", G.circle_edge_name)
+
+        added_tails = self.alg._apply_rule6(G, "B", "A", "C")
+        assert added_tails
+
+        assert G.has_edge("B", "C", G.undirected_edge_name)
+        assert not G.has_edge("C", "B", G.circle_edge_name)
+
+        # Check for birected edge: if A - B o-o C then A - B -o C
+        G = PAG()
+        G.add_edge("A", "B", G.undirected_edge_name)
+        G.add_edge("C", "B", G.circle_edge_name)
+        G.add_edge("B", "C", G.circle_edge_name)
+
+        added_tails = self.alg._apply_rule6(G, "B", "A", "C")
+
+        assert added_tails
+        assert G.has_edge("B", "C", G.circle_edge_name)
+        assert not G.has_edge("C", "B", G.circle_edge_name)
+
+    def test_fci_rule7(self):
+        # Check for directed edge: if A -o B o-> C then A -o B -> C
+        G = PAG()
+        G.add_edge("A", "U", G.circle_edge_name)
+        G.add_edge("U", "C", G.directed_edge_name)
+        G.add_edge("C", "U", G.circle_edge_name)
+        G_copy = G.copy()
+
+        added_tails = self.alg._apply_rule7(G, "U", "A", "C")
+
+        assert added_tails
+        assert not G.has_edge("C", "U", G.circle_edge_name)
+
+        # Check for directed edge: if A -o B o-> C but A -> C then nothing happens
+        G = G_copy.copy()
+        G.add_edge("A", "C", G.directed_edge_name)
+        added_tails = self.alg._apply_rule7(G, "U", "A", "C")
+        assert not added_tails
+        assert G.has_edge("C", "U", G.circle_edge_name)
+
     def test_fci_rule8_without_selection_bias(self):
         # If A -> u -> C and A o-> C
         # orient A o-> C as A -> C
@@ -316,6 +395,20 @@ class Test_FCI:
 
         # create a chain for A, u, C
         G.add_edges_from([("A", "u"), ("u", "C")], G.directed_edge_name)
+        G.add_edge("A", "C", G.directed_edge_name)
+        G.add_edge("C", "A", G.circle_edge_name)
+        self.alg._apply_rule8(G, "u", "A", "C")
+
+        assert G.has_edge("A", "C", G.directed_edge_name)
+        assert not G.has_edge("C", "A", G.circle_edge_name)
+
+    def test_fci_rule8_with_selection_bias(self):
+        # If A -o u -> C and A o-> C then orient A o-> C as A -> C
+        G = PAG()
+
+        # create a chain for A, u, C
+        G.add_edge("u", "C", G.directed_edge_name)
+        G.add_edge("A", "u", G.circle_edge_name)
         G.add_edge("A", "C", G.directed_edge_name)
         G.add_edge("C", "A", G.circle_edge_name)
         self.alg._apply_rule8(G, "u", "A", "C")
@@ -365,6 +458,28 @@ class Test_FCI:
         assert added_arrows
         assert uncov_pd_path == ["A", "u", "x", "y", "z", "C"]
         assert not G.has_edge("C", "A", G.circle_edge_name)
+
+        # test fig 6 Zhang 2008
+        G = PAG()
+        G.add_edges_from(
+            [("A", "B"), ("B", "A"), ("A", "C"), ("C", "A"), ("D", "B"), ("D", "C")],
+            G.circle_edge_name,
+        )
+        G.add_edges_from([("B", "D"), ("C", "D")], G.directed_edge_name)
+        self.alg._apply_rule9(G, "A", "B", "D")
+
+        expected_G = PAG()
+        expected_G.add_edges_from(
+            [("A", "B"), ("B", "A"), ("A", "C"), ("C", "A"), ("D", "C")],
+            expected_G.circle_edge_name,
+        )
+        expected_G.add_edges_from([("B", "D"), ("C", "D")], expected_G.directed_edge_name)
+
+        assert G.edges() == expected_G.edges()
+        self.alg._apply_rule9(G, "A", "C", "D")
+        expected_G.remove_edge("D", "C", expected_G.circle_edge_name)
+
+        assert G.edges() == expected_G.edges()
 
     def test_fci_rule10(self):
         # If A o-> C and u -> C <- v and:
@@ -559,3 +674,80 @@ class Test_FCI:
         expected_pag.add_edge("x4", "x5", expected_pag.bidirected_edge_name)
 
         assert set(pag.edges()) == set(expected_pag.edges())
+
+    def test_fci_fig6(self):
+        """
+        Based on Figure 6 from :footcite:`Zhang2008`
+
+        """
+
+        import pywhy_graphs
+
+        # Pretend this is a MAG - refactor if MAGs are developed
+        G = ADMG()
+        G.add_edge("A", "C", G.directed_edge_name)
+        G.add_edge("A", "B", G.bidirected_edge_name)
+        G.add_edge("B", "D", G.directed_edge_name)
+        G.add_edge("C", "D", G.directed_edge_name)
+        assert pywhy_graphs.networkx.m_separated(G, {"A"}, {"D"}, {"B", "C"})
+
+        sample = dummy_sample(G)
+        context = make_context().variables(data=sample).build()
+        oracle = Oracle(G)
+        ci_estimator = oracle
+        fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=False)
+        fci.fit(sample, context)
+        pag = fci.graph_
+
+        expected_G = PAG()
+        expected_G.add_edge("A", "B", expected_G.circle_edge_name)
+        expected_G.add_edge("B", "A", expected_G.circle_edge_name)
+        expected_G.add_edge("C", "A", expected_G.circle_edge_name)
+        expected_G.add_edge("A", "C", expected_G.circle_edge_name)
+        expected_G.add_edge("B", "D", expected_G.directed_edge_name)
+        expected_G.add_edge("C", "D", expected_G.directed_edge_name)
+
+        assert pag.nodes() == expected_G.nodes()
+        assert pag.edges() == expected_G.edges()
+
+    def test_fci_selection_bias(self):
+        """
+        Based on Figure 1 from :footcite:`Zhang2008`, with extra edge R <- D
+
+        The DAG (over observed and selected variables) is
+        A -> Ef <-> R <- D, Ef -> Sel, where Sel is a selection variable.
+
+        The MAG is A - Ef -> R <- D.
+
+        The PAG is A o-o Ef o-o R o-o D.
+
+        References
+        ----------
+        .. footbibliography::
+
+        """
+
+        # Pretend we have a MAG - refactor if in future MAGs are implemented
+        G = PAG()
+        G.add_edge("A", "Ef", G.undirected_edge_name)
+        G.add_edge("Ef", "R", G.directed_edge_name)
+        G.add_edge("D", "R", G.directed_edge_name)
+        G._edge_graphs.pop("circle")
+
+        sample = dummy_sample(G)
+        context = make_context().variables(data=sample).build()
+        oracle = Oracle(G)
+        ci_estimator = oracle
+        fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=True)
+        fci.fit(sample, context)
+        pag = fci.graph_
+
+        expected_pag = PAG()
+        expected_pag.add_edge("A", "Ef", expected_pag.circle_edge_name)
+        expected_pag.add_edge("Ef", "A", expected_pag.circle_edge_name)
+        expected_pag.add_edge("Ef", "R", expected_pag.directed_edge_name)
+        expected_pag.add_edge("R", "Ef", expected_pag.circle_edge_name)
+        expected_pag.add_edge("R", "D", expected_pag.circle_edge_name)
+        expected_pag.add_edge("D", "R", expected_pag.directed_edge_name)
+        assert pag.nodes() == expected_pag.nodes()
+        assert pag.edges() == expected_pag.edges()

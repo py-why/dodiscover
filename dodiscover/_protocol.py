@@ -31,6 +31,10 @@ class Graph(Protocol):
         """Remove a set of edges from the graph."""
         pass
 
+    def add_edge(self, u, v, edge_type) -> None:
+        """Add an edge to the graph."""
+        pass
+
     def remove_edge(self, u, v, edge_type) -> None:
         """Remove an edge from the graph."""
         pass
