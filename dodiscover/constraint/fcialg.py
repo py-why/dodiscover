@@ -801,33 +801,6 @@ class FCI(BaseConstraintDiscovery):
     def learn_skeleton(
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
-        import pywhy_graphs
-
-        from dodiscover import make_context
-
-        # initially learn the skeleton
-        skel_graph, sep_set = super().learn_skeleton(data, context, sep_set)
-
-        # convert the undirected skeleton graph to a PAG, where
-        # all left-over edges have a "circle" endpoint
-        pag = pywhy_graphs.PAG(incoming_circle_edges=skel_graph, name="PAG derived with FCI")
-
-        # orient colliders
-        self.orient_unshielded_triples(pag, sep_set)
-
-        # convert the adjacency graph
-        new_init_graph = pag.to_undirected()
-
-        # Update the Context:
-        # add the corresponding intermediate PAG now to the context
-        # new initialization graph
-        for (_, _, d) in new_init_graph.edges(data=True):
-            if "test_stat" in d:
-                d.pop("test_stat")
-            if "pvalue" in d:
-                d.pop("pvalue")
-        context = make_context(context).graph(new_init_graph).state_variable("PAG", pag).build()
-
         # # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(
             self.ci_estimator,
@@ -836,7 +809,8 @@ class FCI(BaseConstraintDiscovery):
             min_cond_set_size=self.min_cond_set_size,
             max_cond_set_size=self.max_cond_set_size,
             max_combinations=self.max_combinations,
-            skeleton_method=self.pds_skeleton_method,
+            skeleton_method=self.skeleton_method,
+            second_stage_skeleton_method=self.pds_skeleton_method,
             keep_sorted=False,
             max_path_length=self.max_path_length,
             **self.ci_estimator_kwargs,
@@ -849,7 +823,7 @@ class FCI(BaseConstraintDiscovery):
         return skel_graph, sep_set
 
     def fit(self, data: pd.DataFrame, context: Context) -> None:
-        return super().fit(data, context)
+        super().fit(data, context)
 
     def orient_edges(self, graph: EquivalenceClass):
         # orient colliders again

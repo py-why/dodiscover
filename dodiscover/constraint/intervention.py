@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
@@ -112,8 +112,40 @@ class PsiFCI(FCI):
     ) -> Tuple[nx.Graph, SeparatingSet]:
         return super().learn_skeleton(data, context, sep_set)
 
-    def fit(self, data: pd.DataFrame, context: Context) -> None:
-        return super().fit(data, context)
+    def fit(self, data: List[pd.DataFrame], context: Context):
+        """Learn the relevant causal graph equivalence class.
+
+        From the pairs of datasets, we take all combinations and
+        construct F-nodes corresponding to those.
+
+        Parameters
+        ----------
+        data : List[pd.DataFrame]
+            The list of different datasets assigned to different
+            environments. We assume the first dataset is always
+            observational.
+        context : Context
+            _description_
+
+        Returns
+        -------
+        _type_
+            _description_
+        """
+        if not isinstance(data, list):
+            raise RuntimeError("The input datasets must be in a Python list.")
+
+        n_datasets = len(data)
+        intervention_targets = context.intervention_targets
+
+        if n_datasets - 1 != len(intervention_targets):
+            raise RuntimeError(
+                f"There are {n_datasets} passed in, but {len(intervention_targets)} "
+                f"intervention targets. There must be a matching (number of datasets - 1) and "
+                f"intervention targets."
+            )
+
+        super().fit(data, context)
 
     def orient_edges(self, graph: EquivalenceClass):
         return super().orient_edges(graph)

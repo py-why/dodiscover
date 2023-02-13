@@ -1,4 +1,4 @@
-from typing import Set, Tuple
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
@@ -42,10 +42,10 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         self,
         metric: str = "rbf",
         distance_metric: str = "euclidean",
-        kwidth: float = None,
+        kwidth: Optional[float] = None,
         null_reps: int = 1000,
-        n_jobs: int = None,
-        random_state: int = None,
+        n_jobs: Optional[int] = None,
+        random_state: Optional[int] = None,
     ) -> None:
         self.metric = metric
         self.distance_metric = distance_metric
@@ -125,7 +125,7 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         return conditional_div
 
     def compute_null(
-        self, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state: int = None
+        self, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state: Optional[int] = None
     ):
         rng = np.random.default_rng(random_state)
 

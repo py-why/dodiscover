@@ -99,6 +99,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             Set of Y variables.
         group_col : Column
             The column denoting, which group (i.e. environment) each sample belongs to.
+            This is typically the F-node.
 
         Returns
         -------

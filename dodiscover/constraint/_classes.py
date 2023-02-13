@@ -153,15 +153,12 @@ class BaseConstraintDiscovery:
         constructor.
         """
         self.context_ = make_context(context).build()
-        graph = self.context_.init_graph
-        self.init_graph_ = graph
-        self.fixed_edges_ = self.context_.included_edges
 
         # create a reference to the underlying data to be used
         self.X_ = data
 
         # initialize graph object to apply learning
-        self.separating_sets_ = self._initialize_sep_sets(self.init_graph_)
+        self.separating_sets_ = self._initialize_sep_sets(self.context_.init_graph)
 
         # learn skeleton graph and the separating sets per variable
         graph, self.separating_sets_ = self.learn_skeleton(

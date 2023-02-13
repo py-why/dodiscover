@@ -21,11 +21,11 @@ class KernelCITest(BaseConditionalIndependenceTest):
         kernel_z: str = "rbf",
         null_size: int = 1000,
         approx_with_gamma: bool = True,
-        kwidth_x: float = None,
-        kwidth_y: float = None,
-        kwidth_z: float = None,
+        kwidth_x: Optional[float] = None,
+        kwidth_y: Optional[float] = None,
+        kwidth_z: Optional[float] = None,
         threshold: float = 1e-5,
-        n_jobs: int = None,
+        n_jobs: Optional[int] = None,
     ):
         """Kernel (Conditional) Independence Test.
 

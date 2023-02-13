@@ -1,30 +1,54 @@
-from copy import copy, deepcopy
-from typing import Any, Dict, Optional, Set, Tuple, cast
+import types
+from copy import copy
+from itertools import combinations
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, cast
 
 import networkx as nx
+import numpy as np
 import pandas as pd
 
 from ._protocol import Graph
 from .context import Context
 from .typing import Column, NetworkxGraph
 
+CALLABLES = types.FunctionType, types.MethodType
+
 
 class ContextBuilder:
-    """A builder class for creating Context objects ergonomically.
+    """A builder class for creating observational data Context objects ergonomically.
+
+    The ContextBuilder is meant solely to build Context objects that work
+    with observational datasets.
 
     The context builder provides a way to capture assumptions, domain knowledge,
     and data. This should NOT be instantiated directly. One should instead use
     `dodiscover.make_context` to build a Context data structure.
     """
 
-    _graph: Optional[Graph] = None
+    _init_graph: Optional[Graph] = None
     _included_edges: Optional[NetworkxGraph] = None
     _excluded_edges: Optional[NetworkxGraph] = None
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
     _state_variables: Dict[str, Any] = dict()
 
-    def graph(self, graph: Graph) -> "ContextBuilder":
+    def __init__(self) -> None:
+        # perform an error-check on subclass definitions of ContextBuilder
+        for attribute, value in self.__class__.__dict__.items():
+            if isinstance(value, CALLABLES) or isinstance(value, property):
+                continue
+            if attribute.startswith("__"):
+                continue
+
+            if not hasattr(self, attribute[1:]):
+                raise RuntimeError(
+                    f"Context objects has class attributes that do not have "
+                    f"a matching class method to set the attribute, {attribute}. "
+                    f"The form of the attribute must be '_<name>' and a "
+                    f"corresponding function name '<name>'."
+                )
+
+    def init_graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
 
         Parameters
@@ -37,7 +61,47 @@ class ContextBuilder:
         self : ContextBuilder
             The builder instance
         """
-        self._graph = graph
+        self._init_graph = graph
+        return self
+
+    def excluded_edges(self, exclude: Optional[NetworkxGraph]) -> "ContextBuilder":
+        """Set exclusion edge constraints to apply in discovery.
+
+        Parameters
+        ----------
+        excluded : Optional[NetworkxGraph]
+            Edges that should be excluded in the resultant graph
+
+        Returns
+        -------
+        self : ContextBuilder
+            The builder instance
+        """
+        if self._included_edges is not None:
+            for u, v in exclude.edges:  # type: ignore
+                if self._included_edges.has_edge(u, v):
+                    raise RuntimeError(f"{(u, v)} is already specified as an included edge.")
+        self._excluded_edges = exclude
+        return self
+
+    def included_edges(self, include: Optional[NetworkxGraph]) -> "ContextBuilder":
+        """Set inclusion edge constraints to apply in discovery.
+
+        Parameters
+        ----------
+        included : Optional[NetworkxGraph]
+            Edges that should be included in the resultant graph
+
+        Returns
+        -------
+        self : ContextBuilder
+            The builder instance
+        """
+        if self._excluded_edges is not None:
+            for u, v in include.edges:  # type: ignore
+                if self._excluded_edges.has_edge(u, v):
+                    raise RuntimeError(f"{(u, v)} is already specified as an excluded edge.")
+        self._included_edges = include
         return self
 
     def edges(
@@ -61,6 +125,46 @@ class ContextBuilder:
         """
         self._included_edges = include
         self._excluded_edges = exclude
+        return self
+
+    def observed_variables(self, observed: Optional[Set[Column]] = None) -> "ContextBuilder":
+        """Set observed variables.
+
+        Parameters
+        ----------
+        observed : Optional[Set[Column]]
+            Set of observed variables, by default None. If neither ``latents``,
+            nor ``variables`` is set, then it is presumed that ``variables`` consists
+            of the columns of ``data`` and ``latents`` is the empty set.
+        """
+        if self._latent_variables is not None and any(
+            obs_var in self._latent_variables for obs_var in observed  # type: ignore
+        ):
+            raise RuntimeError(
+                f"Latent variables are set already {self._latent_variables}, "
+                f'which contain variables you are trying to set as "observed".'
+            )
+        self._observed_variables = observed
+        return self
+
+    def latent_variables(self, latents: Optional[Set[Column]] = None) -> "ContextBuilder":
+        """Set latent variables.
+
+        Parameters
+        ----------
+        latents : Optional[Set[Column]]
+            Set of latent "unobserved" variables, by default None. If neither ``latents``,
+            nor ``variables`` is set, then it is presumed that ``variables`` consists
+            of the columns of ``data`` and ``latents`` is the empty set.
+        """
+        if self._observed_variables is not None and any(
+            latent_var in self._observed_variables for latent_var in latents  # type: ignore
+        ):
+            raise RuntimeError(
+                f"Observed variables are set already {self._observed_variables}, "
+                f'which contain variables you are trying to set as "latent".'
+            )
+        self._latent_variables = latents
         return self
 
     def variables(
@@ -145,13 +249,13 @@ class ContextBuilder:
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
 
-        empty_graph = lambda: nx.empty_graph(self._observed_variables, create_using=nx.Graph)
+        empty_graph = self._empty_graph_func(self._observed_variables)
         return Context(
-            init_graph=self._interpolate_graph(),
+            init_graph=self._interpolate_graph(self._observed_variables),
             included_edges=self._included_edges or empty_graph(),
             excluded_edges=self._excluded_edges or empty_graph(),
-            variables=self._observed_variables,
-            latents=self._latent_variables or set(),
+            observed_variables=self._observed_variables,
+            latent_variables=self._latent_variables or set(),
             state_variables=self._state_variables,
         )
 
@@ -166,7 +270,7 @@ class ContextBuilder:
         if observed is not None and latents is not None:
             if columns - set(observed) != set(latents):
                 raise ValueError(
-                    "If observed and latents are set, then they must be "
+                    "If observed and latents are both set, then they must "
                     "include all columns in data."
                 )
         elif observed is None and latents is not None:
@@ -183,26 +287,215 @@ class ContextBuilder:
         latents = set(cast(Set[Column], latents))
         return (observed, latents)
 
-    def _interpolate_graph(self) -> nx.Graph:
+    def _interpolate_graph(self, graph_variables) -> nx.Graph:
         if self._observed_variables is None:
             raise ValueError("Must set variables() before building Context.")
 
-        complete_graph = lambda: nx.complete_graph(self._observed_variables, create_using=nx.Graph)
-        has_all_variables = lambda g: set(g.nodes) == set(self._observed_variables)
+        complete_graph = lambda: nx.complete_graph(graph_variables, create_using=nx.Graph)
+        has_all_variables = lambda g: set(g.nodes).issuperset(set(self._observed_variables))
 
         # initialize the starting graph
-        if self._graph is None:
+        if self._init_graph is None:
             return complete_graph()
         else:
-            if not has_all_variables(self._graph):
+            if not has_all_variables(self._init_graph):
                 raise ValueError(
-                    f"The nodes within the initial graph, {self._graph.nodes}, "
+                    f"The nodes within the initial graph, {self._init_graph.nodes}, "
                     f"do not match the nodes in the passed in data, {self._observed_variables}."
                 )
-            return self._graph
+            return self._init_graph
+
+    def _empty_graph_func(self, graph_variables) -> Callable:
+        empty_graph = lambda: nx.empty_graph(graph_variables, create_using=nx.Graph)
+        return empty_graph
 
 
-def make_context(context: Optional[Context] = None) -> ContextBuilder:
+class InterventionalContextBuilder(ContextBuilder):
+    """A builder class for creating observational+interventional data Context objects.
+
+    The InterventionalContextBuilder is meant solely to build Context objects that work
+    with observational + interventional datasets.
+
+    The context builder provides a way to capture assumptions, domain knowledge,
+    and data. This should NOT be instantiated directly. One should instead use
+    `dodiscover.make_context` to build a Context data structure.
+
+    Notes
+    -----
+    The number of distributions and/or interventional targets must be set in order
+    to build the `Context` object here.
+    """
+
+    _intervention_targets: List[Tuple[Column]] = []
+    _num_distributions: Optional[int] = None
+    _obs_distribution: bool = True
+
+    def obs_distribution(self, has_obs_distrib: bool):
+        """Whether or not we have access to the observational distribution."""
+        self._obs_distribution = has_obs_distrib
+        return self
+
+    def num_distributions(self, num_distribs: int):
+        """Set the number of data distributions we are expected to have access to.
+
+        Note this must include observational too if observational is assumed present.
+        To assume that we do not have access to observational data, use the
+        :meth:`InterventionalContextBuilder.obs_distribution` to turn off that assumption.
+
+        Parameters
+        ----------
+        num_distribs : int
+            Number of distributions we will have access to. Will set the number of
+            distributions to be ``num_distribs + 1`` if ``_obs_distribution is True`` (default).
+        """
+        if len(self._intervention_targets) > 0 and (
+            len(self._intervention_targets) + int(self._obs_distribution) != num_distribs
+        ):
+            raise RuntimeError(
+                f"Setting the number of distributions {num_distribs} does not match the number of "
+                f"intervention targets {len(self._intervention_targets)}."
+            )
+        self._num_distributions = num_distribs
+        return self
+
+    def intervention_targets(self, targets: List[Tuple[Column]]):
+        """Set known intervention targets of the data.
+
+        Will also automatically infer the F-nodes that will be present
+        in the graph. For more information on F-nodes see ``pywhy-graphs``.
+
+        Parameters
+        ----------
+        interventions : List of tuples
+            A list of tuples of nodes that are known intervention targets.
+            Assumes that the order of the interventions marked are those of the
+            passed in the data.
+
+            If intervention targets are unknown, then this is not necessary.
+        """
+        if (
+            self._num_distributions is not None
+            and len(targets) + int(self._obs_distribution) != self._num_distributions
+        ):
+            raise RuntimeError(
+                f"Setting the number of intervention targets {targets} does not match the "
+                f"number of distributions set {self._num_distributions} (it is assumed "
+                f"there are {int(self._obs_distribution)} observational distributions)."
+            )
+        self._intervention_targets = targets
+        self._num_distributions = len(targets) + int(self._obs_distribution)
+        return self
+
+    def build(self) -> Context:
+        """Build the Context object.
+
+        Returns
+        -------
+        context : Context
+            The populated Context object.
+        """
+        if self._observed_variables is None:
+            raise ValueError("Could not infer variables from data or given arguments.")
+        if self._num_distributions is None:
+            raise ValueError(
+                "There is no intervention context set. Are you sure you are using "
+                "the right contextbuilder? If you only have observational data "
+                "use `ContextBuilder` instead of `InterventionContextBuilder`."
+            )
+
+        # get F-nodes and sigma-map
+        f_nodes, sigma_map, symmetric_diff_map = self._create_augmented_nodes()
+        graph_variables = set(self._observed_variables).union(set(f_nodes))
+
+        empty_graph = self._empty_graph_func(graph_variables)
+        return Context(
+            init_graph=self._interpolate_graph(graph_variables),
+            included_edges=self._included_edges or empty_graph(),
+            excluded_edges=self._excluded_edges or empty_graph(),
+            observed_variables=self._observed_variables,
+            latent_variables=self._latent_variables or set(),
+            state_variables=self._state_variables,
+            intervention_targets=self._intervention_targets,
+            f_nodes=f_nodes,
+            sigma_map=sigma_map,
+            symmetric_diff_map=symmetric_diff_map,
+            obs_distribution=self._obs_distribution,
+            num_distributions=self._num_distributions,
+        )
+
+    def _create_augmented_nodes(self) -> Tuple[List, Dict, Dict]:
+        """Create augmented nodes, sigma map and optionally a symmetric difference map.
+
+        Given a number of distributions attributed to interventions, one constructs
+        F-nodes to add to the causal graph via one of two procedures:
+
+        - (known targets): For all pairs of intervention targets, form the
+          symmetric difference and then assign this to a new F-node.
+          This is ``n_targets choose 2``
+        - (unknown targets): For all pairs of incoming distributions, form
+          a new F-node. This is ``n_distributions choose 2``
+
+        The difference is the additional information is encoded in the known
+        targets case. That is we know the symmetric difference mapping for each
+        F-node.
+
+        Returns
+        -------
+        Tuple[List, Dict[Any, Tuple], Dict[Any, FrozenSet]]
+            _description_
+        """
+        augmented_nodes = []
+        sigma_map = dict()
+        symmetric_diff_map = dict()
+
+        # add the empty intervention if there is assumed observational data
+        if self._obs_distribution:
+            distribution_targets_idx = [0]
+        else:
+            distribution_targets_idx = []
+
+        # now map all distribution targets to their indexed distribution
+        int_dist_idx = np.arange(int(self._obs_distribution), self._num_distributions).tolist()
+        distribution_targets_idx.extend(int_dist_idx)
+
+        # store known-targets, which are sets of nodes
+        targets = []
+        if len(self._intervention_targets) > 0:
+            if self._obs_distribution:
+                targets.append(())
+            targets.extend(copy(list(self._intervention_targets)))  # type: ignore
+
+        for idx, (jdx, kdx) in enumerate(combinations(distribution_targets_idx, 2)):
+            if jdx == kdx:
+                continue
+            f_node = ("F", idx)
+            augmented_nodes.append(f_node)
+            sigma_map[f_node] = (jdx, kdx)
+
+            # if we additionally know the intervention targets
+            if len(self._intervention_targets) > 0:
+                print(jdx, kdx, len(targets), distribution_targets_idx)
+                i_target: Set = set(targets[jdx])
+                j_target: Set = set(targets[kdx])
+
+                # form symmetric difference and store its frozenset
+                # (so that way order is not important)
+                f_node_targets = frozenset(i_target.symmetric_difference(j_target))
+                symmetric_diff_map[f_node] = f_node_targets
+        return augmented_nodes, sigma_map, symmetric_diff_map
+
+    def _interpolate_graph(self, graph_variables) -> nx.Graph:
+        init_graph = super()._interpolate_graph(graph_variables)
+
+        # do error-check
+        if not all(node in init_graph for node in graph_variables):
+            raise RuntimeError(
+                "Not all nodes (observational and f-nodes) are part of the init graph."
+            )
+        return init_graph
+
+
+def make_context(context: Optional[Context] = None, create_using=ContextBuilder) -> ContextBuilder:
     """Create a new ContextBuilder instance.
 
     Returns
@@ -216,11 +509,22 @@ def make_context(context: Optional[Context] = None) -> ContextBuilder:
     variables, ``(1, 2, 3)``.
     >>> context_builder = make_context()
     >>> context = context_builder.variables([1, 2, 3]).build()
+
+    Notes
+    -----
+    `Context` objects are dataclasses that creates a dictionary-like access
+    to causal context metadata. Copying relevant information from a `Context`
+    object into a `ContextBuilder` is all supported with the exception of
+    state variables. State variables are not copied over. To set state variables
+    again, one must build the Context and then call :meth:`Context.state_variable`.
     """
-    result = ContextBuilder()
+    result = create_using()
     if context is not None:
-        result.graph(deepcopy(context.init_graph))
-        result.edges(deepcopy(context.included_edges), deepcopy(context.excluded_edges))
-        result.variables(copy(context.observed_variables), copy(context.latent_variables))
-        result.state_variables(deepcopy(context.state_variables))
+        # we create a copy of the ContextBuilder with the current values
+        # in the context
+        ctx_params = context.get_params()
+        for param, value in ctx_params.items():
+            if getattr(result, param, None) is not None:
+                getattr(result, param)(value)
+
     return result

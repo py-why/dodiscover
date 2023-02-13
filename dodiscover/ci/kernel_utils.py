@@ -101,9 +101,9 @@ def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) ->
 def corrent_matrix(
     data: ArrayLike,
     metric: str = "rbf",
-    kwidth: float = None,
+    kwidth: Optional[float] = None,
     distance_metric="euclidean",
-    n_jobs=None,
+    n_jobs: Optional[int] = None,
 ) -> ArrayLike:
     """Compute the centered correntropy of a matrix.
 
@@ -227,7 +227,10 @@ def compute_kernel(
 
 
 def _estimate_kwidth(
-    X: ArrayLike, method="scott", distance_metric: str = None, n_jobs: int = None
+    X: ArrayLike,
+    method="scott",
+    distance_metric: Optional[str] = None,
+    n_jobs: Optional[int] = None,
 ) -> float:
     """Estimate kernel width.
 
@@ -272,9 +275,9 @@ def _estimate_kwidth(
 def _kernel_estimate_propensity_scores(
     K: ArrayLike,
     group_ind: ArrayLike,
-    penalty: float = None,
-    n_jobs: int = None,
-    random_state: int = None,
+    penalty: Optional[float] = None,
+    n_jobs: Optional[int] = None,
+    random_state: Optional[int] = None,
 ) -> ArrayLike:
     """Estimate propensity scores given kernel and propensities.
 

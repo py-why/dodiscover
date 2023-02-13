@@ -51,6 +51,14 @@ class Graph(Protocol):
         """
         pass
 
+    def subgraph(self, nodes):
+        """Get subgraph based on nodes."""
+        pass
+
+    def copy(self):
+        """Create a copy of the graph."""
+        pass
+
 
 class EquivalenceClass(Graph, Protocol):
     """Protocol for equivalence class of graphs."""
