@@ -402,6 +402,26 @@ class Test_FCI:
         assert G.has_edge("A", "C", G.directed_edge_name)
         assert not G.has_edge("C", "A", G.circle_edge_name)
 
+        # Check that if A o-> u -> C and A o-> C then rule is not applied
+        G = PAG()
+        G.add_edge("A", "u", G.directed_edge_name)
+        G.add_edge("u", "C", G.directed_edge_name)
+        G.add_edge("u", "A", G.circle_edge_name)
+        G.add_edge("C", "A", G.circle_edge_name)
+        G.add_edge("A", "C", G.directed_edge_name)
+
+        assert not self.alg._apply_rule8(G, "u", "A", "C")
+
+        # Check that if A <-o u -> C and A o-> C then rule is not applied
+        G = PAG()
+        G.add_edge("A", "u", G.circle_edge_name)
+        G.add_edge("u", "C", G.directed_edge_name)
+        G.add_edge("u", "A", G.directed_edge_name)
+        G.add_edge("C", "A", G.circle_edge_name)
+        G.add_edge("A", "C", G.directed_edge_name)
+
+        assert not self.alg._apply_rule8(G, "u", "A", "C")
+
     def test_fci_rule8_with_selection_bias(self):
         # If A -o u -> C and A o-> C then orient A o-> C as A -> C
         G = PAG()
