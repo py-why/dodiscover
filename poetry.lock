@@ -2961,7 +2961,7 @@ networkx = ">=1.11"
 
 [[package]]
 name = "pywhy-graphs"
-version = "0.0.0.post80.dev0+1f1dfc6"
+version = "0.0.0.post82.dev0+8e0b2d1"
 description = "Causal Graphs for Python"
 category = "main"
 optional = true

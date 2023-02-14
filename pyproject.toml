@@ -207,8 +207,6 @@ add_ignore = 'D100,D104,D107'
 [tool.mypy]
 ignore_missing_imports = true
 no_site_packages = true
-namespace_packages = true
-explicit_package_bases = false
 
 [tool.pytest.ini_options]
 minversion = '6.0'
