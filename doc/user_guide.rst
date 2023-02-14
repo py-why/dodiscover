@@ -15,6 +15,7 @@ User Guide
    :maxdepth: 3
 
    constraint_causal_discovery.rst
+   conditional_independence.rst
    .. scores_causal_discovery.rst
    .. visualizations.rst
    .. datasets.rst

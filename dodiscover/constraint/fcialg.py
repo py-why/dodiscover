@@ -525,9 +525,10 @@ class FCI(BaseConstraintDiscovery):
     def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 8 of FCI algorithm.
 
-        If A -> u -> C, or A -o u -> C
-        and A o-> C, then orient A o-> C as A -> C.
-
+        If:
+        - A -> u -> C, or A -o u -> C, (the second condition is only present with selection bias)
+        - and A o-> C,
+        - then orient A o-> C as A -> C.
 
         Parameters
         ----------
@@ -553,10 +554,18 @@ class FCI(BaseConstraintDiscovery):
         if graph.has_edge(c, a, graph.circle_edge_name) and graph.has_edge(
             a, c, graph.directed_edge_name
         ):
-            # check that A -> u or A -o u
-            condition_one = graph.has_edge(a, u, graph.directed_edge_name) or graph.has_edge(
+            # check that A -> u
+            condition_one_Adirectu = graph.has_edge(
+                a, u, graph.directed_edge_name
+            ) and not graph.has_edge(u, a, graph.circle_edge_name)
+            # check that A -o u
+            # Note: this is not possible without first running R5-7 because a tail with a circle edge
+            # would not occur through any of the other rules.
+            condition_one_Acircleu = graph.has_edge(
                 a, u, graph.circle_edge_name
-            )
+            ) and not graph.has_edge(u, a)
+            condition_one = condition_one_Adirectu or condition_one_Acircleu
+
             # check that u -> C
             condition_two = graph.has_edge(u, c, graph.directed_edge_name) and not graph.has_edge(
                 c, u, graph.circle_edge_name
@@ -784,6 +793,22 @@ class FCI(BaseConstraintDiscovery):
                         r9_add,
                         r10_add,
                     ]
+                    if all(x in [u, a, c] for x in ["x6", "x4"]) and any(all_flags):
+                        print(u, a, c)
+                        print(
+                            [
+                                r1_add,
+                                r2_add,
+                                r3_add,
+                                r4_add,
+                                r5_add,
+                                r6_add,
+                                r7_add,
+                                r8_add,
+                                r9_add,
+                                r10_add,
+                            ]
+                        )
                     if any(all_flags) and not change_flag:
                         logger.info(f"{change_flag} with " f"{all_flags}")
                         change_flag = True
@@ -801,7 +826,7 @@ class FCI(BaseConstraintDiscovery):
     def learn_skeleton(
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
-        # # now compute all possibly d-separating sets and learn a better skeleton
+        # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(
             self.ci_estimator,
             sep_set=sep_set,

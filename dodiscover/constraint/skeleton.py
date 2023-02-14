@@ -77,24 +77,28 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
         The set of neighbors that are also along a path towards
         the 'end' node.
     """
-
-    def _assign_weight(u, v, edge_attr):
-        if u == node or v == node:
-            return np.inf
-        else:
-            return 1
-
     nbrs = set()
+
+    # query all neighbors of X and then only add nodes that are in a valid path
+    # to end
     for node in G.neighbors(start):
         if not G.has_edge(start, node):
             raise RuntimeError(f"{start} and {node} are not connected, but they are assumed to be.")
 
+        # if we queried the edge we are testing, then pick that one
+        if node == end:
+            continue
+
         # find a path from start node to end
-        path = nx.shortest_path(G, source=node, target=end, weight=_assign_weight)
-        if len(path) > 0:
-            if start in path:
-                raise RuntimeError("There is an error with the input. This is not possible.")
-            nbrs.add(node)
+        paths = nx.all_simple_paths(G, source=node, target=end)
+        for path in paths:
+            # the trivial path which indicates that 'node' is only connected to 'end' through 'start'
+            if path == (node, start, end):
+                continue
+            else:
+                # found a single path
+                nbrs.add(node)
+                break
     return nbrs
 
 
