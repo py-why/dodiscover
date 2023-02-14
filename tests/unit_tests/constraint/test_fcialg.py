@@ -2,12 +2,14 @@ import logging
 
 import networkx as nx
 import numpy as np
+import pytest
 import pywhy_graphs
 import pywhy_graphs.networkx as pywhy_nx
 from pywhy_graphs import ADMG, PAG
 
 from dodiscover import FCI, make_context
 from dodiscover.ci import Oracle
+from dodiscover.constraint.config import SkeletonMethods
 from dodiscover.constraint.utils import dummy_sample
 
 np.random.seed(12345)
@@ -638,7 +640,9 @@ class Test_FCI:
         assert nx.is_isomorphic(skel_graph.to_undirected(), expected_pag.to_undirected())
         assert set(expected_pag.edges()) == set(pag.edges())
 
-    def test_fci_complex(self):
+    @pytest.mark.parametrize("skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.COMPLETE])
+    @pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS])
+    def test_fci_complex(self, skeleton_method, pds_skeleton_method):
         """
         Test FCI algorithm with more complex graph.
 
@@ -664,7 +668,13 @@ class Test_FCI:
         context = make_context().variables(data=sample).build()
         oracle = Oracle(G)
         ci_estimator = oracle
-        fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf)
+        fci = FCI(
+            ci_estimator=ci_estimator,
+            max_iter=np.inf,
+            skeleton_method=skeleton_method,
+            pds_skeleton_method=pds_skeleton_method,
+            selection_bias=False,
+        )
         fci.fit(sample, context)
         pag = fci.graph_
 
@@ -694,6 +704,8 @@ class Test_FCI:
         expected_pag.add_edge("x4", "x5", expected_pag.bidirected_edge_name)
 
         assert set(pag.edges()) == set(expected_pag.edges())
+        for edge_type, subgraph in expected_pag.get_graphs().items():
+            assert nx.is_isomorphic(subgraph, pag.get_graphs(edge_type))
 
     def test_fci_fig6(self):
         """
