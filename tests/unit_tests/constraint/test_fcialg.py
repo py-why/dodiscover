@@ -404,6 +404,26 @@ class Test_FCI:
         assert G.has_edge("A", "C", G.directed_edge_name)
         assert not G.has_edge("C", "A", G.circle_edge_name)
 
+        # Check that if A o-> u -> C and A o-> C then rule is not applied
+        G = PAG()
+        G.add_edge("A", "u", G.directed_edge_name)
+        G.add_edge("u", "C", G.directed_edge_name)
+        G.add_edge("u", "A", G.circle_edge_name)
+        G.add_edge("C", "A", G.circle_edge_name)
+        G.add_edge("A", "C", G.directed_edge_name)
+
+        assert not self.alg._apply_rule8(G, "u", "A", "C")
+
+        # Check that if A <-o u -> C and A o-> C then rule is not applied
+        G = PAG()
+        G.add_edge("A", "u", G.circle_edge_name)
+        G.add_edge("u", "C", G.directed_edge_name)
+        G.add_edge("u", "A", G.directed_edge_name)
+        G.add_edge("C", "A", G.circle_edge_name)
+        G.add_edge("A", "C", G.directed_edge_name)
+
+        assert not self.alg._apply_rule8(G, "u", "A", "C")
+
     def test_fci_rule8_with_selection_bias(self):
         # If A -o u -> C and A o-> C then orient A o-> C as A -> C
         G = PAG()
@@ -616,7 +636,10 @@ class Test_FCI:
         assert nx.is_isomorphic(skel_graph.to_undirected(), expected_pag.to_undirected())
         assert set(expected_pag.edges()) == set(pag.edges())
 
-    def test_fci_complex(self):
+    @pytest.mark.parametrize("skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.COMPLETE])
+    @pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS])
+    @pytest.mark.parametrize("selection_bias", [True, False])
+    def test_fci_complex(self, skeleton_method, pds_skeleton_method, selection_bias):
         """
         Test FCI algorithm with more complex graph.
 
@@ -642,7 +665,13 @@ class Test_FCI:
         context = make_context().variables(data=sample).build()
         oracle = Oracle(G)
         ci_estimator = oracle
-        fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf)
+        fci = FCI(
+            ci_estimator=ci_estimator,
+            max_iter=np.inf,
+            skeleton_method=skeleton_method,
+            pds_skeleton_method=pds_skeleton_method,
+            selection_bias=selection_bias,
+        )
         fci.fit(sample, context)
         pag = fci.graph_
 
@@ -672,6 +701,8 @@ class Test_FCI:
         expected_pag.add_edge("x4", "x5", expected_pag.bidirected_edge_name)
 
         assert set(pag.edges()) == set(expected_pag.edges())
+        for edge_type, subgraph in expected_pag.get_graphs().items():
+            assert nx.is_isomorphic(subgraph, pag.get_graphs(edge_type))
 
     def test_fci_fig6(self):
         """
