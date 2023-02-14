@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>API &#8212; dodiscover v0.0.0</title>
 <script>
@@ -476,10 +476,6 @@ object rather than just data. One should use our builder <code class="docutils l
 API for construction of the Context class.</p>
 <p>See docs for <code class="docutils literal notranslate"><span class="pre">Context</span></code> and <code class="docutils literal notranslate"><span class="pre">make_context</span></code> for more information.</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_context</span></code></a>([context])</p></td>
 <td><p>Create a new ContextBuilder instance.</p></td>
@@ -496,10 +492,6 @@ API for construction of the Context class.</p>
 <section id="constraint-based-structure-learning">
 <h2>Constraint-based structure learning<a class="headerlink" href="#constraint-based-structure-learning" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton" title="dodiscover.constraint.LearnSkeleton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LearnSkeleton</span></code></a>(ci_estimator[, sep_set, ...])</p></td>
 <td><p>Learn a skeleton graph from a Markovian causal model.</p></td>
@@ -522,10 +514,6 @@ API for construction of the Context class.</p>
 <section id="comparing-causal-discovery-algorithms">
 <h2>Comparing causal discovery algorithms<a class="headerlink" href="#comparing-causal-discovery-algorithms" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.metrics.confusion_matrix_networks.html#dodiscover.metrics.confusion_matrix_networks" title="dodiscover.metrics.confusion_matrix_networks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confusion_matrix_networks</span></code></a>(true_graph, pred_graph)</p></td>
 <td><p>Compute the confusion matrix comparing a predicted graph from the true graph.</p></td>
@@ -541,10 +529,6 @@ API for construction of the Context class.</p>
 <p>We define some custom types to allow 3rd party packages
 to work with <code class="docutils literal notranslate"><span class="pre">mypy</span></code>.</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.typing.Column.html#dodiscover.typing.Column" title="dodiscover.typing.Column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Column</span></code></a></p></td>
 <td><p>The central part of internal API.</p></td>
@@ -561,10 +545,6 @@ to work with <code class="docutils literal notranslate"><span class="pre">mypy</
 <section id="graph-protocols">
 <h2>Graph protocols<a class="headerlink" href="#graph-protocols" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.Graph.html#dodiscover.Graph" title="dodiscover.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Protocol for graphs to work with dodiscover algorithms.</p></td>
@@ -587,10 +567,6 @@ independence testing).</p>
 of many causal inference procedures, such as constraint-based structure
 learning.</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a>()</p></td>
 <td><p>Abstract class for any conditional independence test.</p></td>
@@ -630,10 +606,6 @@ learning.</p>
 of many causal inference procedures, such as constraint-based structure
 learning.</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.cd.BaseConditionalDiscrepancyTest.html#dodiscover.cd.BaseConditionalDiscrepancyTest" title="dodiscover.cd.BaseConditionalDiscrepancyTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalDiscrepancyTest</span></code></a>()</p></td>
 <td><p>Abstract class for any conditional discrepancy test.</p></td>
@@ -653,10 +625,6 @@ learning.</p>
 of many causal inference procedures, such as constraint-based structure
 learning.</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.kernel_utils.compute_kernel.html#dodiscover.ci.kernel_utils.compute_kernel" title="dodiscover.ci.kernel_utils.compute_kernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_kernel</span></code></a>(X[, Y, metric, ...])</p></td>
 <td><p>Compute a kernel matrix and corresponding width.</p></td>
@@ -678,10 +646,6 @@ learning.</p>
 <p>Other utilities include support for Monte-Carlo testing for conditional
 independence.</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.monte_carlo.generate_knn_in_subspace.html#dodiscover.ci.monte_carlo.generate_knn_in_subspace" title="dodiscover.ci.monte_carlo.generate_knn_in_subspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_knn_in_subspace</span></code></a>(z_arr[, method, k, ...])</p></td>
 <td><p>Generate kNN in subspace.</p></td>

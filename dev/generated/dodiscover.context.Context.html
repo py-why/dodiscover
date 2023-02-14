@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>dodiscover.context.Context &#8212; dodiscover v0.0.0</title>
 <script>
@@ -457,7 +457,7 @@
 <p>This should NOT be instantiated directly. One should instead
 use <a class="reference internal" href="dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dodiscover.make_context</span></code></a> to build a Context data structure.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>variables</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></span></dt><dd><p>Set of observed variables. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
 nor <code class="docutils literal notranslate"><span class="pre">variables</span></code> is set, then it is presumed that <code class="docutils literal notranslate"><span class="pre">variables</span></code> consists
@@ -475,7 +475,7 @@ of the columns of <code class="docutils literal notranslate"><span class="pre">d
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p><code class="docutils literal notranslate"><span class="pre">variables</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> if both set, should contain the set of
 all columns in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
@@ -489,7 +489,7 @@ priors and other structured contexts alongside the datasets. This class
 is used in conjunction with a discovery algorithm.</p>
 <p>Setting the a priori explicit direction of an edge is not supported yet.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>excluded_edges</strong></dt><dd></dd>
 <dt><strong>included_edges</strong></dt><dd></dd>
@@ -502,10 +502,6 @@ is used in conjunction with a discovery algorithm.</p>
 </dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.context.Context.add_state_variable" title="dodiscover.context.Context.add_state_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_state_variable</span></code></a>(name, var)</p></td>
 <td><p>Add a state variable.</p></td>
@@ -522,7 +518,7 @@ is used in conjunction with a discovery algorithm.</p>
 <p>Called by an algorithm to persist data objects that
 are used in intermediate steps.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the state variable.</p>
 </dd>
@@ -538,13 +534,13 @@ are used in intermediate steps.</p>
 <span class="sig-name descname"><span class="pre">state_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.state_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.state_variable" title="Permalink to this definition">#</a></dt>
 <dd><p>Get a state variable.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the state variable.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
 <dt><strong>state_var</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></span></dt><dd><p>The state variable.</p>
 </dd>
