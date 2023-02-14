@@ -206,10 +206,15 @@
                 
   <h1>Source code for dodiscover.cd.base</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 
+<span class="kn">from</span> <span class="nn">dodiscover.ci.kernel_utils</span> <span class="kn">import</span> <span class="n">_default_regularization</span>
 <span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
 
 
@@ -220,6 +225,10 @@
 <span class="sd">    class interface is expected to be very lightweight to enable anyone to convert</span>
 <span class="sd">    a function for CD testing into a class, which has a specific API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">propensity_est</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">]</span>
+    <span class="n">propensity_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_check_test_input</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -234,6 +243,22 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The y variables are not all in the DataFrame.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">group_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group column </span><span class="si">{</span><span class="n">group_col</span><span class="si">}</span><span class="s2"> is not in the DataFrame.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Both propensity model and propensity estimates are specified. Only one is allowed.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">group_col</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;There are </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> pre-defined estimates, while &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">group_col</span><span class="p">])</span><span class="si">}</span><span class="s2"> unique groups.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">group_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;There are </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> group pre-defined estimates, while &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">group_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> samples.&quot;</span>
+                <span class="p">)</span>
 
 <div class="viewcode-block" id="BaseConditionalDiscrepancyTest.test"><a class="viewcode-back" href="../../../generated/dodiscover.cd.BaseConditionalDiscrepancyTest.html#dodiscover.cd.BaseConditionalDiscrepancyTest.test">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
@@ -258,7 +283,84 @@
 <span class="sd">        Tuple[float, float]</span>
 <span class="sd">            Test statistic and pvalue.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div></div>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_propensity_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_ind</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+
+            <span class="c1"># compute a default penalty term if using a kernel matrix</span>
+            <span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">propensity_penalty_</span> <span class="o">=</span> <span class="n">_default_regularization</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+                <span class="n">C</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_penalty_</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">propensity_penalty_</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">C</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+            <span class="c1"># default model is logistic regression</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">propensity_model_</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+                <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
+                <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+                <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">propensity_model_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_model</span>
+
+        <span class="c1"># either use pre-defined propensity weights, or estimate them</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+            <span class="c1"># fit and then obtain the probabilities of treatment</span>
+            <span class="c1"># for each sample (i.e. the propensity scores)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_model_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">group_ind</span><span class="p">)</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">K</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propensity_est_</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">group_ind</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract method for computing the test statistic.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="BaseConditionalDiscrepancyTest.compute_null"><a class="viewcode-back" href="../../../generated/dodiscover.cd.BaseConditionalDiscrepancyTest.html#dodiscover.cd.BaseConditionalDiscrepancyTest.compute_null">[docs]</a>    <span class="k">def</span> <span class="nf">compute_null</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">e_hat</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">null_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimate null distribution using propensity weights.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        e_hat : Array-like of shape (n_samples,)</span>
+<span class="sd">            The predicted propensity score for ``group_ind == 1``.</span>
+<span class="sd">        X : Array-Like of shape (n_samples, n_features_x)</span>
+<span class="sd">            The X (covariates) array.</span>
+<span class="sd">        Y : Array-Like of shape (n_samples, n_features_y)</span>
+<span class="sd">            The Y (outcomes) array.</span>
+<span class="sd">        null_reps : int, optional</span>
+<span class="sd">            Number of times to sample null, by default 1000.</span>
+<span class="sd">        random_state : int, optional</span>
+<span class="sd">            Random generator, or random seed, by default None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        null_dist : Array-like of shape (n_samples,)</span>
+<span class="sd">            The null distribution of test statistics.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+        <span class="n">n_samps</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># compute the test statistic on the conditionally permuted</span>
+        <span class="c1"># dataset, where each group label is resampled for each sample</span>
+        <span class="c1"># according to its propensity score</span>
+        <span class="n">null_dist</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+            <span class="p">[</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_statistic</span><span class="p">)(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">rng</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">e_hat</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samps</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">null_reps</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">null_dist</span></div></div>
 </pre></div>
 
               </article>

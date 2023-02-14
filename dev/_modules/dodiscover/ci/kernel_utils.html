@@ -212,7 +212,6 @@
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">logm</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">pairwise_distances</span><span class="p">,</span> <span class="n">pairwise_kernels</span>
 
 
@@ -474,54 +473,6 @@
         <span class="c1"># prevents division by zero when used on label vectors</span>
         <span class="n">kwidth</span> <span class="o">=</span> <span class="n">med</span> <span class="k">if</span> <span class="n">med</span> <span class="k">else</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">kwidth</span>
-
-
-<span class="k">def</span> <span class="nf">_kernel_estimate_propensity_scores</span><span class="p">(</span>
-    <span class="n">K</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">group_ind</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate propensity scores given kernel and propensities.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    K : ArrayLike of shape (n_samples, n_samples)</span>
-<span class="sd">        The kernel matrix generated.</span>
-<span class="sd">    group_ind : ArrayLike of shape (n_samples,)</span>
-<span class="sd">        Group indicator (empirical labels). Must be comprised of only</span>
-<span class="sd">        1&#39;s and 0&#39;s (i.e. binary groups).</span>
-<span class="sd">    penalty : float, optional</span>
-<span class="sd">        L2 regularization, by default None.</span>
-<span class="sd">    n_jobs : int, optional</span>
-<span class="sd">        Joblib parallelization, by default None.</span>
-<span class="sd">    random_state : int, optional</span>
-<span class="sd">        Random seed, by default None.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    e_hat : ArrayLike of shape (n_samples)</span>
-<span class="sd">        The predicted propensities (i.e. probabilities) of samples falling</span>
-<span class="sd">        into ``group_ind = 1``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">penalty</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">penalty</span> <span class="o">=</span> <span class="n">_default_regularization</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
-
-    <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
-        <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>
-        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
-        <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-        <span class="n">C</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">penalty</span><span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="c1"># fit and then obtain the probabilities of treatment</span>
-    <span class="c1"># for each sample (i.e. the propensity scores)</span>
-    <span class="n">e_hat</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">group_ind</span><span class="p">)</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">K</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">e_hat</span>
 
 
 <span class="k">def</span> <span class="nf">_center_kernel</span><span class="p">(</span><span class="n">K</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
