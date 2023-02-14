@@ -642,7 +642,8 @@ class Test_FCI:
 
     @pytest.mark.parametrize("skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.COMPLETE])
     @pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS])
-    def test_fci_complex(self, skeleton_method, pds_skeleton_method):
+    @pytest.mark.parametrize("selection_bias", [True, False])
+    def test_fci_complex(self, skeleton_method, pds_skeleton_method, selection_bias):
         """
         Test FCI algorithm with more complex graph.
 
@@ -673,7 +674,7 @@ class Test_FCI:
             max_iter=np.inf,
             skeleton_method=skeleton_method,
             pds_skeleton_method=pds_skeleton_method,
-            selection_bias=False,
+            selection_bias=selection_bias,
         )
         fci.fit(sample, context)
         pag = fci.graph_

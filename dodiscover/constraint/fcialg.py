@@ -558,9 +558,10 @@ class FCI(BaseConstraintDiscovery):
                 a, u, graph.directed_edge_name
             ) and not graph.has_edge(u, a, graph.circle_edge_name)
             # check that A -o u
-            condition_one_Acircleu = graph.has_edge(
-                a, u, graph.circle_edge_name
-            ) and not graph.has_edge(u, a)
+            condition_one_Acircleu = graph.has_edge(a, u, graph.circle_edge_name) and not (
+                graph.has_edge(u, a, graph.circle_edge_name)
+                or graph.has_edge(u, a, graph.directed_edge_name)
+            )
             if self.selection_bias:
                 condition_one = condition_one_Adirectu or condition_one_Acircleu
             else:
