@@ -113,21 +113,15 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
 
     if env_type == "single":
         _, pvalue = cd_estimator.test(df, {"x"}, {"x1"}, group_col=group_col)
-        print(pvalue)
-        assert pvalue > alpha
+        assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
         _, pvalue = cd_estimator.test(df, {"x"}, {"z"}, group_col=group_col)
-        print(pvalue)
-        assert pvalue > alpha
+        assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
         _, pvalue = cd_estimator.test(df, {"x"}, {"y"}, group_col=group_col)
-        print(pvalue)
-        assert pvalue > alpha
+        assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
     elif env_type == "multi":
         _, pvalue = cd_estimator.test(df, {"x"}, {"z"}, group_col=group_col)
-        assert pvalue < alpha
-        print(pvalue)
+        assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
         _, pvalue = cd_estimator.test(df, {"x"}, {"y"}, group_col=group_col)
-        assert pvalue < alpha
-        print(pvalue)
+        assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
         _, pvalue = cd_estimator.test(df, {"x1"}, {"z"}, group_col=group_col)
-        assert pvalue < alpha
-        print(pvalue)
+        assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"

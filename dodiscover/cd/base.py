@@ -119,7 +119,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
 
     def compute_null(
         self, e_hat: ArrayLike, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state=None
-    ):
+    ) -> ArrayLike:
         """Estimate null distribution using propensity weights.
 
         Parameters
