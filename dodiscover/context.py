@@ -34,7 +34,7 @@ class Context(BasePyWhy):
         Excluded edges without direction.
     state_variables : Dict
         Name of intermediate state variables during the learning process.
-    intervention_targets : list of tuples
+    intervention_targets : list of tuple
         List of intervention targets (known, or unknown), which correspond to
         the nodes in the graph (known), or indices of datasets that contain
         interventions (unknown).
@@ -58,7 +58,7 @@ class Context(BasePyWhy):
     Currently, testing for equality is done on all attributes that are not
     graphs. Defining equality among graphs is ill-defined, and as such, we
     leave testing of the internal graphs to users. Some checks of equality
-    for example can be :func:`nx.is_isomorphic` for checking isomorphism
+    for example can be :func:`networkx.is_isomorphic` for checking isomorphism
     among two graphs.
     """
 
@@ -111,7 +111,7 @@ class Context(BasePyWhy):
         ----------
         name : str
             The name of the state variable.
-        on_missing : one of {'raise', 'warn', 'ignore'}
+        on_missing : {'raise', 'warn', 'ignore'}
             Behavior if ``name`` is not in the dictionary of state variables.
             If 'raise' (default) will raise a RuntimeError. If 'warn', will
             raise a UserWarning. If 'ignore', will return `None`.

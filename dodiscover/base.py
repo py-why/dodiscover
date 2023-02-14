@@ -126,8 +126,8 @@ class BasePyWhy:
 
         Returns
         -------
-        self : estimator instance
-            Estimator instance.
+        self : instance
+            Learner instance.
         """
         if not params:
             # Simple optimization to gain speed (inspect is slow)

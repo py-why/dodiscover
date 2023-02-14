@@ -92,7 +92,8 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
         # find a path from start node to end
         paths = nx.all_simple_paths(G, source=node, target=end)
         for path in paths:
-            # the trivial path which indicates that 'node' is only connected to 'end' through 'start'
+            # the trivial path which indicates that 'node' is only connected to
+            # 'end' through 'start'
             if path == (node, start, end):
                 continue
             else:

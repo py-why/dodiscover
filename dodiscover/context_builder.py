@@ -323,7 +323,7 @@ class InterventionalContextBuilder(ContextBuilder):
     Notes
     -----
     The number of distributions and/or interventional targets must be set in order
-    to build the `Context` object here.
+    to build the `dodiscover.Context` object here.
     """
 
     _intervention_targets: List[Tuple[Column]] = []
@@ -512,11 +512,12 @@ def make_context(context: Optional[Context] = None, create_using=ContextBuilder)
 
     Notes
     -----
-    `Context` objects are dataclasses that creates a dictionary-like access
-    to causal context metadata. Copying relevant information from a `Context`
+    `dodiscover.Context` objects are dataclasses that creates a dictionary-like access
+    to causal context metadata. Copying relevant information from a `dodiscover.Context`
     object into a `ContextBuilder` is all supported with the exception of
     state variables. State variables are not copied over. To set state variables
-    again, one must build the Context and then call :meth:`Context.state_variable`.
+    again, one must build the Context and then call
+    :meth:`dodiscover.Context.state_variable`.
     """
     result = create_using()
     if context is not None:
