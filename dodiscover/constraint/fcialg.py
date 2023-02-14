@@ -558,8 +558,8 @@ class FCI(BaseConstraintDiscovery):
                 a, u, graph.directed_edge_name
             ) and not graph.has_edge(u, a, graph.circle_edge_name)
             # check that A -o u
-            # Note: this is not possible without first running R5-7 because a tail with a circle edge
-            # would not occur through any of the other rules.
+            # Note: this is not possible without first running R5-7 because a tail with a circle
+            # edge would not occur through any of the other rules.
             condition_one_Acircleu = graph.has_edge(a, u, graph.circle_edge_name) and not (
                 graph.has_edge(u, a, graph.circle_edge_name)
                 or graph.has_edge(u, a, graph.directed_edge_name)
