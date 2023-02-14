@@ -636,8 +636,8 @@ class Test_FCI:
         assert nx.is_isomorphic(skel_graph.to_undirected(), expected_pag.to_undirected())
         assert set(expected_pag.edges()) == set(pag.edges())
 
-    @pytest.mark.parametrize("skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.COMPLETE])
-    @pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS])
+    @pytest.mark.parametrize("skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.NBRS_PATH, SkeletonMethods.COMPLETE])
+    @pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS, SkeletonMethods.PDS_PATH])
     @pytest.mark.parametrize("selection_bias", [True, False])
     def test_fci_complex(self, skeleton_method, pds_skeleton_method, selection_bias):
         """
@@ -780,73 +780,3 @@ class Test_FCI:
         expected_pag.add_edge("D", "R", expected_pag.directed_edge_name)
         assert pag.nodes() == expected_pag.nodes()
         assert pag.edges() == expected_pag.edges()
-
-
-@pytest.mark.parametrize(
-    "skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.NBRS_PATH, SkeletonMethods.COMPLETE]
-)
-@pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS_PATH, SkeletonMethods.PDS])
-def test_fci_complex(skeleton_method, pds_skeleton_method):
-    """
-    Test FCI algorithm with more complex graph.
-
-    Use Figure 2 from :footcite:`Colombo2012`.
-
-    References
-    ----------
-    .. footbibliography::
-    """
-    edge_list = [
-        ("x4", "x1"),
-        ("x2", "x5"),
-        ("x3", "x2"),
-        ("x3", "x4"),
-        ("x2", "x6"),
-        ("x3", "x6"),
-        ("x4", "x6"),
-        ("x5", "x6"),
-    ]
-    latent_edge_list = [("x1", "x2"), ("x4", "x5")]
-    G = ADMG(edge_list, latent_edge_list)
-    sample = dummy_sample(G)
-    context = make_context().variables(data=sample).build()
-    oracle = Oracle(G)
-    ci_estimator = oracle
-    fci = FCI(
-        ci_estimator=ci_estimator,
-        max_iter=np.inf,
-        skeleton_method=skeleton_method,
-        pds_skeleton_method=pds_skeleton_method,
-        selection_bias=False,
-    )
-    fci.fit(sample, context)
-    pag = fci.graph_
-
-    # double check the m-separation statement and PDS
-    assert pywhy_nx.m_separated(G, {"x1"}, {"x3"}, {"x4"})
-    pdsep = pywhy_graphs.pds(G, "x1", "x3")
-    assert "x2" in pdsep
-
-    expected_pag = PAG()
-    expected_pag.add_edges_from(
-        [("x6", "x5"), ("x2", "x3"), ("x4", "x3"), ("x6", "x4")], expected_pag.circle_edge_name
-    )
-    expected_pag.add_edges_from(
-        [
-            ("x4", "x1"),
-            ("x2", "x5"),
-            ("x3", "x2"),
-            ("x3", "x4"),
-            ("x2", "x6"),
-            ("x3", "x6"),
-            ("x4", "x6"),
-            ("x5", "x6"),
-        ],
-        expected_pag.directed_edge_name,
-    )
-    expected_pag.add_edge("x1", "x2", expected_pag.bidirected_edge_name)
-    expected_pag.add_edge("x4", "x5", expected_pag.bidirected_edge_name)
-
-    assert set(pag.edges()) == set(expected_pag.edges())
-    for edge_type, subgraph in expected_pag.get_graphs().items():
-        assert nx.is_isomorphic(subgraph, pag.get_graphs(edge_type))
