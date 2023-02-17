@@ -24,8 +24,9 @@ Contents
    :caption: Getting started:
 
    installation
-   api
-   use
+   Reference API<api>
+   Usage<use>
+   User Guide<user_guide>
    tutorials/index
    whats_new
 

@@ -7,9 +7,8 @@ import numpy as np
 import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.constraint.skeleton import LearnSkeleton, SkeletonMethods
+from dodiscover.constraint.skeleton import ConditioningSetSelection, LearnSkeleton
 from dodiscover.context import Context
-from dodiscover.context_builder import make_context
 from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass
@@ -46,8 +45,6 @@ class BaseConstraintDiscovery:
         Whether or not to apply orientation rules given the learned skeleton graph
         and separating set per pair of variables. If ``True`` (default), will
         apply orientation rules for specific algorithm.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
 
     Attributes
     ----------
@@ -69,13 +66,11 @@ class BaseConstraintDiscovery:
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
+        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
-        **ci_estimator_kwargs,
     ):
         self.alpha = alpha
         self.ci_estimator = ci_estimator
-        self.ci_estimator_kwargs = ci_estimator_kwargs
         self.apply_orientations = apply_orientations
         self.skeleton_method = skeleton_method
 
@@ -152,17 +147,14 @@ class BaseConstraintDiscovery:
         Control over the constraints imposed by the algorithm can be passed into the class
         constructor.
         """
-        self.context_ = make_context(context).build()
-
-        # create a reference to the underlying data to be used
-        self.X_ = data
+        self.context_ = context.copy()
 
         # initialize graph object to apply learning
         self.separating_sets_ = self._initialize_sep_sets(self.context_.init_graph)
 
         # learn skeleton graph and the separating sets per variable
         graph, self.separating_sets_ = self.learn_skeleton(
-            self.X_, self.context_, self.separating_sets_
+            data, self.context_, self.separating_sets_
         )
 
         # convert networkx.Graph to relevant causal graph object
@@ -203,7 +195,7 @@ class BaseConstraintDiscovery:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z)
         return test_stat, pvalue
 
     def learn_skeleton(
@@ -257,7 +249,6 @@ class BaseConstraintDiscovery:
             max_combinations=self.max_combinations,
             skeleton_method=self.skeleton_method,
             keep_sorted=False,
-            **self.ci_estimator_kwargs,
         )
         skel_alg.fit(data, context)
 

@@ -1,4 +1,6 @@
-from typing import List, Optional, Tuple
+import logging
+from itertools import permutations
+from typing import Any, Dict, FrozenSet, List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
@@ -6,11 +8,14 @@ import pandas as pd
 from dodiscover._protocol import EquivalenceClass
 from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest
-from dodiscover.constraint import LearnInterventionSkeleton, SkeletonMethods
 from dodiscover.context import Context
-from dodiscover.typing import SeparatingSet
+from dodiscover.typing import Column, SeparatingSet
 
+from .config import ConditioningSetSelection
 from .fcialg import FCI
+from .skeleton import LearnInterventionSkeleton
+
+logger = logging.getLogger()
 
 
 class PsiFCI(FCI):
@@ -73,10 +78,6 @@ class PsiFCI(FCI):
     known_intervention_targets : bool, optional
         If `True`, then will run the I-FCI algorithm. If `False`, will run the
         Psi-FCI algorithm. By default False.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
-    cd_estimator_kwargs : dict
-        Keyword arguments for the ``cd_estimator`` function.
 
     Notes
     -----
@@ -91,14 +92,12 @@ class PsiFCI(FCI):
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
+        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
-        pds_skeleton_method: SkeletonMethods = SkeletonMethods.PDS,
+        pds_skeleton_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         known_intervention_targets: bool = False,
-        ci_estimator_kwargs=None,
-        cd_estimator_kwargs=None,
     ):
         super().__init__(
             ci_estimator,
@@ -112,17 +111,15 @@ class PsiFCI(FCI):
             max_path_length=max_path_length,
             selection_bias=False,
             pds_skeleton_method=pds_skeleton_method,
-            ci_estimator_kwargs=ci_estimator_kwargs,
         )
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
-        self.cd_estimator_kwargs = cd_estimator_kwargs
 
     def learn_skeleton(
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
         # now compute all possibly d-separating sets and learn a better skeleton
-        skel_alg = LearnInterventionSkeleton(
+        self.skeleton_learner_ = LearnInterventionSkeleton(
             self.ci_estimator,
             self.cd_estimator,
             sep_set=sep_set,
@@ -134,14 +131,13 @@ class PsiFCI(FCI):
             second_stage_skeleton_method=self.pds_skeleton_method,
             keep_sorted=False,
             max_path_length=self.max_path_length,
-            ci_estimator_kwargs=self.ci_estimator_kwargs,
-            cd_estimator_kwargs=self.cd_estimator_kwargs,
         )
-        skel_alg.fit(data, context)
+        print(context)
+        self.skeleton_learner_.fit(data, context)
 
-        skel_graph = skel_alg.adj_graph_
-        sep_set = skel_alg.sep_set_
-        self.n_ci_tests += skel_alg.n_ci_tests
+        skel_graph = self.skeleton_learner_.adj_graph_
+        sep_set = self.skeleton_learner_.sep_set_
+        self.n_ci_tests += self.skeleton_learner_.n_ci_tests
         return skel_graph, sep_set
 
     def fit(self, data: List[pd.DataFrame], context: Context):
@@ -168,19 +164,175 @@ class PsiFCI(FCI):
             raise RuntimeError("The input datasets must be in a Python list.")
 
         n_datasets = len(data)
-        intervention_targets = context.intervention_targets
+        n_distributions = context.num_distributions
 
-        if n_datasets - 1 != len(intervention_targets):
+        if n_datasets != n_distributions:
             raise RuntimeError(
-                f"There are {n_datasets} passed in, but {len(intervention_targets)} "
-                f"intervention targets. There must be a matching (number of datasets - 1) and "
-                f"intervention targets."
+                f"There are {n_datasets} passed in, but {n_distributions} "
+                f"total assumed distributions. There must be a matching number of datasets and "
+                f"'context.num_distributions'."
             )
 
         super().fit(data, context)
 
-    def orient_edges(self, graph: EquivalenceClass):
-        return super().orient_edges(graph)
+    def _apply_rule11(self, graph: EquivalenceClass, f_nodes: List) -> Tuple[bool, List]:
+        """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.
+
+        This orients all edges out of F-nodes. So patterns of the form
+
+        ``('F', 0) *-* 'x'`` will become ``('F', 0) -> 'x'``.
+
+        For original details of the rule, see :footcite:`Kocaoglu2019characterization`.
+
+        Parameters
+        ----------
+        graph : EquivalenceClass
+            The causal graph to apply rules to.
+        f_nodes : list
+            The list of f-nodes within the graph.
+
+        Returns
+        -------
+        added_arrows : bool
+            Whether or not arrows were added.
+        oriented_edges : List
+            A list of oriented edges.
+
+        References
+        ----------
+        .. footbibliography::
+        """
+        oriented_edges = []
+        added_arrows = True
+        for node in f_nodes:
+            for nbr in graph.neighbors(node):
+                if nbr in f_nodes:
+                    continue
+
+                # remove all edges between node and nbr and orient this out
+                graph.remove_edge(node, nbr)
+                graph.remove_edge(nbr, node)
+                graph.add_edge(node, nbr, graph.directed_edge_name)
+                oriented_edges.append((node, nbr))
+        return added_arrows, oriented_edges
+
+    def _apply_rule12(
+        self,
+        graph: EquivalenceClass,
+        u: Column,
+        a: Column,
+        c: Column,
+        f_nodes: List,
+        symmetric_diff_map: Dict[Any, FrozenSet],
+    ) -> bool:
+        """Apply "Rule 9" of the I-FCI algorithm.
+
+        Checks for inducing paths where 'u' is the F-node, and 'a' and 'c' are connected:
+
+        'u' -> 'a' *-* 'c' with 'u' -> 'c', then orient 'a' -> 'c'.
+
+        For original details of the rule, see :footcite:`Kocaoglu2019characterization`.
+
+        Parameters
+        ----------
+        graph : EquivalenceClass
+            The causal graph.
+        u : Column
+            The candidate F-node
+        a : Column
+            Neighbors of the F-node.
+        c : Column
+            Neighbors of the F-node.
+        symmetric_diff_map : dict
+            A mapping from the F-nodes to the symmetric difference of the pair of
+            intervention targets each F-node represents. I.e. if F-node, F1 represents
+            the pair of intervention distributions with targets {'x'}, and {'x', 'y'},
+            then F1 maps to {'y'} in the symmetric diff map.
+
+        Returns
+        -------
+        added_arrows : bool
+            Whether or not an orientation was made.
+
+        References
+        ----------
+        .. footbibliography::
+        """
+        added_arrows = False
+        if u in f_nodes and self.known_intervention_targets:
+            # get sigma map to map F-node to its symmetric difference target
+            S_set: FrozenSet = symmetric_diff_map.get(u, frozenset())
+
+            # check a *-* c
+            if (
+                len(S_set) == 1
+                and a in S_set
+                and (graph.has_edge(a, c) or graph.has_edge(c, a))
+                and graph.has_edge(u, a)
+                and graph.has_edge(u, c)
+            ):
+                # remove all edges between a and c
+                graph.remove_edge(a, c)
+                graph.remove_edge(c, a)
+
+                # then orient X -> Y
+                graph.add_edge(a, c, graph.directed_edge_name)
+
+                added_arrows = True
+        return added_arrows
+
+    def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):
+        idx = 0
+        finished = False
+
+        # apply R11, which is called R8 in I-FCI / Psi-FCI orienting all F-nodes
+        f_nodes = self.context_.f_nodes
+        symmetric_diff_map = self.context_.symmetric_diff_map
+        _ = self._apply_rule11(graph, f_nodes)
+
+        while idx < self.max_iter and not finished:
+            change_flag = False
+            logger.info(f"Running R1-10 for iteration {idx}")
+
+            for u in graph.nodes:
+                for (a, c) in permutations(graph.neighbors(u), 2):
+                    logger.debug(f"Check {u} {a} {c}")
+
+                    # apply R1-3 to orient triples and arrowheads
+                    r1_add = self._apply_rule1(graph, u, a, c)
+                    r2_add = self._apply_rule2(graph, u, a, c)
+                    r3_add = self._apply_rule3(graph, u, a, c)
+
+                    # apply R4, orienting discriminating paths
+                    r4_add, _ = self._apply_rule4(graph, u, a, c, sep_set)
+
+                    # apply R8 to orient more tails
+                    r8_add = self._apply_rule8(graph, u, a, c)
+
+                    # apply R9-10 to orient uncovered potentially directed paths
+                    r9_add, _ = self._apply_rule9(graph, a, u, c)
+
+                    # a and c are neighbors of u, so u is the endpoint desired
+                    r10_add, _, _ = self._apply_rule10(graph, a, c, u)
+
+                    # apply R12, called R9 in I-FCI when we know the intervention targets
+                    r12_add = self._apply_rule12(graph, u, a, c, f_nodes, symmetric_diff_map)
+
+                    # see if there was a change flag
+                    all_flags = [r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add, r12_add]
+                    if any(all_flags) and not change_flag:
+                        logger.info(f"{change_flag} with {all_flags}")
+                        change_flag = True
+
+            # check if we should continue or not
+            if not change_flag:
+                finished = True
+                if not self.selection_bias:
+                    logger.info(f"Finished applying R1-4, and R8-10 with {idx} iterations")
+                if self.selection_bias:
+                    logger.info(f"Finished applying R1-10 with {idx} iterations")
+                break
+            idx += 1
 
     def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
         import pywhy_graphs as pgraph

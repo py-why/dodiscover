@@ -175,10 +175,8 @@ def test_context_interventions():
     df = make_df()
 
     # check InterventionalContextBuilder errors that should be raised
-    with pytest.raises(ValueError, match="There is no intervention context set"):
-        copy(ctx_builder).variables(data=df).init_graph(
-            nx.empty_graph(df.columns + ["blah"])
-        ).build()
+    with pytest.warns(UserWarning, match="There is no intervention context set"):
+        copy(ctx_builder).variables(data=df).init_graph(nx.empty_graph(df.columns)).build()
 
     with pytest.raises(RuntimeError, match="Not all nodes"):
         copy(ctx_builder).variables(data=df).init_graph(

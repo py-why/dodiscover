@@ -23,9 +23,12 @@ Fundamental Assumptions of Constraint-Based Causal Discovery
 ------------------------------------------------------------
 The fundamental assumptions of all algorithms in this section are the Markov property assumption
 and the causal faithfulness assumption :footcite:`Spirtes1993` and :footcite:`Pearl_causality_2009`.
+
 The Markov assumption states that all d-separation statements in the causal graph imply a
 corresponding CI statement in the data. This is a core-assumption that users from graphical modeling
-may be familiar with. On the other hand, the causal faithfulness assumption states that all
+may be familiar with.
+
+On the other hand, the causal faithfulness assumption states that all
 CI statements in the data map to a d-separation statement. That is, there are no accidental
 CI that occur in the data, which are not represented by a d-separation statement in the underlying
 causal graph. The causal faithfulness assumption is a very problematic assumption because in practice
@@ -33,7 +36,8 @@ one might have data that is very weakly dependent, such that a CI test under a s
 level would fail to reject the null hypothesis and conclude the variables in question are CI. In higher
 dimensions this can occur a large percentage of the time as demonstrated in :footcite:`uhler2013geometry`.
 
-Tackling constraint-based causal discovery is a large and active area of research.
+Tackling violations of faithfulness in constraint-based causal discovery is a large and active
+area of research.
 
 (Non-parametric) Markovian SCMs with Observational Data
 -------------------------------------------------------
@@ -41,29 +45,83 @@ If one assumes that the underlying structural causal model (SCM) is Markovian,
 then the Peter and Clarke (PC) algorithm has been shown to be sound and complete
 for learning a completed partially directed acyclic graph (CPDAG) :footcite:`Meek1995`.
 
-The PC algorithm and its variants assume Markovianity, which is also known as
-causal-sufficiency in the literature. In other words, it assumes a lack of latent
+The :class:`dodiscover.PC` algorithm and its variants assume Markovianity, which is
+also known as causal-sufficiency in the literature. In other words, it assumes a lack of latent
 confounders, where there is no latent variable that is a confounder of the observed data.
 
 The PC algorithm learns a CPDAG in three stages:
 
 1. skeleton discovery: This first phase is the process of leveraging CI tests to test
-    edges for conditional independence.
-2. unshielded triplet orientation:
-3. deterministic path orientations:
+    edges for conditional independence. Along the way, connections of the graph are trimmed
+    (when CI is detected) and the separating sets among pairs of variables are tracked.
 
+    A separating set is a set of nodes in the graph that d-separate a pair of variables.
+    Note that a pair of variables may contain many d-separators, and thus there may be
+    many separating sets.
+2. unshielded triplet orientation: This takes triplets on a path of the form ``X *-* Y *-* Z``,
+    where the triplet path is "unshielded" meaning ``X`` and ``Z`` are not connected. Then
+    it checks that ``Y`` is not in the separating set of X and Z. Given these two conditions,
+    Y must be a collider and is oriented as ``X *-> Y <-* Z``. The stars in the path indicate
+    that it can be any kind of edge endpoint (e.g. in a PAG it could be a circle endpoint edge).
+3. deterministic path orientations: Once all colliders are oriented, there are a set of
+    deterministic logical rules that allow us to orient more edges. In the PC algorithm,
+    these are the so-called "Meek's orientation rules", which are 4 rules that are applied
+    repeatedly until no more changes to the graph are made :footcite:`Meek1995`.
+
+The resulting graph is an equivalence class of DAGs without latent confounders, the CPDAG.
+For more information on CPDAGs, one can also see :class:`pywhy_graphs.CPDAG`.
 
 (Non-parametric) Semi-Markovian SCMs with Observational Data
 ------------------------------------------------------------
+If one assumes that the underlying SCM is Semi-Markovian, then the "Fast Causal Inference"
+(FCI) algorithm has been shown to be sound and complete for learning a partial ancestral
+graph (PAG) :footcite:`zhang2008ancestralgraphs,Zhang2008`.
 
+The FCI algorithm and its variants assume Semi-Markovianity, which assumes the
+possible presence of latent confounders and even selection bias in the observational data.
+
+The :class:`dodiscover.FCI` algorithm follows the three stages of learning that the PC
+algorithm does, but with a few minor modifications that we will outline here:
+
+1. skeleton discovery: The skeleton discovery phase is now composed of two stages. The first
+    stage is the same as the PC algorithm. The second phase, takes the output graph of the first
+    phase and tries to orient colliders. This results in a PAG that can be queried for the
+    potentially d-separating (PDS) sets for any pair of variables ``(X, Y)``. The skeleton
+    discovery phase is restarted from scratch, but now the conditioning sets are chosen from
+    the PDS sets. The PDS set approach is described in :footcite:`Colombo2012` and
+    :footcite:`Spirtes1993`.
+2. deterministic path orientations: The four orientation rules of the PC algorithm are still
+    the same, but in the FCI case, we add an additional six orientation rules. The additional
+    rules account for latent confounding and selection bias. Three of those rules
+    only apply if we assume selection bias is present.
 
 (Non-parametric) SCMs with Interventional Data
 ----------------------------------------------
+When we have access to experimental data, there are multiple datasets corresponding to multiple
+distributions (e.g. observational and different interventions), we can improve causal discovery.
+If one assumes we have access to multiple distributions, one may know the targets of
+each intervention, where one can apply the I-FCI algorithm to learn an Interventional-PAG
+(I-PAG) :footcite:`Kocaoglu2019characterization`.
 
+Alternatively, one may assume they do not know where the intervention was applied in each
+distribution. In this case, one may apply the :math:`Psi`-FCI algorithm to learn a
+:math:`Psi`-PAG :footcite:`Jaber2020causal`.
+
+.. autosummary::
+   :toctree: generated/
+
+   PsiFCI
 
 Choosing the conditioning sets
 ------------------------------
-To describe.
+We briefly describe how ``dodiscover`` chooses conditioning sets, ``Z`` that are tested given
+a pair of nodes ``(X, Y)``. The test we are doing is :math:`X \perp Y | Z`, where ``Z`` can
+be the empty set. There are multiple strategies for choosing ``Z``.
+
+.. autosummary::
+   :toctree: generated/
+
+   ConditioningSetSelection
 
 Hyperparameters and controlling overfitting
 -------------------------------------------

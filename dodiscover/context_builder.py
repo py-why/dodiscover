@@ -1,7 +1,8 @@
 import types
 from copy import copy
 from itertools import combinations
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple, cast
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Union, cast
+from warnings import warn
 
 import networkx as nx
 import numpy as np
@@ -397,7 +398,7 @@ class InterventionalContextBuilder(ContextBuilder):
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
         if self._num_distributions is None:
-            raise ValueError(
+            warn(
                 "There is no intervention context set. Are you sure you are using "
                 "the right contextbuilder? If you only have observational data "
                 "use `ContextBuilder` instead of `InterventionContextBuilder`."
@@ -406,6 +407,12 @@ class InterventionalContextBuilder(ContextBuilder):
         # get F-nodes and sigma-map
         f_nodes, sigma_map, symmetric_diff_map = self._create_augmented_nodes()
         graph_variables = set(self._observed_variables).union(set(f_nodes))
+
+        # infer number of distributions
+        if self._num_distributions is None:
+            num_distributions = int(self._obs_distribution)
+        else:
+            num_distributions = self._num_distributions
 
         empty_graph = self._empty_graph_func(graph_variables)
         return Context(
@@ -420,7 +427,7 @@ class InterventionalContextBuilder(ContextBuilder):
             sigma_map=sigma_map,
             symmetric_diff_map=symmetric_diff_map,
             obs_distribution=self._obs_distribution,
-            num_distributions=self._num_distributions,
+            num_distributions=num_distributions,
         )
 
     def _create_augmented_nodes(self) -> Tuple[List, Dict, Dict]:
@@ -495,7 +502,9 @@ class InterventionalContextBuilder(ContextBuilder):
         return init_graph
 
 
-def make_context(context: Optional[Context] = None, create_using=ContextBuilder) -> ContextBuilder:
+def make_context(
+    context: Optional[Context] = None, create_using=ContextBuilder
+) -> Union[ContextBuilder, InterventionalContextBuilder]:
     """Create a new ContextBuilder instance.
 
     Returns

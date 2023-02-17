@@ -5,7 +5,7 @@ from typing import Optional
 import networkx as nx
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.constraint.config import SkeletonMethods
+from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
@@ -56,8 +56,6 @@ class PC(BaseConstraintDiscovery):
     max_iter : int
         The maximum number of iterations through the graph to apply
         orientation rules.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
 
     Attributes
     ----------
@@ -83,10 +81,9 @@ class PC(BaseConstraintDiscovery):
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
+        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
         max_iter: int = 1000,
-        **ci_estimator_kwargs,
     ):
         super().__init__(
             ci_estimator,
@@ -95,7 +92,6 @@ class PC(BaseConstraintDiscovery):
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
             skeleton_method=skeleton_method,
-            **ci_estimator_kwargs,
         )
         self.max_iter = max_iter
         self.apply_orientations = apply_orientations

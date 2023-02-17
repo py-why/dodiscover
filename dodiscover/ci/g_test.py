@@ -382,7 +382,7 @@ def g_square_discrete(
 
 
 class GSquareCITest(BaseConditionalIndependenceTest):
-    def __init__(self, data_type: str = "binary"):
+    def __init__(self, data_type: str = "binary", levels: Optional[List] = None):
         r"""G squared CI test for discrete or binary data.
 
         For details of the test see :footcite:`Neapolitan2003`.
@@ -392,6 +392,8 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         data_type : str, optional
             The type of data, which can be "binary", or "discrete".
             By default "binary".
+        levels : List, optional
+            Levels of each column in the data matrix (as a list()).
 
         Notes
         -----
@@ -411,6 +413,7 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         .. footbibliography::
         """
         self.data_type = data_type
+        self.levels = levels
 
     def test(
         self,
@@ -418,7 +421,6 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         x_vars: Set[Column],
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
-        levels: Optional[List] = None,
     ) -> Tuple[float, float]:
         """Abstract method for all conditional independence tests.
 
@@ -450,7 +452,7 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         if self.data_type == "binary":
             stat, pvalue = g_square_binary(df, x_var, y_var, z_covariates)
         elif self.data_type == "discrete":
-            stat, pvalue = g_square_discrete(df, x_var, y_var, z_covariates, levels=levels)
+            stat, pvalue = g_square_discrete(df, x_var, y_var, z_covariates, levels=self.levels)
         else:
             raise ValueError(
                 f"The acceptable data_type for G Square CI test is "

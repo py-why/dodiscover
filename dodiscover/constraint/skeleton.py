@@ -11,7 +11,7 @@ import pandas as pd
 
 from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest, Oracle
-from dodiscover.constraint.config import SkeletonMethods
+from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
@@ -143,8 +143,6 @@ class LearnSkeleton:
         by its dependencies from strongest to weakest (i.e. largest CI test statistic value
         to lowest). This can be used in conjunction with ``max_combinations`` parameter
         to only test the "strongest" dependences.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
 
     Attributes
     ----------
@@ -236,14 +234,12 @@ class LearnSkeleton:
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
+        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         keep_sorted: bool = False,
-        ci_estimator_kwargs=None,
     ) -> None:
         self.ci_estimator = ci_estimator
         self.sep_set = sep_set
         self.alpha = alpha
-        self.ci_estimator_kwargs = ci_estimator_kwargs
         self.skeleton_method = skeleton_method
 
         # control of the conditioning set
@@ -266,9 +262,10 @@ class LearnSkeleton:
         if self.max_combinations is not None and self.max_combinations <= 0:
             raise RuntimeError(f"Max combinations must be at least 1, not {self.max_combinations}")
 
-        if self.skeleton_method not in SkeletonMethods:
+        if self.skeleton_method not in ConditioningSetSelection:
             raise ValueError(
-                f"Skeleton method must be one of {SkeletonMethods}, not {self.skeleton_method}."
+                f"Skeleton method must be one of {ConditioningSetSelection}, not "
+                f"{self.skeleton_method}."
             )
 
         if self.sep_set is None and not hasattr(self, "sep_set_"):
@@ -290,9 +287,6 @@ class LearnSkeleton:
             self.max_combinations_ = np.inf
         else:
             self.max_combinations_ = self.max_combinations
-
-        if self.ci_estimator_kwargs is None:
-            self.ci_estimator_kwargs = dict()
 
     def evaluate_edge(
         self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
@@ -319,7 +313,7 @@ class LearnSkeleton:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z)
         self.n_ci_tests += 1
         return test_stat, pvalue
 
@@ -515,12 +509,12 @@ class LearnSkeleton:
         """
         skeleton_method = self.skeleton_method
 
-        if skeleton_method == SkeletonMethods.COMPLETE:
+        if skeleton_method == ConditioningSetSelection.COMPLETE:
             possible_variables = set(adj_graph.nodes)
-        elif skeleton_method == SkeletonMethods.NBRS:
+        elif skeleton_method == ConditioningSetSelection.NBRS:
             possible_variables = set(adj_graph.neighbors(x_var))
             # possible_adjacencies.copy()
-        elif skeleton_method == SkeletonMethods.NBRS_PATH:
+        elif skeleton_method == ConditioningSetSelection.NBRS_PATH:
             # constrain adjacency set to ones with a path from x_var to y_var
             possible_variables = _find_neighbors_along_path(adj_graph, start=x_var, end=y_var)
 
@@ -615,8 +609,6 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         to only test the "strongest" dependences.
     max_path_length : int, optional
         The maximum length of any discriminating path, or None if unlimited.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
 
     Attributes
     ----------
@@ -680,11 +672,12 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
-        second_stage_skeleton_method: Optional[SkeletonMethods] = SkeletonMethods.PDS,
+        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        second_stage_skeleton_method: Optional[
+            ConditioningSetSelection
+        ] = ConditioningSetSelection.PDS,
         keep_sorted: bool = False,
         max_path_length: Optional[int] = None,
-        ci_estimator_kwargs=None,
     ) -> None:
         super().__init__(
             ci_estimator,
@@ -695,7 +688,6 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             max_combinations,
             skeleton_method,
             keep_sorted,
-            ci_estimator_kwargs=ci_estimator_kwargs,
         )
 
         self.second_stage_skeleton_method = second_stage_skeleton_method
@@ -743,13 +735,13 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
                 raise RuntimeError("wtf..")
             skeleton_method = self.second_stage_skeleton_method
 
-            if skeleton_method == SkeletonMethods.PDS:
+            if skeleton_method == ConditioningSetSelection.PDS:
                 # determine how we want to construct the candidates for separating nodes
                 # perform conditioning independence testing on all combinations
                 possible_variables = pgraph.pds(
                     pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
                 )
-            elif skeleton_method == SkeletonMethods.PDS_PATH:
+            elif skeleton_method == ConditioningSetSelection.PDS_PATH:
                 # determine how we want to construct the candidates for separating nodes
                 # perform conditioning independence testing on all combinations
                 possible_variables = pgraph.pds_path(
@@ -861,10 +853,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         to only test the "strongest" dependences.
     max_path_length : int, optional
         The maximum length of any discriminating path, or None if unlimited.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
-    cd_estimator_kwargs : dict
-        Keyword arguments for the ``cd_estimator`` function.
 
     Notes
     -----
@@ -890,13 +878,11 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
-        second_stage_skeleton_method: SkeletonMethods = SkeletonMethods.PDS,
+        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        second_stage_skeleton_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         keep_sorted: bool = False,
         max_path_length: Optional[int] = None,
         known_intervention_targets: bool = False,
-        ci_estimator_kwargs=None,
-        cd_estimator_kwargs=None,
     ) -> None:
         super().__init__(
             ci_estimator,
@@ -909,12 +895,10 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             second_stage_skeleton_method,
             keep_sorted,
             max_path_length,
-            ci_estimator_kwargs,
         )
 
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
-        self.cd_estimator_kwargs = cd_estimator_kwargs
 
     def evaluate_fnode_edge(
         self,
@@ -965,14 +949,10 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # indicates which distribution data came from
         if isinstance(self.cd_estimator, Oracle):
             # test graphically if Y is d-separated from F-node given Z
-            test_stat, pvalue = self.cd_estimator.test(
-                data, {group_col}, Y, Z, **self.cd_estimator_kwargs
-            )
+            test_stat, pvalue = self.cd_estimator.test(data, {group_col}, Y, Z)
         else:
             # test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-            test_stat, pvalue = self.cd_estimator.test(
-                data, Z, Y, group_col, **self.cd_estimator_kwargs
-            )
+            test_stat, pvalue = self.cd_estimator.test(data, Z, Y, group_col)
 
         self.n_ci_tests += 1
         return test_stat, pvalue
@@ -1017,8 +997,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         adj_graph = self.context_.init_graph
         f_nodes = self.context_.f_nodes
 
-        print("Starting learning int skeleton: ", f_nodes)
-
         # the size of the conditioning set will start off at the minimum
         size_cond_set = self.min_cond_set_size_
 
@@ -1057,22 +1035,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                         # summarize the comparison of XY
                         self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
                         continue
-
-                    # TODO: allow ignoring fixed edges
-                    # if self.context_.included_edges.has_edge(x_var, y_var):
-                    #     continue
-                    # if self.context_.excluded_edges.has_edge(x_var, y_var):
-                    #     pvalue = 1.0
-                    #     test_stat = 0.0
-
-                    #     # post-process the CI test results
-                    #     removed_edge = self._postprocess_ci_test(
-                    #         adj_graph, x_var, y_var, {}, test_stat, pvalue
-                    #     )
-
-                    #     # summarize the comparison of XY
-                    #     self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
-                    #     continue
 
                     # compute the possible variables used in the conditioning set
                     possible_variables = self._compute_candidate_conditioning_sets(
@@ -1179,8 +1141,9 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         context : Context
             Context object.
         """
-        if self.cd_estimator_kwargs is None:
-            self.cd_estimator_kwargs = dict()
+        # ensure data is a list
+        if isinstance(data, pd.DataFrame):
+            data = [data]
 
         # error-check the datasets passed in match the intervention contexts
         if len(data) != context.num_distributions:
@@ -1188,7 +1151,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 f"The number of datasets does not match the number of interventions. "
                 f"You passed in {len(data)} different datasets, whereas "
                 f"there are {len(context.intervention_targets)} different interventions "
-                f"specified. It is assumed that the first dataset is observational, "
+                f"specified and {context.num_distributions} distributions assumed. "
+                f"It is assumed that the first dataset is observational, "
                 f"while the rest are interventional."
             )
 

@@ -9,7 +9,7 @@ from pywhy_graphs import ADMG, PAG
 
 from dodiscover import FCI, make_context
 from dodiscover.ci import Oracle
-from dodiscover.constraint.config import SkeletonMethods
+from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import dummy_sample
 
 np.random.seed(12345)
@@ -23,19 +23,20 @@ class Test_FCI:
         oracle = Oracle(G)
         fci = FCI(ci_estimator=oracle)
 
+        self.context_func = make_context
         self.G = G
         self.ci_estimator = oracle
         self.alg = fci
 
     def test_fci_skel_graph(self):
         sample = dummy_sample(self.G)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
         skel_graph, _ = self.alg.learn_skeleton(sample, context)
         assert nx.is_isomorphic(skel_graph, self.G.to_undirected())
 
     def test_fci_basic_collider(self):
         sample = dummy_sample(self.G)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
         skel_graph, sep_set = self.alg.learn_skeleton(sample, context)
         graph = PAG(incoming_circle_edges=skel_graph)
         self.alg.orient_unshielded_triples(graph, sep_set)
@@ -425,6 +426,9 @@ class Test_FCI:
         assert not self.alg._apply_rule8(G, "u", "A", "C")
 
     def test_fci_rule8_with_selection_bias(self):
+        if not self.alg.selection_bias:
+            pytest.skip(reason="No selection bias for this algorithm")
+
         # If A -o u -> C and A o-> C then orient A o-> C as A -> C
         G = PAG()
 
@@ -565,7 +569,7 @@ class Test_FCI:
         latent_edge_list = [("x1", "x2")]
         G = ADMG(edge_list, incoming_bidirected_edges=latent_edge_list)
         sample = dummy_sample(G)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
 
         oracle = Oracle(G)
         ci_estimator = oracle
@@ -602,7 +606,7 @@ class Test_FCI:
         graph = ADMG(edge_list, latent_edge_list)
         alg = FCI(ci_estimator=Oracle(graph))
         sample = dummy_sample(graph)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
         alg.fit(sample, context)
         pag = alg.graph_
         skel_graph = alg.graph_
@@ -636,8 +640,17 @@ class Test_FCI:
         assert nx.is_isomorphic(skel_graph.to_undirected(), expected_pag.to_undirected())
         assert set(expected_pag.edges()) == set(pag.edges())
 
-    @pytest.mark.parametrize("skeleton_method", [SkeletonMethods.NBRS, SkeletonMethods.NBRS_PATH, SkeletonMethods.COMPLETE])
-    @pytest.mark.parametrize("pds_skeleton_method", [SkeletonMethods.PDS, SkeletonMethods.PDS_PATH])
+    @pytest.mark.parametrize(
+        "skeleton_method",
+        [
+            ConditioningSetSelection.NBRS,
+            ConditioningSetSelection.NBRS_PATH,
+            ConditioningSetSelection.COMPLETE,
+        ],
+    )
+    @pytest.mark.parametrize(
+        "pds_skeleton_method", [ConditioningSetSelection.PDS, ConditioningSetSelection.PDS_PATH]
+    )
     @pytest.mark.parametrize("selection_bias", [True, False])
     def test_fci_complex(self, skeleton_method, pds_skeleton_method, selection_bias):
         """
@@ -662,7 +675,7 @@ class Test_FCI:
         latent_edge_list = [("x1", "x2"), ("x4", "x5")]
         G = ADMG(edge_list, latent_edge_list)
         sample = dummy_sample(G)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(
@@ -721,7 +734,7 @@ class Test_FCI:
         assert pywhy_graphs.networkx.m_separated(G, {"A"}, {"D"}, {"B", "C"})
 
         sample = dummy_sample(G)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=False)
@@ -764,7 +777,7 @@ class Test_FCI:
         G._edge_graphs.pop("circle")
 
         sample = dummy_sample(G)
-        context = make_context().variables(data=sample).build()
+        context = self.context_func().variables(data=sample).build()
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=True)

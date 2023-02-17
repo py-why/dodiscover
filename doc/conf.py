@@ -205,6 +205,7 @@ intersphinx_mapping = {
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
     "torch": ("https://pytorch.org/docs/master/", None),
+    "pywhy_graphs": ("https://www.pywhy.org/pywhy-graphs/dev/", None),
 }
 intersphinx_timeout = 5
 

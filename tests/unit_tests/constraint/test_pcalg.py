@@ -8,7 +8,7 @@ from pywhy_graphs import ADMG, CPDAG
 from dodiscover import make_context
 from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint import PC
-from dodiscover.constraint.config import SkeletonMethods
+from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import dummy_sample
 from dodiscover.metrics import confusion_matrix_networks
 from dodiscover.testdata.testdata import bin_data, dis_data
@@ -22,7 +22,7 @@ from dodiscover.testdata.testdata import bin_data, dis_data
             "max_cond_set_size": 3,
             "max_combinations": 10,
             "max_iter": 10,
-            "skeleton_method": SkeletonMethods.NBRS_PATH,
+            "skeleton_method": ConditioningSetSelection.NBRS_PATH,
         },
         {},
     ],

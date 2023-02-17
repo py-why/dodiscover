@@ -46,7 +46,7 @@ Constraint-based structure learning
 
    LearnSkeleton
    LearnSemiMarkovianSkeleton
-   SkeletonMethods
+   ConditioningSetSelection
    PC
    FCI
 
