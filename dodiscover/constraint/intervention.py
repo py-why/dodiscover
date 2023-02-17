@@ -36,7 +36,7 @@ class PsiFCI(FCI):
 
     Parameters
     ----------
-    ci_estimator : Callable
+    ci_estimator : BaseConditionalIndependenceTest
         The conditional independence test function. The arguments of the estimator should
         be data, node, node to compare, conditioning set of nodes, and any additional
         keyword arguments.
@@ -59,7 +59,7 @@ class PsiFCI(FCI):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
+    skeleton_method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
@@ -72,7 +72,7 @@ class PsiFCI(FCI):
         orientation rules.
     max_path_length : int, optional
         The maximum length of any discriminating path, or None if unlimited.
-    pds_skeleton_method : SkeletonMethods
+    pds_skeleton_method : ConditioningSetSelection
         The method to use for learning the skeleton using PDS. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
     known_intervention_targets : bool, optional
@@ -132,7 +132,6 @@ class PsiFCI(FCI):
             keep_sorted=False,
             max_path_length=self.max_path_length,
         )
-        print(context)
         self.skeleton_learner_.fit(data, context)
 
         skel_graph = self.skeleton_learner_.adj_graph_
@@ -153,12 +152,12 @@ class PsiFCI(FCI):
             environments. We assume the first dataset is always
             observational.
         context : Context
-            _description_
+            The context with interventional assumptions.
 
         Returns
         -------
-        _type_
-            _description_
+        self : PsiFCI
+            The fitted learner.
         """
         if not isinstance(data, list):
             raise RuntimeError("The input datasets must be in a Python list.")
@@ -173,7 +172,7 @@ class PsiFCI(FCI):
                 f"'context.num_distributions'."
             )
 
-        super().fit(data, context)
+        return super().fit(data, context)
 
     def _apply_rule11(self, graph: EquivalenceClass, f_nodes: List) -> Tuple[bool, List]:
         """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.

@@ -45,7 +45,7 @@ class PC(BaseConstraintDiscovery):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
+    skeleton_method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool

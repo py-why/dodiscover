@@ -111,6 +111,7 @@ numpydoc_xref_ignore = {
     "CPDAG",
     "PAG",
     "ADMG",
+    "PsiFCI",
     # networkx
     "node",
     "nodes",
@@ -148,6 +149,7 @@ numpydoc_xref_aliases = {
     "nx.Graph": "networkx.Graph",
     "nx.DiGraph": "networkx.DiGraph",
     "nx.MultiDiGraph": "networkx.MultiDiGraph",
+    "nx": "networkx",
     "pgmpy.models.BayesianNetwork": "pgmpy.models.BayesianNetwork",
     # dodiscover
     "ADMG": "dodiscover.ADMG",
@@ -155,6 +157,8 @@ numpydoc_xref_aliases = {
     "CPDAG": "dodiscover.CPDAG",
     "DAG": "dodiscover.DAG",
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
+    "BaseConditionalDiscrepancyTest": "dodiscover.cd.BaseConditionalDiscrepancyTest",
+    "ConditioningSetSelection": "dodiscover.constraint.ConditioningSetSelection",
     "Context": "dodiscover.context.Context",
     "PC": "dodiscover.PC",
     "EquivalenceClass": "dodiscover.EquivalenceClass",
@@ -173,7 +177,7 @@ numpydoc_xref_aliases = {
     "column": "pandas.DataFrame.columns",
 }
 
-default_role = "py:obj"
+default_role = "literal"
 
 # Tell myst-parser to assign header anchors for h1-h3.
 # myst_heading_anchors = 3

@@ -3,8 +3,10 @@
 ==================================
 Constraint-based causal discovery
 ==================================
-
-.. currentmodule:: dodiscover.constraint
+.. automodule:: dodiscover.constraint
+    :no-members:
+    :no-inherited-members:
+.. currentmodule:: dodiscover
 
 The following are a set of methods intended for (non-parametric) structure learning
 of causal graphs (i.e. causal discovery) given observational and/or interventional data
@@ -45,7 +47,7 @@ If one assumes that the underlying structural causal model (SCM) is Markovian,
 then the Peter and Clarke (PC) algorithm has been shown to be sound and complete
 for learning a completed partially directed acyclic graph (CPDAG) :footcite:`Meek1995`.
 
-The :class:`dodiscover.PC` algorithm and its variants assume Markovianity, which is
+The :class:`dodiscover.constraint.PC` algorithm and its variants assume Markovianity, which is
 also known as causal-sufficiency in the literature. In other words, it assumes a lack of latent
 confounders, where there is no latent variable that is a confounder of the observed data.
 
@@ -80,7 +82,7 @@ graph (PAG) :footcite:`zhang2008ancestralgraphs,Zhang2008`.
 The FCI algorithm and its variants assume Semi-Markovianity, which assumes the
 possible presence of latent confounders and even selection bias in the observational data.
 
-The :class:`dodiscover.FCI` algorithm follows the three stages of learning that the PC
+The :class:`dodiscover.constraint.FCI` algorithm follows the three stages of learning that the PC
 algorithm does, but with a few minor modifications that we will outline here:
 
 1. skeleton discovery: The skeleton discovery phase is now composed of two stages. The first
@@ -110,7 +112,7 @@ distribution. In this case, one may apply the :math:`Psi`-FCI algorithm to learn
 .. autosummary::
    :toctree: generated/
 
-   PsiFCI
+    constraint.PsiFCI
 
 Choosing the conditioning sets
 ------------------------------
@@ -121,7 +123,7 @@ be the empty set. There are multiple strategies for choosing ``Z``.
 .. autosummary::
    :toctree: generated/
 
-   ConditioningSetSelection
+   constraint.ConditioningSetSelection
 
 Hyperparameters and controlling overfitting
 -------------------------------------------

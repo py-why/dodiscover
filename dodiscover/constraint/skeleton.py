@@ -134,7 +134,7 @@ class LearnSkeleton:
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
+    skeleton_method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('complete', 'neighbors', 'neighbors_path'). See Notes for more details.
     keep_sorted : bool
@@ -505,7 +505,7 @@ class LearnSkeleton:
         Notes
         -----
         The :attr:`skeleton_method` dictates how we choose the corresponding conditioning sets.
-        For more information, see :class:`SkeletonMethods`.
+        For more information, see :class:`ConditioningSetSelection`.
         """
         skeleton_method = self.skeleton_method
 
@@ -594,10 +594,10 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
+    skeleton_method : ConditioningSetSelection
         The method to use for determining conditioning sets when testing conditional
         independence of the first stage. See :class:`LearnSkeleton` for details.
-    second_stage_skeleton_method : SkeletonMethods | None
+    second_stage_skeleton_method : ConditioningSetSelection | None
         The method to use for determining conditioning sets when testing conditional
         independence of the first stage. Must be one of ('pds', 'pds_path'). See Notes
         for more details. If `None`, then no second stage skeleton discovery phase will be run.
@@ -842,7 +842,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
+    skeleton_method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
     keep_sorted : bool

@@ -58,8 +58,8 @@ class Context(BasePyWhy):
     Currently, testing for equality is done on all attributes that are not
     graphs. Defining equality among graphs is ill-defined, and as such, we
     leave testing of the internal graphs to users. Some checks of equality
-    for example can be :func:`networkx.is_isomorphic` for checking isomorphism
-    among two graphs.
+    for example can be :func:`networkx.algorithms.isomorphism.is_isomorphic`
+    for checking isomorphism among two graphs.
     """
 
     observed_variables: Set[Column]

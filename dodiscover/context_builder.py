@@ -319,12 +319,12 @@ class InterventionalContextBuilder(ContextBuilder):
 
     The context builder provides a way to capture assumptions, domain knowledge,
     and data. This should NOT be instantiated directly. One should instead use
-    `dodiscover.make_context` to build a Context data structure.
+    :func:`dodiscover.make_context` to build a Context data structure.
 
     Notes
     -----
     The number of distributions and/or interventional targets must be set in order
-    to build the `dodiscover.Context` object here.
+    to build the :class:`~.context.Context` object here.
     """
 
     _intervention_targets: List[Tuple[Column]] = []
@@ -367,7 +367,7 @@ class InterventionalContextBuilder(ContextBuilder):
 
         Parameters
         ----------
-        interventions : List of tuples
+        interventions : List of tuple
             A list of tuples of nodes that are known intervention targets.
             Assumes that the order of the interventions marked are those of the
             passed in the data.
@@ -509,7 +509,7 @@ def make_context(
 
     Returns
     -------
-    result : ContextBuilder
+    result : ContextBuilder, InterventionalContextBuilder
         The new ContextBuilder instance
 
     Examples
@@ -521,12 +521,12 @@ def make_context(
 
     Notes
     -----
-    `dodiscover.Context` objects are dataclasses that creates a dictionary-like access
-    to causal context metadata. Copying relevant information from a `dodiscover.Context`
+    :class:`~.context.Context` objects are dataclasses that creates a dictionary-like access
+    to causal context metadata. Copying relevant information from a Context
     object into a `ContextBuilder` is all supported with the exception of
     state variables. State variables are not copied over. To set state variables
     again, one must build the Context and then call
-    :meth:`dodiscover.Context.state_variable`.
+    :py:meth:`~.context.Context.state_variable`.
     """
     result = create_using()
     if context is not None:

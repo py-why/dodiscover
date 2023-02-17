@@ -16,8 +16,9 @@ User Guide
 
    constraint_causal_discovery.rst
    conditional_independence.rst
-   .. scores_causal_discovery.rst
-   .. visualizations.rst
-   .. datasets.rst
-   .. computing.rst
-   .. common_pitfalls.rst
+
+.. scores_causal_discovery.rst
+.. visualizations.rst
+.. datasets.rst
+.. computing.rst
+.. common_pitfalls.rst

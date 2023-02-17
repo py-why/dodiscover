@@ -48,7 +48,7 @@ class FCI(BaseConstraintDiscovery):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
+    skeleton_method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
@@ -64,7 +64,7 @@ class FCI(BaseConstraintDiscovery):
     selection_bias : bool
         Whether or not to account for selection bias within the causal PAG.
         See :footcite:`Zhang2008`.
-    pds_skeleton_method : SkeletonMethods
+    pds_skeleton_method : ConditioningSetSelection
         The method to use for learning the skeleton using PDS. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
 
