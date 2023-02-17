@@ -5,7 +5,6 @@ from numpy.typing import ArrayLike
 from scipy.linalg import logm
 from scipy.optimize import minimize_scalar
 from scipy.stats import gaussian_kde
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import pairwise_distances, pairwise_kernels
 
 
@@ -270,54 +269,6 @@ def _estimate_kwidth(
         # prevents division by zero when used on label vectors
         kwidth = med if med else 1
     return kwidth
-
-
-def _kernel_estimate_propensity_scores(
-    K: ArrayLike,
-    group_ind: ArrayLike,
-    penalty: Optional[float] = None,
-    n_jobs: Optional[int] = None,
-    random_state: Optional[int] = None,
-) -> ArrayLike:
-    """Estimate propensity scores given kernel and propensities.
-
-    Parameters
-    ----------
-    K : ArrayLike of shape (n_samples, n_samples)
-        The kernel matrix generated.
-    group_ind : ArrayLike of shape (n_samples,)
-        Group indicator (empirical labels). Must be comprised of only
-        1's and 0's (i.e. binary groups).
-    penalty : float, optional
-        L2 regularization, by default None.
-    n_jobs : int, optional
-        Joblib parallelization, by default None.
-    random_state : int, optional
-        Random seed, by default None.
-
-    Returns
-    -------
-    e_hat : ArrayLike of shape (n_samples)
-        The predicted propensities (i.e. probabilities) of samples falling
-        into ``group_ind = 1``.
-    """
-    if penalty is None:
-        penalty = _default_regularization(K)
-
-    clf = LogisticRegression(
-        penalty="l2",
-        n_jobs=n_jobs,
-        warm_start=True,
-        solver="lbfgs",
-        random_state=random_state,
-        C=1 / (2 * penalty),
-    )
-
-    # fit and then obtain the probabilities of treatment
-    # for each sample (i.e. the propensity scores)
-    e_hat = clf.fit(K, group_ind).predict_proba(K)[:, 1]
-
-    return e_hat
 
 
 def _center_kernel(K: ArrayLike):

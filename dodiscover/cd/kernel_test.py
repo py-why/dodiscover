@@ -2,14 +2,9 @@ from typing import Set, Tuple
 
 import numpy as np
 import pandas as pd
-from joblib import Parallel, delayed
 from numpy.typing import ArrayLike
 
-from dodiscover.ci.kernel_utils import (
-    _default_regularization,
-    _kernel_estimate_propensity_scores,
-    compute_kernel,
-)
+from dodiscover.ci.kernel_utils import _default_regularization, compute_kernel
 from dodiscover.typing import Column
 
 from .base import BaseConditionalDiscrepancyTest
@@ -24,9 +19,11 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     Parameters
     ----------
     distance_metric : str, optional
-        _description_, by default "euclidean"
+        Distance metric to use, by default "euclidean". For others, see
+        :class:`~sklearn.metrics.DistanceMetric` for supported list of metrics.
     metric : str, optional
-        _description_, by default "rbf"
+        Kernel metric, by default "rbf". For others, see :mod:`~sklearn.metrics.pairwise`
+        for supported kernel metrics.
     l2 : float | tuple of float, optional
         The l2 regularization to apply for inverting the kernel matrices of 'x' and 'y'
         respectively, by default None. If a single number, then the same l2 regularization
@@ -43,8 +40,23 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         Number of times to sample the null distribution, by default 1000.
     n_jobs : int, optional
         Number of jobs to run computations in parallel, by default None.
+    propensity_model : callable, optional
+        The propensity model to estimate propensity scores among the groups. If `None`
+        (default) will use :class:`sklearn.linear_model.LogisticRegression`. The
+        ``propensity_model`` passed in must implement a ``predict_proba`` method in
+        order to be used. See https://scikit-learn.org/stable/glossary.html#term-predict_proba
+        for more information.
+    propensity_est : array-like of shape (n_samples, n_groups,), optional
+        The propensity estimates for each group. Must match the cardinality of the
+        ``group_col`` in the data passed to ``test`` function. If `None` (default),
+        will build a propensity model using the argument in ``propensity_model``.
     random_state : int, optional
         Random seed, by default None.
+
+    Notes
+    -----
+    Currently only testing among two groups are supported. Therefore ``df[group_col]`` must
+    only contain binary indicators and ``propensity_est`` must contain only two columns.
 
     References
     ----------
@@ -60,6 +72,8 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         kwidth_y=None,
         null_reps: int = 1000,
         n_jobs=None,
+        propensity_model=None,
+        propensity_est=None,
         random_state=None,
     ) -> None:
         self.l2 = l2
@@ -71,6 +85,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         self.kwidth_y = kwidth_y
         self.metric = metric
         self.distance_metric = distance_metric
+
+        self.propensity_model = propensity_model
+        self.propensity_est = propensity_est
 
     def test(
         self,
@@ -99,7 +116,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             Set of Y variables.
         group_col : Column
             The column denoting, which group (i.e. environment) each sample belongs to.
-            This is typically the F-node.
+            This is typically the F-node. Must be binary.
 
         Returns
         -------
@@ -108,11 +125,11 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         pvalue : float
             The computed p-value.
         """
-        x_cols = list(x_vars)
-        y_cols = list(y_vars)
-
         # check test input
         self._check_test_input(df, x_vars, y_vars, group_col)
+
+        x_cols = list(x_vars)
+        y_cols = list(y_vars)
 
         group_ind = df[group_col].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:
@@ -144,14 +161,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         stat = self._statistic(K, L, group_ind)
 
         # compute propensity scores
-        self.propensity_penalty_ = _default_regularization(K)
-        e_hat = _kernel_estimate_propensity_scores(
-            K,
-            group_ind,
-            penalty=self.propensity_penalty_,
-            n_jobs=self.n_jobs,
-            random_state=self.random_state,
-        )
+        e_hat = self._compute_propensity_scores(group_ind, K=K)
 
         # now compute null distribution
         null_dist = self.compute_null(
@@ -249,14 +259,3 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             if len(self.l2) != 2:
                 raise RuntimeError(f"l2 regularization {self.l2} must be a 2-tuple, or a number.")
             self.regs_ = self.l2
-
-    def compute_null(self, e_hat, K, L, null_reps=1000, random_state=None):
-        rng = np.random.default_rng(random_state)
-
-        # compute the test statistic on the conditionally permuted
-        # dataset, where each group label is resampled for each sample
-        # according to its propensity score
-        null_dist = Parallel(n_jobs=self.n_jobs)(
-            [delayed(self._statistic)(K, L, rng.binomial(1, e_hat)) for _ in range(null_reps)]
-        )
-        return null_dist

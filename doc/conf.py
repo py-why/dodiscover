@@ -132,6 +132,8 @@ numpydoc_xref_ignore = {
     "NDArray",
     "n_samples_X",
     "n_samples_Y",
+    "n_features_x",
+    "n_features_y",
     "n_features",
     "n_features_z",
     "k",
