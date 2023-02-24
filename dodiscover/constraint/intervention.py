@@ -59,8 +59,8 @@ class PsiFCI(FCI):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : ConditioningSetSelection
-        The method to use for testing conditional independence. Must be one of
+    condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
@@ -72,8 +72,8 @@ class PsiFCI(FCI):
         orientation rules.
     max_path_length : int, optional
         The maximum length of any discriminating path, or None if unlimited.
-    pds_skeleton_method : ConditioningSetSelection
-        The method to use for learning the skeleton using PDS. Must be one of
+    pds_condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets using PDS. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
     known_intervention_targets : bool, optional
         If `True`, then will run the I-FCI algorithm. If `False`, will run the
@@ -92,11 +92,11 @@ class PsiFCI(FCI):
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
-        pds_skeleton_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
+        pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         known_intervention_targets: bool = False,
     ):
         super().__init__(
@@ -105,12 +105,12 @@ class PsiFCI(FCI):
             min_cond_set_size,
             max_cond_set_size,
             max_combinations,
-            skeleton_method,
+            condsel_method,
             apply_orientations,
             max_iter=max_iter,
             max_path_length=max_path_length,
             selection_bias=False,
-            pds_skeleton_method=pds_skeleton_method,
+            pds_condsel_method=pds_condsel_method,
         )
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
@@ -127,8 +127,8 @@ class PsiFCI(FCI):
             min_cond_set_size=self.min_cond_set_size,
             max_cond_set_size=self.max_cond_set_size,
             max_combinations=self.max_combinations,
-            skeleton_method=self.skeleton_method,
-            second_stage_skeleton_method=self.pds_skeleton_method,
+            condsel_method=self.condsel_method,
+            second_stage_condsel_method=self.pds_condsel_method,
             keep_sorted=False,
             max_path_length=self.max_path_length,
         )

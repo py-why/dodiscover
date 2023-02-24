@@ -48,8 +48,8 @@ class FCI(BaseConstraintDiscovery):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : ConditioningSetSelection
-        The method to use for testing conditional independence. Must be one of
+    condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
@@ -64,8 +64,8 @@ class FCI(BaseConstraintDiscovery):
     selection_bias : bool
         Whether or not to account for selection bias within the causal PAG.
         See :footcite:`Zhang2008`.
-    pds_skeleton_method : ConditioningSetSelection
-        The method to use for learning the skeleton using PDS. Must be one of
+    pds_condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets using PDS. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
 
     References
@@ -89,12 +89,12 @@ class FCI(BaseConstraintDiscovery):
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
         selection_bias: bool = True,
-        pds_skeleton_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
+        pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
     ):
         super().__init__(
             ci_estimator,
@@ -102,13 +102,13 @@ class FCI(BaseConstraintDiscovery):
             min_cond_set_size=min_cond_set_size,
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
-            skeleton_method=skeleton_method,
+            condsel_method=condsel_method,
         )
         self.max_iter = max_iter
         self.apply_orientations = apply_orientations
         self.max_path_length = max_path_length
         self.selection_bias = selection_bias
-        self.pds_skeleton_method = pds_skeleton_method
+        self.pds_condsel_method = pds_condsel_method
 
     def orient_unshielded_triples(self, graph: EquivalenceClass, sep_set: SeparatingSet) -> None:
         """Orient colliders given a graph and separation set.
@@ -819,8 +819,8 @@ class FCI(BaseConstraintDiscovery):
             min_cond_set_size=self.min_cond_set_size,
             max_cond_set_size=self.max_cond_set_size,
             max_combinations=self.max_combinations,
-            skeleton_method=self.skeleton_method,
-            second_stage_skeleton_method=self.pds_skeleton_method,
+            condsel_method=self.condsel_method,
+            second_stage_condsel_method=self.pds_condsel_method,
             keep_sorted=False,
             max_path_length=self.max_path_length,
         )

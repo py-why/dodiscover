@@ -38,8 +38,8 @@ class BaseConstraintDiscovery:
         parents still, by default None. If None, then will not be used. If set, then
         the conditioning set will be chosen lexographically based on the sorted
         test statistic values of 'ith Pa(X) -> X', for each possible parent node of 'X'.
-    skeleton_method : SkeletonMethods
-        The method to use for testing conditional independence. Must be one of
+    condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
@@ -66,13 +66,13 @@ class BaseConstraintDiscovery:
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
     ):
         self.alpha = alpha
         self.ci_estimator = ci_estimator
         self.apply_orientations = apply_orientations
-        self.skeleton_method = skeleton_method
+        self.condsel_method = condsel_method
 
         # constraining the conditional independence tests
         if max_cond_set_size is None:
@@ -247,7 +247,7 @@ class BaseConstraintDiscovery:
             min_cond_set_size=self.min_cond_set_size,
             max_cond_set_size=self.max_cond_set_size,
             max_combinations=self.max_combinations,
-            skeleton_method=self.skeleton_method,
+            condsel_method=self.condsel_method,
             keep_sorted=False,
         )
         skel_alg.fit(data, context)

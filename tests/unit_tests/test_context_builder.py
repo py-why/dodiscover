@@ -188,7 +188,7 @@ def test_context_interventions():
             5
         ).build()
 
-    with pytest.raises(RuntimeError, match="Setting the number of intervention targets"):
+    with pytest.raises(RuntimeError, match="Setting the number of distribution"):
         copy(ctx_builder).variables(data=df).num_distributions(5).intervention_targets(
             [("x",)]
         ).build()

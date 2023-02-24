@@ -134,8 +134,8 @@ class LearnSkeleton:
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : ConditioningSetSelection
-        The method to use for testing conditional independence. Must be one of
+    condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning set. Must be one of
         ('complete', 'neighbors', 'neighbors_path'). See Notes for more details.
     keep_sorted : bool
         Whether or not to keep the considered conditioning set variables in sorted
@@ -205,7 +205,7 @@ class LearnSkeleton:
     Different methods for learning the skeleton:
 
         There are different ways to learn the skeleton that are valid under various
-        assumptions. The value of ``skeleton_method`` completely defines how one
+        assumptions. The value of ``condsel_method`` completely defines how one
         selects the conditioning set.
 
         - 'complete': This exhaustively conditions on all combinations of variables in
@@ -234,13 +234,13 @@ class LearnSkeleton:
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         keep_sorted: bool = False,
     ) -> None:
         self.ci_estimator = ci_estimator
         self.sep_set = sep_set
         self.alpha = alpha
-        self.skeleton_method = skeleton_method
+        self.condsel_method = condsel_method
 
         # control of the conditioning set
         self.min_cond_set_size = min_cond_set_size
@@ -262,10 +262,10 @@ class LearnSkeleton:
         if self.max_combinations is not None and self.max_combinations <= 0:
             raise RuntimeError(f"Max combinations must be at least 1, not {self.max_combinations}")
 
-        if self.skeleton_method not in ConditioningSetSelection:
+        if self.condsel_method not in ConditioningSetSelection:
             raise ValueError(
                 f"Skeleton method must be one of {ConditioningSetSelection}, not "
-                f"{self.skeleton_method}."
+                f"{self.condsel_method}."
             )
 
         if self.sep_set is None and not hasattr(self, "sep_set_"):
@@ -504,17 +504,17 @@ class LearnSkeleton:
 
         Notes
         -----
-        The :attr:`skeleton_method` dictates how we choose the corresponding conditioning sets.
+        The :attr:`condsel_method` dictates how we choose the corresponding conditioning sets.
         For more information, see :class:`ConditioningSetSelection`.
         """
-        skeleton_method = self.skeleton_method
+        condsel_method = self.condsel_method
 
-        if skeleton_method == ConditioningSetSelection.COMPLETE:
+        if condsel_method == ConditioningSetSelection.COMPLETE:
             possible_variables = set(adj_graph.nodes)
-        elif skeleton_method == ConditioningSetSelection.NBRS:
+        elif condsel_method == ConditioningSetSelection.NBRS:
             possible_variables = set(adj_graph.neighbors(x_var))
             # possible_adjacencies.copy()
-        elif skeleton_method == ConditioningSetSelection.NBRS_PATH:
+        elif condsel_method == ConditioningSetSelection.NBRS_PATH:
             # constrain adjacency set to ones with a path from x_var to y_var
             possible_variables = _find_neighbors_along_path(adj_graph, start=x_var, end=y_var)
 
@@ -594,10 +594,10 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : ConditioningSetSelection
+    condsel_method : ConditioningSetSelection
         The method to use for determining conditioning sets when testing conditional
         independence of the first stage. See :class:`LearnSkeleton` for details.
-    second_stage_skeleton_method : ConditioningSetSelection | None
+    second_stage_condsel_method : ConditioningSetSelection | None
         The method to use for determining conditioning sets when testing conditional
         independence of the first stage. Must be one of ('pds', 'pds_path'). See Notes
         for more details. If `None`, then no second stage skeleton discovery phase will be run.
@@ -649,7 +649,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
     Different methods for learning the skeleton:
 
         There are different ways to learn the skeleton that are valid under various
-        assumptions. The value of ``skeleton_method`` completely defines how one
+        assumptions. The value of ``condsel_method`` completely defines how one
         selects the conditioning set.
 
         - 'pds': This conditions on the PDS set of 'x_var'. Note, this definition does
@@ -672,8 +672,8 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
-        second_stage_skeleton_method: Optional[
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        second_stage_condsel_method: Optional[
             ConditioningSetSelection
         ] = ConditioningSetSelection.PDS,
         keep_sorted: bool = False,
@@ -686,11 +686,11 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             min_cond_set_size,
             max_cond_set_size,
             max_combinations,
-            skeleton_method,
+            condsel_method,
             keep_sorted,
         )
 
-        self.second_stage_skeleton_method = second_stage_skeleton_method
+        self.second_stage_condsel_method = second_stage_condsel_method
         self.max_path_length = max_path_length
 
     def _orient_unshielded_triples(self, graph: EquivalenceClass, sep_set: SeparatingSet) -> None:
@@ -733,15 +733,15 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         else:
             if not all(x in pag.nodes for x in [x_var, y_var]):
                 raise RuntimeError("wtf..")
-            skeleton_method = self.second_stage_skeleton_method
+            condsel_method = self.second_stage_condsel_method
 
-            if skeleton_method == ConditioningSetSelection.PDS:
+            if condsel_method == ConditioningSetSelection.PDS:
                 # determine how we want to construct the candidates for separating nodes
                 # perform conditioning independence testing on all combinations
                 possible_variables = pgraph.pds(
                     pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
                 )
-            elif skeleton_method == ConditioningSetSelection.PDS_PATH:
+            elif condsel_method == ConditioningSetSelection.PDS_PATH:
                 # determine how we want to construct the candidates for separating nodes
                 # perform conditioning independence testing on all combinations
                 possible_variables = pgraph.pds_path(
@@ -777,7 +777,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         # if there is no second stage skeleton method to be run, then we
         # will stop with the skeleton here
-        if self.second_stage_skeleton_method is None:
+        if self.second_stage_condsel_method is None:
             return self
 
         # convert the undirected skeleton graph to a PAG, where
@@ -842,7 +842,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : ConditioningSetSelection
+    condsel_method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
     keep_sorted : bool
@@ -878,8 +878,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         min_cond_set_size: int = 0,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
-        second_stage_skeleton_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        second_stage_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         keep_sorted: bool = False,
         max_path_length: Optional[int] = None,
         known_intervention_targets: bool = False,
@@ -891,8 +891,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             min_cond_set_size,
             max_cond_set_size,
             max_combinations,
-            skeleton_method,
-            second_stage_skeleton_method,
+            condsel_method,
+            second_stage_condsel_method,
             keep_sorted,
             max_path_length,
         )
@@ -947,12 +947,9 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         # compare conditional distributions P(Y | X) vs P'(Y | X), where 'group_col'
         # indicates which distribution data came from
-        if isinstance(self.cd_estimator, Oracle):
-            # test graphically if Y is d-separated from F-node given Z
-            test_stat, pvalue = self.cd_estimator.test(data, {group_col}, Y, Z)
-        else:
-            # test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-            test_stat, pvalue = self.cd_estimator.test(data, Z, Y, group_col)
+        # test graphically if Y is d-separated from F-node given Z
+        # or test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
+        test_stat, pvalue = self.cd_estimator.test(data, {group_col}, Y, Z)
 
         self.n_ci_tests += 1
         return test_stat, pvalue

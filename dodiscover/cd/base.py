@@ -55,21 +55,33 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
 
     @abstractmethod
     def test(
-        self, df: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], group_col: Column
+        self,
+        df: pd.DataFrame,
+        y_vars: Set[Column],
+        group_col: Column,
+        x_vars: Optional[Set[Column]],
     ) -> Tuple[float, float]:
         """Abstract method for all conditional discrepancy tests.
+
+        Tests the null hypothesis: :math:`P(Y | X, group) = P(Y | X)`, where
+        we are trying to determine if Y is (conditionally) independent from
+        the group denoting the distribution, given X.
+
+        Another way of viewing this test is testing whether or not :math:`P_i(Y|X) = P_j(Y|X)`,
+        where :math:`P_i(.)` and :math:`P_j(.)` denote distributions from different groups
+        or environments denoted by the group_col.
 
         Parameters
         ----------
         df : pd.DataFrame
             The dataframe containing the dataset.
-        x_vars : Set of column
-            A column in ``df``.
         y_vars : Set of column
             A column in ``df``.
         group_col : column
             A column in ``df`` that indicates which group of distribution
             each sample belongs to with a '0', or '1'.
+        x_vars : Set of column, optional
+            A column in ``df``.
 
         Returns
         -------

@@ -43,13 +43,6 @@
   year    = {2019}
 }
 
-@article{Lopez2016revisiting,
-  title   = {Revisiting classifier two-sample tests},
-  author  = {Lopez-Paz, David and Oquab, Maxime},
-  journal = {arXiv preprint arXiv:1610.06545},
-  year    = {2016}
-}
-
 @article{Meek1995,
   author  = {Meek, Christopher},
   year    = {2013},
@@ -58,15 +51,6 @@
   title   = {Causal Inference and Causal Explanation with Background Knowledge},
   volume  = {2},
   journal = {Proceedings of Eleventh Conference on Uncertainty in Artificial Intelligence, Montreal, QU}
-}
-
-@inproceedings{Mukherjee2020ccmi,
-  title        = {CCMI: Classifier based conditional mutual information estimation},
-  author       = {Mukherjee, Sudipto and Asnani, Himanshu and Kannan, Sreeram},
-  booktitle    = {Uncertainty in artificial intelligence},
-  pages        = {1083--1093},
-  year         = {2020},
-  organization = {PMLR}
 }
 
 @book{Neapolitan2003,
@@ -80,40 +64,6 @@
   doi       = {10.1145/1327942.1327961}
 }
 
-
-@inproceedings{Park2021conditional,
-  title        = {Conditional distributional treatment effect with kernel conditional mean embeddings and U-statistic regression},
-  author       = {Park, Junhyung and Shalit, Uri and Sch{\"o}lkopf, Bernhard and Muandet, Krikamol},
-  booktitle    = {International Conference on Machine Learning},
-  pages        = {8401--8412},
-  year         = {2021},
-  organization = {PMLR}
-}
-
-
-@inproceedings{Runge2018cmi,
-  title     = {Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information},
-  author    = {Runge, Jakob},
-  booktitle = {Proceedings of the Twenty-First International Conference on Artificial Intelligence and Statistics},
-  pages     = {938--947},
-  year      = {2018},
-  editor    = {Storkey, Amos and Perez-Cruz, Fernando},
-  volume    = {84},
-  series    = {Proceedings of Machine Learning Research},
-  month     = {09--11 Apr},
-  publisher = {PMLR},
-  pdf       = {http://proceedings.mlr.press/v84/runge18a/runge18a.pdf},
-  url       = {https://proceedings.mlr.press/v84/runge18a.html}
-}
-
-@article{Sen2017model,
-  title   = {Model-powered conditional independence test},
-  author  = {Sen, Rajat and Suresh, Ananda Theertha and Shanmugam, Karthikeyan and Dimakis, Alexandros G and Shakkottai, Sanjay},
-  journal = {Advances in neural information processing systems},
-  volume  = {30},
-  year    = {2017}
-}
-
 @article{uhler2013geometry,
   title     = {Geometry of the faithfulness assumption in causal inference},
   author    = {Uhler, Caroline and Raskutti, Garvesh and B{\"u}hlmann, Peter and Yu, Bin},
@@ -121,21 +71,6 @@
   pages     = {436--463},
   year      = {2013},
   publisher = {JSTOR}
-}
-
-@inproceedings{Yu2020Bregman,
-  title     = {Measuring the Discrepancy between Conditional Distributions: Methods, Properties and Applications},
-  author    = {Yu, Shujian and Shaker, Ammar and Alesiani, Francesco and Principe, Jose},
-  booktitle = {Proceedings of the Twenty-Ninth International Joint Conference on
-               Artificial Intelligence, {IJCAI-20}},
-  publisher = {International Joint Conferences on Artificial Intelligence Organization},
-  editor    = {Christian Bessiere},
-  pages     = {2777--2784},
-  year      = {2020},
-  month     = {7},
-  note      = {Main track},
-  doi       = {10.24963/ijcai.2020/385},
-  url       = {https://doi.org/10.24963/ijcai.2020/385}
 }
 
 @article{Zhang2008,
@@ -161,20 +96,6 @@
   number  = {47},
   pages   = {1437--1474},
   url     = {http://jmlr.org/papers/v9/zhang08a.html}
-}
-
-@inproceedings{Zhang2011,
-  author    = {Zhang, Kun and Peters, Jonas and Janzing, Dominik and Sch\"{o}lkopf, Bernhard},
-  title     = {Kernel-Based Conditional Independence Test and Application in Causal Discovery},
-  year      = {2011},
-  isbn      = {9780974903972},
-  publisher = {AUAI Press},
-  address   = {Arlington, Virginia, USA},
-  booktitle = {Proceedings of the Twenty-Seventh Conference on Uncertainty in Artificial Intelligence},
-  pages     = {804–813},
-  numpages  = {10},
-  location  = {Barcelona, Spain},
-  series    = {UAI'11}
 }
 
 # Books
@@ -216,3 +137,129 @@
   journal = {arXiv preprint arXiv:2210.11021},
   year    = {2022}
 }
+
+% Conditional Testing
+
+@article{frenzel_partial_2007,
+  title    = {Partial {Mutual} {Information} for {Coupling} {Analysis} of {Multivariate} {Time} {Series}},
+  volume   = {99},
+  doi      = {10.1103/PhysRevLett.99.204101},
+  abstract = {We propose a method to discover couplings in multivariate time series, based on partial mutual information, an information-theoretic generalization of partial correlation. It represents the part of mutual information of two random quantities that is not contained in a third one. By suitable choice of the latter, we can differentiate between direct and indirect interactions and derive an appropriate graphical model. An efficient estimator for partial mutual information is presented as well.},
+  journal  = {Physical review letters},
+  author   = {Frenzel, Stefan and Pompe, Bernd},
+  month    = dec,
+  year     = {2007},
+  pages    = {204101},
+  file     = {Full Text PDF:/Users/adam2392/Zotero/storage/8ICFXVZG/Frenzel and Pompe - 2007 - Partial Mutual Information for Coupling Analysis o.pdf:application/pdf}
+}
+
+@article{kraskov_estimating_2004,
+  title    = {Estimating mutual information},
+  volume   = {69},
+  url      = {https://link.aps.org/doi/10.1103/PhysRevE.69.066138},
+  doi      = {10.1103/PhysRevE.69.066138},
+  abstract = {We present two classes of improved estimators for mutual information M(X,Y), from samples of random points distributed according to some joint probability density μ(x,y). In contrast to conventional estimators based on binnings, they are based on entropy estimates from k-nearest neighbor distances. This means that they are data efficient (with k=1 we resolve structures down to the smallest possible scales), adaptive (the resolution is higher where data are more numerous), and have minimal bias. Indeed, the bias of the underlying entropy estimates is mainly due to nonuniformity of the density at the smallest resolved scale, giving typically systematic errors which scale as functions of k∕N for N points. Numerically, we find that both families become exact for independent distributions, i.e. the estimator ˆM(X,Y) vanishes (up to statistical fluctuations) if μ(x,y)=μ(x)μ(y). This holds for all tested marginal distributions and for all dimensions of x and y. In addition, we give estimators for redundancies between more than two random variables. We compare our algorithms in detail with existing algorithms. Finally, we demonstrate the usefulness of our estimators for assessing the actual independence of components obtained from independent component analysis (ICA), for improving ICA, and for estimating the reliability of blind source separation., This article appears in the following collections:},
+  number   = {6},
+  urldate  = {2023-01-27},
+  journal  = {Physical Review E},
+  author   = {Kraskov, Alexander and Stögbauer, Harald and Grassberger, Peter},
+  month    = jun,
+  year     = {2004},
+  note     = {Publisher: American Physical Society},
+  pages    = {066138},
+  file     = {APS Snapshot:/Users/adam2392/Zotero/storage/GRW23BYU/PhysRevE.69.html:text/html;Full Text PDF:/Users/adam2392/Zotero/storage/NJT9QCVA/Kraskov et al. - 2004 - Estimating mutual information.pdf:application/pdf}
+}
+
+@article{Lopez2016revisiting,
+  title   = {Revisiting classifier two-sample tests},
+  author  = {Lopez-Paz, David and Oquab, Maxime},
+  journal = {arXiv preprint arXiv:1610.06545},
+  year    = {2016}
+}
+
+@inproceedings{Mukherjee2020ccmi,
+  title        = {CCMI: Classifier based conditional mutual information estimation},
+  author       = {Mukherjee, Sudipto and Asnani, Himanshu and Kannan, Sreeram},
+  booktitle    = {Uncertainty in artificial intelligence},
+  pages        = {1083--1093},
+  year         = {2020},
+  organization = {PMLR}
+}
+
+@inproceedings{Park2021conditional,
+  title        = {Conditional distributional treatment effect with kernel conditional mean embeddings and U-statistic regression},
+  author       = {Park, Junhyung and Shalit, Uri and Sch{\"o}lkopf, Bernhard and Muandet, Krikamol},
+  booktitle    = {International Conference on Machine Learning},
+  pages        = {8401--8412},
+  year         = {2021},
+  organization = {PMLR}
+}
+
+@inproceedings{Runge2018cmi,
+  title     = {Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information},
+  author    = {Runge, Jakob},
+  booktitle = {Proceedings of the Twenty-First International Conference on Artificial Intelligence and Statistics},
+  pages     = {938--947},
+  year      = {2018},
+  editor    = {Storkey, Amos and Perez-Cruz, Fernando},
+  volume    = {84},
+  series    = {Proceedings of Machine Learning Research},
+  month     = {09--11 Apr},
+  publisher = {PMLR},
+  pdf       = {http://proceedings.mlr.press/v84/runge18a/runge18a.pdf},
+  url       = {https://proceedings.mlr.press/v84/runge18a.html}
+}
+
+@article{Sen2017model,
+  title   = {Model-powered conditional independence test},
+  author  = {Sen, Rajat and Suresh, Ananda Theertha and Shanmugam, Karthikeyan and Dimakis, Alexandros G and Shakkottai, Sanjay},
+  journal = {Advances in neural information processing systems},
+  volume  = {30},
+  year    = {2017}
+}
+
+@inproceedings{Yu2020Bregman,
+  title     = {Measuring the Discrepancy between Conditional Distributions: Methods, Properties and Applications},
+  author    = {Yu, Shujian and Shaker, Ammar and Alesiani, Francesco and Principe, Jose},
+  booktitle = {Proceedings of the Twenty-Ninth International Joint Conference on
+               Artificial Intelligence, {IJCAI-20}},
+  publisher = {International Joint Conferences on Artificial Intelligence Organization},
+  editor    = {Christian Bessiere},
+  pages     = {2777--2784},
+  year      = {2020},
+  month     = {7},
+  note      = {Main track},
+  doi       = {10.24963/ijcai.2020/385},
+  url       = {https://doi.org/10.24963/ijcai.2020/385}
+}
+
+@inproceedings{Zhang2011,
+  author    = {Zhang, Kun and Peters, Jonas and Janzing, Dominik and Sch\"{o}lkopf, Bernhard},
+  title     = {Kernel-Based Conditional Independence Test and Application in Causal Discovery},
+  year      = {2011},
+  isbn      = {9780974903972},
+  publisher = {AUAI Press},
+  address   = {Arlington, Virginia, USA},
+  booktitle = {Proceedings of the Twenty-Seventh Conference on Uncertainty in Artificial Intelligence},
+  pages     = {804–813},
+  numpages  = {10},
+  location  = {Barcelona, Spain},
+  series    = {UAI'11}
+}
+
+% Example refs
+
+@article{sachsdataset2005,
+  author   = {Karen Sachs  and Omar Perez  and Dana Pe'er  and Douglas A. Lauffenburger  and Garry P. Nolan },
+  title    = {Causal Protein-Signaling Networks Derived from Multiparameter Single-Cell Data},
+  journal  = {Science},
+  volume   = {308},
+  number   = {5721},
+  pages    = {523-529},
+  year     = {2005},
+  doi      = {10.1126/science.1105809},
+  url      = {https://www.science.org/doi/abs/10.1126/science.1105809},
+  eprint   = {https://www.science.org/doi/pdf/10.1126/science.1105809},
+  abstract = {Machine learning was applied for the automated derivation of causal influences in cellular signaling networks. This derivation relied on the simultaneous measurement of multiple phosphorylated protein and phospholipid components in thousands of individual primary human immune system cells. Perturbing these cells with molecular interventions drove the ordering of connections between pathway components, wherein Bayesian network computational methods automatically elucidated most of the traditionally reported signaling relationships and predicted novel interpathway network causalities, which we verified experimentally. Reconstruction of network models from physiologically relevant primary single cells might be applied to understanding native-state tissue signaling biology, complex drug actions, and dysfunctional signaling in diseased cells.}
+}
+

@@ -45,8 +45,8 @@ class PC(BaseConstraintDiscovery):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : ConditioningSetSelection
-        The method to use for testing conditional independence. Must be one of
+    condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning set. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
@@ -81,7 +81,7 @@ class PC(BaseConstraintDiscovery):
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
         max_iter: int = 1000,
     ):
@@ -91,7 +91,7 @@ class PC(BaseConstraintDiscovery):
             min_cond_set_size=min_cond_set_size,
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
-            skeleton_method=skeleton_method,
+            condsel_method=condsel_method,
         )
         self.max_iter = max_iter
         self.apply_orientations = apply_orientations

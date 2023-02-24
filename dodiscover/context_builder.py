@@ -327,12 +327,15 @@ class InterventionalContextBuilder(ContextBuilder):
     to build the :class:`~.context.Context` object here.
     """
 
-    _intervention_targets: List[Tuple[Column]] = []
+    _intervention_targets: Optional[List[Tuple[Column]]] = None
     _num_distributions: Optional[int] = None
     _obs_distribution: bool = True
 
     def obs_distribution(self, has_obs_distrib: bool):
-        """Whether or not we have access to the observational distribution."""
+        """Whether or not we have access to the observational distribution.
+
+        By default, this is True and assumed to be the first distribution.
+        """
         self._obs_distribution = has_obs_distrib
         return self
 
@@ -349,13 +352,6 @@ class InterventionalContextBuilder(ContextBuilder):
             Number of distributions we will have access to. Will set the number of
             distributions to be ``num_distribs + 1`` if ``_obs_distribution is True`` (default).
         """
-        if len(self._intervention_targets) > 0 and (
-            len(self._intervention_targets) + int(self._obs_distribution) != num_distribs
-        ):
-            raise RuntimeError(
-                f"Setting the number of distributions {num_distribs} does not match the number of "
-                f"intervention targets {len(self._intervention_targets)}."
-            )
         self._num_distributions = num_distribs
         return self
 
@@ -374,17 +370,7 @@ class InterventionalContextBuilder(ContextBuilder):
 
             If intervention targets are unknown, then this is not necessary.
         """
-        if (
-            self._num_distributions is not None
-            and len(targets) + int(self._obs_distribution) != self._num_distributions
-        ):
-            raise RuntimeError(
-                f"Setting the number of intervention targets {targets} does not match the "
-                f"number of distributions set {self._num_distributions} (it is assumed "
-                f"there are {int(self._obs_distribution)} observational distributions)."
-            )
         self._intervention_targets = targets
-        self._num_distributions = len(targets) + int(self._obs_distribution)
         return self
 
     def build(self) -> Context:
@@ -404,15 +390,29 @@ class InterventionalContextBuilder(ContextBuilder):
                 "use `ContextBuilder` instead of `InterventionContextBuilder`."
             )
 
-        # get F-nodes and sigma-map
-        f_nodes, sigma_map, symmetric_diff_map = self._create_augmented_nodes()
-        graph_variables = set(self._observed_variables).union(set(f_nodes))
-
-        # infer number of distributions
+        # infer intervention targets and number of distributions
+        if self._intervention_targets is None:
+            intervention_targets = []
+        else:
+            intervention_targets = self._intervention_targets
         if self._num_distributions is None:
-            num_distributions = int(self._obs_distribution)
+            num_distributions = int(self._obs_distribution) + len(intervention_targets)
         else:
             num_distributions = self._num_distributions
+
+        # error-check if intervention targets was set that it matches the distributions
+        if len(intervention_targets) > 0:
+            if len(intervention_targets) + int(self._obs_distribution) != num_distributions:
+                raise RuntimeError(
+                    f"Setting the number of distributions {num_distributions} does not match the number of "
+                    f"intervention targets {len(intervention_targets)}."
+                )
+
+        # get F-nodes and sigma-map
+        f_nodes, sigma_map, symmetric_diff_map = self._create_augmented_nodes(
+            intervention_targets, num_distributions
+        )
+        graph_variables = set(self._observed_variables).union(set(f_nodes))
 
         empty_graph = self._empty_graph_func(graph_variables)
         return Context(
@@ -422,7 +422,7 @@ class InterventionalContextBuilder(ContextBuilder):
             observed_variables=self._observed_variables,
             latent_variables=self._latent_variables or set(),
             state_variables=self._state_variables,
-            intervention_targets=self._intervention_targets,
+            intervention_targets=intervention_targets,
             f_nodes=f_nodes,
             sigma_map=sigma_map,
             symmetric_diff_map=symmetric_diff_map,
@@ -430,7 +430,9 @@ class InterventionalContextBuilder(ContextBuilder):
             num_distributions=num_distributions,
         )
 
-    def _create_augmented_nodes(self) -> Tuple[List, Dict, Dict]:
+    def _create_augmented_nodes(
+        self, intervention_targets, num_distributions
+    ) -> Tuple[List, Dict, Dict]:
         """Create augmented nodes, sigma map and optionally a symmetric difference map.
 
         Given a number of distributions attributed to interventions, one constructs
@@ -462,16 +464,17 @@ class InterventionalContextBuilder(ContextBuilder):
             distribution_targets_idx = []
 
         # now map all distribution targets to their indexed distribution
-        int_dist_idx = np.arange(int(self._obs_distribution), self._num_distributions).tolist()
+        int_dist_idx = np.arange(int(self._obs_distribution), num_distributions).tolist()
         distribution_targets_idx.extend(int_dist_idx)
 
         # store known-targets, which are sets of nodes
         targets = []
-        if len(self._intervention_targets) > 0:
+        if len(intervention_targets) > 0:
             if self._obs_distribution:
                 targets.append(())
-            targets.extend(copy(list(self._intervention_targets)))  # type: ignore
+            targets.extend(copy(list(intervention_targets)))  # type: ignore
 
+        # create F-nodes, their symmetric difference mapping and sigma-mapping to intervention targets
         for idx, (jdx, kdx) in enumerate(combinations(distribution_targets_idx, 2)):
             if jdx == kdx:
                 continue
@@ -480,8 +483,7 @@ class InterventionalContextBuilder(ContextBuilder):
             sigma_map[f_node] = (jdx, kdx)
 
             # if we additionally know the intervention targets
-            if len(self._intervention_targets) > 0:
-                print(jdx, kdx, len(targets), distribution_targets_idx)
+            if len(intervention_targets) > 0:
                 i_target: Set = set(targets[jdx])
                 j_target: Set = set(targets[kdx])
 

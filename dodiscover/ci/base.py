@@ -34,7 +34,9 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         if any(col not in df.columns for col in y_vars):
             raise ValueError(f"The y variables {y_vars} are not all in the DataFrame.")
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
-            raise ValueError("The z conditioning set variables are not all in the DataFrame.")
+            raise ValueError(
+                f"The z conditioning set variables {z_covariates} are not all in the DataFrame with {df.columns}."
+            )
 
         if not self._allow_multivariate_input and (len(x_vars) > 1 or len(y_vars) > 1):
             raise RuntimeError(f"{self.__class__} does not support multivariate input for X and Y.")

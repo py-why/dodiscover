@@ -74,7 +74,11 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         self.propensity_est = propensity_est
 
     def test(
-        self, df: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], group_col: Column
+        self,
+        df: pd.DataFrame,
+        y_vars: Set[Column],
+        group_col: Column,
+        x_vars: Optional[Set[Column]],
     ) -> Tuple[float, float]:
         # check test input
         self._check_test_input(df, x_vars, y_vars, group_col)

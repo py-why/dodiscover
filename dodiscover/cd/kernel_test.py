@@ -1,4 +1,4 @@
-from typing import Set, Tuple
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
@@ -92,9 +92,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     def test(
         self,
         df: pd.DataFrame,
-        x_vars: Set[Column],
         y_vars: Set[Column],
         group_col: Column,
+        x_vars: Optional[Set[Column]],
     ) -> Tuple[float, float]:
         """Compute k-sample test statistic and pvalue.
 
@@ -103,7 +103,12 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             H_0: P(Y|X) = P'(Y|X)
 
         where the different distributions arise from the different datasets
-        collected denoted by the ``group_col`` parameter.
+        collected denoted by the ``group_col`` parameter. It can also be written
+        as::
+
+            H_0: P(Y|X,T) = P(Y|X)
+
+        meaning that :math:`Y \\perp X | T`, where T is the group indicator.
 
         Parameters
         ----------
