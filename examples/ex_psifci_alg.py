@@ -29,7 +29,7 @@ dodiscover for causal discovery:
 # License: BSD (3-clause)
 
 from pywhy_graphs.viz import draw
-from dodiscover.ci import GSquareCITest, Oracle
+from dodiscover.ci import GSquareCITest
 from dodiscover import PsiFCI, Context, make_context, InterventionalContextBuilder
 
 import pandas as pd
@@ -49,7 +49,7 @@ import pooch
 # We will download a preprocessed version of the dataset from the following
 # url: https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz
 #
-# Ref: https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example
+# Ref: https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example  # noqa
 df = bnlearn.import_example("sachs", n=2000)
 
 # use pooch to download robustly from a url

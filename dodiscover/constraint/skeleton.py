@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from dodiscover.cd import BaseConditionalDiscrepancyTest
-from dodiscover.ci import BaseConditionalIndependenceTest, Oracle
+from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet

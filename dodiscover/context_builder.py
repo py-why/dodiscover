@@ -404,8 +404,8 @@ class InterventionalContextBuilder(ContextBuilder):
         if len(intervention_targets) > 0:
             if len(intervention_targets) + int(self._obs_distribution) != num_distributions:
                 raise RuntimeError(
-                    f"Setting the number of distributions {num_distributions} does not match the number of "
-                    f"intervention targets {len(intervention_targets)}."
+                    f"Setting the number of distributions {num_distributions} does not match the "
+                    f"number of intervention targets {len(intervention_targets)}."
                 )
 
         # get F-nodes and sigma-map
@@ -474,7 +474,8 @@ class InterventionalContextBuilder(ContextBuilder):
                 targets.append(())
             targets.extend(copy(list(intervention_targets)))  # type: ignore
 
-        # create F-nodes, their symmetric difference mapping and sigma-mapping to intervention targets
+        # create F-nodes, their symmetric difference mapping and sigma-mapping to
+        # intervention targets
         for idx, (jdx, kdx) in enumerate(combinations(distribution_targets_idx, 2)):
             if jdx == kdx:
                 continue
