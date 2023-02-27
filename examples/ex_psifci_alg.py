@@ -116,6 +116,9 @@ ctx: Context = (
     .build()
 )
 
+print(ctx.init_graph)
+print(ctx.f_nodes)
+
 # %%
 # Run the learning process
 # ------------------------

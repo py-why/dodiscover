@@ -68,10 +68,16 @@ def _calculate_contingency_tble(
             else:
                 # discrete case
                 if zidx == 0:
-                    kdx += data[z][row_idx]  # data[row_idx, z]
+                    # print(zidx, z, row_idx, data.shape)
+                    row = data.iloc[row_idx]
+                    kdx += row[z]  # data[row_idx, z]
                 else:
                     lprod = np.prod(list(map(lambda x: levels[x], sep_set[:zidx])))  # type: ignore
-                    kdx += data[z][row_idx] * lprod
+                    row = data.iloc[row_idx]
+                    kdx += row[z] * lprod
+
+        if np.isnan(kdx):
+            print(kdx, zidx, z, data[z][row_idx], lprod)
 
         # increment the co-occurrence found
         contingency_tble[idx, jdx, kdx] += 1
@@ -337,7 +343,7 @@ def g_square_discrete(
         )
 
     if levels is None:
-        levels = np.amax(data, axis=0) + 1
+        levels = (np.amax(data, axis=0) + 1).astype(int)
     n_samples = data.shape[0]
     s_size = len(sep_set)
     dof = (levels[x] - 1) * (levels[y] - 1) * np.prod(list(map(lambda x: levels[x], sep_set)))

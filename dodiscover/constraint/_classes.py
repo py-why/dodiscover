@@ -169,6 +169,7 @@ class BaseConstraintDiscovery:
 
         # store resulting data structures
         self.graph_ = graph
+        return self
 
     def evaluate_edge(
         self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None

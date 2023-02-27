@@ -937,8 +937,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         distribution_idx = self.context_.sigma_map[group_col]
 
         # get the distributions across the two distributions
-        data_i = data[distribution_idx[0]]
-        data_j = data[distribution_idx[1]]
+        data_i = data[distribution_idx[0]].copy()
+        data_j = data[distribution_idx[1]].copy()
 
         # name the group column the F-node, so Oracle works as expected
         data_i[group_col] = 0
@@ -984,7 +984,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 raise RuntimeError("This should not be the case")
 
             # get only neighboring sets of Y-vars, or PDS that depend on Y
-            possible_variables = set(adj_graph.neighbors(y_var))
+            possible_variables = set(adj_graph.neighbors(y_var)) - set(f_nodes)
             return possible_variables
 
     def _learn_skeleton_with_interventions(self, interv_data: List[pd.DataFrame], context: Context):
@@ -999,6 +999,25 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         # track progress of the algorithm for which edges to remove to ensure stability
         self.remove_edges = set()
+
+        # first remove all connections among f-nodes
+        for x_var in f_nodes:
+            for y_var in f_nodes:
+                if x_var == y_var:
+                    continue
+
+                pvalue = 1.0
+                test_stat = 0.0
+
+                # post-process the CI test results
+                removed_edge = self._postprocess_ci_test(
+                    adj_graph, x_var, y_var, set(), test_stat, pvalue
+                )
+
+                # summarize the comparison of XY
+                self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
+        # Remove edges
+        adj_graph.remove_edges_from(self.remove_edges)
 
         # Outer loop: iterate over 'size_cond_set' until stopping criterion is met
         # - 'size_cond_set' > 'max_cond_set_size' or
@@ -1017,20 +1036,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 for y_var in possible_adjacencies:
                     # a node cannot be a parent to itself in DAGs
                     if y_var == x_var:
-                        continue
-
-                    # if Y is also a F-node, then they are automatically assumed d-separated
-                    if y_var in f_nodes:
-                        pvalue = 1.0
-                        test_stat = 0.0
-
-                        # post-process the CI test results
-                        removed_edge = self._postprocess_ci_test(
-                            adj_graph, x_var, y_var, set(), test_stat, pvalue
-                        )
-
-                        # summarize the comparison of XY
-                        self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
                         continue
 
                     # compute the possible variables used in the conditioning set
