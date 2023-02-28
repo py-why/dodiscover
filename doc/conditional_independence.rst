@@ -64,14 +64,14 @@ various proposals in the literature for estimating CMI, which we summarize here:
 .. autosummary::
    :toctree: generated/
 
-    ci.CMITest
+    CMITest
 
 - The Classifier Divergence approach estimates CMI using a classification model.
 
 .. autosummary::
    :toctree: generated/
 
-    ci.ClassifierCMITest
+    ClassifierCMITest
 
 - Direct posterior estimates can be implemented with a classification model by directly
   estimating :math:`P(y|x)` and :math:`P(y|x,z)`, which can be used as plug-in estimates
@@ -87,7 +87,7 @@ which may be unrealistic in certain datasets.
 .. autosummary::
    :toctree: generated/
 
-    ci.FisherZCITest
+    FisherZCITest
 
 Discrete, Categorical and Binary Data
 -------------------------------------
@@ -99,7 +99,7 @@ for a discrete variable.
 .. autosummary::
    :toctree: generated/
 
-    ci.GSquareCITest
+    GSquareCITest
 
 Kernel-Approaches
 -----------------
@@ -112,7 +112,7 @@ estimate a pvalue.
 .. autosummary::
    :toctree: generated/
 
-    ci.KernelCITest
+    KernelCITest
 
 Classifier-based Approaches
 ---------------------------
@@ -126,7 +126,7 @@ state that the original data was in fact CI :footcite:`Sen2017model`.
 .. autosummary::
    :toctree: generated/
 
-    ci.ClassifierCITest
+    ClassifierCITest
 
 =======================
 Conditional Discrepancy
@@ -165,7 +165,7 @@ based on the estimated propensity scores to generate samples from the null distr
 .. autosummary::
    :toctree: generated/
 
-    cd.KernelCDTest
+    KernelCDTest
 
 Bregman-Divergences
 -------------------
@@ -177,4 +177,4 @@ weighted permutation testing based on the estimated propensity scores to generat
 .. autosummary::
    :toctree: generated/
 
-    cd.BregmanCDTest
+    BregmanCDTest

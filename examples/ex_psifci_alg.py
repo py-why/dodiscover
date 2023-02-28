@@ -75,7 +75,7 @@ print(df.shape)
 # Preprocess the dataset
 # ----------------------
 # Since the data is one dataframe, we need to process it into a form
-# that is acceptable by dodiscover's :class:`PsiFCI`` algorithm. We
+# that is acceptable by dodiscover's :class:`constraint.PsiFCI` algorithm. We
 # will form a list of separate dataframes.
 unique_ints = df["INT"].unique()
 
@@ -123,7 +123,7 @@ print(ctx.f_nodes)
 # Run the learning process
 # ------------------------
 # We have setup our causal context and causal discovery learner, so we will now
-# run the algorithm using the :meth:`PsiFCI.fit` API, which is similar to scikit-learn's
+# run the algorithm using the :meth:`constraint.PsiFCI.fit` API, which is similar to scikit-learn's
 # `fit` design. All fitted attributes contain an underscore at the end.
 learner = learner.fit(data, ctx)
 
@@ -136,11 +136,14 @@ learner = learner.fit(data, ctx)
 est_pag = learner.graph_
 
 # draw the full graph
-draw(est_pag, direction="LR")
+dot_graph = draw(est_pag, direction="LR")
+dot_graph.render(outfile="psi_pag_full.png", view=True)
 
 # if we do not want to visualize the F-nodes, then we can view the subgraph
 est_pag_no_fnodes = est_pag.subgraph(ctx.get_non_f_nodes())
-draw(est_pag_no_fnodes, direction="LR")
+dot_graph = draw(est_pag_no_fnodes, direction="LR")
+dot_graph.render(outfile="psi_pag.png", view=True)
+
 
 # References
 # ----------
