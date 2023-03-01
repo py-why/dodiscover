@@ -50,7 +50,7 @@ import pooch
 # url: https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz
 #
 # Ref: https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example  # noqa
-df = bnlearn.import_example("sachs", n=2000)
+df = bnlearn.import_example("sachs", n=2000, verbose=False)
 
 # use pooch to download robustly from a url
 url = "https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz"
