@@ -949,7 +949,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # indicates which distribution data came from
         # test graphically if Y is d-separated from F-node given Z
         # or test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-        test_stat, pvalue = self.cd_estimator.test(data, {group_col}, Y, Z)
+        test_stat, pvalue = self.cd_estimator.test(data, Y, group_col, Z)
 
         self.n_ci_tests += 1
         return test_stat, pvalue

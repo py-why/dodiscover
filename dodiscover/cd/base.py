@@ -26,11 +26,11 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
     def _check_test_input(
         self,
         df: pd.DataFrame,
-        x_vars: Set[Column],
         y_vars: Set[Column],
         group_col: Column,
+        x_vars: Optional[Set[Column]],
     ):
-        if any(col not in df.columns for col in x_vars):
+        if x_vars is not None and any(col not in df.columns for col in x_vars):
             raise ValueError("The x variables are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
             raise ValueError("The y variables are not all in the DataFrame.")

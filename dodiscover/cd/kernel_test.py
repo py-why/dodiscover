@@ -94,7 +94,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         df: pd.DataFrame,
         y_vars: Set[Column],
         group_col: Column,
-        x_vars: Optional[Set[Column]],
+        x_vars: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
         """Compute k-sample test statistic and pvalue.
 
@@ -115,13 +115,13 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         df : pd.DataFrame
             The dataset containing the columns denoted by ``x_vars``, ``y_vars``,
             and the ``group_col``.
-        x_vars : Set[Column]
-            Set of X variables.
         y_vars : Set[Column]
             Set of Y variables.
         group_col : Column
             The column denoting, which group (i.e. environment) each sample belongs to.
             This is typically the F-node. Must be binary.
+        x_vars : Set[Column]
+            Set of X variables.
 
         Returns
         -------
@@ -131,9 +131,13 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             The computed p-value.
         """
         # check test input
-        self._check_test_input(df, x_vars, y_vars, group_col)
+        self._check_test_input(df, y_vars, group_col, x_vars)
 
-        x_cols = list(x_vars)
+        if x_vars is not None:
+            x_cols = list(x_vars)
+        else:
+            x_cols = None
+
         y_cols = list(y_vars)
 
         group_ind = df[group_col].to_numpy()
