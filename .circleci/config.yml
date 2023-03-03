@@ -5,11 +5,7 @@ orbs:
 
 jobs:
   build_doc:
-    parameters:
-      tag:
-        type: string
-        default: "3.10"
-    executor: python/default
+    executor: python/3.10
     steps:
       - restore_cache:
           name: Restore .git
