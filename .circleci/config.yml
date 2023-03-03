@@ -6,7 +6,9 @@ orbs:
 jobs:
   build_doc:
     parameters:
-      tag: "3.10"
+      tag:
+        type: string
+        default: "3.10"
     executor: python/default
     steps:
       - restore_cache:
