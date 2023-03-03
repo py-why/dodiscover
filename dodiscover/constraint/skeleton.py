@@ -949,7 +949,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # indicates which distribution data came from
         # test graphically if Y is d-separated from F-node given Z
         # or test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-        test_stat, pvalue = self.cd_estimator.test(data, Y, group_col, Z)
+        test_stat, pvalue = self.cd_estimator.test(data, Y, X, Z)
 
         self.n_ci_tests += 1
         return test_stat, pvalue
@@ -1082,7 +1082,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
                         # compute conditional independence test
                         test_stat, pvalue = self.evaluate_fnode_edge(
-                            interv_data, {x_var}, {y_var}, set(cond_set)
+                            interv_data, set({x_var}), set({y_var}), set(cond_set)
                         )
 
                         # if any "independence" is found through inability to reject

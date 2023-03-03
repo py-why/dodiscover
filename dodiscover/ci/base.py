@@ -32,7 +32,9 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         if any(col not in df.columns for col in x_vars):
             raise ValueError(f"The x variables {x_vars} are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
-            raise ValueError(f"The y variables {y_vars} are not all in the DataFrame.")
+            raise ValueError(
+                f"The y variables {y_vars} are not all in the DataFrame: {df.columns}."
+            )
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
             raise ValueError(
                 f"The z conditioning set variables {z_covariates} are not all in the "

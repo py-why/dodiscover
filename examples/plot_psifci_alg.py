@@ -60,9 +60,9 @@ file_path = pooch.retrieve(
 
 df = pd.read_csv(file_path, delimiter=" ")
 
-# the ground-truth dag is shown here
-ground_truth_dag = bnlearn.import_DAG("sachs", verbose=False)
-fig = bnlearn.plot(ground_truth_dag)
+# the ground-truth dag is shown here: XXX: comment in when errors are fixed
+# ground_truth_dag = bnlearn.import_DAG("sachs", verbose=False)
+# fig = bnlearn.plot(ground_truth_dag)
 
 # .. note::
 #    The Sachs dataset has previously been preprocessed, and the steps are described
