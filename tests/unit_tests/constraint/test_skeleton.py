@@ -148,7 +148,7 @@ def test_learn_skeleton_pds_disabled_first_stage():
     expected_skel = nx.Graph(edge_list)
 
     # learn the skeleton of the graph now with the first stage skeleton
-    alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator, second_stage_skeleton_method=None)
+    alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator, second_stage_condsel_method=None)
     alg.fit(sample, context)
     assert alg.context_.state_variable("PAG", on_missing="ignore") is None
     assert nx.is_isomorphic(expected_skel, alg.adj_graph_)

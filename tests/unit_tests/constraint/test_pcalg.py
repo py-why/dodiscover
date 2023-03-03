@@ -22,7 +22,7 @@ from dodiscover.testdata.testdata import bin_data, dis_data
             "max_cond_set_size": 3,
             "max_combinations": 10,
             "max_iter": 10,
-            "skeleton_method": ConditioningSetSelection.NBRS_PATH,
+            "condsel_method": ConditioningSetSelection.NBRS_PATH,
         },
         {},
     ],

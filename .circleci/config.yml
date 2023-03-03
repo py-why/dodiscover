@@ -63,12 +63,12 @@ jobs:
             echo "BASH_ENV:"
             cat $BASH_ENV
       - run:
-            name: Install fonts needed for diagrams
-            command: |
-              mkdir -p $HOME/.fonts
-              curl https://codeload.github.com/adobe-fonts/source-code-pro/tar.gz/2.038R-ro/1.058R-it/1.018R-VAR | tar xz -C $HOME/.fonts
-              curl https://codeload.github.com/adobe-fonts/source-sans-pro/tar.gz/3.028R | tar xz -C $HOME/.fonts
-              fc-cache -f
+          name: Install fonts needed for diagrams
+          command: |
+            mkdir -p $HOME/.fonts
+            curl https://codeload.github.com/adobe-fonts/source-code-pro/tar.gz/2.038R-ro/1.058R-it/1.018R-VAR | tar xz -C $HOME/.fonts
+            curl https://codeload.github.com/adobe-fonts/source-sans-pro/tar.gz/3.028R | tar xz -C $HOME/.fonts
+            fc-cache -f
       - run:
           name: Install pysal dependencies
           command: |

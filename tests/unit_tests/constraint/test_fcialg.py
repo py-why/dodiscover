@@ -641,7 +641,7 @@ class Test_FCI:
         assert set(expected_pag.edges()) == set(pag.edges())
 
     @pytest.mark.parametrize(
-        "skeleton_method",
+        "condsel_method",
         [
             ConditioningSetSelection.NBRS,
             ConditioningSetSelection.NBRS_PATH,
@@ -649,10 +649,10 @@ class Test_FCI:
         ],
     )
     @pytest.mark.parametrize(
-        "pds_skeleton_method", [ConditioningSetSelection.PDS, ConditioningSetSelection.PDS_PATH]
+        "pds_condsel_method", [ConditioningSetSelection.PDS, ConditioningSetSelection.PDS_PATH]
     )
     @pytest.mark.parametrize("selection_bias", [True, False])
-    def test_fci_complex(self, skeleton_method, pds_skeleton_method, selection_bias):
+    def test_fci_complex(self, condsel_method, pds_condsel_method, selection_bias):
         """
         Test FCI algorithm with more complex graph.
 
@@ -681,8 +681,8 @@ class Test_FCI:
         fci = FCI(
             ci_estimator=ci_estimator,
             max_iter=np.inf,
-            skeleton_method=skeleton_method,
-            pds_skeleton_method=pds_skeleton_method,
+            condsel_method=condsel_method,
+            pds_condsel_method=pds_condsel_method,
             selection_bias=selection_bias,
         )
         fci.fit(sample, context)
