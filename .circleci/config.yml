@@ -55,12 +55,12 @@ jobs:
             sudo apt update
             sudo apt-get update
             sudo apt install -qq graphviz optipng libxft2 graphviz-dev
-            echo "set -e" >> $BASH_ENV
-            echo "export OPENBLAS_NUM_THREADS=4" >> $BASH_ENV
-            echo "export XDG_RUNTIME_DIR=/tmp/runtime-circleci" >> $BASH_ENV
-            echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
-            echo "export DISPLAY=:99" >> $BASH_ENV
-            echo "BASH_ENV:"
+            echo 'set -e' >> $BASH_ENV
+            echo 'export OPENBLAS_NUM_THREADS=4' >> $BASH_ENV
+            echo 'export XDG_RUNTIME_DIR=/tmp/runtime-circleci' >> $BASH_ENV
+            echo 'export PATH=~/.local/bin/:$PATH' >> $BASH_ENV
+            echo 'export DISPLAY=:99' >> $BASH_ENV
+            echo 'BASH_ENV:'
             cat $BASH_ENV
       - run:
           name: Install fonts needed for diagrams
