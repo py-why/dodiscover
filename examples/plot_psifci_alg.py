@@ -142,7 +142,9 @@ dot_graph.render(outfile="psi_pag_full.png", view=True)
 est_pag_no_fnodes = est_pag.subgraph(ctx.get_non_f_nodes())
 dot_graph = draw(est_pag_no_fnodes, direction="LR")
 dot_graph.render(outfile="psi_pag.png", view=True)
+dot_graph.render(outfile="psi_pag.dot", view=True)
 
+# .. graphviz:: psi_pag.dot
 
 # References
 # ----------

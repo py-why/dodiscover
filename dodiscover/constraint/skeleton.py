@@ -903,7 +903,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
     def evaluate_fnode_edge(
         self,
         data: List[pd.DataFrame],
-        X: Set[Column],
+        X: Column,
         Y: Set[Column],
         Z: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
@@ -930,26 +930,23 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         if Z is None:
             Z = set()
 
-        # extract the F-node name
-        group_col: Column = reduce(lambda x: x, X)  # type: ignore
-
         # get the sigma-map for this F-node
-        distribution_idx = self.context_.sigma_map[group_col]
+        distribution_idx = self.context_.sigma_map[X]
 
         # get the distributions across the two distributions
         data_i = data[distribution_idx[0]].copy()
         data_j = data[distribution_idx[1]].copy()
 
         # name the group column the F-node, so Oracle works as expected
-        data_i[group_col] = 0
-        data_j[group_col] = 1
+        data_i[X] = 0
+        data_j[X] = 1
         data = pd.concat((data_i, data_j), axis=0)
 
         # compare conditional distributions P(Y | X) vs P'(Y | X), where 'group_col'
         # indicates which distribution data came from
         # test graphically if Y is d-separated from F-node given Z
         # or test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-        test_stat, pvalue = self.cd_estimator.test(data, Y, X, Z)
+        test_stat, pvalue = self.cd_estimator.test(data, Y, {X}, Z)
 
         self.n_ci_tests += 1
         return test_stat, pvalue
@@ -1082,7 +1079,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
                         # compute conditional independence test
                         test_stat, pvalue = self.evaluate_fnode_edge(
-                            interv_data, set({x_var}), set({y_var}), set(cond_set)
+                            interv_data, x_var, set({y_var}), set(cond_set)
                         )
 
                         # if any "independence" is found through inability to reject

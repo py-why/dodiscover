@@ -56,7 +56,10 @@ extensions = [
     "numpydoc",
     "IPython.sphinxext.ipython_console_highlighting",
     "nbsphinx",
+    "sphinx.ext.graphviz",
 ]
+
+graphviz_output_format = 'png'
 
 # configure sphinx-copybutton
 copybutton_prompt_text = r">>> |\.\.\. |\$ "

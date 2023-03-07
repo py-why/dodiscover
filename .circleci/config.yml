@@ -94,8 +94,7 @@ jobs:
       - run:
           name: Build documentation
           command: |
-            cd doc
-            poetry run make html
+            poetry run poe build_docs
       # Save the example test results
       - store_test_results:
           path: doc/_build/test-results
