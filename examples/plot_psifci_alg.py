@@ -93,7 +93,7 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # CD test.
 cd_estimator = GSquareCITest(data_type="discrete")
 
-alpha = 0.1
+alpha = 0.05
 learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=cd_estimator, alpha=alpha)
 
 # create context with information about the interventions
