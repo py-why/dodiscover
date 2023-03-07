@@ -1,13 +1,17 @@
 from itertools import permutations
 
+import bnlearn
 import networkx as nx
 import numpy as np
+import pandas as pd
+import pooch
 import pytest
 import pywhy_graphs as pgraphs
 from pywhy_graphs import IPAG, PsiPAG
+from pywhy_graphs.export import numpy_to_graph
 
 from dodiscover import InterventionalContextBuilder, PsiFCI, make_context
-from dodiscover.ci import Oracle
+from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint.utils import dummy_sample
 
 from .test_fcialg import Test_FCI
@@ -241,3 +245,54 @@ class Test_PsiFCI(Test_IFCI):
         learned_graph = learner.graph_
         for edge_type, subgraph in expected_G.get_graphs().items():
             assert nx.is_isomorphic(subgraph, learned_graph.get_graphs(edge_type))
+
+
+def test_psifci_withsachs():
+
+    bnlearn.import_DAG()
+
+    # use pooch to download robustly from a url
+    url = "https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz"
+    file_path = pooch.retrieve(
+        url=url,
+        known_hash="md5:39ee257f7eeb94cb60e6177cf80c9544",
+    )
+
+    df = pd.read_csv(file_path, delimiter=" ")
+
+    # only use the observational data
+    unique_ints = df["INT"].unique()
+    intervention_targets = [df.columns[idx] for idx in unique_ints]
+
+    # get the list of intervention targets and list of dataframe associated with each intervention
+    data_cols = [col for col in df.columns if col != "INT"]
+    data = []
+    for interv_idx in unique_ints:
+        _data = df[df["INT"] == interv_idx][data_cols]
+        data.append(_data)
+
+    ci_estimator = GSquareCITest(data_type="discrete")
+    alpha = 0.05
+    learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=ci_estimator, alpha=alpha)
+    ctx_builder = make_context(create_using=InterventionalContextBuilder)
+    ctx = (
+        ctx_builder.variables(data=data)
+        .intervention_targets(intervention_targets)
+        .obs_distribution(False)
+        .build()
+    )
+    # learner.fit(data, ctx)
+
+    # first try it with the oracle
+    # the ground-truth dag
+    ground_truth_dag = bnlearn.import_DAG("sachs", verbose=False)["adjmat"]
+    adjmat = ground_truth_dag.to_numpy()
+    arr_idx = ground_truth_dag.columns.tolist()
+    print(df)
+    print(df.columns)
+    print(adjmat)
+    print(adjmat.shape)
+    G = numpy_to_graph(adjmat, arr_idx=arr_idx, graph_type="dag")
+    print(len(G.edges()))
+
+    assert False

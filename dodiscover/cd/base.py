@@ -65,7 +65,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         df: pd.DataFrame,
         y_vars: Set[Column],
         group_col: Set[Column],
-        x_vars: Optional[Set[Column]],
+        x_vars: Set[Column],
     ) -> Tuple[float, float]:
         """Abstract method for all conditional discrepancy tests.
 

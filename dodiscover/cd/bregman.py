@@ -78,17 +78,13 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         df: pd.DataFrame,
         y_vars: Set[Column],
         group_col: Set[Column],
-        x_vars: Optional[Set[Column]] = None,
+        x_vars: Set[Column],
     ) -> Tuple[float, float]:
         # check test input
         self._check_test_input(df, y_vars, group_col, x_vars)
         group_col_var: Column = list(group_col)[0]
 
-        if x_vars is not None:
-            x_cols = list(x_vars)
-        else:
-            x_cols = None
-
+        x_cols = list(x_vars)
         y_cols = list(y_vars)
         group_ind = df[group_col_var].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:

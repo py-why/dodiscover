@@ -904,7 +904,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         data: List[pd.DataFrame],
         X: Column,
         Y: Set[Column],
-        Z: Optional[Set[Column]] = None,
+        Z: Set[Column],
     ) -> Tuple[float, float]:
         """Test an edge from an F-node to a regular node for X || Y | Z.
 
@@ -916,8 +916,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             A column in ``data``. This is assumed to be the F-node.
         Y : column
             A column in ``data``.
-        Z : set, optional
-            A list of columns in ``data``, by default None.
+        Z : set
+            A list of columns in ``data``. Can be the empty set.
 
         Returns
         -------
@@ -926,9 +926,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         pvalue : float
             The pvalue.
         """
-        if Z is None:
-            Z = set()
-
         # get the sigma-map for this F-node
         distribution_idx = self.context_.sigma_map[X]
 
@@ -986,6 +983,9 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
     def _learn_skeleton_with_interventions(self, interv_data: List[pd.DataFrame], context: Context):
         self.context_ = make_context(context, create_using=InterventionalContextBuilder).build()
 
+        # initialize learning parameters
+        self._initialize_params()
+
         # get the initialized graph
         adj_graph = self.context_.init_graph
         f_nodes = self.context_.f_nodes
@@ -1012,6 +1012,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
                 # summarize the comparison of XY
                 self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
+
         # Remove edges
         adj_graph.remove_edges_from(self.remove_edges)
 
@@ -1157,9 +1158,16 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         orig_context = context.copy()
         f_nodes = context.f_nodes
 
-        # it is fine to run the first stage of the FCI algorithm, as this will
-        # not result in removing any edges among the F-nodes
-        obs_data = data[0]
+        if context.obs_distribution:
+            # it is fine to run the first stage of the FCI algorithm, as this will
+            # not result in removing any edges among the F-nodes
+            obs_data = data[0]
+        else:
+            # if we explicitly do not have access to the observational distribution,
+            # then we should choose the experimental dataset with the most samples
+            largest_data_idx = np.argmax([len(df) for df in data])
+            obs_data = data[largest_data_idx]
+
         self._learn_skeleton_with_observations(obs_data, context)
 
         # keep track of the observational skeleton graph
@@ -1169,7 +1177,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # i) augmented with all F-nodes, or
         # ii) augmented with all F-nodes except intervention index 'i'
         # R9 allows us to leverage F-nodes being not in separating sets to
-
         # augment all separating sets that have non-empty sets with all
         # F-nodes to keep consistency with the algorithm
         for x_var, y_vars in self.sep_set_.items():
@@ -1180,7 +1187,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                         self.sep_set_[x_var][y_var][idx].update(f_nodes)
 
         # index all datasets, where the first one may be observational
-        non_f_nodes = self.context_.get_non_f_nodes()
+        non_f_nodes = context.get_non_f_nodes()
 
         # reset the init graph and this time learn the skeleton using
         # interventional distributions

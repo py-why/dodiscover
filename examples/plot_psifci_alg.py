@@ -102,8 +102,7 @@ ci_estimator = GSquareCITest(data_type="discrete")
 # CD test.
 cd_estimator = GSquareCITest(data_type="discrete")
 
-alpha = 0.05
-
+alpha = 0.1
 learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=cd_estimator, alpha=alpha)
 
 # create context with information about the interventions
@@ -134,6 +133,8 @@ learner = learner.fit(data, ctx)
 # Figure 8 in :footcite:`Jaber2020causal`.
 est_pag = learner.graph_
 
+print(f"There are {len(est_pag.to_undirected().edges)} edges in the resulting PAG")
+
 # draw the full graph
 dot_graph = draw(est_pag, direction="LR")
 dot_graph.render(outfile="psi_pag_full.png", view=True)
@@ -142,8 +143,6 @@ dot_graph.render(outfile="psi_pag_full.png", view=True)
 est_pag_no_fnodes = est_pag.subgraph(ctx.get_non_f_nodes())
 dot_graph = draw(est_pag_no_fnodes, direction="LR")
 dot_graph.render(outfile="psi_pag.png", view=True)
-
-# .. graphviz:: psi_pag.dot
 
 # References
 # ----------

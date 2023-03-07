@@ -77,6 +77,7 @@ typing-extensions = { version = "*" }         # needed in dowhy's package
 joblib = { version = "^1.1.0" }               # needed in dowhy's package
 tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 pre-commit = "^3.0.4"
+pooch = "^1.7.0"
 
 [tool.poetry.group.docs]
 optional = true
