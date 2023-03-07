@@ -59,7 +59,7 @@ extensions = [
     "sphinx.ext.graphviz",
 ]
 
-graphviz_output_format = 'png'
+graphviz_output_format = "png"
 
 # configure sphinx-copybutton
 copybutton_prompt_text = r">>> |\.\.\. |\$ "
