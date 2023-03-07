@@ -263,6 +263,13 @@ html_theme_options = {
 }
 
 scrapers = ("matplotlib",)
+# Add pygraphviz png scraper, if available
+try:
+    from pygraphviz.scraper import PNGScraper
+
+    scrapers += (PNGScraper(),)
+except ImportError:
+    pass
 
 sphinx_gallery_conf = {
     "doc_module": "dodiscover",

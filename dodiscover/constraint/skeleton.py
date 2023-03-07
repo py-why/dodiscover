@@ -1,7 +1,6 @@
 import logging
 from collections import defaultdict
 from copy import deepcopy
-from functools import reduce
 from itertools import chain, combinations
 from typing import Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
 

@@ -27,7 +27,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         self,
         df: pd.DataFrame,
         y_vars: Set[Column],
-        group_col: Column,
+        group_col: Set[Column],
         x_vars: Optional[Set[Column]],
     ):
         if x_vars is not None and any(col not in df.columns for col in x_vars):
@@ -53,12 +53,17 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
                     f"there are {len(df[group_col].unique())} samples."
                 )
 
+        if len(group_col) > 1:
+            raise RuntimeError(
+                f"Group column should be only one column (one node) in the data {group_col}."
+            )
+
     @abstractmethod
     def test(
         self,
         df: pd.DataFrame,
         y_vars: Set[Column],
-        group_col: Column,
+        group_col: Set[Column],
         x_vars: Optional[Set[Column]],
     ) -> Tuple[float, float]:
         """Abstract method for all conditional discrepancy tests.
