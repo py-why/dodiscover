@@ -281,7 +281,7 @@ def test_psifci_withsachs():
         .obs_distribution(False)
         .build()
     )
-    # learner.fit(data, ctx)
+    learner.fit(data, ctx)
 
     # first try it with the oracle
     # the ground-truth dag
@@ -294,5 +294,3 @@ def test_psifci_withsachs():
     print(adjmat.shape)
     G = numpy_to_graph(adjmat, arr_idx=arr_idx, graph_type="dag")
     print(len(G.edges()))
-
-    assert False

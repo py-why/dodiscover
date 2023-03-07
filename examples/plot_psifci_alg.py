@@ -1,23 +1,14 @@
 """
 .. _ex-psifci-algorithm:
 
-=========================================
-Causal discovery with interventional data
-=========================================
+=========================================================
+Causal discovery with interventional data - Sachs dataset
+=========================================================
 
-We will simulate some observational data from a Structural Causal Model (SCM) and
-demonstrate how we will use the PC algorithm.
-
-The PC algorithm works on observational data when there are no unobserved latent
-confounders. That means for any observed set of variables, there is no common causes
-that are unobserved. In other words, all exogenous variables then are assumed to be
-independent.
-
-In this example, we will introduce the main abstractions and concepts used in
-dodiscover for causal discovery:
-
-- learner: Any causal discovery algorithm that has a similar scikit-learn API.
-- context: Causal assumptions.
+We will analyze the Sachs dataset :footcite:`sachsdataset2005` and reproduce analyses
+from the Supplemental Figure 8 in :footcite:`Jaber2020causal` demonstrating the
+usage of the :class:`dodiscover.PsiFCI` algorithm for learning causal graphs
+from observational and interventional data.
 
 .. currentmodule:: dodiscover
 """
@@ -126,8 +117,8 @@ print(ctx.f_nodes)
 learner = learner.fit(data, ctx)
 
 # %%
-# Visualize the results
-# ---------------------
+# Analyze the results
+# ===================
 # Now that we have learned the graph, we will show it here. Note differences and similarities
 # to the ground-truth DAG that is "assumed". Moreover, note that this reproduces Supplementary
 # Figure 8 in :footcite:`Jaber2020causal`.
@@ -135,14 +126,21 @@ est_pag = learner.graph_
 
 print(f"There are {len(est_pag.to_undirected().edges)} edges in the resulting PAG")
 
-# draw the full graph
+# %%
+# Visualize the full graph including the F-node
 dot_graph = draw(est_pag, direction="LR")
 dot_graph.render(outfile="psi_pag_full.png", view=True)
 
-# if we do not want to visualize the F-nodes, then we can view the subgraph
+# %%
+# Visualize the graph without the F-nodes
 est_pag_no_fnodes = est_pag.subgraph(ctx.get_non_f_nodes())
 dot_graph = draw(est_pag_no_fnodes, direction="LR")
 dot_graph.render(outfile="psi_pag.png", view=True)
+
+# Interpretation
+# --------------
+# Looking at the supplemental figure 8b in :footcite:`Jaber2020causal`, we see that the
+# learned PAG matches quite well.
 
 # References
 # ----------
