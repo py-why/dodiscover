@@ -7,7 +7,7 @@ Causal discovery with interventional data - Sachs dataset
 
 We will analyze the Sachs dataset :footcite:`sachsdataset2005` and reproduce analyses
 from the Supplemental Figure 8 in :footcite:`Jaber2020causal` demonstrating the
-usage of the :class:`dodiscover.PsiFCI` algorithm for learning causal graphs
+usage of the :class:`dodiscover.constraint.PsiFCI` algorithm for learning causal graphs
 from observational and interventional data.
 
 .. currentmodule:: dodiscover

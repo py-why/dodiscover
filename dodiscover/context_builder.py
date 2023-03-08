@@ -477,8 +477,6 @@ class InterventionalContextBuilder(ContextBuilder):
         # create F-nodes, their symmetric difference mapping and sigma-mapping to
         # intervention targets
         for idx, (jdx, kdx) in enumerate(combinations(distribution_targets_idx, 2)):
-            if jdx == kdx:
-                continue
             f_node = ("F", idx)
             augmented_nodes.append(f_node)
             sigma_map[f_node] = (jdx, kdx)

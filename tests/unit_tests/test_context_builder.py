@@ -235,6 +235,9 @@ def test_context_interventions():
     assert ctx.symmetric_diff_map == dict()
     assert set(ctx.sigma_map.keys()) == set(ctx.f_nodes)
 
+    # test reverse sigma map
+    assert set(ctx.reverse_sigma_map().values()) == set(ctx.f_nodes)
+
 
 def test_context_interventions_without_observational():
     ctx_builder = make_context(create_using=InterventionalContextBuilder)
