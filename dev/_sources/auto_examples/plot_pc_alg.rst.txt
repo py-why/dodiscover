@@ -144,7 +144,7 @@ are conditionally independent.
 
  .. code-block:: none
 
-    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1623.50it/s]
+    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1665.73it/s]
        x  ...  w
     0  0  ...  1
     1  1  ...  2
@@ -159,7 +159,7 @@ are conditionally independent.
     w    [1, 2, 0]
     dtype: object
 
-    <graphviz.graphs.Digraph object at 0x7f23f0cad190>
+    <graphviz.graphs.Digraph object at 0x7fdd46c72640>
 
 
 
@@ -314,7 +314,7 @@ always a possibility that the CI test makes a mistake.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.396 seconds)
+   **Total running time of the script:** ( 0 minutes  1.314 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_pc_alg.py:
