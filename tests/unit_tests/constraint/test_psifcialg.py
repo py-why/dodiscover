@@ -270,13 +270,14 @@ def test_psifci_withsachs():
     for interv_idx in unique_ints:
         _data = df[df["INT"] == interv_idx][data_cols]
         data.append(_data)
+        print(len(_data))
 
     ci_estimator = GSquareCITest(data_type="discrete")
     alpha = 0.05
     learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=ci_estimator, alpha=alpha)
     ctx_builder = make_context(create_using=InterventionalContextBuilder)
     ctx = (
-        ctx_builder.variables(data=data)
+        ctx_builder.variables(observed=data_cols)
         .intervention_targets(intervention_targets)
         .obs_distribution(False)
         .build()

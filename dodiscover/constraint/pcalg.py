@@ -1,8 +1,9 @@
 import logging
 from itertools import combinations
-from typing import Optional
+from typing import Optional, Tuple
 
 import networkx as nx
+import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import ConditioningSetSelection
@@ -10,7 +11,9 @@ from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass
+from ..context import Context
 from ._classes import BaseConstraintDiscovery
+from .skeleton import LearnSkeleton
 
 logger = logging.getLogger()
 
@@ -24,10 +27,13 @@ class PC(BaseConstraintDiscovery):
 
     Parameters
     ----------
-    ci_estimator : Callable
+    ci_estimator : BaseConditionalIndependenceTest
         The conditional independence test function. The arguments of the estimator should
         be data, node, node to compare, conditioning set of nodes, and any additional
-        keyword arguments.
+        keyword arguments. It must implement the ``test`` function which accepts the data,
+        a set of X nodes, a set of Y nodes and an optional set of Z nodes, which returns a
+        ordered tuple of test statistic and pvalue associated with the null hypothesis
+        :math:`X \\perp Y | Z`.
     alpha : float, optional
         The significance level for the conditional independence test, by default 0.05.
     min_cond_set_size : int, optional
@@ -53,6 +59,14 @@ class PC(BaseConstraintDiscovery):
         and separating set per pair of variables. If ``True`` (default), will
         apply Meek's orientation rules R0-3, orienting colliders and certain
         arrowheads :footcite:`Meek1995`.
+    keep_sorted : bool
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). The conditioning set is chosen lexographically
+        based on the sorted test statistic values of 'ith Pa(X) -> X', for each possible
+        parent node of 'X'. This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
     max_iter : int
         The maximum number of iterations through the graph to apply
         orientation rules.
@@ -83,6 +97,7 @@ class PC(BaseConstraintDiscovery):
         max_combinations: Optional[int] = None,
         condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
+        keep_sorted: bool = False,
         max_iter: int = 1000,
     ):
         super().__init__(
@@ -92,9 +107,10 @@ class PC(BaseConstraintDiscovery):
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
             condsel_method=condsel_method,
+            apply_orientations=apply_orientations,
+            keep_sorted=keep_sorted,
         )
         self.max_iter = max_iter
-        self.apply_orientations = apply_orientations
 
     def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
         """Convert skeleton graph as undirected networkx Graph to CPDAG.
@@ -116,6 +132,51 @@ class PC(BaseConstraintDiscovery):
         # all undirected edges
         graph = CPDAG(incoming_undirected_edges=graph)
         return graph
+
+    def learn_skeleton(
+        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+    ) -> Tuple[nx.Graph, SeparatingSet]:
+        """Learns the skeleton of a causal DAG using pairwise (conditional) independence testing.
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The dataset.
+        context : Context
+            A context object.
+        sep_set : SeparatingSet
+            The separating set.
+
+        Returns
+        -------
+        skel_graph : nx.Graph
+            The undirected graph of the causal graph's skeleton.
+        sep_set : SeparatingSet
+            The separating set per pairs of variables.
+
+        Notes
+        -----
+        Learning the skeleton of a causal DAG uses (conditional) independence testing
+        to determine which variables are (in)dependent. This specific algorithm
+        compares exhaustively pairs of adjacent variables.
+        """
+        skel_alg = LearnSkeleton(
+            self.ci_estimator,
+            sep_set=sep_set,
+            alpha=self.alpha,
+            min_cond_set_size=self.min_cond_set_size,
+            max_cond_set_size=self.max_cond_set_size,
+            max_combinations=self.max_combinations,
+            condsel_method=self.condsel_method,
+            keep_sorted=self.keep_sorted,
+        )
+        skel_alg.fit(data, context)
+
+        skel_graph = skel_alg.adj_graph_
+        sep_set = skel_alg.sep_set_
+        self.n_ci_tests += skel_alg.n_ci_tests
+
+        return skel_graph, sep_set
 
     def orient_edges(self, graph: EquivalenceClass) -> None:
         """Orient edges in a skeleton graph to estimate the causal DAG, or CPDAG.

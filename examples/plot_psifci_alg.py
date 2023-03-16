@@ -100,7 +100,8 @@ learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=cd_estimator, alpha=alp
 ctx_builder = make_context(create_using=InterventionalContextBuilder)
 ctx: Context = (
     ctx_builder.variables(data=data[0])
-    .intervention_targets(intervention_targets)
+    # .intervention_targets(intervention_targets)
+    .num_distributions(6)
     .obs_distribution(False)
     .build()
 )

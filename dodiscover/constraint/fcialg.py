@@ -56,6 +56,14 @@ class FCI(BaseConstraintDiscovery):
         and separating set per pair of variables. If ``True`` (default), will
         apply Zhang's orientation rules R0-10, orienting colliders and certain
         arrowheads and tails :footcite:`Zhang2008`.
+    keep_sorted : bool
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). The conditioning set is chosen lexographically
+        based on the sorted test statistic values of 'ith Pa(X) -> X', for each possible
+        parent node of 'X'. This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
     max_iter : int
         The maximum number of iterations through the graph to apply
         orientation rules.
@@ -91,6 +99,7 @@ class FCI(BaseConstraintDiscovery):
         max_combinations: Optional[int] = None,
         condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
+        keep_sorted: bool = False,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
         selection_bias: bool = True,
@@ -103,9 +112,10 @@ class FCI(BaseConstraintDiscovery):
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
             condsel_method=condsel_method,
+            keep_sorted=keep_sorted,
+            apply_orientations=apply_orientations,
         )
         self.max_iter = max_iter
-        self.apply_orientations = apply_orientations
         self.max_path_length = max_path_length
         self.selection_bias = selection_bias
         self.pds_condsel_method = pds_condsel_method
@@ -821,7 +831,7 @@ class FCI(BaseConstraintDiscovery):
             max_combinations=self.max_combinations,
             condsel_method=self.condsel_method,
             second_stage_condsel_method=self.pds_condsel_method,
-            keep_sorted=False,
+            keep_sorted=self.keep_sorted,
             max_path_length=self.max_path_length,
         )
         skel_alg.fit(data, context)

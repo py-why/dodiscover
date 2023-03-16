@@ -67,6 +67,14 @@ class PsiFCI(FCI):
         and separating set per pair of variables. If ``True`` (default), will
         apply Zhang's orientation rules R0-10, orienting colliders and certain
         arrowheads and tails :footcite:`Zhang2008`.
+    keep_sorted : bool
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). The conditioning set is chosen lexographically
+        based on the sorted test statistic values of 'ith Pa(X) -> X', for each possible
+        parent node of 'X'. This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
     max_iter : int
         The maximum number of iterations through the graph to apply
         orientation rules.
@@ -94,6 +102,7 @@ class PsiFCI(FCI):
         max_combinations: Optional[int] = None,
         condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
+        keep_sorted: bool = False,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
@@ -107,6 +116,7 @@ class PsiFCI(FCI):
             max_combinations,
             condsel_method,
             apply_orientations,
+            keep_sorted=keep_sorted,
             max_iter=max_iter,
             max_path_length=max_path_length,
             selection_bias=False,
@@ -342,4 +352,9 @@ class PsiFCI(FCI):
             pag = pgraph.IPAG(incoming_circle_edges=graph, name="IPAG derived with I-FCI")
         else:
             pag = pgraph.PsiPAG(incoming_circle_edges=graph, name="PsiPAG derived with Psi-FCI")
+
+        # XXX: assign targets as well
+        # assign f-nodes
+        for f_node in self.context_.f_nodes:
+            pag.set_f_node(f_node)
         return pag

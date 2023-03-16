@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from copy import deepcopy
 from itertools import chain, combinations
-from typing import Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
+from typing import Callable, Generator, Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
 
 import networkx as nx
 import numpy as np
@@ -14,11 +14,41 @@ from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
 
-from .._protocol import EquivalenceClass
+from .._protocol import EquivalenceClass, Graph
 from ..context import Context
 from ..context_builder import ContextBuilder, InterventionalContextBuilder, make_context
 
 logger = logging.getLogger()
+
+
+def _parallel_test_xy_edges(
+    conditional_test_func, x_var, y_var, cond_set, data
+) -> Tuple[float, float]:
+    """Private function used to test edges between X and Y in parallel.
+
+    Parameters
+    ----------
+    conditional_test_func : Callable
+        Conditional test function.
+    x_var : Columns
+        The 'X' variable name.
+    y_var : Column
+        The 'Y' variable name.
+    cond_set : Set[Column]
+        A set of variables to condition on. Can be the empty set.
+    data : pandas.Dataframe
+        The dataset with variables as columns and samples as rows.
+
+    Returns
+    -------
+    test_stat : float
+        Test statistic.
+    pvalue : float
+        Pvalue.
+    """
+    # compute conditional independence test
+    test_stat, pvalue = conditional_test_func(data, x_var, y_var, set(cond_set))
+    return test_stat, pvalue
 
 
 def _iter_conditioning_set(
@@ -102,7 +132,385 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
     return nbrs
 
 
-class LearnSkeleton:
+class BaseSkeletonLearner:
+    """Base class for constraint-based skeleton learning algorithms."""
+
+    alpha: float
+
+    adj_graph_: nx.Graph
+    context_: Context
+    sep_set_: SeparatingSet
+    min_cond_set_size_: int
+    max_cond_set_size_: int
+    max_combinations_: int
+
+    n_iters_: int
+
+    _cont: bool
+
+    def _learn_skeleton(
+        self,
+        data: pd.DataFrame,
+        context: Context,
+        conditional_test_func: Callable,
+        possible_x_nodes=None,
+    ):
+        """Core function for learning the skeleton of a causal graph.
+
+        This function is a "stateful" function of Skeleton learners. It requires
+        the following state to be preserved as attributes of self.
+
+        - context_ : a Context object
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The data to learn the causal graph from.
+        context : Context
+            A context object.
+        conditional_test_func : Callable
+            The conditional test function that
+        possible_x_nodes : set of nodes, optional
+            The nodes to initialize as X variables. How to initialize variables to test in
+            the second loop of the algorithm. See Notes for details.
+
+        Notes
+        -----
+        The context object should be copied before this function is called.
+
+        Proceed by testing neighboring nodes, while keeping track of test
+        statistic values (these are the ones that are
+        the "most dependent"). Remember we are testing the null hypothesis
+
+        .. math::
+            H_0: X \\perp Y | Z
+
+        where the alternative hypothesis is that they are dependent and hence
+        require a causal edge linking the two variables.
+
+        Overview of learning causal skeleton from data:
+
+            This algorithm consists of four general loops through the data.
+
+            1. "Infinite" loop through size of the conditioning set, 'size_cond_set'. The
+            minimum size is set by ``min_cond_set_size``, whereas the maximum is controlled
+            by ``max_cond_set_size`` hyperparameter.
+            2. Loop through nodes of the graph, 'x_var'
+            3. Loop through variables adjacent to selected node, 'y_var'. The edge between 'x_var'
+            and 'y_var' is tested with a statistical test.
+            4. Loop through combinations of the conditioning set of size p, 'cond_set'.
+            The ``max_combinations`` parameter allows one to limit the fourth loop through
+            combinations of the conditioning set.
+
+            At each iteration of the outer infinite loop, the edges that were deemed
+            independent for a specific 'size_cond_set' are removed and 'size_cond_set'
+            is incremented.
+
+            Furthermore, the maximum pvalue is stored for existing
+            dependencies among variables (i.e. any two nodes with an edge still).
+            The ``keep_sorted`` hyperparameter keeps the considered neighbors in
+            a sorted order.
+
+            The stopping condition is when the size of the conditioning variables for all (X, Y)
+            pairs is less than the size of 'size_cond_set', or if the 'max_cond_set_size' is
+            reached.
+        """
+        # preserve state of the Context object
+        self.context_ = context
+
+        # get the initialized graph
+        adj_graph: Graph = deepcopy(context.init_graph.copy())
+
+        if possible_x_nodes is None:
+            possible_x_nodes = adj_graph.nodes
+
+        # the size of the conditioning set will start off at the minimum
+        size_cond_set = self.min_cond_set_size_
+
+        logger.info(
+            f"\n\nRunning skeleton phase with: \n"
+            f"max_combinations: {self.max_combinations_},\n"
+            f"min_cond_set_size: {self.min_cond_set_size_},\n"
+            f"max_cond_set_size: {self.max_cond_set_size_},\n"
+        )
+
+        # Outer loop: iterate over 'size_cond_set' until stopping criterion is met
+        # - 'size_cond_set' > 'max_cond_set_size' or
+        # - All (X, Y) pairs have candidate conditioning sets of size < 'size_cond_set'
+        while 1:
+            # private attribute '_cont' is used to preserve state and determine a breaking
+            # condition for the constraint-based search algorithm
+            self._cont = False
+
+            # initialize set of edges to remove at the end of every loop
+            # track progress of the algorithm for which edges to remove to ensure stability
+            # wrt which edges are removed at each process of the algorithm
+            remove_edges = set()
+
+            # determine whether or not to continue
+            # loop through every node that we want to test
+            for x_var in possible_x_nodes:
+                possible_adjacencies = set(adj_graph.neighbors(x_var))
+                logger.info(f"Considering node {x_var}...\n\n")
+
+                for y_var in possible_adjacencies:
+                    # a node cannot be a parent to itself in DAGs
+                    if y_var == x_var:
+                        continue
+
+                    if (x_var, y_var) in context.included_edges.edges:
+                        continue
+
+                    # compute the possible variables used in the conditioning set
+                    possible_variables = self._compute_candidate_conditioning_sets(
+                        adj_graph,
+                        x_var,
+                        y_var,
+                    )
+
+                    logger.debug(
+                        f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
+                        f"with p={size_cond_set}. The possible variables to condition on are: "
+                        f"{possible_variables}."
+                    )
+
+                    # check that number of adjacencies is greater then the
+                    # cardinality of the conditioning set
+                    if len(possible_variables) < size_cond_set:
+                        logger.debug(
+                            f"\n\nBreaking for {x_var}, {y_var}, {len(possible_adjacencies)}, "
+                            f"{size_cond_set}, {possible_variables}"
+                        )
+                        continue
+                    else:
+                        self._cont = True
+
+                    # generate iterator through the conditioning sets
+                    conditioning_sets = _iter_conditioning_set(
+                        possible_variables=possible_variables,
+                        x_var=x_var,
+                        y_var=y_var,
+                        size_cond_set=size_cond_set,
+                    )
+
+                    # now iterate through the possible parents
+                    for comb_idx, cond_set in enumerate(conditioning_sets):
+                        # check the number of combinations of possible parents we have tried
+                        # to use as a separating set
+                        if (
+                            self.max_combinations_ is not None
+                            and comb_idx >= self.max_combinations_
+                        ):
+                            break
+
+                        try:
+                            # compute conditional independence test
+                            test_stat, pvalue = conditional_test_func(
+                                data, x_var, y_var, set(cond_set)
+                            )
+                        except Exception as e:
+                            print(e)
+                            test_stat = np.inf
+                            pvalue = 0.0
+
+                        # if any "independence" is found through inability to reject
+                        # the null hypothesis, then we will break the loop comparing X and Y
+                        # and say X and Y are conditionally independent given 'cond_set'
+                        if pvalue > self.alpha:
+                            break
+
+                    # post-process the CI test results
+                    removed_edge = self._postprocess_ci_test(
+                        adj_graph, x_var, y_var, cond_set, test_stat, pvalue
+                    )
+                    if removed_edge:
+                        remove_edges.add((x_var, y_var, pvalue))
+
+                    # summarize the comparison of XY
+                    self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
+
+            # finally remove edges after performing
+            # conditional independence tests
+            logger.info(f"For p = {size_cond_set}, removing all edges: {remove_edges}")
+
+            # Remove non-significant links
+            # Note: Removing edges at the end ensures "stability" of the algorithm
+            # with respect to the randomness choice of pairs of edges considered in the inner loop
+            adj_graph.remove_edges_from(remove_edges)
+
+            # increment the conditioning set size
+            size_cond_set += 1
+
+            # only allow conditioning set sizes up to maximum set number
+            if size_cond_set > self.max_cond_set_size_ or self._cont is False:
+                break
+
+        self.adj_graph_ = adj_graph
+        self.n_iters_ += 1
+
+    def _generate_pairs_with_sepset(
+        self, possible_x_nodes, adj_graph, context, size_cond_set
+    ):  # -> Generator[Column, Column, Set[Column]]:
+        # loop through every node that we want to test
+        for x_var in possible_x_nodes:
+            possible_adjacencies = set(adj_graph.neighbors(x_var))
+            logger.info(f"Considering node {x_var}...\n\n")
+
+            for y_var in possible_adjacencies:
+                # a node cannot be a parent to itself in DAGs
+                if y_var == x_var:
+                    continue
+
+                if (x_var, y_var) in context.included_edges.edges:
+                    continue
+
+                # compute the possible variables used in the conditioning set
+                possible_variables = self._compute_candidate_conditioning_sets(
+                    adj_graph,
+                    x_var,
+                    y_var,
+                )
+
+                logger.debug(
+                    f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
+                    f"with p={size_cond_set}. The possible variables to condition on are: "
+                    f"{possible_variables}."
+                )
+
+                # check that number of adjacencies is greater then the
+                # cardinality of the conditioning set
+                if len(possible_variables) < size_cond_set:
+                    logger.debug(
+                        f"\n\nBreaking for {x_var}, {y_var}, {len(possible_adjacencies)}, "
+                        f"{size_cond_set}, {possible_variables}"
+                    )
+                    continue
+                else:
+                    self._cont = True
+
+                # generate iterator through the conditioning sets
+                conditioning_sets = _iter_conditioning_set(
+                    possible_variables=possible_variables,
+                    x_var=x_var,
+                    y_var=y_var,
+                    size_cond_set=size_cond_set,
+                )
+
+                # now iterate through the possible parents
+                for comb_idx, cond_set in enumerate(conditioning_sets):
+                    # check the number of combinations of possible parents we have tried
+                    # to use as a separating set
+                    if self.max_combinations_ is not None and comb_idx >= self.max_combinations_:
+                        break
+                    yield x_var, y_var, cond_set
+
+    def _compute_candidate_conditioning_sets(
+        self, adj_graph: nx.Graph, x_var: Column, y_var: Column
+    ) -> Set[Column]:
+        r"""Compute candidate conditioning sets.
+
+        For a given 'X' and 'Y', this method implements a graphical algorithm that
+        enumerates possible variables that are part of 'Z', the conditioning set.
+        One can then test the following null hypothesis :math:`H_0: X \perp Y | Z`.
+
+        Parameters
+        ----------
+        adj_graph : nx.Graph
+            The current adjacency graph.
+        x_var : node
+            The 'X' node.
+        y_var : node
+            The 'Y' node.
+
+        Returns
+        -------
+        possible_variables : Set of Column
+            The set of nodes in 'adj_graph' that are candidates for the
+            conditioning set.
+
+        Notes
+        -----
+        This depends on:
+
+        size_cond_set : int
+            The maximum size of the conditioning set allowed. If candidate conditioning
+            sets are less than this number, then the ``possible_variables`` will be
+            the empty set.
+        """
+        raise NotImplementedError(
+            "All skeleton discovery methods should implement a method for selecting "
+            "the possible conditioning sets."
+        )
+
+    def _postprocess_ci_test(
+        self,
+        adj_graph: nx.Graph,
+        x_var: Column,
+        y_var: Column,
+        cond_set: Set[Column],
+        test_stat: float,
+        pvalue: float,
+    ) -> bool:
+        # keep track of the smallest test statistic, meaning the highest pvalue
+        # meaning the "most" independent. keep track of the maximum pvalue as well
+        if pvalue > adj_graph.edges[x_var, y_var]["pvalue"]:
+            adj_graph.edges[x_var, y_var]["pvalue"] = pvalue
+        if test_stat < adj_graph.edges[x_var, y_var]["test_stat"]:
+            adj_graph.edges[x_var, y_var]["test_stat"] = test_stat
+
+        # two variables found to be independent given a separating set
+        if pvalue > self.alpha:
+            self.sep_set_[x_var][y_var].append(set(cond_set))
+            self.sep_set_[y_var][x_var].append(set(cond_set))
+            return True
+        return False
+
+    def _summarize_xy_comparison(
+        self, x_var: Column, y_var: Column, removed_edge: bool, pvalue: float
+    ) -> None:
+        """Provide ability to log end result of each XY edge evaluation."""
+        # exit loop if we have found an independency and removed the edge
+        if removed_edge:
+            remove_edge_str = "Removing edge"
+        else:
+            remove_edge_str = "Did not remove edge"
+
+        logger.info(
+            f"{remove_edge_str} between {x_var} and {y_var}... \n"
+            f"Statistical summary:\n"
+            f"- PValue={pvalue} at alpha={self.alpha}"
+        )
+
+    def evaluate_edge(
+        self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
+    ) -> Tuple[float, float]:
+        """Test any specific edge for X || Y | Z.
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The dataset
+        X : column
+            A column in ``data``.
+        Y : column
+            A column in ``data``.
+        Z : set, optional
+            A list of columns in ``data``, by default None.
+
+        Returns
+        -------
+        test_stat : float
+            Test statistic.
+        pvalue : float
+            The pvalue.
+        """
+        raise NotImplementedError(
+            "All skeleton discovery methods should implement a method for "
+            "evaluating an edge with a statistical test."
+        )
+
+
+class LearnSkeleton(BaseSkeletonLearner):
     """Learn a skeleton graph from observational data without latent confounding.
 
     A skeleton graph from a Markovian causal model can be learned completely
@@ -176,31 +584,6 @@ class LearnSkeleton:
     where the alternative hypothesis is that they are dependent and hence
     require a causal edge linking the two variables.
 
-    Overview of learning causal skeleton from data:
-
-        This algorithm consists of four general loops through the data.
-
-        - "infinite" loop through size of the conditioning set, 'size_cond_set'. The
-          minimum size is set by ``min_cond_set_size``, whereas the maximum is controlled
-          by ``max_cond_set_size`` hyperparameter.
-        - loop through nodes of the graph, 'x_var'
-        - loop through variables adjacent to selected node, 'y_var'
-        - loop through combinations of the conditioning set of size p, 'cond_set'.
-          The ``max_combinations`` parameter allows one to limit the fourth loop through
-          combinations of the conditioning set.
-
-        At each iteration of the outer infinite loop, the edges that were deemed
-        independent for a specific 'size_cond_set' are removed and 'size_cond_set' is incremented.
-
-        Furthermore, the maximum pvalue is stored for existing
-        dependencies among variables (i.e. any two nodes with an edge still).
-        The ``keep_sorted`` hyperparameter keeps the considered neighbors in
-        a sorted order.
-
-        The stopping condition is when the size of the conditioning variables for all (X, Y)
-        pairs is less than the size of 'size_cond_set', or if the 'max_cond_set_size' is
-        reached.
-
     Different methods for learning the skeleton:
 
         There are different ways to learn the skeleton that are valid under various
@@ -214,16 +597,6 @@ class LearnSkeleton:
         - 'neighbors_path': This is 'neighbors', but restricts to variables with an adjacency path
           from 'x_var' to 'y_var'. This is a variant from the RFCI paper :footcite:`Colombo2012`
     """
-
-    adj_graph_: nx.Graph
-    context_: Context
-    min_cond_set_size_: int
-    max_cond_set_size_: int
-    max_combinations_: int
-    sep_set_: SeparatingSet
-    n_iters_: int = 0
-
-    remove_edges: Set
 
     def __init__(
         self,
@@ -251,6 +624,7 @@ class LearnSkeleton:
 
         # debugging mode
         self.n_ci_tests = 0
+        self.n_iters_ = 0
 
     def _initialize_params(self) -> None:
         """Initialize parameters for learning skeleton.
@@ -312,7 +686,7 @@ class LearnSkeleton:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z)
+        test_stat, pvalue = self.ci_estimator.test(data, set({X}), set({Y}), Z)
         self.n_ci_tests += 1
         return test_stat, pvalue
 
@@ -328,21 +702,14 @@ class LearnSkeleton:
         """
         self.context_ = context.copy()
 
-        # get the initialized graph
-        adj_graph = deepcopy(self.context_.init_graph.copy())
-
-        # track progress of the algorithm for which edges to remove to ensure stability
-        self.remove_edges = set()
-
         # initialize learning parameters
         self._initialize_params()
 
-        # the size of the conditioning set will start off at the minimum
-        size_cond_set = self.min_cond_set_size_
-
         # allow us to query the iteration stage of the causal discovery algorithm
         # allowing us to run multiple iterations of the skeleton discovery
-        edge_attrs = set(chain.from_iterable(d.keys() for *_, d in adj_graph.edges(data=True)))
+        edge_attrs = set(
+            chain.from_iterable(d.keys() for *_, d in self.context_.init_graph.edges(data=True))
+        )
         if self.n_iters_ == 0 and "test_stat" in edge_attrs or "pvalue" in edge_attrs:
             raise RuntimeError(
                 "Running skeleton discovery with adjacency graph "
@@ -351,130 +718,14 @@ class LearnSkeleton:
 
         # store the absolute value of test-statistic values and pvalue for
         # every single candidate parent-child edge (X -> Y)
-        nx.set_edge_attributes(adj_graph, np.inf, "test_stat")
-        nx.set_edge_attributes(adj_graph, -1e-5, "pvalue")
+        nx.set_edge_attributes(self.context_.init_graph, np.inf, "test_stat")
+        nx.set_edge_attributes(self.context_.init_graph, -1e-5, "pvalue")
 
-        logger.info(
-            f"\n\nRunning skeleton phase with: \n"
-            f"max_combinations: {self.max_combinations_},\n"
-            f"min_cond_set_size: {self.min_cond_set_size_},\n"
-            f"max_cond_set_size: {self.max_cond_set_size_},\n"
-        )
-
-        # Outer loop: iterate over 'size_cond_set' until stopping criterion is met
-        # - 'size_cond_set' > 'max_cond_set_size' or
-        # - All (X, Y) pairs have candidate conditioning sets of size < 'size_cond_set'
-        while 1:
-            cont = False
-            # initialize set of edges to remove at the end of every loop
-            self.remove_edges = set()
-
-            # loop through every node
-            for x_var in adj_graph.nodes:
-                possible_adjacencies = set(adj_graph.neighbors(x_var))
-
-                logger.info(f"Considering node {x_var}...\n\n")
-
-                for y_var in possible_adjacencies:
-                    # a node cannot be a parent to itself in DAGs
-                    if y_var == x_var:
-                        continue
-
-                    # ignore fixed edges
-                    if (x_var, y_var) in self.context_.included_edges.edges:
-                        continue
-
-                    # compute the possible variables used in the conditioning set
-                    possible_variables = self._compute_candidate_conditioning_sets(
-                        adj_graph,
-                        x_var,
-                        y_var,
-                    )
-
-                    logger.debug(
-                        f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
-                        f"with p={size_cond_set}. The possible variables to condition on are: "
-                        f"{possible_variables}."
-                    )
-
-                    # check that number of adjacencies is greater then the
-                    # cardinality of the conditioning set
-                    if len(possible_variables) < size_cond_set:
-                        logger.debug(
-                            f"\n\nBreaking for {x_var}, {y_var}, {len(possible_adjacencies)}, "
-                            f"{size_cond_set}, {possible_variables}"
-                        )
-                        continue
-                    else:
-                        cont = True
-
-                    # generate iterator through the conditioning sets
-                    conditioning_sets = _iter_conditioning_set(
-                        possible_variables=possible_variables,
-                        x_var=x_var,
-                        y_var=y_var,
-                        size_cond_set=size_cond_set,
-                    )
-
-                    # now iterate through the possible parents
-                    for comb_idx, cond_set in enumerate(conditioning_sets):
-                        # check the number of combinations of possible parents we have tried
-                        # to use as a separating set
-                        if (
-                            self.max_combinations_ is not None
-                            and comb_idx >= self.max_combinations_
-                        ):
-                            break
-
-                        # compute conditional independence test
-                        test_stat, pvalue = self.evaluate_edge(data, x_var, y_var, set(cond_set))
-
-                        # if any "independence" is found through inability to reject
-                        # the null hypothesis, then we will break the loop comparing X and Y
-                        # and say X and Y are conditionally independent given 'cond_set'
-                        if pvalue > self.alpha:
-                            break
-
-                    # post-process the CI test results
-                    removed_edge = self._postprocess_ci_test(
-                        adj_graph, x_var, y_var, cond_set, test_stat, pvalue
-                    )
-
-                    # summarize the comparison of XY
-                    self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
-
-            # finally remove edges after performing
-            # conditional independence tests
-            logger.info(f"For p = {size_cond_set}, removing all edges: {self.remove_edges}")
-
-            # Remove non-significant links
-            # Note: Removing edges at the end ensures "stability" of the algorithm
-            # with respect to the randomness choice of pairs of edges considered in the inner loop
-            adj_graph.remove_edges_from(self.remove_edges)
-
-            # increment the conditioning set size
-            size_cond_set += 1
-
-            # only allow conditioning set sizes up to maximum set number
-            if size_cond_set > self.max_cond_set_size_ or cont is False:
-                break
-
-        self.adj_graph_ = adj_graph
-        self.n_iters_ += 1
-
-    def _summarize_xy_comparison(
-        self, x_var: Column, y_var: Column, removed_edge: bool, pvalue: float
-    ) -> None:
-        # exit loop if we have found an independency and removed the edge
-        if removed_edge:
-            remove_edge_str = "Removing edge"
-        else:
-            remove_edge_str = "Did not remove edge"
-
-        logger.info(
-            f"{remove_edge_str} between {x_var} and {y_var}... \n"
-            f"Statistical summary:\n"
-            f"- PValue={pvalue} at alpha={self.alpha}"
+        # apply algorithm to learn skeleton
+        self._learn_skeleton(
+            data,
+            context=self.context_,
+            conditional_test_func=self.evaluate_edge,
         )
 
     def _compute_candidate_conditioning_sets(
@@ -532,30 +783,6 @@ class LearnSkeleton:
             possible_variables.remove(y_var)
 
         return possible_variables
-
-    def _postprocess_ci_test(
-        self,
-        adj_graph: nx.Graph,
-        x_var: Column,
-        y_var: Column,
-        cond_set: Set[Column],
-        test_stat: float,
-        pvalue: float,
-    ) -> bool:
-        # keep track of the smallest test statistic, meaning the highest pvalue
-        # meaning the "most" independent. keep track of the maximum pvalue as well
-        if pvalue > adj_graph.edges[x_var, y_var]["pvalue"]:
-            adj_graph.edges[x_var, y_var]["pvalue"] = pvalue
-        if test_stat < adj_graph.edges[x_var, y_var]["test_stat"]:
-            adj_graph.edges[x_var, y_var]["test_stat"] = test_stat
-
-        # two variables found to be independent given a separating set
-        if pvalue > self.alpha:
-            self.remove_edges.add((x_var, y_var))
-            self.sep_set_[x_var][y_var].append(set(cond_set))
-            self.sep_set_[y_var][x_var].append(set(cond_set))
-            return True
-        return False
 
 
 class LearnSemiMarkovianSkeleton(LearnSkeleton):
@@ -738,13 +965,13 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
                 # determine how we want to construct the candidates for separating nodes
                 # perform conditioning independence testing on all combinations
                 possible_variables = pgraph.pds(
-                    pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+                    pag, x_var, y_var, max_path_length=self.max_path_length_  # type: ignore
                 )
             elif condsel_method == ConditioningSetSelection.PDS_PATH:
                 # determine how we want to construct the candidates for separating nodes
                 # perform conditioning independence testing on all combinations
                 possible_variables = pgraph.pds_path(
-                    pag, x_var, y_var, max_path_length=self.max_path_length  # type: ignore
+                    pag, x_var, y_var, max_path_length=self.max_path_length_  # type: ignore
                 )
 
             if self.keep_sorted:
@@ -763,21 +990,13 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return possible_variables
 
-    def fit(self, data: pd.DataFrame, context: Context):
+    def _prep_second_stage_skeleton(self) -> Context:
         import pywhy_graphs as pgraphs
 
         if self.max_path_length is None:
             self.max_path_length_ = np.inf
         else:
             self.max_path_length_ = self.max_path_length
-
-        # initially learn the skeleton without using PDS information
-        super().fit(data, context)
-
-        # if there is no second stage skeleton method to be run, then we
-        # will stop with the skeleton here
-        if self.second_stage_condsel_method is None:
-            return self
 
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
@@ -800,11 +1019,24 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             if "pvalue" in d:
                 d.pop("pvalue")
         context = (
-            make_context(context).init_graph(new_init_graph).state_variable("PAG", pag).build()
+            make_context(self.context_)
+            .init_graph(new_init_graph)
+            .state_variable("PAG", pag)
+            .build()
         )
+        return context
 
-        if not all(x in context.state_variable("PAG").nodes for x in data.columns):
-            raise RuntimeError("wtf..")
+    def fit(self, data: pd.DataFrame, context: Context):
+        # initially learn the skeleton without using PDS information
+        super().fit(data, context)
+
+        # if there is no second stage skeleton method to be run, then we
+        # will stop with the skeleton here
+        if self.second_stage_condsel_method is None:
+            return self
+
+        # setup context for the second round-of learning
+        context = self._prep_second_stage_skeleton()
 
         # now compute all possibly d-separating sets and learn a better skeleton
         super().fit(data, context)
@@ -899,6 +1131,70 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
 
+    def _initialize_params(self) -> None:
+        """Initialize parameters for learning skeleton.
+
+        Basic parameters that are used by any constraint-based causal discovery algorithms.
+        """
+        # error checks of passed in arguments
+        if self.max_combinations is not None and self.max_combinations <= 0:
+            raise RuntimeError(f"Max combinations must be at least 1, not {self.max_combinations}")
+
+        if self.condsel_method not in ConditioningSetSelection:
+            raise ValueError(
+                f"Skeleton method must be one of {ConditioningSetSelection}, not "
+                f"{self.condsel_method}."
+            )
+
+        if self.sep_set is None and not hasattr(self, "sep_set_"):
+            # keep track of separating sets
+            self.sep_set_ = defaultdict(lambda: defaultdict(list))
+        elif not hasattr(self, "sep_set_"):
+            self.sep_set_ = self.sep_set  # type: ignore
+
+        # control of the conditioning set
+        if self.max_cond_set_size is None:
+            self.max_cond_set_size_ = np.inf
+        else:
+            self.max_cond_set_size_ = self.max_cond_set_size
+        if self.min_cond_set_size is None:
+            self.min_cond_set_size_ = 0
+        else:
+            self.min_cond_set_size_ = self.min_cond_set_size
+        if self.max_combinations is None:
+            self.max_combinations_ = np.inf
+        else:
+            self.max_combinations_ = self.max_combinations
+
+    def evaluate_edge(
+        self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
+    ) -> Tuple[float, float]:
+        """Test any specific edge for X || Y | Z.
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The dataset
+        X : column
+            A column in ``data``.
+        Y : column
+            A column in ``data``.
+        Z : set, optional
+            A list of columns in ``data``, by default None.
+
+        Returns
+        -------
+        test_stat : float
+            Test statistic.
+        pvalue : float
+            The pvalue.
+        """
+        if Z is None:
+            Z = set()
+        test_stat, pvalue = self.ci_estimator.test(data, set({X}), set({Y}), Z)
+        self.n_ci_tests += 1
+        return test_stat, pvalue
+
     def evaluate_fnode_edge(
         self,
         data: List[pd.DataFrame],
@@ -907,6 +1203,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         Z: Set[Column],
     ) -> Tuple[float, float]:
         """Test an edge from an F-node to a regular node for X || Y | Z.
+
+        Tests the conditional invariance: :math:`P_{X=x}(Y | Z) = P_{X=x'}(Y|Z)`.
 
         Parameters
         ----------
@@ -934,15 +1232,15 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         data_j = data[distribution_idx[1]].copy()
 
         # name the group column the F-node, so Oracle works as expected
-        data_i[X] = 0
-        data_j[X] = 1
+        data_i[X] = 1
+        data_j[X] = 0
         data = pd.concat((data_i, data_j), axis=0)
 
         # compare conditional distributions P(Y | X) vs P'(Y | X), where 'group_col'
         # indicates which distribution data came from
         # test graphically if Y is d-separated from F-node given Z
         # or test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-        test_stat, pvalue = self.cd_estimator.test(data, Y, {X}, Z)
+        test_stat, pvalue = self.cd_estimator.test(data, Y, set({X}), Z)
 
         self.n_ci_tests += 1
         return test_stat, pvalue
@@ -977,158 +1275,65 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 raise RuntimeError("This should not be the case")
 
             # get only neighboring sets of Y-vars, or PDS that depend on Y
-            possible_variables = set(adj_graph.neighbors(y_var)) - set(f_nodes)
+            possible_variables = super()._compute_candidate_conditioning_sets(
+                adj_graph, x_var, y_var
+            ) - set(f_nodes)
+
             return possible_variables
 
-    def _learn_skeleton_with_interventions(self, interv_data: List[pd.DataFrame], context: Context):
-        self.context_ = make_context(context, create_using=InterventionalContextBuilder).build()
-
-        # initialize learning parameters
-        self._initialize_params()
-
-        # get the initialized graph
-        adj_graph = self.context_.init_graph
+    def _postprocess_ci_test(
+        self,
+        adj_graph: nx.Graph,
+        x_var: Column,
+        y_var: Column,
+        cond_set: Set[Column],
+        test_stat: float,
+        pvalue: float,
+    ) -> bool:
+        # post-process the CI test results
         f_nodes = self.context_.f_nodes
+        if x_var in f_nodes:
+            all_other_fnodes = f_nodes.copy()
+            all_other_fnodes.remove(x_var)
+            cond_set = cond_set.union(all_other_fnodes)
+        return super()._postprocess_ci_test(adj_graph, x_var, y_var, cond_set, test_stat, pvalue)
 
-        # the size of the conditioning set will start off at the minimum
-        size_cond_set = self.min_cond_set_size_
+    def _learn_skeleton_with_interventions(self, interv_data: List[pd.DataFrame], context: Context):
+        state_variables = context.state_variables.copy()
+        self.context_ = make_context(context, create_using=InterventionalContextBuilder).build()
+        for name, var in state_variables.items():
+            self.context_.add_state_variable(name, var)
 
-        # track progress of the algorithm for which edges to remove to ensure stability
-        self.remove_edges = set()
-
-        # first remove all connections among f-nodes
-        for x_var in f_nodes:
-            for y_var in f_nodes:
-                if x_var == y_var:
-                    continue
-
-                pvalue = 1.0
-                test_stat = 0.0
-
-                # post-process the CI test results
-                removed_edge = self._postprocess_ci_test(
-                    adj_graph, x_var, y_var, set(), test_stat, pvalue
-                )
-
-                # summarize the comparison of XY
-                self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
-
-        # Remove edges
-        adj_graph.remove_edges_from(self.remove_edges)
-
-        # Outer loop: iterate over 'size_cond_set' until stopping criterion is met
-        # - 'size_cond_set' > 'max_cond_set_size' or
-        # - All (X, Y) pairs have candidate conditioning sets of size < 'size_cond_set'
-        while 1:
-            cont = False
-            # initialize set of edges to remove at the end of every loop
-            self.remove_edges = set()
-
-            # loop through every node
-            for x_var in f_nodes:
-                possible_adjacencies = set(adj_graph.neighbors(x_var))
-
-                logger.info(f"Considering node {x_var}...\n\n")
-
-                for y_var in possible_adjacencies:
-                    # a node cannot be a parent to itself in DAGs
-                    if y_var == x_var:
-                        continue
-
-                    # compute the possible variables used in the conditioning set
-                    possible_variables = self._compute_candidate_conditioning_sets(
-                        adj_graph,
-                        x_var,
-                        y_var,
-                    )
-
-                    logger.debug(
-                        f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
-                        f"with p={size_cond_set}. The possible variables to condition on are: "
-                        f"{possible_variables}."
-                    )
-
-                    # check that number of adjacencies is greater then the
-                    # cardinality of the conditioning set
-                    if len(possible_variables) < size_cond_set:
-                        logger.debug(
-                            f"\n\nBreaking for {x_var}, {y_var}, {len(possible_adjacencies)}, "
-                            f"{size_cond_set}, {possible_variables}"
-                        )
-                        continue
-                    else:
-                        cont = True
-
-                    # generate iterator through the conditioning sets
-                    conditioning_sets = _iter_conditioning_set(
-                        possible_variables=possible_variables,
-                        x_var=x_var,
-                        y_var=y_var,
-                        size_cond_set=size_cond_set,
-                    )
-
-                    # now iterate through the possible parents
-                    for comb_idx, cond_set in enumerate(conditioning_sets):
-                        # check the number of combinations of possible parents we have tried
-                        # to use as a separating set
-                        if (
-                            self.max_combinations_ is not None
-                            and comb_idx >= self.max_combinations_
-                        ):
-                            break
-
-                        # compute conditional independence test
-                        test_stat, pvalue = self.evaluate_fnode_edge(
-                            interv_data, x_var, set({y_var}), set(cond_set)
-                        )
-
-                        # if any "independence" is found through inability to reject
-                        # the null hypothesis, then we will break the loop comparing X and Y
-                        # and say X and Y are conditionally independent given 'cond_set'
-                        if pvalue > self.alpha:
-                            break
-
-                    # post-process the CI test results
-                    removed_edge = self._postprocess_ci_test(
-                        adj_graph, x_var, y_var, cond_set, test_stat, pvalue
-                    )
-
-                    # summarize the comparison of XY
-                    self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
-
-            # finally remove edges after performing
-            # conditional independence tests
-            logger.info(f"For p = {size_cond_set}, removing all edges: {self.remove_edges}")
-
-            # Remove non-significant links
-            # Note: Removing edges at the end ensures "stability" of the algorithm
-            # with respect to the randomness choice of pairs of edges considered in the inner loop
-            adj_graph.remove_edges_from(self.remove_edges)
-
-            # increment the conditioning set size
-            size_cond_set += 1
-
-            # only allow conditioning set sizes up to maximum set number
-            if size_cond_set > self.max_cond_set_size_ or cont is False:
-                break
-
-        self.adj_graph_ = adj_graph
+        # apply algorithm to learn skeleton
+        self._learn_skeleton(
+            data=interv_data,
+            context=self.context_,
+            conditional_test_func=self.evaluate_fnode_edge,
+            possible_x_nodes=list(self.context_.f_nodes),
+        )
 
     def _learn_skeleton_with_observations(self, obs_data: pd.DataFrame, context: Context):
-        f_nodes = context.f_nodes
-
         # get the init graph that does not contain any F-nodes
         obs_context_bld = make_context(context, create_using=ContextBuilder)
         init_graph = deepcopy(context.init_graph)
 
         # get the subgraph of non-f nodes
-        non_f_nodes = set(init_graph.nodes) - set(f_nodes)
-        obs_init_graph = init_graph.subgraph(non_f_nodes)
+        obs_init_graph = init_graph.subgraph(context.get_non_f_nodes())
 
         # now learn the observational subgraph
         obs_context_bld.init_graph(obs_init_graph)
         obs_context = obs_context_bld.build()
-        super().fit(obs_data, obs_context)
+
+        # get the initialized graph
+        adj_graph = deepcopy(obs_context.init_graph.copy())
+
+        # apply algorithm to learn skeleton
+        self._learn_skeleton(
+            data=obs_data,
+            context=obs_context,
+            conditional_test_func=self.evaluate_edge,
+            possible_x_nodes=list(adj_graph.nodes),
+        )
 
     def fit(self, data: List[pd.DataFrame], context: Context) -> None:
         """Fit data and context.
@@ -1168,11 +1373,34 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             largest_data_idx = np.argmax([len(df) for df in data])
             obs_data = data[largest_data_idx]
 
+        self.context_ = context.copy()
+
+        # initialize learning parameters
+        self._initialize_params()
+
+        # allow us to query the iteration stage of the causal discovery algorithm
+        # allowing us to run multiple iterations of the skeleton discovery
+        edge_attrs = set(
+            chain.from_iterable(d.keys() for *_, d in context.init_graph.edges(data=True))
+        )
+        if self.n_iters_ == 0 and "test_stat" in edge_attrs or "pvalue" in edge_attrs:
+            raise RuntimeError(
+                "Running skeleton discovery with adjacency graph "
+                "with 'test_stat' or 'pvalue' is not supported yet."
+            )
+
+        # store the absolute value of test-statistic values and pvalue for
+        # every single candidate parent-child edge (X -> Y)
+        nx.set_edge_attributes(context.init_graph, np.inf, "test_stat")
+        nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
+
+        # first learn the skeleton using only "observational data"
         self._learn_skeleton_with_observations(obs_data, context)
 
         # keep track of the observational skeleton graph
         obs_skel_graph = self.adj_graph_.copy()
 
+        # prepare the context object for the second stage of learning
         # all separating sets are either:
         # i) augmented with all F-nodes, or
         # ii) augmented with all F-nodes except intervention index 'i'
@@ -1193,7 +1421,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # interventional distributions
         # create a complete subgraph of F-nodes with all other nodes
         for node in f_nodes:
-            for obs_node in set(f_nodes).union(set(non_f_nodes)):
+            for obs_node in set(non_f_nodes):
                 if node == obs_node:
                     continue
                 self.adj_graph_.add_edge(node, obs_node, test_stat=np.inf, pvalue=-1e-5)
@@ -1205,6 +1433,19 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             .build()
         )
         self.context_.add_state_variable("obs_skel_graph", obs_skel_graph)
+
+        # convert the undirected skeleton graph to a PAG, where
+        # all left-over edges have a "circle" endpoint
+        sep_set = self.sep_set_
+        import pywhy_graphs
+
+        pag = pywhy_graphs.PAG(incoming_circle_edges=obs_skel_graph, name="PAG derived with FCI")
+
+        # orient colliders
+        self._orient_unshielded_triples(pag, sep_set)
+
+        # convert the adjacency graph
+        self.context_.add_state_variable("pag", pag)
 
         # now, we'll fit the data using interventional data by looping over all
         # combinations of F-nodes and their neighbors
