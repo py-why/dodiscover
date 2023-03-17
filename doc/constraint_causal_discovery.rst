@@ -109,11 +109,6 @@ Alternatively, one may assume they do not know where the intervention was applie
 distribution. In this case, one may apply the :math:`Psi`-FCI algorithm to learn a
 :math:`Psi`-PAG :footcite:`Jaber2020causal`.
 
-.. autosummary::
-   :toctree: generated/
-
-    constraint.PsiFCI
-
 Choosing the conditioning sets
 ------------------------------
 We briefly describe how ``dodiscover`` chooses conditioning sets, ``Z`` that are tested given
