@@ -76,9 +76,6 @@ def _calculate_contingency_tble(
                     row = data.iloc[row_idx]
                     kdx += row[z] * lprod
 
-        if np.isnan(kdx):
-            print(kdx, zidx, z, data[z][row_idx], lprod)
-
         # increment the co-occurrence found
         contingency_tble[idx, jdx, kdx] += 1
     return contingency_tble
