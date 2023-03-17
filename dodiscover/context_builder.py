@@ -1,5 +1,5 @@
-from copy import copy, deepcopy
-from typing import Any, Dict, Optional, Set, Tuple, cast
+import types
+from typing import Any, Callable, Dict, Optional, Set, Tuple, cast
 
 import networkx as nx
 import pandas as pd
@@ -8,23 +8,44 @@ from ._protocol import Graph
 from .context import Context
 from .typing import Column, NetworkxGraph
 
+CALLABLES = types.FunctionType, types.MethodType
+
 
 class ContextBuilder:
-    """A builder class for creating Context objects ergonomically.
+    """A builder class for creating observational data Context objects ergonomically.
+
+    The ContextBuilder is meant solely to build Context objects that work
+    with observational datasets.
 
     The context builder provides a way to capture assumptions, domain knowledge,
     and data. This should NOT be instantiated directly. One should instead use
     `dodiscover.make_context` to build a Context data structure.
     """
 
-    _graph: Optional[Graph] = None
+    _init_graph: Optional[Graph] = None
     _included_edges: Optional[NetworkxGraph] = None
     _excluded_edges: Optional[NetworkxGraph] = None
     _observed_variables: Optional[Set[Column]] = None
     _latent_variables: Optional[Set[Column]] = None
     _state_variables: Dict[str, Any] = dict()
 
-    def graph(self, graph: Graph) -> "ContextBuilder":
+    def __init__(self) -> None:
+        # perform an error-check on subclass definitions of ContextBuilder
+        for attribute, value in self.__class__.__dict__.items():
+            if isinstance(value, CALLABLES) or isinstance(value, property):
+                continue
+            if attribute.startswith("__"):
+                continue
+
+            if not hasattr(self, attribute[1:]):
+                raise RuntimeError(
+                    f"Context objects has class attributes that do not have "
+                    f"a matching class method to set the attribute, {attribute}. "
+                    f"The form of the attribute must be '_<name>' and a "
+                    f"corresponding function name '<name>'."
+                )
+
+    def init_graph(self, graph: Graph) -> "ContextBuilder":
         """Set the partial graph to start with.
 
         Parameters
@@ -37,7 +58,47 @@ class ContextBuilder:
         self : ContextBuilder
             The builder instance
         """
-        self._graph = graph
+        self._init_graph = graph
+        return self
+
+    def excluded_edges(self, exclude: Optional[NetworkxGraph]) -> "ContextBuilder":
+        """Set exclusion edge constraints to apply in discovery.
+
+        Parameters
+        ----------
+        excluded : Optional[NetworkxGraph]
+            Edges that should be excluded in the resultant graph
+
+        Returns
+        -------
+        self : ContextBuilder
+            The builder instance
+        """
+        if self._included_edges is not None:
+            for u, v in exclude.edges:  # type: ignore
+                if self._included_edges.has_edge(u, v):
+                    raise RuntimeError(f"{(u, v)} is already specified as an included edge.")
+        self._excluded_edges = exclude
+        return self
+
+    def included_edges(self, include: Optional[NetworkxGraph]) -> "ContextBuilder":
+        """Set inclusion edge constraints to apply in discovery.
+
+        Parameters
+        ----------
+        included : Optional[NetworkxGraph]
+            Edges that should be included in the resultant graph
+
+        Returns
+        -------
+        self : ContextBuilder
+            The builder instance
+        """
+        if self._excluded_edges is not None:
+            for u, v in include.edges:  # type: ignore
+                if self._excluded_edges.has_edge(u, v):
+                    raise RuntimeError(f"{(u, v)} is already specified as an excluded edge.")
+        self._included_edges = include
         return self
 
     def edges(
@@ -61,6 +122,46 @@ class ContextBuilder:
         """
         self._included_edges = include
         self._excluded_edges = exclude
+        return self
+
+    def observed_variables(self, observed: Optional[Set[Column]] = None) -> "ContextBuilder":
+        """Set observed variables.
+
+        Parameters
+        ----------
+        observed : Optional[Set[Column]]
+            Set of observed variables, by default None. If neither ``latents``,
+            nor ``variables`` is set, then it is presumed that ``variables`` consists
+            of the columns of ``data`` and ``latents`` is the empty set.
+        """
+        if self._latent_variables is not None and any(
+            obs_var in self._latent_variables for obs_var in observed  # type: ignore
+        ):
+            raise RuntimeError(
+                f"Latent variables are set already {self._latent_variables}, "
+                f'which contain variables you are trying to set as "observed".'
+            )
+        self._observed_variables = observed
+        return self
+
+    def latent_variables(self, latents: Optional[Set[Column]] = None) -> "ContextBuilder":
+        """Set latent variables.
+
+        Parameters
+        ----------
+        latents : Optional[Set[Column]]
+            Set of latent "unobserved" variables, by default None. If neither ``latents``,
+            nor ``variables`` is set, then it is presumed that ``variables`` consists
+            of the columns of ``data`` and ``latents`` is the empty set.
+        """
+        if self._observed_variables is not None and any(
+            latent_var in self._observed_variables for latent_var in latents  # type: ignore
+        ):
+            raise RuntimeError(
+                f"Observed variables are set already {self._observed_variables}, "
+                f'which contain variables you are trying to set as "latent".'
+            )
+        self._latent_variables = latents
         return self
 
     def variables(
@@ -145,13 +246,13 @@ class ContextBuilder:
         if self._observed_variables is None:
             raise ValueError("Could not infer variables from data or given arguments.")
 
-        empty_graph = lambda: nx.empty_graph(self._observed_variables, create_using=nx.Graph)
+        empty_graph = self._empty_graph_func(self._observed_variables)
         return Context(
-            init_graph=self._interpolate_graph(),
+            init_graph=self._interpolate_graph(self._observed_variables),
             included_edges=self._included_edges or empty_graph(),
             excluded_edges=self._excluded_edges or empty_graph(),
-            variables=self._observed_variables,
-            latents=self._latent_variables or set(),
+            observed_variables=self._observed_variables,
+            latent_variables=self._latent_variables or set(),
             state_variables=self._state_variables,
         )
 
@@ -166,7 +267,7 @@ class ContextBuilder:
         if observed is not None and latents is not None:
             if columns - set(observed) != set(latents):
                 raise ValueError(
-                    "If observed and latents are set, then they must be "
+                    "If observed and latents are both set, then they must "
                     "include all columns in data."
                 )
         elif observed is None and latents is not None:
@@ -183,44 +284,24 @@ class ContextBuilder:
         latents = set(cast(Set[Column], latents))
         return (observed, latents)
 
-    def _interpolate_graph(self) -> nx.Graph:
+    def _interpolate_graph(self, graph_variables) -> nx.Graph:
         if self._observed_variables is None:
             raise ValueError("Must set variables() before building Context.")
 
-        complete_graph = lambda: nx.complete_graph(self._observed_variables, create_using=nx.Graph)
-        has_all_variables = lambda g: set(g.nodes) == set(self._observed_variables)
+        complete_graph = lambda: nx.complete_graph(graph_variables, create_using=nx.Graph)
+        has_all_variables = lambda g: set(g.nodes).issuperset(set(self._observed_variables))
 
         # initialize the starting graph
-        if self._graph is None:
+        if self._init_graph is None:
             return complete_graph()
         else:
-            if not has_all_variables(self._graph):
+            if not has_all_variables(self._init_graph):
                 raise ValueError(
-                    f"The nodes within the initial graph, {self._graph.nodes}, "
+                    f"The nodes within the initial graph, {self._init_graph.nodes}, "
                     f"do not match the nodes in the passed in data, {self._observed_variables}."
                 )
-            return self._graph
+            return self._init_graph
 
-
-def make_context(context: Optional[Context] = None) -> ContextBuilder:
-    """Create a new ContextBuilder instance.
-
-    Returns
-    -------
-    result : ContextBuilder
-        The new ContextBuilder instance
-
-    Examples
-    --------
-    This creates a context object denoting that there are three observed
-    variables, ``(1, 2, 3)``.
-    >>> context_builder = make_context()
-    >>> context = context_builder.variables([1, 2, 3]).build()
-    """
-    result = ContextBuilder()
-    if context is not None:
-        result.graph(deepcopy(context.init_graph))
-        result.edges(deepcopy(context.included_edges), deepcopy(context.excluded_edges))
-        result.variables(copy(context.observed_variables), copy(context.latent_variables))
-        result.state_variables(deepcopy(context.state_variables))
-    return result
+    def _empty_graph_func(self, graph_variables) -> Callable:
+        empty_graph = lambda: nx.empty_graph(graph_variables, create_using=nx.Graph)
+        return empty_graph
