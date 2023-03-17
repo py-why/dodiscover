@@ -2,14 +2,13 @@ import logging
 from collections import defaultdict
 from copy import deepcopy
 from itertools import chain, combinations
-from typing import Any, Callable, Dict, Generator, Iterable, List, Optional, Set, Tuple
+from typing import Any, Callable, Dict, Generator, Iterable, Optional, Set, Tuple
 
 import networkx as nx
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 
-from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
@@ -17,7 +16,7 @@ from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass, Graph
 from ..context import Context
-from ..context_builder import ContextBuilder, InterventionalContextBuilder, make_context
+from ..context_builder import make_context
 
 logger = logging.getLogger()
 

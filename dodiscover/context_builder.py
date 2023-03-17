@@ -1,5 +1,5 @@
 import types
-from typing import Any, Callable, Dict, Optional, Set, Tuple, cast, Union
+from typing import Any, Callable, Dict, Optional, Set, Tuple, cast
 
 import networkx as nx
 import pandas as pd
@@ -307,20 +307,21 @@ class ContextBuilder:
         return empty_graph
 
 
-def make_context(
-    context: Optional[Context] = None, create_using=ContextBuilder
-) -> ContextBuilder:
+def make_context(context: Optional[Context] = None, create_using=ContextBuilder) -> ContextBuilder:
     """Create a new ContextBuilder instance.
+
     Returns
     -------
     result : ContextBuilder
         The new ContextBuilder instance
+
     Examples
     --------
     This creates a context object denoting that there are three observed
     variables, ``(1, 2, 3)``.
     >>> context_builder = make_context()
     >>> context = context_builder.variables([1, 2, 3]).build()
+
     Notes
     -----
     :class:`~.context.Context` objects are dataclasses that creates a dictionary-like access

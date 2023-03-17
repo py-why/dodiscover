@@ -1,6 +1,5 @@
 import dataclasses
-import math
-from copy import copy, deepcopy
+from copy import deepcopy
 
 import networkx as nx
 import numpy as np
