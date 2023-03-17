@@ -51,7 +51,6 @@ Constraint-based structure learning
    ConditioningSetSelection
    PC
    FCI
-   PsiFCI
 
 Comparing causal discovery algorithms
 =====================================
