@@ -144,6 +144,7 @@ class PsiFCI(FCI):
         )
         self.skeleton_learner_.fit(data, context)
 
+        self.context_ = self.skeleton_learner_.context_.copy()
         skel_graph = self.skeleton_learner_.adj_graph_
         sep_set = self.skeleton_learner_.sep_set_
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests

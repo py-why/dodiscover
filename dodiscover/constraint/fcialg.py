@@ -385,7 +385,7 @@ class FCI(BaseConstraintDiscovery):
             # now check if u is in SepSet(v, c)
             # handle edge case where sep_set is empty.
             if last_node in sep_set:
-                if is_in_sep_set(u, sep_set, last_node, c, "any"):  # u in sep_set[last_node][c]:
+                if is_in_sep_set(u, sep_set, last_node, c, "any"):
                     # orient u -> c
                     graph.remove_edge(c, u, graph.circle_edge_name)
                 if graph.has_edge(u, c, graph.circle_edge_name):

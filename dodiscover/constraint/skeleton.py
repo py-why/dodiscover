@@ -2,11 +2,12 @@ import logging
 from collections import defaultdict
 from copy import deepcopy
 from itertools import chain, combinations
-from typing import Callable, Generator, Iterable, List, Optional, Set, SupportsFloat, Tuple, Union
+from typing import Any, Callable, Dict, Generator, Iterable, List, Optional, Set, Tuple
 
 import networkx as nx
 import numpy as np
 import pandas as pd
+from joblib import Parallel, delayed
 
 from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest
@@ -22,20 +23,38 @@ logger = logging.getLogger()
 
 
 def _parallel_test_xy_edges(
-    conditional_test_func, x_var, y_var, cond_set, data
-) -> Tuple[float, float]:
-    """Private function used to test edges between X and Y in parallel.
+    conditional_test_func: Callable[
+        [pd.DataFrame, Column, Column, Optional[Set[Column]]], Tuple[float, float]
+    ],
+    x_var: Column,
+    y_var: Column,
+    alpha: float,
+    size_cond_set: int,
+    max_combinations: Optional[int],
+    possible_variables: Set[Column],
+    data: pd.DataFrame,
+) -> Dict[str, Any]:
+    """Private function used to test edge between X and Y in parallel for candidate separating sets.
 
     Parameters
     ----------
     conditional_test_func : Callable
         Conditional test function.
-    x_var : Columns
+    x_var : Column
         The 'X' variable name.
     y_var : Column
         The 'Y' variable name.
-    cond_set : Set[Column]
-        A set of variables to condition on. Can be the empty set.
+    alpha : float
+        The significance level for the conditional independence test.
+    size_cond_set : int
+        The current size of the conditioning set. This value will then generate
+        ``(N choose 'size_cond_set')`` sets of candidate separating sets to test, where
+        ``N`` is the size of 'possible_variables'.
+    max_combinations : int
+        The maximum number of conditional independence tests to run from the set
+        of possible conditioning sets.
+    possible_variables : Set[Column]
+        A set of variables that are candidates for the conditioning set.
     data : pandas.Dataframe
         The dataset with variables as columns and samples as rows.
 
@@ -46,15 +65,52 @@ def _parallel_test_xy_edges(
     pvalue : float
         Pvalue.
     """
-    # compute conditional independence test
-    test_stat, pvalue = conditional_test_func(data, x_var, y_var, set(cond_set))
-    return test_stat, pvalue
+    prev_pvalue = 0.0
+
+    # generate iterator through the conditioning sets
+    conditioning_sets = _iter_conditioning_set(
+        possible_variables=possible_variables,
+        x_var=x_var,
+        y_var=y_var,
+        size_cond_set=size_cond_set,
+    )
+
+    # now iterate through the possible parents
+    for comb_idx, cond_set in enumerate(conditioning_sets):
+        # check the number of combinations of possible parents we have tried
+        # to use as a separating set
+        if max_combinations is not None and comb_idx >= max_combinations:
+            break
+
+        try:
+            # compute conditional independence test
+            test_stat, pvalue = conditional_test_func(data, x_var, y_var, set(cond_set))
+        except Exception as e:
+            print(e)
+            test_stat = np.inf
+            pvalue = 0.0
+
+        # if any "independence" is found through inability to reject
+        # the null hypothesis, then we will break the loop comparing X and Y
+        # and say X and Y are conditionally independent given 'cond_set'
+        if pvalue > alpha:
+            break
+        else:
+            pvalue = max(pvalue, prev_pvalue)
+
+    result: Dict[str, Any] = dict()
+    result["x_var"] = x_var
+    result["y_var"] = y_var
+    result["cond_set"] = list(cond_set)
+    result["test_stat"] = test_stat
+    result["pvalue"] = pvalue
+    return result
 
 
 def _iter_conditioning_set(
     possible_variables: Iterable,
-    x_var: Union[SupportsFloat, str],
-    y_var: Union[SupportsFloat, str],
+    x_var: Column,
+    y_var: Column,
     size_cond_set: int,
 ) -> Iterable[Set]:
     """Iterate function to generate the conditioning set.
@@ -133,18 +189,33 @@ def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
 
 
 class BaseSkeletonLearner:
-    """Base class for constraint-based skeleton learning algorithms."""
+    """Base class for constraint-based skeleton learning algorithms.
+
+    Attributes
+    ----------
+    adj_graph_ : nx.Graph
+        The learned skeleton graph.
+    sep_set_ : SeparatingSet
+        The learned separating sets.
+    context_ : Context
+        The resulting causal context.
+    n_iters_ : int
+        The number of iterations of the skeleton learning process that were performed.
+        This helps track iteration of algorithms that perform the entire skeleton
+        discovery phase multiple times.
+    """
 
     alpha: float
+    n_jobs: Optional[int]
 
     adj_graph_: nx.Graph
     context_: Context
     sep_set_: SeparatingSet
+    n_iters_: int
+
     min_cond_set_size_: int
     max_cond_set_size_: int
     max_combinations_: int
-
-    n_iters_: int
 
     _cont: bool
 
@@ -158,9 +229,8 @@ class BaseSkeletonLearner:
         """Core function for learning the skeleton of a causal graph.
 
         This function is a "stateful" function of Skeleton learners. It requires
-        the following state to be preserved as attributes of self.
-
-        - context_ : a Context object
+        the ``context_`` object to be preserved as attributes of self. It also keeps
+        track of ``_cont`` private attribute, which helps determine stopping conditions.
 
         Parameters
         ----------
@@ -169,7 +239,8 @@ class BaseSkeletonLearner:
         context : Context
             A context object.
         conditional_test_func : Callable
-            The conditional test function that
+            The conditional test function that takes in three arguments 'x_var', 'y_var'
+            and an optional 'z_var', where 'z_var' is the conditioning set of variables.
         possible_x_nodes : set of nodes, optional
             The nodes to initialize as X variables. How to initialize variables to test in
             the second loop of the algorithm. See Notes for details.
@@ -247,44 +318,10 @@ class BaseSkeletonLearner:
             # wrt which edges are removed at each process of the algorithm
             remove_edges = set()
 
-            # determine whether or not to continue
-            # loop through every node that we want to test
-            for x_var in possible_x_nodes:
-                possible_adjacencies = set(adj_graph.neighbors(x_var))
-                logger.info(f"Considering node {x_var}...\n\n")
-
-                for y_var in possible_adjacencies:
-                    # a node cannot be a parent to itself in DAGs
-                    if y_var == x_var:
-                        continue
-
-                    if (x_var, y_var) in context.included_edges.edges:
-                        continue
-
-                    # compute the possible variables used in the conditioning set
-                    possible_variables = self._compute_candidate_conditioning_sets(
-                        adj_graph,
-                        x_var,
-                        y_var,
-                    )
-
-                    logger.debug(
-                        f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
-                        f"with p={size_cond_set}. The possible variables to condition on are: "
-                        f"{possible_variables}."
-                    )
-
-                    # check that number of adjacencies is greater then the
-                    # cardinality of the conditioning set
-                    if len(possible_variables) < size_cond_set:
-                        logger.debug(
-                            f"\n\nBreaking for {x_var}, {y_var}, {len(possible_adjacencies)}, "
-                            f"{size_cond_set}, {possible_variables}"
-                        )
-                        continue
-                    else:
-                        self._cont = True
-
+            if self.n_jobs == 1:
+                for x_var, y_var, possible_variables in self._generate_pairs_with_sepset(
+                    possible_x_nodes, adj_graph, context, size_cond_set
+                ):
                     # generate iterator through the conditioning sets
                     conditioning_sets = _iter_conditioning_set(
                         possible_variables=possible_variables,
@@ -309,6 +346,8 @@ class BaseSkeletonLearner:
                                 data, x_var, y_var, set(cond_set)
                             )
                         except Exception as e:
+                            # allow us to catch exceptions that are due to not enough samples
+                            # if so, we cannot remove the edge and just proceed
                             print(e)
                             test_stat = np.inf
                             pvalue = 0.0
@@ -320,14 +359,52 @@ class BaseSkeletonLearner:
                             break
 
                     # post-process the CI test results
-                    removed_edge = self._postprocess_ci_test(
-                        adj_graph, x_var, y_var, cond_set, test_stat, pvalue
-                    )
-                    if removed_edge:
+                    self._postprocess_ci_test(adj_graph, x_var, y_var, test_stat, pvalue)
+
+                    # two variables found to be independent given a separating set
+                    if pvalue > self.alpha:
+                        self.sep_set_[x_var][y_var].append(set(cond_set))
+                        self.sep_set_[y_var][x_var].append(set(cond_set))
                         remove_edges.add((x_var, y_var, pvalue))
 
                     # summarize the comparison of XY
-                    self._summarize_xy_comparison(x_var, y_var, removed_edge, pvalue)
+                    self._summarize_xy_comparison(x_var, y_var, pvalue > self.alpha, pvalue)
+            else:
+                # run parallelized loop
+                out = Parallel(n_jobs=self.n_jobs)(
+                    delayed(_parallel_test_xy_edges)(
+                        conditional_test_func,
+                        x_var,
+                        y_var,
+                        self.alpha,
+                        size_cond_set,
+                        self.max_combinations_,
+                        possible_variables,
+                        data,
+                    )
+                    for x_var, y_var, possible_variables in self._generate_pairs_with_sepset(
+                        possible_x_nodes, adj_graph, context, size_cond_set
+                    )
+                )
+
+                for result in out:
+                    test_stat = result["test_stat"]
+                    pvalue = result["pvalue"]
+                    x_var = result["x_var"]
+                    y_var = result["y_var"]
+                    cond_set = result["cond_set"]
+
+                    # post-process the CI test results
+                    self._postprocess_ci_test(adj_graph, x_var, y_var, test_stat, pvalue)
+
+                    # two variables found to be independent given a separating set
+                    if pvalue > self.alpha:
+                        self.sep_set_[x_var][y_var].append(set(cond_set))
+                        self.sep_set_[y_var][x_var].append(set(cond_set))
+                        remove_edges.add((x_var, y_var, pvalue))
+
+                    # summarize the comparison of XY
+                    self._summarize_xy_comparison(x_var, y_var, pvalue > self.alpha, pvalue)
 
             # finally remove edges after performing
             # conditional independence tests
@@ -349,8 +426,27 @@ class BaseSkeletonLearner:
         self.n_iters_ += 1
 
     def _generate_pairs_with_sepset(
-        self, possible_x_nodes, adj_graph, context, size_cond_set
-    ):  # -> Generator[Column, Column, Set[Column]]:
+        self, possible_x_nodes: Set[Column], adj_graph: Graph, context: Context, size_cond_set: int
+    ) -> Generator[Tuple[Column, Column, Set[Column]], None, None]:
+        """Generate X, Y and Z pairs for conditional testing.
+
+        Parameters
+        ----------
+        possible_x_nodes : Set[Column]
+            Nodes that we want to test edges of.
+        adj_graph : Graph
+            The graph encoding adjacencies and current state of the learned undirected graph.
+        context : Context
+            The causal context.
+        size_cond_set : int
+            The current size of the conditioning set to consider.
+
+        Yields
+        ------
+        Generator[Tuple[Column, Column, Set[Column]], None, None]
+            Generates 'X' variable, 'Y' variable and canddiate 'Z' (i.e. possible separating set
+            variables).
+        """
         # loop through every node that we want to test
         for x_var in possible_x_nodes:
             possible_adjacencies = set(adj_graph.neighbors(x_var))
@@ -387,22 +483,7 @@ class BaseSkeletonLearner:
                     continue
                 else:
                     self._cont = True
-
-                # generate iterator through the conditioning sets
-                conditioning_sets = _iter_conditioning_set(
-                    possible_variables=possible_variables,
-                    x_var=x_var,
-                    y_var=y_var,
-                    size_cond_set=size_cond_set,
-                )
-
-                # now iterate through the possible parents
-                for comb_idx, cond_set in enumerate(conditioning_sets):
-                    # check the number of combinations of possible parents we have tried
-                    # to use as a separating set
-                    if self.max_combinations_ is not None and comb_idx >= self.max_combinations_:
-                        break
-                    yield x_var, y_var, cond_set
+                yield x_var, y_var, possible_variables
 
     def _compute_candidate_conditioning_sets(
         self, adj_graph: nx.Graph, x_var: Column, y_var: Column
@@ -447,23 +528,34 @@ class BaseSkeletonLearner:
         adj_graph: nx.Graph,
         x_var: Column,
         y_var: Column,
-        cond_set: Set[Column],
         test_stat: float,
         pvalue: float,
-    ) -> bool:
+    ):
+        """Post-processing of CI tests.
+
+        The basic values any learner keeps track of is the pvalue/test-statistic of each
+        remaining edge. This is a heuristic estimate of the "dependency" of any node
+        with its neighbors.
+
+        Parameters
+        ----------
+        adj_graph : nx.Graph
+            The adjacency graph.
+        x_var : Column
+            X variable.
+        y_var : Column
+            Y variable.
+        test_stat : float
+            The test statistic.
+        pvalue : float
+            The pvalue of the test statistic.
+        """
         # keep track of the smallest test statistic, meaning the highest pvalue
         # meaning the "most" independent. keep track of the maximum pvalue as well
         if pvalue > adj_graph.edges[x_var, y_var]["pvalue"]:
             adj_graph.edges[x_var, y_var]["pvalue"] = pvalue
         if test_stat < adj_graph.edges[x_var, y_var]["test_stat"]:
             adj_graph.edges[x_var, y_var]["test_stat"] = test_stat
-
-        # two variables found to be independent given a separating set
-        if pvalue > self.alpha:
-            self.sep_set_[x_var][y_var].append(set(cond_set))
-            self.sep_set_[y_var][x_var].append(set(cond_set))
-            return True
-        return False
 
     def _summarize_xy_comparison(
         self, x_var: Column, y_var: Column, removed_edge: bool, pvalue: float
@@ -550,6 +642,8 @@ class LearnSkeleton(BaseSkeletonLearner):
         by its dependencies from strongest to weakest (i.e. largest CI test statistic value
         to lowest). This can be used in conjunction with ``max_combinations`` parameter
         to only test the "strongest" dependences.
+    n_jobs : int, optional
+        Number of CPUs to use, by default None.
 
     Attributes
     ----------
@@ -608,11 +702,13 @@ class LearnSkeleton(BaseSkeletonLearner):
         max_combinations: Optional[int] = None,
         condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         keep_sorted: bool = False,
+        n_jobs: Optional[int] = None,
     ) -> None:
         self.ci_estimator = ci_estimator
         self.sep_set = sep_set
         self.alpha = alpha
         self.condsel_method = condsel_method
+        self.n_jobs = n_jobs
 
         # control of the conditioning set
         self.min_cond_set_size = min_cond_set_size
@@ -858,6 +954,8 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         The number of iterations the skeleton has been learned.
     max_path_length_ : int
         Th inferred maximum path length any single discriminating path is allowed to take.
+    n_jobs : int, optional
+        Number of CPUs to use, by default None.
 
     Notes
     -----
@@ -904,6 +1002,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         ] = ConditioningSetSelection.PDS,
         keep_sorted: bool = False,
         max_path_length: Optional[int] = None,
+        n_jobs: Optional[int] = None,
     ) -> None:
         super().__init__(
             ci_estimator,
@@ -914,6 +1013,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             max_combinations,
             condsel_method,
             keep_sorted,
+            n_jobs=n_jobs,
         )
 
         self.second_stage_condsel_method = second_stage_condsel_method
@@ -1084,6 +1184,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         to only test the "strongest" dependences.
     max_path_length : int, optional
         The maximum length of any discriminating path, or None if unlimited.
+    n_jobs : int, optional
+        Number of CPUs to use, by default None.
 
     Notes
     -----
@@ -1114,6 +1216,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         keep_sorted: bool = False,
         max_path_length: Optional[int] = None,
         known_intervention_targets: bool = False,
+        n_jobs: Optional[int] = None,
     ) -> None:
         super().__init__(
             ci_estimator,
@@ -1126,6 +1229,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             second_stage_condsel_method,
             keep_sorted,
             max_path_length,
+            n_jobs=n_jobs,
         )
 
         self.cd_estimator = cd_estimator
@@ -1199,7 +1303,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self,
         data: List[pd.DataFrame],
         X: Column,
-        Y: Set[Column],
+        Y: Column,
         Z: Set[Column],
     ) -> Tuple[float, float]:
         """Test an edge from an F-node to a regular node for X || Y | Z.
@@ -1240,7 +1344,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # indicates which distribution data came from
         # test graphically if Y is d-separated from F-node given Z
         # or test statistically (Y || F-node | Z), or P(Y|Z) =? P'(Y|Z)
-        test_stat, pvalue = self.cd_estimator.test(data, Y, set({X}), Z)
+        test_stat, pvalue = self.cd_estimator.test(data, set({Y}), set({X}), Z)
 
         self.n_ci_tests += 1
         return test_stat, pvalue
@@ -1274,29 +1378,12 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             if y_var in f_nodes:
                 raise RuntimeError("This should not be the case")
 
-            # get only neighboring sets of Y-vars, or PDS that depend on Y
+            # get candidate conditioning sets that do not include the F-nodes
             possible_variables = super()._compute_candidate_conditioning_sets(
                 adj_graph, x_var, y_var
             ) - set(f_nodes)
 
             return possible_variables
-
-    def _postprocess_ci_test(
-        self,
-        adj_graph: nx.Graph,
-        x_var: Column,
-        y_var: Column,
-        cond_set: Set[Column],
-        test_stat: float,
-        pvalue: float,
-    ) -> bool:
-        # post-process the CI test results
-        f_nodes = self.context_.f_nodes
-        if x_var in f_nodes:
-            all_other_fnodes = f_nodes.copy()
-            all_other_fnodes.remove(x_var)
-            cond_set = cond_set.union(all_other_fnodes)
-        return super()._postprocess_ci_test(adj_graph, x_var, y_var, cond_set, test_stat, pvalue)
 
     def _learn_skeleton_with_interventions(self, interv_data: List[pd.DataFrame], context: Context):
         state_variables = context.state_variables.copy()
@@ -1450,3 +1537,24 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # now, we'll fit the data using interventional data by looping over all
         # combinations of F-nodes and their neighbors
         self._learn_skeleton_with_interventions(data, self.context_)
+
+        for x_var, y_vars in self.sep_set_.items():
+            for y_var in y_vars:
+                f_node = None
+                if x_var in f_nodes:
+                    f_node = x_var
+                if y_var in f_nodes:
+                    f_node = y_var
+
+                if f_node is None:
+                    continue
+
+                f_nodes_without_this = f_nodes.copy()
+                f_nodes_without_this.remove(f_node)
+                sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+                if len(sep_sets) > 0:
+                    print(
+                        f"Updated separating set for {x_var}, {y_var} with {f_nodes_without_this}"
+                    )
+                    for idx in range(len(sep_sets)):
+                        self.sep_set_[x_var][y_var][idx].update(f_nodes_without_this)

@@ -187,6 +187,7 @@ def _calculate_g_statistic(contingency_tble):
     nlevels_x, nlevels_y, dof_count = contingency_tble.shape
 
     # now compute marginal terms across all degrees of freedom
+    # (nlevels_x, dof_count) and (nlevels_y, dof_count) arrays
     tx_dof = contingency_tble.sum(axis=1)
     ty_dof = contingency_tble.sum(axis=0)
 
