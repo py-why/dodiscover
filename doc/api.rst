@@ -1,3 +1,5 @@
+.. _api_ref:
+
 ###
 API
 ###
@@ -32,6 +34,7 @@ See docs for ``Context`` and ``make_context`` for more information.
 
    make_context
    ContextBuilder
+   InterventionalContextBuilder
    context.Context
 
 
@@ -44,9 +47,11 @@ Constraint-based structure learning
 
    LearnSkeleton
    LearnSemiMarkovianSkeleton
-   SkeletonMethods
+   LearnInterventionSkeleton
+   ConditioningSetSelection
    PC
    FCI
+   PsiFCI
 
 Comparing causal discovery algorithms
 =====================================

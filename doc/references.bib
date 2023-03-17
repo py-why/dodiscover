@@ -16,11 +16,31 @@
   url       = {https://doi.org/10.1214/11-AOS940}
 }
 
-@article{Lopez2016revisiting,
-  title   = {Revisiting classifier two-sample tests},
-  author  = {Lopez-Paz, David and Oquab, Maxime},
-  journal = {arXiv preprint arXiv:1610.06545},
-  year    = {2016}
+@inproceedings{correa2020calculus,
+  title     = {A calculus for stochastic interventions: Causal effect identification and surrogate experiments},
+  author    = {Correa, Juan and Bareinboim, Elias},
+  booktitle = {Proceedings of the AAAI conference on artificial intelligence},
+  volume    = {34},
+  number    = {06},
+  pages     = {10093--10100},
+  year      = {2020}
+}
+
+@article{Jaber2020causal,
+  title   = {Causal discovery from soft interventions with unknown targets: Characterization and learning},
+  author  = {Jaber, Amin and Kocaoglu, Murat and Shanmugam, Karthikeyan and Bareinboim, Elias},
+  journal = {Advances in neural information processing systems},
+  volume  = {33},
+  pages   = {9551--9561},
+  year    = {2020}
+}
+
+@article{Kocaoglu2019characterization,
+  title   = {Characterization and learning of causal graphs with latent variables from soft interventions},
+  author  = {Kocaoglu, Murat and Jaber, Amin and Shanmugam, Karthikeyan and Bareinboim, Elias},
+  journal = {Advances in Neural Information Processing Systems},
+  volume  = {32},
+  year    = {2019}
 }
 
 @article{Meek1995,
@@ -31,15 +51,6 @@
   title   = {Causal Inference and Causal Explanation with Background Knowledge},
   volume  = {2},
   journal = {Proceedings of Eleventh Conference on Uncertainty in Artificial Intelligence, Montreal, QU}
-}
-
-@inproceedings{Mukherjee2020ccmi,
-  title        = {CCMI: Classifier based conditional mutual information estimation},
-  author       = {Mukherjee, Sudipto and Asnani, Himanshu and Kannan, Sreeram},
-  booktitle    = {Uncertainty in artificial intelligence},
-  pages        = {1083--1093},
-  year         = {2020},
-  organization = {PMLR}
 }
 
 @book{Neapolitan2003,
@@ -53,6 +64,144 @@
   doi       = {10.1145/1327942.1327961}
 }
 
+@article{uhler2013geometry,
+  title     = {Geometry of the faithfulness assumption in causal inference},
+  author    = {Uhler, Caroline and Raskutti, Garvesh and B{\"u}hlmann, Peter and Yu, Bin},
+  journal   = {The Annals of Statistics},
+  pages     = {436--463},
+  year      = {2013},
+  publisher = {JSTOR}
+}
+
+@article{Zhang2008,
+  title    = {On the completeness of orientation rules for causal discovery in the presence of latent confounders and selection bias},
+  journal  = {Artificial Intelligence},
+  volume   = {172},
+  number   = {16},
+  pages    = {1873-1896},
+  year     = {2008},
+  issn     = {0004-3702},
+  doi      = {https://doi.org/10.1016/j.artint.2008.08.001},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0004370208001008},
+  author   = {Jiji Zhang},
+  keywords = {Ancestral graphs, Automated causal discovery, Bayesian networks, Causal models, Markov equivalence, Latent variables}
+}
+
+@article{zhang2008ancestralgraphs,
+  author  = {Jiji Zhang},
+  title   = {Causal Reasoning with Ancestral Graphs},
+  journal = {Journal of Machine Learning Research},
+  year    = {2008},
+  volume  = {9},
+  number  = {47},
+  pages   = {1437--1474},
+  url     = {http://jmlr.org/papers/v9/zhang08a.html}
+}
+
+# Books
+
+@book{Pearl_causality_2009,
+  author    = {Pearl, Judea},
+  title     = {Causality: Models, Reasoning and Inference},
+  year      = {2009},
+  isbn      = {052189560X},
+  publisher = {Cambridge University Press},
+  address   = {USA},
+  edition   = {2nd}
+}
+
+@book{Spirtes1993,
+  author    = {Spirtes, Peter and Glymour, Clark and Scheines, Richard},
+  year      = {1993},
+  month     = {01},
+  pages     = {},
+  title     = {Causation, Prediction, and Search},
+  volume    = {81},
+  isbn      = {978-1-4612-7650-0},
+  doi       = {10.1007/978-1-4612-2748-9},
+  publisher = {The MIT Press}
+}
+
+@article{xie2020generalized,
+  title   = {Generalized independent noise condition for estimating latent variable causal graphs},
+  author  = {Xie, Feng and Cai, Ruichu and Huang, Biwei and Glymour, Clark and Hao, Zhifeng and Zhang, Kun},
+  journal = {Advances in Neural Information Processing Systems},
+  volume  = {33},
+  pages   = {14891--14902},
+  year    = {2020}
+}
+
+@article{dai2022independence,
+  title   = {Independence Testing-Based Approach to Causal Discovery under Measurement Error and Linear Non-Gaussian Models},
+  author  = {Dai, Haoyue and Spirtes, Peter and Zhang, Kun},
+  journal = {arXiv preprint arXiv:2210.11021},
+  year    = {2022}
+}
+
+% Conditional Testing
+
+@article{cressieread1984,
+  issn      = {00359246},
+  url       = {http://www.jstor.org/stable/2345686},
+  abstract  = {This article investigates the family {Iλ;λ ∈ R} of power divergence statistics for testing the fit of observed frequencies {Xi;i = 1,...,k} to expected frequencies {Ei;i = 1,...,k}. From the definition 2nIλ = 2/λ(λ + 1) ∑ki = 1 Xi{(Xi/Ei)λ - 1}; λ ∈ R, it can easily be seen that Pearson's X2 (λ = 1), the log likelihood ratio statistic (λ = 0), the Freeman-Tukey statistic (λ = -1/2) the modified log likelihood ratio statistic (λ = -1) and the Neyman modified X2 (λ = -2), are all special cases. Most of the work presented is devoted to an analytic study of the asymptotic difference between different Iλ, however finite sample results have been presented as a check and a supplement to our conclusions. A new goodness-of-fit statistic, where λ = 2/3, emerges as an excellent and compromising alternative to the old warriors, I0 and I1.},
+  author    = {Noel Cressie and Timothy R. C. Read},
+  journal   = {Journal of the Royal Statistical Society. Series B (Methodological)},
+  number    = {3},
+  pages     = {440--464},
+  publisher = {[Royal Statistical Society, Wiley]},
+  title     = {Multinomial Goodness-of-Fit Tests},
+  urldate   = {2023-03-16},
+  volume    = {46},
+  year      = {1984}
+}
+
+
+
+@article{frenzel_partial_2007,
+  title    = {Partial {Mutual} {Information} for {Coupling} {Analysis} of {Multivariate} {Time} {Series}},
+  volume   = {99},
+  doi      = {10.1103/PhysRevLett.99.204101},
+  abstract = {We propose a method to discover couplings in multivariate time series, based on partial mutual information, an information-theoretic generalization of partial correlation. It represents the part of mutual information of two random quantities that is not contained in a third one. By suitable choice of the latter, we can differentiate between direct and indirect interactions and derive an appropriate graphical model. An efficient estimator for partial mutual information is presented as well.},
+  journal  = {Physical review letters},
+  author   = {Frenzel, Stefan and Pompe, Bernd},
+  month    = dec,
+  year     = {2007},
+  pages    = {204101},
+  file     = {Full Text PDF:/Users/adam2392/Zotero/storage/8ICFXVZG/Frenzel and Pompe - 2007 - Partial Mutual Information for Coupling Analysis o.pdf:application/pdf}
+}
+
+@article{kraskov_estimating_2004,
+  title    = {Estimating mutual information},
+  volume   = {69},
+  url      = {https://link.aps.org/doi/10.1103/PhysRevE.69.066138},
+  doi      = {10.1103/PhysRevE.69.066138},
+  abstract = {We present two classes of improved estimators for mutual information M(X,Y), from samples of random points distributed according to some joint probability density μ(x,y). In contrast to conventional estimators based on binnings, they are based on entropy estimates from k-nearest neighbor distances. This means that they are data efficient (with k=1 we resolve structures down to the smallest possible scales), adaptive (the resolution is higher where data are more numerous), and have minimal bias. Indeed, the bias of the underlying entropy estimates is mainly due to nonuniformity of the density at the smallest resolved scale, giving typically systematic errors which scale as functions of k∕N for N points. Numerically, we find that both families become exact for independent distributions, i.e. the estimator ˆM(X,Y) vanishes (up to statistical fluctuations) if μ(x,y)=μ(x)μ(y). This holds for all tested marginal distributions and for all dimensions of x and y. In addition, we give estimators for redundancies between more than two random variables. We compare our algorithms in detail with existing algorithms. Finally, we demonstrate the usefulness of our estimators for assessing the actual independence of components obtained from independent component analysis (ICA), for improving ICA, and for estimating the reliability of blind source separation., This article appears in the following collections:},
+  number   = {6},
+  urldate  = {2023-01-27},
+  journal  = {Physical Review E},
+  author   = {Kraskov, Alexander and Stögbauer, Harald and Grassberger, Peter},
+  month    = jun,
+  year     = {2004},
+  note     = {Publisher: American Physical Society},
+  pages    = {066138},
+  file     = {APS Snapshot:/Users/adam2392/Zotero/storage/GRW23BYU/PhysRevE.69.html:text/html;Full Text PDF:/Users/adam2392/Zotero/storage/NJT9QCVA/Kraskov et al. - 2004 - Estimating mutual information.pdf:application/pdf}
+}
+
+@article{Lopez2016revisiting,
+  title   = {Revisiting classifier two-sample tests},
+  author  = {Lopez-Paz, David and Oquab, Maxime},
+  journal = {arXiv preprint arXiv:1610.06545},
+  year    = {2016}
+}
+
+@inproceedings{Mukherjee2020ccmi,
+  title        = {CCMI: Classifier based conditional mutual information estimation},
+  author       = {Mukherjee, Sudipto and Asnani, Himanshu and Kannan, Sreeram},
+  booktitle    = {Uncertainty in artificial intelligence},
+  pages        = {1083--1093},
+  year         = {2020},
+  organization = {PMLR}
+}
 
 @inproceedings{Park2021conditional,
   title        = {Conditional distributional treatment effect with kernel conditional mean embeddings and U-statistic regression},
@@ -62,7 +211,6 @@
   year         = {2021},
   organization = {PMLR}
 }
-
 
 @inproceedings{Runge2018cmi,
   title     = {Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information},
@@ -102,20 +250,6 @@
   url       = {https://doi.org/10.24963/ijcai.2020/385}
 }
 
-@article{Zhang2008,
-  title    = {On the completeness of orientation rules for causal discovery in the presence of latent confounders and selection bias},
-  journal  = {Artificial Intelligence},
-  volume   = {172},
-  number   = {16},
-  pages    = {1873-1896},
-  year     = {2008},
-  issn     = {0004-3702},
-  doi      = {https://doi.org/10.1016/j.artint.2008.08.001},
-  url      = {https://www.sciencedirect.com/science/article/pii/S0004370208001008},
-  author   = {Jiji Zhang},
-  keywords = {Ancestral graphs, Automated causal discovery, Bayesian networks, Causal models, Markov equivalence, Latent variables}
-}
-
 @inproceedings{Zhang2011,
   author    = {Zhang, Kun and Peters, Jonas and Janzing, Dominik and Sch\"{o}lkopf, Bernhard},
   title     = {Kernel-Based Conditional Independence Test and Application in Causal Discovery},
@@ -130,42 +264,19 @@
   series    = {UAI'11}
 }
 
-# Books
+% Example refs
 
-@book{Pearl_causality_2009,
-  author    = {Pearl, Judea},
-  title     = {Causality: Models, Reasoning and Inference},
-  year      = {2009},
-  isbn      = {052189560X},
-  publisher = {Cambridge University Press},
-  address   = {USA},
-  edition   = {2nd}
+@article{sachsdataset2005,
+  author   = {Karen Sachs  and Omar Perez  and Dana Pe'er  and Douglas A. Lauffenburger  and Garry P. Nolan },
+  title    = {Causal Protein-Signaling Networks Derived from Multiparameter Single-Cell Data},
+  journal  = {Science},
+  volume   = {308},
+  number   = {5721},
+  pages    = {523-529},
+  year     = {2005},
+  doi      = {10.1126/science.1105809},
+  url      = {https://www.science.org/doi/abs/10.1126/science.1105809},
+  eprint   = {https://www.science.org/doi/pdf/10.1126/science.1105809},
+  abstract = {Machine learning was applied for the automated derivation of causal influences in cellular signaling networks. This derivation relied on the simultaneous measurement of multiple phosphorylated protein and phospholipid components in thousands of individual primary human immune system cells. Perturbing these cells with molecular interventions drove the ordering of connections between pathway components, wherein Bayesian network computational methods automatically elucidated most of the traditionally reported signaling relationships and predicted novel interpathway network causalities, which we verified experimentally. Reconstruction of network models from physiologically relevant primary single cells might be applied to understanding native-state tissue signaling biology, complex drug actions, and dysfunctional signaling in diseased cells.}
 }
 
-@book{Spirtes1993,
-  author    = {Spirtes, Peter and Glymour, Clark and Scheines, Richard},
-  year      = {1993},
-  month     = {01},
-  pages     = {},
-  title     = {Causation, Prediction, and Search},
-  volume    = {81},
-  isbn      = {978-1-4612-7650-0},
-  doi       = {10.1007/978-1-4612-2748-9},
-  publisher = {The MIT Press}
-}
-
-@article{xie2020generalized,
-  title     = {Generalized independent noise condition for estimating latent variable causal graphs},
-  author    = {Xie, Feng and Cai, Ruichu and Huang, Biwei and Glymour, Clark and Hao, Zhifeng and Zhang, Kun},
-  journal   = {Advances in Neural Information Processing Systems},
-  volume    = {33},
-  pages     = {14891--14902},
-  year      = {2020}
-}
-
-@article{dai2022independence,
-  title     = {Independence Testing-Based Approach to Causal Discovery under Measurement Error and Linear Non-Gaussian Models},
-  author    = {Dai, Haoyue and Spirtes, Peter and Zhang, Kun},
-  journal   = {arXiv preprint arXiv:2210.11021},
-  year      = {2022}
-}

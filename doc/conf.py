@@ -56,7 +56,10 @@ extensions = [
     "numpydoc",
     "IPython.sphinxext.ipython_console_highlighting",
     "nbsphinx",
+    "sphinx.ext.graphviz",
 ]
+
+graphviz_output_format = "png"
 
 # configure sphinx-copybutton
 copybutton_prompt_text = r">>> |\.\.\. |\$ "
@@ -111,6 +114,7 @@ numpydoc_xref_ignore = {
     "CPDAG",
     "PAG",
     "ADMG",
+    "PsiFCI",
     # networkx
     "node",
     "nodes",
@@ -148,6 +152,7 @@ numpydoc_xref_aliases = {
     "nx.Graph": "networkx.Graph",
     "nx.DiGraph": "networkx.DiGraph",
     "nx.MultiDiGraph": "networkx.MultiDiGraph",
+    "nx": "networkx",
     "pgmpy.models.BayesianNetwork": "pgmpy.models.BayesianNetwork",
     # dodiscover
     "ADMG": "dodiscover.ADMG",
@@ -155,6 +160,8 @@ numpydoc_xref_aliases = {
     "CPDAG": "dodiscover.CPDAG",
     "DAG": "dodiscover.DAG",
     "BaseConditionalIndependenceTest": "dodiscover.ci.BaseConditionalIndependenceTest",
+    "BaseConditionalDiscrepancyTest": "dodiscover.cd.BaseConditionalDiscrepancyTest",
+    "ConditioningSetSelection": "dodiscover.constraint.ConditioningSetSelection",
     "Context": "dodiscover.context.Context",
     "PC": "dodiscover.PC",
     "EquivalenceClass": "dodiscover.EquivalenceClass",
@@ -173,7 +180,7 @@ numpydoc_xref_aliases = {
     "column": "pandas.DataFrame.columns",
 }
 
-default_role = "py:obj"
+default_role = "literal"
 
 # Tell myst-parser to assign header anchors for h1-h3.
 # myst_heading_anchors = 3
@@ -207,6 +214,7 @@ intersphinx_mapping = {
     "joblib": ("https://joblib.readthedocs.io/en/latest", None),
     "matplotlib": ("https://matplotlib.org/stable", None),
     "torch": ("https://pytorch.org/docs/master/", None),
+    "pywhy_graphs": ("https://www.pywhy.org/pywhy-graphs/dev/", None),
 }
 intersphinx_timeout = 5
 
@@ -255,6 +263,13 @@ html_theme_options = {
 }
 
 scrapers = ("matplotlib",)
+# Add pygraphviz png scraper, if available
+try:
+    from pygraphviz.scraper import PNGScraper
+
+    scrapers += (PNGScraper(),)
+except ImportError:
+    pass
 
 sphinx_gallery_conf = {
     "doc_module": "dodiscover",
