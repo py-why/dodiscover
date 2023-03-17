@@ -132,9 +132,7 @@ def test_pc_against_causallearn(dataset, ci_estimator, clearn_test, col_names, c
 
     # convert to pywhy graph
     nodes = [node.get_name() for node in clearn_graph.G.nodes]
-    clearn_pywhy_graph = clearn_to_graph(
-        clearn_graph.G.graph, arr_idx=nodes, graph_type="cpdag"
-    )
+    clearn_pywhy_graph = clearn_to_graph(clearn_graph.G.graph, arr_idx=nodes, graph_type="cpdag")
     print(pywhy_graph)
     print(clearn_pywhy_graph)
     print(clearn_graph.G.graph)

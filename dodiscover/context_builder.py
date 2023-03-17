@@ -1,5 +1,5 @@
 import types
-from typing import Any, Callable, Dict, Optional, Set, Tuple, cast
+from typing import Any, Callable, Dict, Optional, Set, Tuple, cast, Union
 
 import networkx as nx
 import pandas as pd
@@ -305,3 +305,38 @@ class ContextBuilder:
     def _empty_graph_func(self, graph_variables) -> Callable:
         empty_graph = lambda: nx.empty_graph(graph_variables, create_using=nx.Graph)
         return empty_graph
+
+
+def make_context(
+    context: Optional[Context] = None, create_using=ContextBuilder
+) -> ContextBuilder:
+    """Create a new ContextBuilder instance.
+    Returns
+    -------
+    result : ContextBuilder
+        The new ContextBuilder instance
+    Examples
+    --------
+    This creates a context object denoting that there are three observed
+    variables, ``(1, 2, 3)``.
+    >>> context_builder = make_context()
+    >>> context = context_builder.variables([1, 2, 3]).build()
+    Notes
+    -----
+    :class:`~.context.Context` objects are dataclasses that creates a dictionary-like access
+    to causal context metadata. Copying relevant information from a Context
+    object into a `ContextBuilder` is all supported with the exception of
+    state variables. State variables are not copied over. To set state variables
+    again, one must build the Context and then call
+    :py:meth:`~.context.Context.state_variable`.
+    """
+    result = create_using()
+    if context is not None:
+        # we create a copy of the ContextBuilder with the current values
+        # in the context
+        ctx_params = context.get_params()
+        for param, value in ctx_params.items():
+            if getattr(result, param, None) is not None:
+                getattr(result, param)(value)
+
+    return result

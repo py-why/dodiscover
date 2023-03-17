@@ -54,33 +54,36 @@ def test_cd_tests_error(cd_func):
     sample_df = single_env_scm(n_samples=10)
     cd_estimator = cd_func()
     with pytest.raises(ValueError, match="The group col"):
-        cd_estimator.test(sample_df, {x}, {y}, group_col="blah")
+        cd_estimator.test(sample_df, {y}, group_col={"blah"}, x_vars={x})
 
     with pytest.raises(ValueError, match="The x variables are not all"):
-        cd_estimator.test(sample_df, {"blah"}, y_vars={y}, group_col="group")
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={"blah"})
 
     with pytest.raises(ValueError, match="The y variables are not all"):
-        cd_estimator.test(sample_df, {x}, y_vars={"blah"}, group_col="group")
+        cd_estimator.test(sample_df, y_vars={"blah"}, group_col={"group"}, x_vars={x})
+
+    with pytest.raises(ValueError, match="Group column should be only one column"):
+        cd_estimator.test(sample_df, y_vars={"blah"}, group_col="group", x_vars={x})
 
     # all the group indicators have different values now from 0/1
     sample_df["group"] = sample_df["group"] + 3
     with pytest.raises(RuntimeError, match="Group indications in"):
-        cd_estimator.test(sample_df, {x}, {y}, group_col="group")
+        cd_estimator.test(sample_df, {y}, group_col={"group"}, x_vars={x})
 
     # test pre-fit propensity scores, or custom propensity model
     with pytest.raises(
         ValueError, match="Both propensity model and propensity estimates are specified"
     ):
         cd_estimator = cd_func(propensity_model=RandomForestClassifier(), propensity_est=[0.5, 0.5])
-        cd_estimator.test(sample_df, {x}, y_vars={y}, group_col="group")
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={x})
 
     with pytest.raises(ValueError, match="There are 3 group pre-defined estimates"):
         cd_estimator = cd_func(propensity_est=np.ones((10, 3)) * 0.5)
-        cd_estimator.test(sample_df, {x}, y_vars={y}, group_col="group")
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={x})
 
     with pytest.raises(ValueError, match="There are 100 pre-defined estimates"):
         cd_estimator = cd_func(propensity_est=np.ones((100, 2)) * 0.5)
-        cd_estimator.test(sample_df, {x}, y_vars={y}, group_col="group")
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={x})
 
 
 @pytest.mark.parametrize(
@@ -112,16 +115,21 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
     alpha = 0.1
 
     if env_type == "single":
-        _, pvalue = cd_estimator.test(df, {"x"}, {"x1"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(
+            df,
+            {"x1"},
+            {group_col},
+            {"x"},
+        )
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"x"}, {"z"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x"})
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"x"}, {"y"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(df, {"y"}, {group_col}, {"x"})
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
     elif env_type == "multi":
-        _, pvalue = cd_estimator.test(df, {"x"}, {"z"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"x"}, {"y"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(df, {"y"}, {group_col}, {"x"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"x1"}, {"z"}, group_col=group_col)
+        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x1"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"

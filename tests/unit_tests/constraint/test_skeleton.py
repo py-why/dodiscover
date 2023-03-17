@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import pytest
 import pywhy_graphs
-from flaky import flaky
 
 from dodiscover import make_context
 from dodiscover.ci import GSquareCITest, Oracle
@@ -105,12 +104,13 @@ def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer):
         assert skel_graph.has_edge(*edge), error_msg
 
 
+@pytest.mark.parametrize("skel_method", [LearnSkeleton, LearnSemiMarkovianSkeleton])
 @pytest.mark.parametrize("G", [collider(), common_cause_and_collider(), complex_graph()])
-def test_learn_skeleton_oracle(G):
+def test_learn_skeleton_oracle(G, skel_method):
     df = dummy_sample(G)
     oracle = Oracle(G)
     alpha = 0.05
-    alg = LearnSkeleton(ci_estimator=oracle, alpha=alpha)
+    alg = skel_method(ci_estimator=oracle, alpha=alpha)
     context = make_context().variables(data=df).build()
     alg.fit(df, context)
 
@@ -121,7 +121,63 @@ def test_learn_skeleton_oracle(G):
     assert nx.is_isomorphic(skel_graph, G.to_undirected())
 
 
-@flaky
+def test_learn_skeleton_pds_disabled_first_stage():
+    """Test that we can disable the first stage of the algorithm."""
+    # reconstruct the PAG the way FCI would
+    edge_list = [("D", "A"), ("B", "E"), ("F", "B"), ("C", "F"), ("C", "H"), ("H", "D")]
+    latent_edge_list = [("A", "B"), ("D", "E")]
+    graph = pywhy_graphs.ADMG(
+        incoming_directed_edges=edge_list, incoming_bidirected_edges=latent_edge_list
+    )
+    ci_estimator = Oracle(graph)
+    sample = dummy_sample(graph)
+    context = make_context().variables(data=sample).build()
+
+    # generate the expected PAG
+    edge_list = [
+        ("A", "B"),
+        ("D", "A"),
+        ("B", "E"),
+        ("B", "F"),
+        ("F", "C"),
+        ("C", "H"),
+        ("H", "D"),
+        ("D", "E"),
+        ("A", "E"),  # Note: this is the extra edge
+    ]
+    expected_skel = nx.Graph(edge_list)
+
+    # learn the skeleton of the graph now with the first stage skeleton
+    alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator, second_stage_condsel_method=None)
+    alg.fit(sample, context)
+    assert alg.context_.state_variable("PAG", on_missing="ignore") is None
+    assert nx.is_isomorphic(expected_skel, alg.adj_graph_)
+
+
+@pytest.mark.parametrize("skel_method", [LearnSkeleton, LearnSemiMarkovianSkeleton])
+def test_method_does_not_change_context(skel_method):
+    # reconstruct the PAG the way FCI would
+    edge_list = [("D", "A")]
+    latent_edge_list = [("A", "B"), ("D", "E")]
+    graph = pywhy_graphs.ADMG(
+        incoming_directed_edges=edge_list, incoming_bidirected_edges=latent_edge_list
+    )
+    ci_estimator = Oracle(graph)
+    sample = dummy_sample(graph)
+    context = make_context().variables(data=sample).build()
+    context_copy = context.copy()
+
+    # after the first stage, we learn a skeleton as in Figure 16
+    firstalg = skel_method(ci_estimator=ci_estimator)
+    firstalg.fit(sample, context)
+
+    # context should not change as a copy is made internally
+    assert context == context_copy
+    assert nx.is_isomorphic(context.init_graph, context_copy.init_graph)
+    assert nx.is_isomorphic(context.included_edges, context_copy.included_edges)
+    assert nx.is_isomorphic(context.excluded_edges, context_copy.excluded_edges)
+
+
 def test_learn_pds_skeleton():
     """Test example in Causation, Prediction and Search book.
 
@@ -171,6 +227,8 @@ def test_learn_pds_skeleton():
     latent_edge_list = [("A", "B"), ("D", "E")]
     uncertain_edge_list = [
         ("A", "E"),
+        ("A", "D"),
+        ("E", "B"),
         ("E", "A"),
         ("B", "F"),
         ("F", "C"),
@@ -179,24 +237,24 @@ def test_learn_pds_skeleton():
         ("H", "C"),
         ("D", "H"),
     ]
-    first_stage_pag = pywhy_graphs.PAG(
+    exp_first_stage_pag = pywhy_graphs.PAG(
         edge_list,
         incoming_bidirected_edges=latent_edge_list,
         incoming_circle_edges=uncertain_edge_list,
     )
 
     # learn the skeleton of the graph now with the first stage skeleton
-    context = (
-        make_context(context)
-        .graph(first_stage_pag.to_undirected())
-        .state_variable("PAG", first_stage_pag)
-        .build()
-    )
+    print(context.init_graph.edges(data=True))
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
     alg.fit(sample, context)
-    skel_graph = alg.adj_graph_
 
-    # generate the expected PAG
+    # the first stage PAG should be equal to what we learned
+    first_stage_pag = alg.context_.state_variable("PAG")
+    for edge_type, subgraph in exp_first_stage_pag.get_graphs().items():
+        assert nx.is_isomorphic(first_stage_pag.get_graphs(edge_type), subgraph)
+
+    # now test that the expected skeleton is the same as the learned skeleton
+    skel_graph = alg.adj_graph_
     edge_list = [
         ("D", "A"),
         ("B", "E"),
@@ -217,8 +275,9 @@ def test_learn_pds_skeleton():
         incoming_bidirected_edges=latent_edge_list,
         incoming_circle_edges=uncertain_edge_list,
     )
-    for edge in expected_pag.to_undirected().edges:
+    expected_skel = expected_pag.to_undirected()
+    for edge in expected_skel.edges:
         assert skel_graph.has_edge(*edge)
     for edge in skel_graph.edges:
-        assert expected_pag.to_undirected().has_edge(*edge)
-    assert nx.is_isomorphic(skel_graph, expected_pag.to_undirected())
+        assert expected_skel.has_edge(*edge)
+    assert nx.is_isomorphic(skel_graph, expected_skel)
