@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 import networkx as nx
 import numpy as np
@@ -6,9 +6,8 @@ from numpy.typing import NDArray
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 
-from dodiscover.typing import NetworkxGraph
-
 from ._protocol import Graph
+from .typing import NetworkxGraph
 
 
 def confusion_matrix_networks(
@@ -146,3 +145,29 @@ def structure_hamming_dist(
         diff = diff + diff.T
         diff[diff > 1] = 1  # Ignoring the double edges.
         return np.sum(diff) / 2
+
+
+def toporder_divergence(A: NDArray, order: List[int]):
+    """Compute topological ordering divergence.
+
+    Given an adjacency matrix A and a topological ordering on its entries,
+    the topological ordering divergence (Rolland et al. (2022)) counts
+    the number of edges of A that can not be recovered due to the choice of
+    the topological ordering.
+
+    Parameters
+    ----------
+    A : NDArray
+        Input adjacency matrix representation of a directed acyclic graphs.
+    order : List[int]
+        A topological ordering on the nodes of the graph.
+
+    Return
+    ------
+    err : int
+        Sum of the number of edges of A not admitted by the given order.
+    """
+    err = 0
+    for i in range(len(order)):
+        err += A[order[i + 1 :], order[i]].sum()
+    return err
