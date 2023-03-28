@@ -12,7 +12,7 @@ from dodiscover.toporder.score import SCORE
 from dodiscover.toporder.utils import full_DAG, orders_consistency
 
 
-################## Fixtures ##################
+# -------------------- Fixtures -------------------- #
 @pytest.fixture
 def dummy_sample():
     """
@@ -146,7 +146,7 @@ def dummy_dense():
     return A
 
 
-################## Unit Tests ##################
+# -------------------- Unit Tests-------------------- #
 def test_given_dataset_when_fitting_DAS_then_shd_larger_equal_dtop(dummy_sample, dummy_groundtruth):
     model = DAS(min_parents=0)
     context = make_context().variables(observed=dummy_sample.columns).build()

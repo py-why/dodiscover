@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -10,7 +10,7 @@ from dodiscover.toporder.utils import full_DAG
 
 
 class NoGAM(BaseCAMPruning, SteinMixin):
-    """The NoGAM (Not only Gaussian Additive Model) algorithm :footcite:`Montagna2023b` for causal discovery.
+    """The NoGAM (Not only Gaussian Additive Model) algorithm :footcite:`Montagna2023b`.
 
     The method iteratively defines a topological ordering finding leaf nodes by
     predicting the entries in the gradient of the log-likelihood via estimated residuals.
@@ -21,12 +21,14 @@ class NoGAM(BaseCAMPruning, SteinMixin):
     Parameters
     ----------
     n_crossval : int
-        Residuals of each variable in the graph are estimated via KernelRidgeRegressor of the sklearn library.
-        To avoid overfitting in the prediction of the residuals, the method uses leave out cross validation,
-        training a number of models equals `n_crossval`, which is used to predict the residuals on the
-        portion of validation data unseen during the fitting of the regressor.
-        Similarly, KernelRidgeRegressor with 'rbf' kernel is used to predict entries in the gradient of
-        the log-likelihood via estimated residuals.
+        Residuals of each variable in the graph are estimated via KernelRidgeRegressor of
+        the sklearn library.
+        To avoid overfitting in the prediction of the residuals, the method uses leave out
+        cross validation, training a number of models equals `n_crossval`, which is used
+        to predict the residuals on the portion of validation data unseen during the fitting
+        of the regressor.
+        Similarly, KernelRidgeRegressor with 'rbf' kernel is used to predict entries in the
+        gradient of the log-likelihood via estimated residuals.
     ridge_alpha: float
         Alpha value for KernelRidgeRegressor with 'rbf' kernel.
     ridge_gamma: float
@@ -38,7 +40,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
     cam_cutoff : float
         alpha value for independence testing for edge pruning
     n_splines : int
-        Default number of splines to use for the feature function. Automatically decreased in case of insufficient samples
+        Default number of splines to use for the feature function. Automatically decreased
+        in case of insufficient samples
     splines_degree: int
         Order of spline to use for the feature function
     pns : bool
@@ -74,7 +77,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         self.ridge_alpha = ridge_alpha
         self.ridge_gamma = ridge_gamma
 
-    def top_order(self, X: NDArray) -> tuple[NDArray, List[int]]:
+    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """Find the topological ordering of the causal variables from X dataset.
 
         Parameter
@@ -110,7 +113,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         return full_DAG(top_order), top_order
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
-        """NoGAM pruning of the fully connected adjacency matrix representation of the inferred topological order.
+        """NoGAM pruning of the fully connected adjacency matrix representation of the
+        inferred topological order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
         Preliminary Neighbors Search :footcite:`Buhlmann2013` is applied before CAM pruning.
@@ -121,14 +125,16 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         return super().prune(X, A_dense)
 
     def _mse(self, X: NDArray, Y: NDArray) -> List[float]:
-        """Predict each column of Y from X and compute the Mean Squared Error. Return the vector of MSEs.
+        """Predict each column of Y from X and compute the Mean Squared Error.
 
         Parameters
         ----------
         X : np.ndarray
-            Matrix of predictors observations. Usually, the n x d matrix R of estimated residuals
+            Matrix of predictors observations. Usually, the n x d matrix R of
+            estimated residuals
         Y  : np.ndarray
-            Matrix of the target variables Y[:, i]. Usually the n x d matrix D of the estimated score function
+            Matrix of the target variables Y[:, i]. Usually the n x d matrix D of the
+            estimated score function
 
         Return
         ------
@@ -150,7 +156,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
     def _estimate_residuals(self, X: NDArray) -> NDArray:
         """Estimate the residuals by fitting a KernelRidge regression.
 
-        For each variable X_j, regress X_j on all the remaining variables  of X, and estimate the residuals.
+        For each variable X_j, regress X_j on all the remaining variables  of X, and
+        estimate the residuals.
 
         Parameters
         ----------

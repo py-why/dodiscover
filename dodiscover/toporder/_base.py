@@ -1,7 +1,7 @@
 import math
 import warnings
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 
 import networkx as nx
 import numpy as np
@@ -14,7 +14,7 @@ from sklearn.feature_selection import SelectFromModel
 
 from dodiscover.context import Context
 
-####################### Mixin class with Stein estimators #######################
+# -------------------- Mixin class with Stein estimators -------------------- #
 
 
 class SteinMixin:
@@ -23,9 +23,9 @@ class SteinMixin:
     """
 
     def hessian(self, X: NDArray, eta_G: float, eta_H: float) -> NDArray:
-        """Stein estimator of the Hessian of log p(x) :footcite:`rolland2022` for each sample in the dataset.
+        """Stein estimator of the Hessian of log p(x) :footcite:`rolland2022`.
 
-        The Hessian matrix is efficiently estimated from data by exploitaiton of the Stein identity.
+        The Hessian matrix is efficiently estimated by exploitaiton of the Stein identity.
 
         Parameters
         ----------
@@ -58,7 +58,7 @@ class SteinMixin:
         K: NDArray = None,
         nablaK: NDArray = None,
     ) -> NDArray:
-        """Stein gradient estimator :footcite:`Li2017` of the score function, i.e. gradient log p(x).
+        """Stein gradient estimator :footcite:`Li2017` of the score, i.e. gradient log p(x).
 
         Parameters
         ----------
@@ -92,13 +92,15 @@ class SteinMixin:
         Parameters
         ----------
         X_diff : np.ndarray
-            n x n x d tensor of i.i.d. samples from p(X) joint distribution
+            n x n x d tensor of i.i.d. samples from p(X)
+            joint distribution
         G : np.ndarray
             estimator of the score function
         c : int
             index of the column of interest
         eta: float
-            regularization parameter for ridge regression in Stein hessian estimator
+            regularization parameter for ridge regression in Stein
+            hessian estimator
         K : np.ndarray
             Gaussian kernel evaluated at X
         s : float
@@ -168,7 +170,7 @@ class SteinMixin:
 
     def _evaluate_kernel(
         self, X_diff: NDArray, evaluate_nabla: bool = False, s: float = None
-    ) -> tuple[NDArray, Union[NDArray, None]]:
+    ) -> Tuple[NDArray, Union[NDArray, None]]:
         """
         Evaluate Gaussian kernel from data.
 
@@ -211,12 +213,12 @@ class SteinMixin:
         return np.expand_dims(X, axis=1) - X
 
 
-####################### Topological ordering interface #######################
+# -------------------- Topological ordering interface -------------------- #
 
 
 class TopOrderInterface(metaclass=ABCMeta):
     """
-    Interface for the implementation of causal discovery methods based on inference of the topological ordering and pruning of the resulting fully connected DAG.
+    Interface for causal discovery based on estimate of topologial ordering and DAG pruning.
     """
 
     @abstractmethod
@@ -232,22 +234,23 @@ class TopOrderInterface(metaclass=ABCMeta):
         raise NotImplementedError()
 
 
-####################### Base class for CAM pruning #######################
+# -------------------- Base class for CAM pruning --------------------#
 class BaseCAMPruning(TopOrderInterface):
-    """
-    Base class for topological order based causal discovery, implementing CAM pruning method :footcite:`Buhlmann2013`.
+    """Class for topological order based methods with CAM pruning :footcite:`Buhlmann2013`.
 
     Implementation `TopOrderInterface` defining `fit` method for causal discovery.
     Class inheriting from `BaseCAMPruning` need to implement the `top_order` method for inference
     of the topological ordering of the nodes in the causal graph.
-    The resulting fully connected matrix is pruned by `prune` method implementation of CAM pruning :footcite:`Buhlmann2013`.
+    The resulting fully connected matrix is pruned by `prune` method implementation of
+    CAM pruning :footcite:`Buhlmann2013`.
 
     Parameters
     ----------
     cam_cutoff : float
         cutoff value for variable selection with hypothesi testing over regression coefficients.
     n_splines : int
-        Default number of splines to use for the feature function. Automatically decreased in case of insufficient samples.
+        Default number of splines to use for the feature function. Automatically decreased in
+        case of insufficient samples.
     splines_degree: int
         Order of spline to use for the feature function.
     pns : bool
@@ -303,7 +306,7 @@ class BaseCAMPruning(TopOrderInterface):
         leaf : int
             Leaf index in the list of graph nodes.
         """
-        # if descendants enforced by edges included in self.context are not in the order, use them as leaves
+        # descend enforced by edges included in self.context and not in the order are used as leaf
         leaf_descendants = self.order_constraints[remaining_nodes[leaf]]
         if not set(leaf_descendants).issubset(set(current_order)):
             found_leaf = False
@@ -315,7 +318,7 @@ class BaseCAMPruning(TopOrderInterface):
                 k += 1
         return leaf
 
-    def fit(self, data_df: pd.DataFrame, context: Context) -> tuple[NDArray, List[int]]:
+    def fit(self, data_df: pd.DataFrame, context: Context) -> Tuple[NDArray, List[int]]:
         """
         Fit topological order based causal discovery algorithm on input data.
 
@@ -346,7 +349,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         # Inference of the causal graph via pruning
         A = self.prune(X, A_dense)
-        self.graph_ = A
+        self.graph_ = nx.from_numpy_array(A, create_using=nx.DiGraph)
         return A, order
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
@@ -425,10 +428,9 @@ class BaseCAMPruning(TopOrderInterface):
         return descendants
 
     def pns(self, A: NDArray, X: NDArray):
-        """Preliminary Neighbors Selection :footcite:`Buhlmann2013` pruning step on adjacency matrix `A`.
+        """Preliminary Neighbors Selection :footcite:`Buhlmann2013` pruning on adj. matrix `A`.
 
-        Variable selection preliminary to CAM pruning, proposed in
-        "Causal additive models, high-dimensional order search and penalized regression", Buhlmann et al., (2013).
+        Variable selection preliminary to CAM pruning.
         It allows to scale CAM pruning to large graphs (~20 or more nodes),
         with sensitive reduction of computational time.
 
@@ -469,8 +471,7 @@ class BaseCAMPruning(TopOrderInterface):
         """
         Regression for parents variables selection.
 
-        Implementation of parents selection for `child` node, as propsoed in
-        "Causal additive models, high-dimensional order search and penalized regression", Buhlmann et al., (2013).
+        Implementation of parents selection for `child` node.
         Returns parents of node `child` associated to sample `y`.
 
         Parameters
@@ -521,7 +522,10 @@ class BaseCAMPruning(TopOrderInterface):
             n, d = X.shape
         except ValueError:
             raise ValueError(
-                f"not enough values to unpack (expected 2, got {len(X.shape)}). If vector X has only 1 dimension, try X.reshape(-1, 1)"
+                (
+                    f"not enough values to unpack (expected 2, got {len(X.shape)}). "
+                    + "If vector X has only 1 dimension, try X.reshape(-1, 1)"
+                )
             )
 
         n_splines = self._n_splines(n, d)
@@ -536,7 +540,7 @@ class BaseCAMPruning(TopOrderInterface):
         lambdas = np.squeeze([s.get_params()["lam"] for s in gam.terms], axis=1)
 
         # Search the best lambdas according to the preliminary search, and get the fitted model
-        lam = np.squeeze([lambda_grid[l] for l in lambdas])
+        lam = np.squeeze([lambda_grid[lam] for lam in lambdas])
         gam = LinearGAM(formula, fit_intercept=False).gridsearch(
             X, y, lam=lam.transpose(), progress=False, objective="GCV"
         )
@@ -562,11 +566,18 @@ class BaseCAMPruning(TopOrderInterface):
         if n / d < 3 * self.n_splines:
             n_splines = math.ceil(n / (3 * self.n_splines))
             print(
-                f"Changed number of basis functions to {n_splines} in order to have enough samples per basis function"
+                (
+                    f"Changed number of basis functions to {n_splines} in order to have"
+                    + " enough samples per basis function"
+                )
             )
             if n_splines <= self.degree:
                 warnings.warn(
-                    f"n_splines must be > spline_order. found: n_splines = {n_splines} and spline_order = {self.degree}. n_splines set to {self.degree + 1}"
+                    (
+                        f"n_splines must be > spline_order. found: n_splines = {n_splines}"
+                        + f" and spline_order = {self.degree}."
+                        + f" n_splines set to {self.degree + 1}"
+                    )
                 )
                 n_splines = self.degree + 1
         return n_splines
@@ -580,7 +591,8 @@ class BaseCAMPruning(TopOrderInterface):
         splines_list : List[Term]
             List of splines term for the GAM formula.
             Example: [s(0), s(1), s(2)] where s is a B-spline Term from pyGAM.
-            The equivalent R formula would be "s(0) + s(1) + s(2)", while the y target is provided directly at gam.fit() call
+            The equivalent R formula would be "s(0) + s(1) + s(2)", while the y target
+            is provided directly at gam.fit() call
 
         Return
         ------

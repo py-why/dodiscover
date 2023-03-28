@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -24,11 +24,13 @@ class SCORE(BaseCAMPruning, SteinMixin):
     cam_cutoff : float
         alpha value for independence testing for edge pruning
     n_splines : int
-        Default number of splines to use for the feature function. Automatically decreased in case of insufficient samples
+        Default number of splines to use for the feature function.
+        Automatically decreased in case of insufficient samples
     splines_degree: int
         Order of spline to use for the feature function
     estimate_variance : bool
-        If True, store estimates the variance of the noise terms from the diagonal of Stein Hessian estimator
+        If True, store estimates the variance of the noise terms from the diagonal of
+        Stein Hessian estimator
     pns : bool
         If True, perform Preliminary Neighbour Search (PNS) before CAM pruning step.
         Allows scaling CAM pruning to large graphs.
@@ -59,7 +61,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         self.var = list()  # data structure for estimated variance of SCM noise terms
         self.estimate_variance = estimate_variance
 
-    def top_order(self, X: NDArray) -> tuple[NDArray, List[int]]:
+    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """Find the topological ordering of the causal variables from X dataset.
 
         Parameter
@@ -93,7 +95,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         return full_DAG(order), order
 
     def prune(self, X, A_dense: NDArray) -> NDArray:
-        """SCORE pruning of the fully connected adjacency matrix representation of the inferred topological order.
+        """SCORE pruning of the fully connected adj. matrix representation of the inferred order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
         Preliminary Neighbors Search :footcite:`Buhlmann2013` is applied before CAM pruning.
@@ -108,9 +110,10 @@ class SCORE(BaseCAMPruning, SteinMixin):
     ) -> NDArray:
         """Find a leaf by inspection of the diagonal elements of the Hessian of the log-likelihood.
 
-        Leaf node equals the 'argmin' of the variance of the diagonal terms of the Hessian of the log-likelihood.
-        After a leaf is identified, it is added to the topological order, and the list of nodes without position
-        in the ordering is updated.
+        Leaf node equals the 'argmin' of the variance of the diagonal terms of the Hessian of
+        the log-likelihood.
+        After a leaf is identified, it is added to the topological order, and the list of nodes
+        without position in the ordering is updated.
 
         Parameters
         ----------
@@ -129,13 +132,13 @@ class SCORE(BaseCAMPruning, SteinMixin):
             Matrix of the data without the column corresponding to the identified leaf node.
         """
         H_diag = stein_instance.hessian_diagonal(X, self.eta_G, self.eta_H)
-        l = int(H_diag.var(axis=0).argmin())
-        l = self.get_leaf(
-            l, active_nodes, order
+        leaf = int(H_diag.var(axis=0).argmin())
+        leaf = self.get_leaf(
+            leaf, active_nodes, order
         )  # get leaf consistent with order imposed by included_edges from self.context
-        order.append(active_nodes[l])
-        active_nodes.pop(l)
-        X = np.hstack([X[:, 0:l], X[:, l + 1 :]])
+        order.append(active_nodes[leaf])
+        active_nodes.pop(leaf)
+        X = np.hstack([X[:, 0:leaf], X[:, leaf + 1 :]])
         if self.estimate_variance:
-            self.var.append(1 / H_diag[:, l].var(axis=0).item())
+            self.var.append(1 / H_diag[:, leaf].var(axis=0).item())
         return X

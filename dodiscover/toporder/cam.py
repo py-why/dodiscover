@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import networkx as nx
 import numpy as np
@@ -20,7 +20,8 @@ class CAM(BaseCAMPruning):
     cam_cutoff : float
         alpha value for independence testing for edge pruning
     n_splines : int
-        Default number of splines to use for the feature function. Automatically decreased in case of insufficient samples
+        Default number of splines to use for the feature function.
+        Automatically decreased in case of insufficient samples
     splines_degree: int
         Order of spline to use for the feature function
     pns : bool
@@ -47,7 +48,7 @@ class CAM(BaseCAMPruning):
         )
         self.inf = np.finfo(np.float32).min
 
-    def top_order(self, X: NDArray) -> tuple[NDArray, List[int]]:
+    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """
         Find the topological ordering of the causal variables from the dataset `X`.
 
@@ -157,9 +158,10 @@ class CAM(BaseCAMPruning):
     def _update_acyclicity_constraints(
         self, parent: int, child: int, score_gains: NDArray, directed_paths: NDArray
     ):
-        """Update the acyclicity constraints and the existing directed paths given new (parent, child) edge.
+        """Update the acyclicity constraints and directed paths given new (parent, child) edge.
 
-        Add aciclicity constraints given (parent, child) edge addition, and update the existing directed paths
+        Add aciclicity constraints given (parent, child) edge addition,
+        and update the existing directed paths.
         In order to forbid i -> j edge selection, set score_gains[i, j] = -Inf
 
         Parameters
@@ -179,7 +181,7 @@ class CAM(BaseCAMPruning):
         self._update_directed_paths(parent, child, directed_paths)
         score_gains[np.transpose(directed_paths == 1, (1, 0))] = self.inf
 
-    def _initialize_score(self, X: NDArray, directed_paths: NDArray) -> tuple[NDArray, NDArray]:
+    def _initialize_score(self, X: NDArray, directed_paths: NDArray) -> Tuple[NDArray, NDArray]:
         """
         Initialize score gains matrix and the score contribution of each node.
 
@@ -196,10 +198,12 @@ class CAM(BaseCAMPruning):
         Return
         ------
         score_gain : np.ndarray
-            d x d matrix of gains. score_gain[i, j] is the additive contribute to the score (i.e. the gain) in adding i as parent of j
+            d x d matrix of gains. score_gain[i, j] is the additive contribute to the score
+            (i.e. the gain) in adding i as parent of j
         init_score : np.ndarray
             d x 1 vector of the score contribute of each node.
-            Since the initial topological ordering is empty, all nodes are initially treated as source as source.
+            Since the initial topological ordering is empty,
+            all nodes are initially treated as source.
         """
         _, d = X.shape
         G_excluded = self.context.excluded_edges  # nx.Graph with excluded edges

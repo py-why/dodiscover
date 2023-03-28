@@ -11,11 +11,14 @@ class DAS(SCORE):
     """The Discovery At Scale (DAS) algorithm :footcite:`Montagna2023a` for causal discovery.
 
     The method infer the topological ordering using SCORE :footcite:`rolland2022`.
-    Then it prunes the fully connected DAG by inspection of the non diagonal entries of the Hessian of the log likelihood.
-    A final, computationally cheap, pruning step is performed with CAM pruning :footcite:`Buhlmann2013`.
+    Then it prunes the fully connected DAG by inspection of the non diagonal entries of the
+    Hessian of the log likelihood.
+    A final, computationally cheap, pruning step is performed with
+    CAM pruning :footcite:`Buhlmann2013`.
     The method assumes Additive Noise Model and Gaussianity of the noise terms.
     DAS is a highly scalable method, allowing to run causal discovery on thousands of nodes.
-    It reduces the computational complexity of the pruning method of an order of magnitude with respect to SCORE.
+    It reduces the computational complexity of the pruning method of an order of magnitude with
+    respect to SCORE.
 
     Parameters
     ----------
@@ -28,7 +31,8 @@ class DAS(SCORE):
     das_cutoff : float
         alpha value for hypothesis testing in preliminary DAS pruning
     n_splines : int
-        Number of splines to use for feature selection with GAM (Generalized Additive Model) fitting.
+        Number of splines to use for feature selection with GAM
+        (Generalized Additive Model) fitting.
         Automatically decreased in case of insufficient samples
     splines_degree: int
         Order of splines for feature selection with GAM (Generalized Additive Model) fitting.
@@ -84,9 +88,9 @@ class DAS(SCORE):
 
         hess = stein.hessian(X, eta_G=self.eta_G, eta_H=self.eta_H)
         for i in range(d - 1):
-            l = order[::-1][i]
-            hess_l = hess[:, l, :][:, remaining_nodes]
-            hess_m = np.abs(np.median(hess_l * self.var[l], axis=0))
+            leaf = order[::-1][i]
+            hess_l = hess[:, leaf, :][:, remaining_nodes]
+            hess_m = np.abs(np.median(hess_l * self.var[leaf], axis=0))
             max_parents = min(max_parents, len(remaining_nodes))
 
             # Find index of the reference for the hypothesis testing
@@ -98,7 +102,7 @@ class DAS(SCORE):
             parents = []
             hess_l = np.abs(hess_l)
             l_index = remaining_nodes.index(
-                l
+                leaf
             )  # leaf index in the remaining nodes (from 0 to len(remaining_nodes)-1)
             for j in range(max_parents):
                 node = topk_indices[j]
@@ -106,7 +110,8 @@ class DAS(SCORE):
                     if j < self.min_parents:  # do not filter minimum number of parents
                         parents.append(remaining_nodes[node])
                     else:  # filter potential parents with hp testing
-                        # Use hess_l[:, argmin] as sample from a zero mean population (implicit assumption: argmin corresponding to zero mean of the hessian entry)
+                        # Use hess_l[:, argmin] as sample from a zero mean population
+                        # (implicit assumption: argmin corresponds to zero mean hessian entry)
                         _, pval = ttest_ind(
                             hess_l[:, node],
                             hess_l[:, argmin],
@@ -116,7 +121,7 @@ class DAS(SCORE):
                         if pval < self.das_cutoff:
                             parents.append(remaining_nodes[node])
 
-            A_das[parents, l] = 1
+            A_das[parents, leaf] = 1
             del remaining_nodes[l_index]
 
         return super().prune(X, A_das)

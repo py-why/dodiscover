@@ -5,13 +5,11 @@ import pytest
 
 from dodiscover import make_context
 from dodiscover.metrics import structure_hamming_dist, toporder_divergence
-
-# from tests.unit_tests.top_order.test_base import dummy_sample, dummy_groundtruth
 from dodiscover.toporder.score import SCORE
 from dodiscover.toporder.utils import full_DAG, orders_consistency
 
 
-################## Fixtures ##################
+# -------------------- Fixtures -------------------- #
 @pytest.fixture
 def dummy_sample():
     """
@@ -145,7 +143,7 @@ def dummy_dense():
     return A
 
 
-################## Unit Tests ##################
+# -------------------- Unit Tests -------------------- #
 def test_given_dataset_when_fitting_SCORE_then_shd_larger_equal_dtop(
     dummy_sample, dummy_groundtruth
 ):
@@ -181,7 +179,7 @@ def test_given_dataset_and_rescaled_dataset_when_fitting_then_returns_equal_outp
     assert order == order_rescaled
 
 
-def test_given_dataset_and_dataset_with_column_permutation_when_fitting_then_returns_consistent_outputs(
+def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return_consistent_outputs(
     dummy_sample,
 ):
     model = SCORE()

@@ -9,7 +9,7 @@ from dodiscover.toporder.score import SCORE
 from dodiscover.toporder.utils import full_DAG, fullAdj2Order
 
 
-################## Fixtures ##################
+# -------------------- Fixtures -------------------- #
 @pytest.fixture
 def dummy_sample():
     """
@@ -143,6 +143,7 @@ def dummy_dense():
     return A
 
 
+# -------------------- Unit Tests -------------------- #
 def test_given_fully_connected_adjacency_when_applying_fullAdj2Order_then_order_is_correct(
     dummy_dense,
 ):
@@ -182,13 +183,13 @@ def test_given_adjacency_when_pruning_then_excluded_edges_are_removed(dummy_samp
     A = model.prune(X, dummy_dense)  # find prediction without excluded edges
 
     # Exclude leaf node incoming edge
-    l = order[-1]
-    l_parents = np.argwhere(A[:, l] == 1).squeeze(axis=1)
+    leaf = order[-1]
+    l_parents = np.argwhere(A[:, leaf] == 1).squeeze(axis=1)
     excluded_edges = nx.empty_graph(len(dummy_sample.columns), create_using=nx.DiGraph)
-    excluded_edges.add_edges_from([(l_parents[0], l)])
+    excluded_edges.add_edges_from([(l_parents[0], leaf)])
     model.context = make_context(model.context).edges(exclude=excluded_edges).build()
     A_excluded = model.prune(X, dummy_dense)
-    assert A_excluded[l_parents[0], l] == 0
+    assert A_excluded[l_parents[0], leaf] == 0
 
 
 def test_given_adjacency_when_pruning_with_pns_then_excluded_edges_are_removed(
@@ -202,16 +203,16 @@ def test_given_adjacency_when_pruning_with_pns_then_excluded_edges_are_removed(
     A = model.prune(X, dummy_dense.astype(np.float_))  # find prediction without excluded edges
 
     # Exclude leaf node incoming edge
-    l = order[-1]
-    l_parents = np.argwhere(A[:, l] == 1).squeeze(axis=1)
+    leaf = order[-1]
+    l_parents = np.argwhere(A[:, leaf] == 1).squeeze(axis=1)
     excluded_edges = nx.empty_graph(len(dummy_sample.columns), create_using=nx.DiGraph)
-    excluded_edges.add_edges_from([(l_parents[0], l)])
+    excluded_edges.add_edges_from([(l_parents[0], leaf)])
     model.context = make_context(model.context).edges(exclude=excluded_edges).build()
     A_excluded = model.prune(X, dummy_dense.astype(np.float_))
-    assert A_excluded[l_parents[0], l] == 0
+    assert A_excluded[l_parents[0], leaf] == 0
 
 
-################## Test SteinMixin ##################
+# -------------------- Test SteinMixin -------------------- #
 def test_given_dataset_when_fitting_the_hessian_then_hessian_is_symmetric(dummy_sample):
     def check_symmetry(H):
         for row in range(len(H)):

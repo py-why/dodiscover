@@ -11,7 +11,7 @@ from dodiscover.toporder.nogam import NoGAM
 from dodiscover.toporder.utils import full_DAG, orders_consistency
 
 
-################## Fixtures ##################
+# -------------------- Fixtures -------------------- #
 @pytest.fixture
 def dummy_sample():
     """
@@ -145,7 +145,7 @@ def dummy_dense():
     return A
 
 
-################## Unit Tests ##################
+# -------------------- Unit Tests -------------------- #
 def test_given_dataset_when_fitting_NoGAM_then_shd_larger_equal_dtop(
     dummy_sample, dummy_groundtruth
 ):
@@ -172,7 +172,7 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     assert orders_consistency(order_full, order_noleaf)
 
 
-def test_given_dataset_and_dataset_with_column_permutation_when_fitting_then_returns_consistent_outputs(
+def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return_consistent_outputs(
     dummy_sample,
 ):
     model = NoGAM()
