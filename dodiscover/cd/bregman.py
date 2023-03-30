@@ -12,8 +12,10 @@ from .base import BaseConditionalDiscrepancyTest
 
 class BregmanCDTest(BaseConditionalDiscrepancyTest):
     """Bregman divergence conditional discrepancy test.
+
     Tests the equality of conditional distributions using a kernel approach
     to estimate Bregman divergences outlined in :footcite:`Yu2020Bregman`.
+
     Parameters
     ----------
     metric : str, optional
@@ -39,6 +41,7 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         will build a propensity model using the argument in ``propensity_model``.
     random_state : int, optional
         Random seed, by default None.
+
     Notes
     -----
     Currently only testing among two groups are supported. Therefore ``df[group_col]`` must

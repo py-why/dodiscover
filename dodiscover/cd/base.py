@@ -13,6 +13,7 @@ from dodiscover.typing import Column
 
 class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
     """Abstract class for any conditional discrepancy test.
+
     All CD tests are used in constraint-based causal discovery algorithms. This
     class interface is expected to be very lightweight to enable anyone to convert
     a function for CD testing into a class, which has a specific API.
@@ -67,12 +68,15 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         x_vars: Set[Column],
     ) -> Tuple[float, float]:
         """Abstract method for all conditional discrepancy tests.
+
         Tests the null hypothesis: :math:`P(Y | X, group) = P(Y | X)`, where
         we are trying to determine if Y is (conditionally) independent from
         the group denoting the distribution, given X.
+
         Another way of viewing this test is testing whether or not :math:`P_i(Y|X) = P_j(Y|X)`,
         where :math:`P_i(.)` and :math:`P_j(.)` denote distributions from different groups
         or environments denoted by the group_col.
+
         Parameters
         ----------
         df : pd.DataFrame
@@ -84,6 +88,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
             each sample belongs to with a '0', or '1'.
         x_vars : Set of column, optional
             A column in ``df``.
+
         Returns
         -------
         Tuple[float, float]
@@ -134,6 +139,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         self, e_hat: ArrayLike, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state=None
     ) -> ArrayLike:
         """Estimate null distribution using propensity weights.
+
         Parameters
         ----------
         e_hat : Array-like of shape (n_samples,)
@@ -146,6 +152,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
             Number of times to sample null, by default 1000.
         random_state : int, optional
             Random generator, or random seed, by default None.
+
         Returns
         -------
         null_dist : Array-like of shape (n_samples,)

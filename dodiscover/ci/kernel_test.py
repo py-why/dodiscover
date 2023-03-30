@@ -28,8 +28,10 @@ class KernelCITest(BaseConditionalIndependenceTest):
         n_jobs: Optional[int] = None,
     ):
         """Kernel (Conditional) Independence Test.
+
         For testing (conditional) independence on continuous data, we
         leverage kernels :footcite:`Zhang2011` that are computationally efficient.
+
         Parameters
         ----------
         kernel_x : str, optional
@@ -55,6 +57,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
             to regularize the method.
         n_jobs : int, optional
             The number of CPUs to use, by default None.
+
         Notes
         -----
         Valid strings for ``compute_kernel`` are, as defined in
@@ -62,6 +65,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
             [``"additive_chi2"``, ``"chi2"``, ``"linear"``, ``"poly"``,
             ``"polynomial"``, ``"rbf"``,
             ``"laplacian"``, ``"sigmoid"``, ``"cosine"``]
+
         References
         ----------
         .. footbibliography::
@@ -102,7 +106,8 @@ class KernelCITest(BaseConditionalIndependenceTest):
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
-        """Abstract method for all conditional independence tests.
+        """Run CI test.
+
         Parameters
         ----------
         df : pd.DataFrame
@@ -114,6 +119,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
         z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
             the test should run a standard independence test.
+
         Returns
         -------
         stat : float
@@ -220,17 +226,20 @@ class KernelCITest(BaseConditionalIndependenceTest):
 
     def _approx_gamma_params_ci(self, uu_prod):
         """Get parameters of the approximated Gamma distribution.
+
         Parameters
         ----------
         uu_prod : np.ndarray of shape (n_features, n_features)
             The product of the eigenvectors of Kx and Ky, the kernels
             on the input data, X and Y.
+
         Returns
         -------
         k_appr : float
             The shape parameter of the Gamma distribution.
         theta_appr : float
             The scale parameter of the Gamma distribution.
+
         Notes
         -----
         X ~ Gamma(k, theta) with a probability density function of the following:

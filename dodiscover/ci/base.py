@@ -13,6 +13,7 @@ from .monte_carlo import generate_knn_in_subspace, restricted_nbr_permutation
 
 class BaseConditionalIndependenceTest(metaclass=ABCMeta):
     """Abstract class for any conditional independence test.
+
     All CI tests are used in constraint-based causal discovery algorithms. This
     class interface is expected to be very lightweight to enable anyone to convert
     a function for CI testing into a class, which has a specific API.
@@ -52,6 +53,7 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
         """Abstract method for all conditional independence tests.
+
         Parameters
         ----------
         df : pd.DataFrame
@@ -63,6 +65,7 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
             the test should run a standard independence test.
+
         Returns
         -------
         Tuple[float, float]
@@ -84,8 +87,10 @@ class ClassifierCIMixin:
         k: int = 1,
     ) -> Tuple:
         """Generate a training and testing dataset for CCIT.
+
         This takes a conditional independence problem given a dataset
         and converts it to a binary classification problem.
+
         Parameters
         ----------
         df : pd.DataFrame
@@ -101,6 +106,7 @@ class ClassifierCIMixin:
             The K nearest-neighbors in subspaces for the conditional permutation
             step to generate distribution with conditional independence. By
             default, 1.
+
         Returns
         -------
         X_train, Y_train, X_test, Y_test : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -181,15 +187,18 @@ class ClassifierCIMixin:
         self, x_arr: ArrayLike, y_arr: ArrayLike
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         r"""Generate samples to emulate X independent of Y.
+
         Based on input data ``(X, Y)``, partitions the dataset into halves, where
         one-half represents the joint distribution of ``P(X, Y)`` and the other
         represents the independent distribution of ``P(X)P(Y)``.
+
         Parameters
         ----------
         x_arr : ArrayLike of shape (n_samples, n_dims_x)
             The input X variable data.
         y_arr : ArrayLike of shape (n_samples, n_dims_y)
             The input Y variable data.
+
         Returns
         -------
         X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -199,6 +208,7 @@ class ClassifierCIMixin:
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
+
         Notes
         -----
         Shuffles the Y samples, such that if there is any dependence among X and Y,
@@ -310,6 +320,7 @@ class CMIMixin:
         n_shuffle: int,
     ) -> float:
         """Compute pvalue by performing a nearest-neighbor shuffle test.
+
         XXX: improve with parallelization with joblib
         Parameters
         ----------
@@ -325,6 +336,7 @@ class CMIMixin:
             The number of nearest-neighbors in feature space to shuffle.
         n_shuffle : int
             The number of times to generate the shuffled distribution.
+
         Returns
         -------
         pvalue : float

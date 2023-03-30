@@ -25,7 +25,7 @@ sample_df = dummy_sample(ground_truth_graph)
 def test_ci_tests(ci_estimator):
     x = "x"
     y = "y"
-    with pytest.raises(ValueError, match="The z conditioning set variables are not all"):
+    with pytest.raises(ValueError, match="The z conditioning set variables .* are not all"):
         ci_estimator.test(sample_df, {x}, {y}, z_covariates=["blah"])
 
     with pytest.raises(ValueError, match="The x variables.*are not all"):
