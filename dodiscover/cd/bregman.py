@@ -1,4 +1,4 @@
-from typing import Set, Tuple
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
@@ -12,10 +12,8 @@ from .base import BaseConditionalDiscrepancyTest
 
 class BregmanCDTest(BaseConditionalDiscrepancyTest):
     """Bregman divergence conditional discrepancy test.
-
     Tests the equality of conditional distributions using a kernel approach
     to estimate Bregman divergences outlined in :footcite:`Yu2020Bregman`.
-
     Parameters
     ----------
     metric : str, optional
@@ -41,12 +39,10 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         will build a propensity model using the argument in ``propensity_model``.
     random_state : int, optional
         Random seed, by default None.
-
     Notes
     -----
     Currently only testing among two groups are supported. Therefore ``df[group_col]`` must
     only contain binary indicators and ``propensity_est`` must contain only two columns.
-
     References
     ----------
     .. footbibliography::
@@ -56,12 +52,12 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         self,
         metric: str = "rbf",
         distance_metric: str = "euclidean",
-        kwidth: float = None,
+        kwidth: Optional[float] = None,
         null_reps: int = 1000,
-        n_jobs: int = None,
+        n_jobs: Optional[int] = None,
         propensity_model=None,
         propensity_est=None,
-        random_state: int = None,
+        random_state: Optional[int] = None,
     ) -> None:
         self.metric = metric
         self.distance_metric = distance_metric
@@ -74,16 +70,21 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         self.propensity_est = propensity_est
 
     def test(
-        self, df: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], group_col: Column
+        self,
+        df: pd.DataFrame,
+        y_vars: Set[Column],
+        group_col: Set[Column],
+        x_vars: Set[Column],
     ) -> Tuple[float, float]:
         # check test input
-        self._check_test_input(df, x_vars, y_vars, group_col)
+        self._check_test_input(df, y_vars, group_col, x_vars)
+        group_col_var: Column = list(group_col)[0]
 
         x_cols = list(x_vars)
         y_cols = list(y_vars)
-        group_ind = df[group_col].to_numpy()
+        group_ind = df[group_col_var].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:
-            raise RuntimeError(f"Group indications in {group_col} column should be all 1 or 0.")
+            raise RuntimeError(f"Group indications in {group_col_var} column should be all 1 or 0.")
 
         # get the X and Y dataset
         X = df[x_cols].to_numpy()

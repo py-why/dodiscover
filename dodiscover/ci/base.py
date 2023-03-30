@@ -13,7 +13,6 @@ from .monte_carlo import generate_knn_in_subspace, restricted_nbr_permutation
 
 class BaseConditionalIndependenceTest(metaclass=ABCMeta):
     """Abstract class for any conditional independence test.
-
     All CI tests are used in constraint-based causal discovery algorithms. This
     class interface is expected to be very lightweight to enable anyone to convert
     a function for CI testing into a class, which has a specific API.
@@ -32,9 +31,14 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         if any(col not in df.columns for col in x_vars):
             raise ValueError(f"The x variables {x_vars} are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
-            raise ValueError(f"The y variables {y_vars} are not all in the DataFrame.")
+            raise ValueError(
+                f"The y variables {y_vars} are not all in the DataFrame: {df.columns}."
+            )
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
-            raise ValueError("The z conditioning set variables are not all in the DataFrame.")
+            raise ValueError(
+                f"The z conditioning set variables {z_covariates} are not all in the "
+                f"DataFrame with {df.columns}."
+            )
 
         if not self._allow_multivariate_input and (len(x_vars) > 1 or len(y_vars) > 1):
             raise RuntimeError(f"{self.__class__} does not support multivariate input for X and Y.")
@@ -48,7 +52,6 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
         """Abstract method for all conditional independence tests.
-
         Parameters
         ----------
         df : pd.DataFrame
@@ -60,7 +63,6 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         z_covariates : Set, optional
             A set of columns in ``df``, by default None. If None, then
             the test should run a standard independence test.
-
         Returns
         -------
         Tuple[float, float]
@@ -82,10 +84,8 @@ class ClassifierCIMixin:
         k: int = 1,
     ) -> Tuple:
         """Generate a training and testing dataset for CCIT.
-
         This takes a conditional independence problem given a dataset
         and converts it to a binary classification problem.
-
         Parameters
         ----------
         df : pd.DataFrame
@@ -101,7 +101,6 @@ class ClassifierCIMixin:
             The K nearest-neighbors in subspaces for the conditional permutation
             step to generate distribution with conditional independence. By
             default, 1.
-
         Returns
         -------
         X_train, Y_train, X_test, Y_test : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -182,18 +181,15 @@ class ClassifierCIMixin:
         self, x_arr: ArrayLike, y_arr: ArrayLike
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         r"""Generate samples to emulate X independent of Y.
-
         Based on input data ``(X, Y)``, partitions the dataset into halves, where
         one-half represents the joint distribution of ``P(X, Y)`` and the other
         represents the independent distribution of ``P(X)P(Y)``.
-
         Parameters
         ----------
         x_arr : ArrayLike of shape (n_samples, n_dims_x)
             The input X variable data.
         y_arr : ArrayLike of shape (n_samples, n_dims_y)
             The input Y variable data.
-
         Returns
         -------
         X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -203,7 +199,6 @@ class ClassifierCIMixin:
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
-
         Notes
         -----
         Shuffles the Y samples, such that if there is any dependence among X and Y,
@@ -253,12 +248,10 @@ class ClassifierCIMixin:
         k: int = 1,
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         """Generate dataset for CI testing as binary classification problem.
-
         Based on input data ``(X, Y, Z)``, partitions the dataset into halves, where
         one-half represents the joint distribution of ``P(X, Y, Z)`` and the other
         represents the conditionally independent distribution of ``P(X | Z)P(Y)``.
         This is done by a nearest-neighbor bootstrap approach.
-
         Parameters
         ----------
         x_arr : ArrayLike of shape (n_samples, n_dims_x)
@@ -271,7 +264,6 @@ class ClassifierCIMixin:
             Method to use, by default 'knn'. Can be ('knn', 'kdtree').
         k : int, optional
             Number of nearest neighbors to swap, by default 1.
-
         Returns
         -------
         X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -281,7 +273,6 @@ class ClassifierCIMixin:
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
-
         Notes
         -----
         This algorithm implements a nearest-neighbor bootstrap approach for generating
@@ -319,9 +310,7 @@ class CMIMixin:
         n_shuffle: int,
     ) -> float:
         """Compute pvalue by performing a nearest-neighbor shuffle test.
-
         XXX: improve with parallelization with joblib
-
         Parameters
         ----------
         data : pd.DataFrame
@@ -336,7 +325,6 @@ class CMIMixin:
             The number of nearest-neighbors in feature space to shuffle.
         n_shuffle : int
             The number of times to generate the shuffled distribution.
-
         Returns
         -------
         pvalue : float

@@ -3,7 +3,7 @@ Wrapper for the GIN latent variable causal discovery algorithm in causal-learn
 """
 
 from pandas import DataFrame
-from pywhy_graphs.array.export import clearn_arr_to_graph
+from pywhy_graphs.export import clearn_to_graph
 
 
 class GIN:
@@ -94,4 +94,4 @@ class GIN:
         self.causal_learn_graph_ = causal_learn_graph
         names = [n.name for n in causal_learn_graph.nodes]
         adj_mat = causal_learn_graph.graph
-        self.graph = clearn_arr_to_graph(adj_mat, names, "cpdag")
+        self.graph = clearn_to_graph(adj_mat, names, "cpdag")
