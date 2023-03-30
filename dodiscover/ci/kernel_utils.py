@@ -10,19 +10,16 @@ from sklearn.metrics import pairwise_distances, pairwise_kernels
 
 def von_neumann_divergence(A: ArrayLike, B: ArrayLike) -> float:
     """Compute Von Neumann divergence between two PSD matrices.
-
     Parameters
     ----------
     A : ArrayLike of shape (n_features, n_features)
         The first PSD matrix.
     B : ArrayLike of shape (n_features, n_features)
         The second PSD matrix.
-
     Returns
     -------
     div : float
         The divergence value.
-
     Notes
     -----
     The Von Neumann divergence, or what is known as the Bregman divergence in
@@ -35,23 +32,18 @@ def von_neumann_divergence(A: ArrayLike, B: ArrayLike) -> float:
 
 def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
     r"""Compute f-divergence upper bound on KL-divergence.
-
     See definition 4 in :footcite:`Mukherjee2020ccmi`, where
     the function is reversed to give an upper-bound for the
     sake of gradient descent.
-
     The f-divergence bound gives an upper bound on KL-divergence:
     .. math::
-
         D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]
-
     Parameters
     ----------
     y_stat_q : ArrayLike of shape (n_samples_q,)
         Samples from the distribution Q, the variational class.
     y_stat_p : : ArrayLike of shape (n_samples_p,)
         Samples from the distribution P, the joint distribution.
-
     Returns
     -------
     f_div : float
@@ -63,17 +55,13 @@ def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
 
 def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) -> float:
     r"""Compute f-divergence upper bound on KL-divergence.
-
     See definition 4 in :footcite:`Mukherjee2020ccmi`, where
     the function is reversed to give an upper-bound for the
     sake of gradient descent.
-
     The KL-divergence can be estimated with the following formula:
     .. math::
-
         \hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -
         log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))
-
     Parameters
     ----------
     y_stat_q : ArrayLike of shape (n_samples_q,)
@@ -82,7 +70,6 @@ def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) ->
     y_stat_p : : ArrayLike of shape (n_samples_p,)
         Samples from the distribution P, the joint distribution.
         This corresponds to :math:`Y_i^p` samples.
-
     Returns
     -------
     metric : float
@@ -100,12 +87,11 @@ def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) ->
 def corrent_matrix(
     data: ArrayLike,
     metric: str = "rbf",
-    kwidth: float = None,
+    kwidth: Optional[float] = None,
     distance_metric="euclidean",
-    n_jobs=None,
+    n_jobs: Optional[int] = None,
 ) -> ArrayLike:
     """Compute the centered correntropy of a matrix.
-
     Parameters
     ----------
     data : ArrayLike of shape (n_samples, n_features)
@@ -118,12 +104,10 @@ def corrent_matrix(
         The distance metric to infer kernel width.
     n_jobs : int, optional
         The number of jobs to run computations in parallel, by default None.
-
     Returns
     -------
     data : ArrayLike of shape (n_features, n_features)
         A symmetric centered correntropy matrix of the data.
-
     Notes
     -----
     The estimator for the correntropy array is given by the formula
@@ -167,9 +151,7 @@ def compute_kernel(
     n_jobs: Optional[int] = None,
 ) -> Tuple[ArrayLike, float]:
     """Compute a kernel matrix and corresponding width.
-
     Also optionally estimates the kernel width parameter.
-
     Parameters
     ----------
     X : ArrayLike of shape (n_samples_X, n_features_X)
@@ -192,7 +174,6 @@ def compute_kernel(
         Whether to center the kernel matrix or not, by default True.
     n_jobs : int, optional
         The number of jobs to run computations in parallel, by default None.
-
     Returns
     -------
     kernel : ArrayLike of shape (n_samples_X, n_samples_X) or (n_samples_X, n_samples_Y)
@@ -226,10 +207,12 @@ def compute_kernel(
 
 
 def _estimate_kwidth(
-    X: ArrayLike, method="scott", distance_metric: str = None, n_jobs: int = None
+    X: ArrayLike,
+    method="scott",
+    distance_metric: Optional[str] = None,
+    n_jobs: Optional[int] = None,
 ) -> float:
     """Estimate kernel width.
-
     Parameters
     ----------
     X : ArrayLike of shape (n_samples, n_features)
@@ -242,7 +225,6 @@ def _estimate_kwidth(
         as defined in :func:`sklearn.metrics.pairwise_distances`.
     n_jobs : int, optional
         The number of jobs to run computations in parallel, by default None.
-
     Returns
     -------
     kwidth : float
@@ -270,15 +252,12 @@ def _estimate_kwidth(
 
 def _center_kernel(K: ArrayLike):
     """Centers a kernel matrix.
-
     Applies a transformation H * K * H, where H is a diagonal matrix with 1/n along
     the diagonal.
-
     Parameters
     ----------
     K : ArrayLike of shape (n_features, n_features)
         The kernel matrix.
-
     Returns
     -------
     K : ArrayLike of shape (n_features, n_features)
@@ -291,12 +270,10 @@ def _center_kernel(K: ArrayLike):
 
 def _default_regularization(K: ArrayLike) -> float:
     """Computes a default regularization for Kernel Logistic Regression.
-
     Parameters
     ----------
     K : ArrayLike of shape (n_samples, n_samples)
         The kernel matrix.
-
     Returns
     -------
     x : float
