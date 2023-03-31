@@ -429,12 +429,10 @@
 <p>See definition 4 in <a class="footnote-reference brackets" href="#footcite-mukherjee2020ccmi" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, where
 the function is reversed to give an upper-bound for the
 sake of gradient descent.</p>
-<p>The KL-divergence can be estimated with the following formula:
-.. math:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>\<span class="n">hat</span><span class="p">{</span><span class="n">D</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">KL</span><span class="p">}(</span><span class="n">p</span> <span class="o">||</span> <span class="n">q</span><span class="p">)</span> <span class="o">=</span> \<span class="n">frac</span><span class="p">{</span><span class="mi">1</span><span class="p">}{</span><span class="n">n</span><span class="p">}</span> \<span class="n">sum_</span><span class="p">{</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">}</span><span class="o">^</span><span class="n">n</span> <span class="n">log</span> <span class="n">L</span><span class="p">(</span><span class="n">Y_i</span><span class="o">^</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span>
-<span class="n">log</span> <span class="p">(</span>\<span class="n">frac</span><span class="p">{</span><span class="mi">1</span><span class="p">}{</span><span class="n">m</span><span class="p">}</span> \<span class="n">sum_</span><span class="p">{</span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">}</span><span class="o">^</span><span class="n">m</span> <span class="n">L</span><span class="p">(</span><span class="n">Y_j</span><span class="o">^</span><span class="n">q</span><span class="p">))</span>
-</pre></div>
-</div>
+<p>The KL-divergence can be estimated with the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -
+log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))\]</div>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>

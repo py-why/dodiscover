@@ -248,8 +248,8 @@
 <span class="sd">    sake of gradient descent.</span>
 
 <span class="sd">    The f-divergence bound gives an upper bound on KL-divergence:</span>
-<span class="sd">    .. math::</span>
 
+<span class="sd">    .. math::</span>
 <span class="sd">        D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]</span>
 
 <span class="sd">    Parameters</span>
@@ -276,8 +276,8 @@
 <span class="sd">    sake of gradient descent.</span>
 
 <span class="sd">    The KL-divergence can be estimated with the following formula:</span>
-<span class="sd">    .. math::</span>
 
+<span class="sd">    .. math::</span>
 <span class="sd">        \hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -</span>
 <span class="sd">        log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))</span>
 
@@ -307,9 +307,9 @@
 <div class="viewcode-block" id="corrent_matrix"><a class="viewcode-back" href="../../../generated/dodiscover.ci.kernel_utils.corrent_matrix.html#dodiscover.ci.kernel_utils.corrent_matrix">[docs]</a><span class="k">def</span> <span class="nf">corrent_matrix</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span>
-    <span class="n">kwidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">kwidth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">distance_metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
-    <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the centered correntropy of a matrix.</span>
 
@@ -433,7 +433,10 @@
 
 
 <span class="k">def</span> <span class="nf">_estimate_kwidth</span><span class="p">(</span>
-    <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;scott&quot;</span><span class="p">,</span> <span class="n">distance_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;scott&quot;</span><span class="p">,</span>
+    <span class="n">distance_metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate kernel width.</span>
 
