@@ -92,9 +92,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     def test(
         self,
         df: pd.DataFrame,
-        x_vars: Set[Column],
         y_vars: Set[Column],
-        group_col: Column,
+        group_col: Set[Column],
+        x_vars: Set[Column],
     ) -> Tuple[float, float]:
         """Compute k-sample test statistic and pvalue.
 
@@ -103,20 +103,25 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             H_0: P(Y|X) = P'(Y|X)
 
         where the different distributions arise from the different datasets
-        collected denoted by the ``group_col`` parameter.
+        collected denoted by the ``group_col`` parameter. It can also be written
+        as::
+
+            H_0: P(Y|X,T) = P(Y|X)
+
+        meaning that :math:`Y \\perp X | T`, where T is the group indicator.
 
         Parameters
         ----------
         df : pd.DataFrame
             The dataset containing the columns denoted by ``x_vars``, ``y_vars``,
             and the ``group_col``.
-        x_vars : Set[Column]
-            Set of X variables.
         y_vars : Set[Column]
             Set of Y variables.
         group_col : Column
             The column denoting, which group (i.e. environment) each sample belongs to.
-            Must be binary.
+            This is typically the F-node. Must be binary.
+        x_vars : Set[Column]
+            Set of X variables. Can be the empty set.
 
         Returns
         -------
@@ -126,14 +131,14 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             The computed p-value.
         """
         # check test input
-        self._check_test_input(df, x_vars, y_vars, group_col)
-
+        self._check_test_input(df, y_vars, group_col, x_vars)
+        group_col_var: Column = list(group_col)[0]
         x_cols = list(x_vars)
         y_cols = list(y_vars)
 
-        group_ind = df[group_col].to_numpy()
+        group_ind = df[group_col_var].to_numpy()
         if set(np.unique(group_ind)) != {0, 1}:
-            raise RuntimeError(f"Group indications in {group_col} column should be all 1 or 0.")
+            raise RuntimeError(f"Group indications in {group_col_var} column should be all 1 or 0.")
 
         # compute kernel for the X and Y data
         X = df[x_cols].to_numpy()

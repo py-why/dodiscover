@@ -32,9 +32,14 @@ class BaseConditionalIndependenceTest(metaclass=ABCMeta):
         if any(col not in df.columns for col in x_vars):
             raise ValueError(f"The x variables {x_vars} are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
-            raise ValueError(f"The y variables {y_vars} are not all in the DataFrame.")
+            raise ValueError(
+                f"The y variables {y_vars} are not all in the DataFrame: {df.columns}."
+            )
         if z_covariates is not None and any(col not in df.columns for col in z_covariates):
-            raise ValueError("The z conditioning set variables are not all in the DataFrame.")
+            raise ValueError(
+                f"The z conditioning set variables {z_covariates} are not all in the "
+                f"DataFrame with {df.columns}."
+            )
 
         if not self._allow_multivariate_input and (len(x_vars) > 1 or len(y_vars) > 1):
             raise RuntimeError(f"{self.__class__} does not support multivariate input for X and Y.")
@@ -253,12 +258,10 @@ class ClassifierCIMixin:
         k: int = 1,
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         """Generate dataset for CI testing as binary classification problem.
-
         Based on input data ``(X, Y, Z)``, partitions the dataset into halves, where
         one-half represents the joint distribution of ``P(X, Y, Z)`` and the other
         represents the conditionally independent distribution of ``P(X | Z)P(Y)``.
         This is done by a nearest-neighbor bootstrap approach.
-
         Parameters
         ----------
         x_arr : ArrayLike of shape (n_samples, n_dims_x)
@@ -271,7 +274,6 @@ class ClassifierCIMixin:
             Method to use, by default 'knn'. Can be ('knn', 'kdtree').
         k : int, optional
             Number of nearest neighbors to swap, by default 1.
-
         Returns
         -------
         X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -281,7 +283,6 @@ class ClassifierCIMixin:
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
-
         Notes
         -----
         This algorithm implements a nearest-neighbor bootstrap approach for generating
@@ -321,7 +322,6 @@ class CMIMixin:
         """Compute pvalue by performing a nearest-neighbor shuffle test.
 
         XXX: improve with parallelization with joblib
-
         Parameters
         ----------
         data : pd.DataFrame

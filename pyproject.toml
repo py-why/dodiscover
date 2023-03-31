@@ -146,6 +146,7 @@ type_check = 'mypy -p dodiscover -p tests --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 build_docs = 'make -C doc clean html'
+build_docs_noplot = 'make -C doc clean html-noplot'
 
 [[tool.poe.tasks.clean]]
 sequence = ['_clean_cache', '_clean_pyc', '_clean_so', '_clean_build', '_clean_ctags', '_clean_test']
@@ -202,7 +203,7 @@ convention = 'numpy'
 ignore-decorators = '(copy_doc|property|.*setter|.*getter|pyqtSlot|Slot)'
 match = '^(?!setup|__init__|test_).*\.py'
 match-dir = '^dodiscover.*'
-add_ignore = 'D100,D104,D107'
+add_ignore = 'D100,D104,D105,D107'
 
 [tool.mypy]
 ignore_missing_imports = true
