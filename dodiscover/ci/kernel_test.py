@@ -21,11 +21,11 @@ class KernelCITest(BaseConditionalIndependenceTest):
         kernel_z: str = "rbf",
         null_size: int = 1000,
         approx_with_gamma: bool = True,
-        kwidth_x: float = None,
-        kwidth_y: float = None,
-        kwidth_z: float = None,
+        kwidth_x: Optional[float] = None,
+        kwidth_y: Optional[float] = None,
+        kwidth_z: Optional[float] = None,
         threshold: float = 1e-5,
-        n_jobs: int = None,
+        n_jobs: Optional[int] = None,
     ):
         """Kernel (Conditional) Independence Test.
 
@@ -106,7 +106,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
-        """Abstract method for all conditional independence tests.
+        """Run CI test.
 
         Parameters
         ----------
@@ -243,10 +243,8 @@ class KernelCITest(BaseConditionalIndependenceTest):
         Notes
         -----
         X ~ Gamma(k, theta) with a probability density function of the following:
-
         .. math::
             f(x; k, \\theta) = \\frac{x^{k-1} e^{-x / \\theta}}{\\theta^k \\Gamma(k)}
-
         where $\\Gamma(k)$ is the Gamma function evaluated at k. In this scenario
         k governs the shape of the pdf, while $\\theta$ governs more how spread out
         the data is.
