@@ -72,7 +72,7 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
         samples that are guaranteed to not have conditional dependence, since
         the samples are shuffled. We then train our classifier on this dataset
         and evaluate it on the other dataset. We then estimate the KL-divergence
-        by comparing the evalutions on the shuffled vs unshuffled dataset.
+        by comparing the evaluations on the shuffled vs unshuffled dataset.
 
         We estimate a metric using the classifier, such as:
         - KL-divergence
