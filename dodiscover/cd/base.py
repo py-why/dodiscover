@@ -26,50 +26,68 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
     def _check_test_input(
         self,
         df: pd.DataFrame,
-        x_vars: Set[Column],
         y_vars: Set[Column],
-        group_col: Column,
+        group_col: Set[Column],
+        x_vars: Optional[Set[Column]],
     ):
-        if any(col not in df.columns for col in x_vars):
+        if len(group_col) > 1:
+            raise ValueError(
+                f"Group column should be only one column (one node) in the data {group_col}."
+            )
+        group_col_var: Column = list(group_col)[0]
+
+        if x_vars is not None and any(col not in df.columns for col in x_vars):
             raise ValueError("The x variables are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
             raise ValueError("The y variables are not all in the DataFrame.")
-        if group_col not in df.columns:
-            raise ValueError(f"The group column {group_col} is not in the DataFrame.")
+        if group_col_var not in df.columns:
+            raise ValueError(f"The group column {group_col_var} is not in the DataFrame.")
 
         if self.propensity_model is not None and self.propensity_est is not None:
             raise ValueError(
                 "Both propensity model and propensity estimates are specified. Only one is allowed."
             )
         if self.propensity_est is not None:
-            if self.propensity_est.shape[0] != len(df[group_col]):
+            if self.propensity_est.shape[0] != len(df[group_col_var]):
                 raise ValueError(
                     f"There are {self.propensity_est.shape[0]} pre-defined estimates, while "
-                    f"there are {len(df[group_col])} unique groups."
+                    f"there are {len(df[group_col_var])} unique groups."
                 )
-            if self.propensity_est.shape[1] != len(df[group_col].unique()):
+            if self.propensity_est.shape[1] != len(df[group_col_var].unique()):
                 raise ValueError(
                     f"There are {self.propensity_est.shape[1]} group pre-defined estimates, while "
-                    f"there are {len(df[group_col].unique())} samples."
+                    f"there are {len(df[group_col_var].unique())} samples."
                 )
 
     @abstractmethod
     def test(
-        self, df: pd.DataFrame, x_vars: Set[Column], y_vars: Set[Column], group_col: Column
+        self,
+        df: pd.DataFrame,
+        y_vars: Set[Column],
+        group_col: Set[Column],
+        x_vars: Set[Column],
     ) -> Tuple[float, float]:
         """Abstract method for all conditional discrepancy tests.
+
+        Tests the null hypothesis: :math:`P(Y | X, group) = P(Y | X)`, where
+        we are trying to determine if Y is (conditionally) independent from
+        the group denoting the distribution, given X.
+
+        Another way of viewing this test is testing whether or not :math:`P_i(Y|X) = P_j(Y|X)`,
+        where :math:`P_i(.)` and :math:`P_j(.)` denote distributions from different groups
+        or environments denoted by the group_col.
 
         Parameters
         ----------
         df : pd.DataFrame
             The dataframe containing the dataset.
-        x_vars : Set of column
-            A column in ``df``.
         y_vars : Set of column
             A column in ``df``.
         group_col : column
             A column in ``df`` that indicates which group of distribution
             each sample belongs to with a '0', or '1'.
+        x_vars : Set of column, optional
+            A column in ``df``.
 
         Returns
         -------

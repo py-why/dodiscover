@@ -4,7 +4,7 @@ import pandas as pd
 from causallearn.search.ConstraintBased.FCI import fci
 from dowhy import gcm
 from dowhy.gcm.util.general import set_random_seed
-from pywhy_graphs.array.export import clearn_arr_to_graph
+from pywhy_graphs.export import clearn_to_graph
 from scipy import stats
 
 from dodiscover import FCI, make_context
@@ -119,7 +119,7 @@ def test_fci_against_causallearn():
     dodiscover_graph = fci_alg.graph_
 
     # first compare the adjacency structure
-    clearn_graph = clearn_arr_to_graph(clearn_graph.graph, arr_idx=data.columns, graph_type="pag")
+    clearn_graph = clearn_to_graph(clearn_graph.graph, arr_idx=data.columns, graph_type="pag")
     cm = confusion_matrix_networks(dodiscover_graph, clearn_graph)
 
     dia = np.diag_indices(cm.shape[0])  # indices of diagonal elements
