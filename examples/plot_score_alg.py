@@ -1,18 +1,32 @@
 """
 .. _ex-score-algorithm:
 
-=======================================================================================
-SCORE algorithm for causal discovery from observational data without latent confounders
-=======================================================================================
+==============================================================================================
+Order based algorithms for causal discovery from observational data without latent confounders
+==============================================================================================
 
 We will simulate some observational data from a Structural Causal Model (SCM) and
-demonstrate how we will use the SCORE algorithm.
+demonstrate how we will use the SCORE algorithm. The example can be easily adapted
+to CAM, DAS and  NoGAM methods.
 
-The SCORE algorithm works on observational data when there are no unobserved latent
-confounders. That means for any observed set of variables, there is no common causes
-that are unobserved. In other words, all exogenous variables then are assumed to be
-independent. Additionally, it works under the assumptions of Additive Noise Model with
-nonlinear mechanisms and Gaussian noise terms.
+CAM :footcite:`Buhlmann2013`, SCORE :footcite:`rolland2022`, DAS :footcite:`Montagna2023a`,
+NoGAM :footcite:`Montagna2023b` algorithms perform causal discovery in a two steps procedure.
+Given observational i.i.d. data from an Additive Noise Model :footcite:`Hoyer2009` without
+latent confounders, first the method estimates a topological ordering of the causal variables.
+This partial oredring can be represented as a fully connected graph, where every node has an
+incoming edge from all its predecessors in the ordering. Second, the resulting fully connected
+DAG is pruned by some variable selection procedure.
+Note that knowing the topological ordering is already sufficient for estimating causal effects.
+Nevertheless, the pruning step is justified by the fact that operating with a sparser graph is
+statistically more efficient.
+
+The four methods differ as follow
+- CAM is the original proposal of inference of the causal graph by topological ordering and pruning.
+- SCORE makes the topological ordering more efficient with respect to CAM. It inherits CAM pruning.
+- DAS makes the pruning step more efficient. It inherits SCORE topological ordering procedure.
+(It can be seen as an efficient version of SCORE, with better scaling in the graph size.)
+- NoGAM introduces a topological ordering procedure that does not assume Gaussianity
+of the noise terms, whereas this assumption is required by all previous methods.
 
 .. currentmodule:: dodiscover
 """
@@ -151,7 +165,7 @@ context = make_context().variables(data=data).build()
 # fully connected adjacency matrix compatible with such ordering is the upper
 # triangular matrix np.triu(np.ones((3, 3)), k=1) with all ones above the
 # diagonal.
-score = SCORE()
+score = SCORE()  # or DAS() or NoGAM()
 score.fit(data, context)
 
 # SCORE estimates a directed acyclic graph (DAG) and the topoological order

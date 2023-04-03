@@ -147,7 +147,7 @@ def structure_hamming_dist(
         return np.sum(diff) / 2
 
 
-def toporder_divergence(A: NDArray, order: List[int]):
+def toporder_divergence_arr(A: NDArray, order: List[int]):
     """Compute topological ordering divergence.
 
     Given an adjacency matrix A and a topological ordering on its entries,

@@ -1,7 +1,7 @@
 import math
 import warnings
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional, Union, Tuple
+from typing import List, Optional, Tuple, Union
 
 import networkx as nx
 import numpy as np
@@ -222,15 +222,15 @@ class TopOrderInterface(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def fit(self, data: pd.DataFrame, context: Context):
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
         raise NotImplementedError()
 
     @abstractmethod
-    def top_order(self, X: NDArray):
+    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         raise NotImplementedError()
 
     @abstractmethod
-    def prune(self, A: NDArray, X: NDArray):
+    def prune(self, A: NDArray, X: NDArray) -> NDArray:
         raise NotImplementedError()
 
 
@@ -318,7 +318,7 @@ class BaseCAMPruning(TopOrderInterface):
                 k += 1
         return leaf
 
-    def fit(self, data_df: pd.DataFrame, context: Context) -> Tuple[NDArray, List[int]]:
+    def fit(self, data_df: pd.DataFrame, context: Context) -> None:
         """
         Fit topological order based causal discovery algorithm on input data.
 
@@ -328,13 +328,6 @@ class BaseCAMPruning(TopOrderInterface):
             Datafame of the input data.
         context: Context
             The context of the causal discovery problem.
-
-        Return
-        ------
-        A : np.ndarray
-            The inferred adjacency matrix of the causal DAG.
-        order : List[int]
-            The inferred topological ordering of the causal DAG.
         """
         X = data_df.to_numpy()
         self.context = context
@@ -350,7 +343,6 @@ class BaseCAMPruning(TopOrderInterface):
         # Inference of the causal graph via pruning
         A = self.prune(X, A_dense)
         self.graph_ = nx.from_numpy_array(A, create_using=nx.DiGraph)
-        return A, order
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """
@@ -390,7 +382,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         return A
 
-    def exclude_edges(self, A: NDArray):
+    def exclude_edges(self, A: NDArray) -> NDArray:
         """Update `self.context` excluding edges not admitted in `A`.
 
         Parameters
@@ -427,7 +419,7 @@ class BaseCAMPruning(TopOrderInterface):
                     descendants[row] = row_descendants
         return descendants
 
-    def pns(self, A: NDArray, X: NDArray):
+    def pns(self, A: NDArray, X: NDArray) -> NDArray:
         """Preliminary Neighbors Selection :footcite:`Buhlmann2013` pruning on adj. matrix `A`.
 
         Variable selection preliminary to CAM pruning.
@@ -484,6 +476,11 @@ class BaseCAMPruning(TopOrderInterface):
             List of potential parents admitted by the topological ordering.
         child : int
             Child node with `pot_parents` potential parent nodes.
+
+        Return
+        ------
+        parents : List[int]
+            The list of selected parents for the input child node.
         """
         _, d = X.shape
 
@@ -546,7 +543,7 @@ class BaseCAMPruning(TopOrderInterface):
         )
         return gam
 
-    def _n_splines(self, n, d):
+    def _n_splines(self, n, d) -> int:
         """
         During GAM fitting, decrease number of splines in case of small sample size.
 

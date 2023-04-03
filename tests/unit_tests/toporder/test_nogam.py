@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from dodiscover import make_context
-from dodiscover.metrics import structure_hamming_dist, toporder_divergence
+from dodiscover.metrics import structure_hamming_dist, toporder_divergence_arr
 
 # from tests.unit_tests.top_order.test_base import dummy_sample, dummy_groundtruth
 from dodiscover.toporder.nogam import NoGAM
@@ -151,13 +151,15 @@ def test_given_dataset_when_fitting_NoGAM_then_shd_larger_equal_dtop(
 ):
     model = NoGAM()
     context = make_context().variables(observed=dummy_sample.columns).build()
-    A_pred, order_pred = model.fit(dummy_sample, context)
+    model.fit(dummy_sample, context)
+    A_pred = nx.to_numpy_array(model.graph_)
+    order_pred = model.order_
     shd = structure_hamming_dist(
         true_graph=nx.from_numpy_array(dummy_groundtruth, create_using=nx.DiGraph),
         pred_graph=nx.from_numpy_array(A_pred, create_using=nx.DiGraph),
         double_for_anticausal=False,
     )
-    d_top = toporder_divergence(dummy_groundtruth, order_pred)
+    d_top = toporder_divergence_arr(dummy_groundtruth, order_pred)
     assert shd >= d_top
 
 
@@ -167,8 +169,10 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     order_gt = [2, 1, 3, 0]
     model = NoGAM()
     context = make_context().variables(observed=dummy_sample.columns).build()
-    _, order_full = model.fit(dummy_sample, context)
-    _, order_noleaf = model.fit(dummy_sample[order_gt[:-1]], context)  # Leaf removal
+    model.fit(dummy_sample, context)
+    order_full = model.order_
+    model.fit(dummy_sample[order_gt[:-1]], context)  # Leaf removal
+    order_noleaf = model.order_
     assert orders_consistency(order_full, order_noleaf)
 
 
@@ -183,8 +187,12 @@ def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return
     permuted_sample = dummy_sample[permutation]  # permute pd.DataFrame columns
 
     # Run inference on original and permuted data
-    A_permuted, order_permuted = model.fit(permuted_sample, context)
-    A, order = model.fit(dummy_sample, context)
+    model.fit(permuted_sample, context)
+    A_permuted = nx.to_numpy_array(model.graph_)
+    order_permuted = model.order_
+    model.fit(dummy_sample, context)
+    A = nx.to_numpy_array(model.graph_)
+    order = model.order_
 
     # Match variables order
     back_permutation = [2, 0, 3, 1]
@@ -201,7 +209,9 @@ def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return
 def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edges(dummy_sample):
     model = NoGAM()
     context = make_context().variables(observed=dummy_sample.columns).build()
-    A, order = model.fit(dummy_sample, context)
+    model.fit(dummy_sample, context)
+    A = nx.to_numpy_array(model.graph_)
+    order = model.order_
     A_dense = full_DAG(order)
     d = len(dummy_sample.columns)
     edges = []  # include all edges in A_dense and not in A
@@ -212,7 +222,8 @@ def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edg
     included_edges = nx.empty_graph(len(dummy_sample.columns), create_using=nx.DiGraph)
     included_edges.add_edges_from(edges)
     context = make_context(context).edges(include=included_edges).build()
-    A_included, _ = model.fit(dummy_sample, context)
+    model.fit(dummy_sample, context)
+    A_included = nx.to_numpy_array(model.graph_)
     assert np.allclose(A_dense, A_included)
 
 
@@ -221,7 +232,9 @@ def test_given_adjacency_when_pruning_with_pns_then_returns_dag_with_context_inc
 ):
     model = NoGAM(pns=True)
     context = make_context().variables(observed=dummy_sample.columns).build()
-    A, order = model.fit(dummy_sample, context)
+    model.fit(dummy_sample, context)
+    A = nx.to_numpy_array(model.graph_)
+    order = model.order_
     A_dense = full_DAG(order)
     d = len(dummy_sample.columns)
     edges = []  # include all edges in A_dense and not in A
@@ -232,5 +245,6 @@ def test_given_adjacency_when_pruning_with_pns_then_returns_dag_with_context_inc
     included_edges = nx.empty_graph(len(dummy_sample.columns), create_using=nx.DiGraph)
     included_edges.add_edges_from(edges)
     context = make_context(context).edges(include=included_edges).build()
-    A_included, _ = model.fit(dummy_sample, context)
+    model.fit(dummy_sample, context)
+    A_included = nx.to_numpy_array(model.graph_)
     assert np.allclose(A_dense, A_included)
