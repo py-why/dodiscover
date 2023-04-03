@@ -42,8 +42,29 @@ Further, DoDiscover seeks to help the user feel confident with their assumptions
 
 ## Unite causal discovery and causal representation learning
 
-Causal representation learning is the task of learning high-level latent variables and the causal structure between them from low-level variables observed in data.
-DoDiscover seeks to support causal representation learning algorithms in the context of traditional causal discovery settings.
+DoDiscover is a Python library for causal discovery (causal structure learning).
+Our goal is to provide developers and researchers with guide rails for causal discovery that doesn't require deep knowledge of individual causal discovery algorithms.
+
+## What is the difference between dodiscover and causal-learn?
+
+The goal of dodiscover is to flatten the on-ramp to causal discovery algorithms.
+DoWhy provides a consistent API for various method for causal effect estimation.
+DoDiscover aims to do the same with causal discovery algorithms.
+
+[causal-learn](https://github.com/py-why/causal-learn) is an extensive collection of causal discovery algorithms.
+It continuous to host new cutting-edge algorithms in causal discovery.
+However, these algorithms do not have a unified API.
+Further, the historic focus of causal-learn is increasing the capabilities of discovery algorithms.
+In constrast, dodiscover's focus is on the discovery API and usability.
+
+When possible, dodiscover prefers to provide an API wrapper to discovery algorithms in causal-learn and other libraries.
+Please consider contributing to [causal-learn](https://github.com/py-why/causal-learn) if you plan to implement an algorithm from scratch, then contributing a wrapper in dodiscover.
+
+## What is the relationship with pywhy-graphs and py-indep?
+
+[pywhy-graphs](https://github.com/py-why/pywhy-graphs) is the home of graph data structures and graph algorithms in PyWhy.
+
+[py-indep](https://github.com/py-why/py-indep) is the home of implementations of tests for conditional independence and other constraints used in tasks including but not limited to causal discovery.
 
 # Documentation
 
