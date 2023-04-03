@@ -56,7 +56,7 @@ def test_skeleton_evaluate_edge():
     _, pvalue = alg.evaluate_edge(data, ("x2", -1), ("x3", 0), {})
     assert pvalue == 0.0
 
-    _, pvalue = alg.evaluate_edge(data, ("x2", -1), ("x3", 0), {('x3', -1)})
+    _, pvalue = alg.evaluate_edge(data, ("x2", -1), ("x3", 0), {("x3", -1)})
     assert pvalue == 0.0
 
 

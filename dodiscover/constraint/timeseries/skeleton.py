@@ -8,7 +8,7 @@ import pandas as pd
 
 from dodiscover._protocol import TimeSeriesGraph
 from dodiscover.ci import BaseConditionalIndependenceTest
-from dodiscover.context import TimeSeriesContext, Context
+from dodiscover.context import Context, TimeSeriesContext
 from dodiscover.typing import Column, SeparatingSet
 
 from ...context_builder import make_ts_context
@@ -35,12 +35,12 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
 
     1. Without extending the maximum-lag, there is always latent confounding: Consider as
     an example, two variable lag-1 ts-causal-graph.
-    
+
           t-1   t
         X  o -> o
         Y  o -> o
-    
-    with Y(t-1) -> X(t). Assuming stationarity, then 
+
+    with Y(t-1) -> X(t). Assuming stationarity, then
 
     Parameters
     ----------
@@ -134,12 +134,12 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
         # to do causal discovery of time-series graphs,
         # homologous edges should not be removed automatically
         adj_graph.set_auto_removal("forwards")
-        
+
         # # to do causal discovery of time-series graphs,
         # # homologous edges should not be removed automatically
         # adj_graph.set_auto_removal("backwards")
 
-        print(f'Testing nodes in the following order for learning skeleton: {testable_nodes}')
+        print(f"Testing nodes in the following order for learning skeleton: {testable_nodes}")
 
         # Outer loop: iterate over 'size_cond_set' until stopping criterion is met
         # - 'size_cond_set' > 'max_cond_set_size' or
@@ -168,8 +168,8 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
                     possible_adjacencies = adj_graph.contemporaneous_neighbors(y_var)
 
                 logger.info(f"Considering node {y_var}...\n\n")
-                print(f'\n\nTesting {y_var} against possible adjacencies {possible_adjacencies}')
-                print(f'size conditioning set p = {size_cond_set}')
+                print(f"\n\nTesting {y_var} against possible adjacencies {possible_adjacencies}")
+                print(f"size conditioning set p = {size_cond_set}")
                 for x_var in possible_adjacencies:
                     # a node cannot be a parent to itself in DAGs
                     if y_var == x_var:
@@ -261,7 +261,7 @@ class LearnTimeSeriesSkeleton(LearnSkeleton):
             # Remove non-significant links
             # Note: Removing edges at the end ensures "stability" of the algorithm
             # with respect to the randomness choice of pairs of edges considered in the inner loop
-            print(f'Removing edges {self.remove_edges}')
+            print(f"Removing edges {self.remove_edges}")
             adj_graph.remove_edges_from(list(self.remove_edges))
 
             # increment the conditioning set size

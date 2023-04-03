@@ -95,7 +95,9 @@ class TestTsPCSimple:
 
         # create an oracle
         oracle = Oracle(G)
-        alg = TimeSeriesPC(ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=False)
+        alg = TimeSeriesPC(
+            ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=False
+        )
 
         context = make_ts_context().max_lag(max_lag).variables(data=data).build()
 
@@ -114,7 +116,6 @@ class TestTsPCSimple:
 
         # all edges in skeleton are inside G
         assert nx.is_isomorphic(learned_graph.to_directed(), G.to_directed())
-
 
     def test_timeseries_pc_contemporaneous(self):
         """Test tsPC algorithm with contemporaneous edges.
@@ -152,7 +153,9 @@ class TestTsPCSimple:
 
         # First: test that the algorithm return the correct answer
         # learn the skeleton graph without contemporaneous edges
-        alg = TimeSeriesPC(ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=True)
+        alg = TimeSeriesPC(
+            ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=True
+        )
         skel_graph, _ = alg.learn_skeleton(data, context)
 
         # all edges in skeleton are inside G
@@ -167,7 +170,9 @@ class TestTsPCSimple:
         assert nx.is_isomorphic(learned_graph.sub_directed_graph(), G)
 
         # learn the skeleton graph without contemporaneous edges
-        alg = TimeSeriesPC(ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=False)
+        alg = TimeSeriesPC(
+            ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=False
+        )
         skel_graph, _ = alg.learn_skeleton(data, context)
         # all edges in skeleton are inside G
         assert not all(edge in skel_graph.edges for edge in G.edges)
@@ -179,5 +184,3 @@ class TestTsPCSimulated:
 
     def setup(self):
         pass
-
-    

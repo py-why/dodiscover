@@ -1,3 +1,3 @@
-from .skeleton import LearnTimeSeriesSkeleton, LearnTimeSeriesSemiMarkovianSkeleton
+from .skeleton import LearnTimeSeriesSemiMarkovianSkeleton, LearnTimeSeriesSkeleton
 from .tsfcialg import TimeSeriesFCI
 from .tspcalg import TimeSeriesPC

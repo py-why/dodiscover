@@ -17,7 +17,7 @@ class Graph(Protocol):
         """Return an iterable over edge tuples in graph."""
         pass
 
-    def has_edge(self, u, v, edge_type) -> bool:
+    def has_edge(self, u, v, edge_type="any") -> bool:
         """Check if graph has an edge for a specific edge type."""
         pass
 
@@ -33,7 +33,11 @@ class Graph(Protocol):
         """Remove a set of edges from the graph."""
         pass
 
-    def remove_edge(self, u, v, edge_type) -> None:
+    def add_edge(self, u, v, edge_type="all") -> None:
+        """Add an edge to the graph."""
+        pass
+
+    def remove_edge(self, u, v, edge_type="all") -> None:
         """Remove an edge from the graph."""
         pass
 
@@ -47,6 +51,14 @@ class Graph(Protocol):
         All nodes are connected by an undirected edge if there are any
         edges between the two.
         """
+        pass
+
+    def subgraph(self, nodes):
+        """Get subgraph based on nodes."""
+        pass
+
+    def copy(self):
+        """Create a copy of the graph."""
         pass
 
 

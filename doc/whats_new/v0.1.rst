@@ -26,6 +26,7 @@ Version 0.1
 Changelog
 ---------
 
+
 - |Feature| Implement continuous integration and repository docs, by `Adam Li`_ (:pr:`15`)
 - |Feature| Implement conditional independence tests under the ``dodiscover.ci`` submodule, by `Adam Li`_ (:pr:`16`)
 - |Feature| Implement skeleton learning method, :class:`dodiscover.constraint.LearnSkeleton` under the ``dodiscover.constraint`` submodule, by `Adam Li`_ (:pr:`20`)
@@ -38,6 +39,13 @@ Changelog
 - |Feature| Implement Structural Hamming Distance metric to compare directed graphs, :func:`dodiscover.metrics.structure_hamming_dist`, by `Adam Li`_ (:pr:`55`)
 - |Fix| Update dependency on networkx, which removes a PR branch dependency with pywhy-graphs having the MixedEdgeGraph class that was causing a dependency conflict, by `Adam Li`_ (:pr:`74`)
 - |Enhancement| Add tutorial for PC algorithm with Asia data, by `Robert Osazuwa Ness`_ (:pr:`67`)
+- |Enhancement| Add wrapper for GIN algorithm from causal-learn, by `Robert Osazuwa Ness`_ (:pr:`94`)
+- |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.KernelCDTest`, by `Adam Li`_ (:pr:`81`)
+- |Feature| Add conditional k-sample (discrepancy) test, :class:`dodiscover.cd.BregmanCDTest`, by `Adam Li`_ (:pr:`82`)
+- |Feature| Add conditional mutual information test, :class:`dodiscover.ci.CMITest`, by `Adam Li`_ (:pr:`83`)
+- |Feature| Add classifier conditional mutual information test, :class:`dodiscover.ci.ClassifierCMITest`, by `Adam Li`_ (:pr:`85`)
+- |Feature| Add rules for orientation under selection bias in FCI algorithm, :class:`dodiscover.constraint.FCI`, by `Jaron Lee`_ (:pr:`106`)
+- |Feature| Add pre-commit hooks for linting, type-checking, and code formatting, by `Jaron Lee`_ (:pr:`117`)
 
 Code and Documentation Contributors
 -----------------------------------
@@ -48,3 +56,4 @@ the project since version inception, including:
 * `Adam Li`_
 * `Chris Trevino`_
 * `Robert Osazuwa Ness`_
+* `Jaron Lee`_

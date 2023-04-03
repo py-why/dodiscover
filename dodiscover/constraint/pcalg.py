@@ -136,7 +136,7 @@ class PC(BaseConstraintDiscovery):
         Used in orientation of edges.
         """
         for i in graph.nodes:
-            for j in graph.neighbors(j):
+            for j in graph.neighbors(i):
                 yield (i, j)
 
     def orient_edges(self, graph: EquivalenceClass) -> None:

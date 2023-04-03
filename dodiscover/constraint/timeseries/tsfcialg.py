@@ -1,13 +1,15 @@
-import logging
 from typing import Optional, Tuple
 
 import networkx as nx
 import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.constraint.timeseries import LearnTimeSeriesSkeleton, LearnTimeSeriesSemiMarkovianSkeleton
-from dodiscover.context_builder import make_ts_context
+from dodiscover.constraint.timeseries import (
+    LearnTimeSeriesSemiMarkovianSkeleton,
+    LearnTimeSeriesSkeleton,
+)
 from dodiscover.context import Context
+from dodiscover.context_builder import make_ts_context
 from dodiscover.typing import SeparatingSet
 
 from ..._protocol import EquivalenceClass
@@ -50,7 +52,9 @@ class TimeSeriesFCI(FCI):
         self.separate_lag_phase = separate_lag_phase
         self.contemporaneous_edges = contemporaneous_edges
 
-    def learn_skeleton(self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None) -> Tuple[nx.Graph, SeparatingSet]:
+    def learn_skeleton(
+        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+    ) -> Tuple[nx.Graph, SeparatingSet]:
         import pywhy_graphs
 
         from dodiscover import make_ts_context
@@ -78,14 +82,15 @@ class TimeSeriesFCI(FCI):
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
         pag = pywhy_graphs.StationaryTimeSeriesPAG(
-            incoming_circle_edges=skel_graph, name="PAG derived with tsFCI")
+            incoming_circle_edges=skel_graph, name="PAG derived with tsFCI"
+        )
 
         # orient colliders
         self.orient_unshielded_triples(pag, sep_set)
 
         # convert the adjacency graph
         new_init_graph = pag.to_ts_undirected()
-        
+
         # Update the Context:
         # add the corresponding intermediate PAG now to the context
         # new initialization graph

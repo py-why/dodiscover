@@ -32,4 +32,4 @@ class SkeletonMethods(Enum, metaclass=MetaEnum):
     PDS = "pds"
     PDS_PATH = "pds_path"
     PDS_T = "pds_t"
-    PDS_T_PATH = 'pds_t_path'
+    PDS_T_PATH = "pds_t_path"

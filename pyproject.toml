@@ -55,7 +55,7 @@ optional = true
 poethepoet = "^0.16.0"
 mypy = "^0.971"
 black = {extras = ["jupyter"], version = "^22.12.0"}
-isort = "^5.10.1"
+isort = "^5.12.0"
 flake8 = "^5.0.4"
 bandit = "^1.7.4"
 pydocstyle = "^6.1.1"
@@ -76,6 +76,7 @@ dowhy = { version = "^0.8" }
 typing-extensions = { version = "*" }         # needed in dowhy's package 
 joblib = { version = "^1.1.0" }               # needed in dowhy's package
 tqdm = { version = "^4.64.0" }                # needed in dowhy's package
+pre-commit = "^3.0.4"
 
 [tool.poetry.group.docs]
 optional = true
@@ -145,6 +146,7 @@ type_check = 'mypy -p dodiscover -p tests --config-file pyproject.toml'
 unit_test = 'pytest tests/unit_tests --cov=dodiscover --cov-report=xml --cov-config=pyproject.toml'
 integration_test = 'pytest tests/integration_tests'
 build_docs = 'make -C doc clean html'
+build_docs_noplot = 'make -C doc clean html-noplot'
 
 [[tool.poe.tasks.clean]]
 sequence = ['_clean_cache', '_clean_pyc', '_clean_so', '_clean_build', '_clean_ctags', '_clean_test']

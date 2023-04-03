@@ -1,4 +1,4 @@
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Optional
 
 import numpy as np
 from numpy.typing import NDArray
@@ -93,12 +93,15 @@ def nonlinear_additive_gaussian(
 
     # compute nonlinear model
     if model_type == "ci":
+        # X <- Z -> Y
         X = nonlinear_func(freq * (Z * Azx + std * X_noise + cause_var))
         Y = nonlinear_func(freq * (Z * Azy + std * Y_noise + cause_var))
     elif model_type == "ind":
+        # X, Y, Z
         X = nonlinear_func(freq * (std * X_noise + cause_var))
         Y = nonlinear_func(freq * (std * Y_noise + cause_var))
     elif model_type == "dep":
+        # X -> Y <- Z
         X = nonlinear_func(freq * (std * X_noise + cause_var))
         Y = nonlinear_func(freq * (2 * Axy * X + Z * Azy + std * Y_noise + cause_var))
 
@@ -106,6 +109,6 @@ def nonlinear_additive_gaussian(
 
 
 def vector_auto_regressive_from_summary(
-    summary_G, max_lag=1, n_times=1000, random_state: int = None
+    summary_G, max_lag: int=1, n_times: int=1000, random_state: Optional[int] = None
 ):
     pass

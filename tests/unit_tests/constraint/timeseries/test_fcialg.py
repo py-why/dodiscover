@@ -1,7 +1,6 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
-import pytest
 from pywhy_graphs import StationaryTimeSeriesDiGraph
 
 from dodiscover.ci import Oracle
@@ -88,15 +87,11 @@ def test_timeseries_fci_oracle():
         columns=var_names,
     )
     print(data.columns)
-    data.drop('x3', axis=1, inplace=True)
+    data.drop("x3", axis=1, inplace=True)
 
     # create an oracle
     oracle = Oracle(G)
-    alg = TimeSeriesFCI(
-        ci_estimator=oracle,
-        separate_lag_phase=False,
-        contemporaneous_edges=False
-    )
+    alg = TimeSeriesFCI(ci_estimator=oracle, separate_lag_phase=False, contemporaneous_edges=False)
 
     context = make_ts_context().max_lag(max_lag).variables(data=data).build()
 

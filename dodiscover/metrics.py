@@ -15,7 +15,7 @@ def confusion_matrix_networks(
     true_graph: Graph,
     pred_graph: Graph,
     labels: Optional[NDArray] = None,
-    normalize: str = None,
+    normalize: Optional[str] = None,
 ):
     """Compute the confusion matrix comparing a predicted graph from the true graph.
 
