@@ -46,7 +46,7 @@ Changelog
 - |Feature| Add classifier conditional mutual information test, :class:`dodiscover.ci.ClassifierCMITest`, by `Adam Li`_ (:pr:`85`)
 - |Feature| Add rules for orientation under selection bias in FCI algorithm, :class:`dodiscover.constraint.FCI`, by `Jaron Lee`_ (:pr:`106`)
 - |Feature| Add pre-commit hooks for linting, type-checking, and code formatting, by `Jaron Lee`_ (:pr:`117`)
-- |Feature| Implement CAM, SCORE, DAS, NoGAM algorithms in ``dodiscover.toporder`` submodule, by `Francesco Montagna`_ (:pr:`129`)
+- |Feature| Implement CAM, SCORE, DAS, NoGAM algorithms in ``dodiscover.toporder`` submodule (:pr:`129`)
 
 Code and Documentation Contributors
 -----------------------------------

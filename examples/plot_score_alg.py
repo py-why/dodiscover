@@ -11,7 +11,7 @@ to CAM, DAS and  NoGAM methods.
 
 CAM :footcite:`Buhlmann2013`, SCORE :footcite:`rolland2022`, DAS :footcite:`Montagna2023a`,
 NoGAM :footcite:`Montagna2023b` algorithms perform causal discovery in a two steps procedure.
-Given observational i.i.d. data from an Additive Noise Model :footcite:`Hoyer2009` without
+Given observational i.i.d. data from an Additive Noise Model without
 latent confounders, first the method estimates a topological ordering of the causal variables.
 This partial oredring can be represented as a fully connected graph, where every node has an
 incoming edge from all its predecessors in the ordering. Second, the resulting fully connected
