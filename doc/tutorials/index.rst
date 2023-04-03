@@ -16,3 +16,12 @@ no latent confounders.
 
    markovian/example-pc-algo
 
+[Experimental] Time-series causal discovery
+===========================================
+We include some tutorials on novel time-series causal discovery algorithms.
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   timeseries/lpcmci-with-summary

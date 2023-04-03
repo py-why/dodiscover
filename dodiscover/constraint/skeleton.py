@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
-from itertools import chain, combinations
-from typing import Iterable, Optional, Set, SupportsFloat, Tuple, Union
+from itertools import chain
+from typing import Optional, Set, Tuple
 
 import networkx as nx
 import numpy as np
@@ -13,84 +13,9 @@ from dodiscover.typing import Column, SeparatingSet
 
 from ..context import Context
 from ..context_builder import make_context
+from .utils import _find_neighbors_along_path, _iter_conditioning_set
 
 logger = logging.getLogger()
-
-
-def _iter_conditioning_set(
-    possible_variables: Iterable,
-    x_var: Union[SupportsFloat, str],
-    y_var: Union[SupportsFloat, str],
-    size_cond_set: int,
-) -> Iterable[Set]:
-    """Iterate function to generate the conditioning set.
-
-    Parameters
-    ----------
-    possible_variables : iterable
-        A set/list/dict of possible variables to consider for the conditioning set.
-        This can be for example, the current adjacencies.
-    x_var : node
-        The node for the 'x' variable.
-    y_var : node
-        The node for the 'y' variable.
-    size_cond_set : int
-        The size of the conditioning set to consider. If there are
-        less adjacent variables than this number, then all variables will be in the
-        conditioning set.
-
-    Yields
-    ------
-    Z : set
-        The set of variables for the conditioning set.
-    """
-    exclusion_set = {x_var, y_var}
-
-    all_adj_excl_current = [p for p in possible_variables if p not in exclusion_set]
-
-    # loop through all possible combinations of the conditioning set size
-    for cond in combinations(all_adj_excl_current, size_cond_set):
-        cond_set = set(cond)
-        yield cond_set
-
-
-def _find_neighbors_along_path(G: nx.Graph, start, end) -> Set:
-    """Find neighbors that are along a path from start to end.
-
-    Parameters
-    ----------
-    G : nx.Graph
-        The graph.
-    start : Node
-        The starting node.
-    end : Node
-        The ending node.
-
-    Returns
-    -------
-    nbrs : Set
-        The set of neighbors that are also along a path towards
-        the 'end' node.
-    """
-
-    def _assign_weight(u, v, edge_attr):
-        if u == node or v == node:
-            return np.inf
-        else:
-            return 1
-
-    nbrs = set()
-    for node in G.neighbors(start):
-        if not G.has_edge(start, node):
-            raise RuntimeError(f"{start} and {node} are not connected, but they are assumed to be.")
-
-        # find a path from start node to end
-        path = nx.shortest_path(G, source=node, target=end, weight=_assign_weight)
-        if len(path) > 0:
-            if start in path:
-                raise RuntimeError("There is an error with the input. This is not possible.")
-            nbrs.add(node)
-    return nbrs
 
 
 class LearnSkeleton:
@@ -268,6 +193,9 @@ class LearnSkeleton:
         else:
             self.max_combinations_ = self.max_combinations
 
+        # track progress of the algorithm for which edges to remove to ensure stability
+        self.remove_edges = set()
+
     def evaluate_edge(
         self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
     ) -> Tuple[float, float]:
@@ -293,9 +221,33 @@ class LearnSkeleton:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = self.ci_estimator.test(data, {X}, {Y}, Z, **self.ci_estimator_kwargs)
+        try:
+            test_stat, pvalue = self.ci_estimator.test(
+                data, {X}, {Y}, Z, **self.ci_estimator_kwargs
+            )
+        except Exception as e:
+            print(X, Y, Z)
+            raise (e)
         self.n_ci_tests += 1
         return test_stat, pvalue
+
+    def _preprocess_data(self, data: pd.DataFrame, context: Context):
+        if set(context.observed_variables) != set(data.columns.values):
+            raise RuntimeError(
+                "The observed variable names in data and context do not match: \n"
+                f"- {context.observed_variables} \n"
+                f"- {data.columns}"
+            )
+
+        edge_attrs = set(
+            chain.from_iterable(d.keys() for *_, d in context.init_graph.edges(data=True))
+        )
+        if "test_stat" in edge_attrs or "pvalue" in edge_attrs:
+            raise RuntimeError(
+                "Running skeleton discovery with adjacency graph "
+                "with 'test_stat' or 'pvalue' is not supported yet."
+            )
+        return data, context
 
     def fit(self, data: pd.DataFrame, context: Context) -> None:
         """Run structure learning to learn the skeleton of the causal graph.
@@ -307,27 +259,18 @@ class LearnSkeleton:
         context : Context
             A context object.
         """
+        data, context = self._preprocess_data(data, context)
         self.context = make_context(context).build()
+
+        # initialize learning parameters
+        self._initialize_params()
 
         # get the initialized graph
         adj_graph = self.context.init_graph
         X = data
 
-        # track progress of the algorithm for which edges to remove to ensure stability
-        self.remove_edges = set()
-
-        # initialize learning parameters
-        self._initialize_params()
-
         # the size of the conditioning set will start off at the minimum
         size_cond_set = self.min_cond_set_size_
-
-        edge_attrs = set(chain.from_iterable(d.keys() for *_, d in adj_graph.edges(data=True)))
-        if "test_stat" in edge_attrs or "pvalue" in edge_attrs:
-            raise RuntimeError(
-                "Running skeleton discovery with adjacency graph "
-                "with 'test_stat' or 'pvalue' is not supported yet."
-            )
 
         # store the absolute value of test-statistic values and pvalue for
         # every single candidate parent-child edge (X -> Y)
@@ -370,12 +313,6 @@ class LearnSkeleton:
                         x_var,
                         y_var,
                         skeleton_method=self.skeleton_method,
-                    )
-
-                    logger.debug(
-                        f"Adj({x_var}) without {y_var} with size={len(possible_adjacencies) - 1} "
-                        f"with p={size_cond_set}. The possible variables to condition on are: "
-                        f"{possible_variables}."
                     )
 
                     # check that number of adjacencies is greater then the

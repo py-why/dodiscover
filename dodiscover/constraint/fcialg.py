@@ -838,7 +838,9 @@ class FCI(BaseConstraintDiscovery):
                 d.pop("test_stat")
             if "pvalue" in d:
                 d.pop("pvalue")
-        context = make_context(context).graph(new_init_graph).state_variable("PAG", pag).build()
+        context = (
+            make_context(context).init_graph(new_init_graph).state_variable("PAG", pag).build()
+        )
 
         # # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(

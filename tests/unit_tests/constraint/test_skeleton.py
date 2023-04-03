@@ -188,7 +188,7 @@ def test_learn_pds_skeleton():
     # learn the skeleton of the graph now with the first stage skeleton
     context = (
         make_context(context)
-        .graph(first_stage_pag.to_undirected())
+        .init_graph(first_stage_pag.to_undirected())
         .state_variable("PAG", first_stage_pag)
         .build()
     )
