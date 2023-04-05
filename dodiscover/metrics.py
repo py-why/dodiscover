@@ -147,17 +147,21 @@ def structure_hamming_dist(
         return np.sum(diff) / 2
 
 
-def toporder_divergence_arr(A: NDArray, order: List[int]):
+def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
     """Compute topological ordering divergence.
 
-    Given an adjacency matrix A and a topological ordering on its entries,
-    the topological ordering divergence (Rolland et al. (2022)) counts
-    the number of edges of A that can not be recovered due to the choice of
-    the topological ordering.
+    Topological order divergence is used to compute the number of false negatives,
+    i.e. missing edges, associated to a topological order of the nodes of a
+    graph with respect to the ground truth structure. 
+    If the topological ordering is compatible with the graph ground truth,
+    the divergence is equal to zero. In the worst case of completely reversed
+    ordering, toporder_divergence a number of false negatives equal to the
+    number of edges in the graph.
+    Note that the divergence defines a lower bound for the Structural Hamming Distance.
 
     Parameters
     ----------
-    A : NDArray
+    true_graph : NetworkxGraph
         Input adjacency matrix representation of a directed acyclic graphs.
     order : List[int]
         A topological ordering on the nodes of the graph.
@@ -167,7 +171,15 @@ def toporder_divergence_arr(A: NDArray, order: List[int]):
     err : int
         Sum of the number of edges of A not admitted by the given order.
     """
-    err = 0
+    if not nx.is_directed_acyclic_graph(true_graph):
+        raise ValueError("The input graph must be directed and acyclic.")
+    if len(order) != A.shape[0] or A.shape[0] != A.shape[1]:
+        raise ValueError("The dimensions of the graph and the order list do not match.")
+    
+    # convert graphs to adjacency matrix in numpy array format
+    A = nx.to_numpy_array(true_graph, create_using=nx.DiGraph)
+
+    false_negatives_from_order = 0
     for i in range(len(order)):
-        err += A[order[i + 1 :], order[i]].sum()
-    return err
+        false_negatives_from_order += A[order[i + 1 :], order[i]].sum()
+    return false_negatives_from_order

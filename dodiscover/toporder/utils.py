@@ -24,7 +24,7 @@ def full_DAG(top_order: List[int]) -> NDArray:
     return A
 
 
-def fullAdj2Order(A: NDArray):
+def full_adj_to_order(A: NDArray) -> List[int]:
     """Find topological ordering from the adjacency matrix A.
 
     Parameters
@@ -42,7 +42,7 @@ def fullAdj2Order(A: NDArray):
     return order
 
 
-def orders_consistency(order_full, order_noleaf):
+def orders_consistency(order_full, order_noleaf) -> bool:
     for node in order_noleaf:
         if node not in order_full:
             return False
