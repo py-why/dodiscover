@@ -351,7 +351,7 @@ Fitting causal mechanism of node x:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node y:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node z:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node w:   0%|          | 0/4 [00:00&lt;?, ?it/s]
-Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1722.68it/s]
+Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1892.31it/s]
    x  ...  w
 0  0  ...  1
 1  1  ...  2
@@ -366,7 +366,7 @@ y    [1, 2, 0]
 w    [1, 2, 0]
 dtype: object
 
-&lt;graphviz.graphs.Digraph object at 0x7fb481a6d640&gt;
+&lt;graphviz.graphs.Digraph object at 0x7fe3c1d0f040&gt;
 </pre></div>
 </div>
 </section>
@@ -403,7 +403,7 @@ assumptions up front (in the form of a DAG) before the data is added, and
 then addresses identifiability given those assumptions and data. In this sense,
 the Context class houses both data, apriori assumptions and other relevant data
 that may be used in downstream structure learning algorithms.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context" class="sphx-glr-backref-module-dodiscover-context sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">context</span></a> <span class="o">=</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a><span class="p">()</span><span class="o">.</span><span class="n">variables</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">context</span> <span class="o">=</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a><span class="p">()</span><span class="o">.</span><span class="n">variables</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 
 <span class="c1"># Alternatively, one could say specify some fixed edges.</span>
 <span class="c1"># Note that when specifying fixed edges, the resulting graph that is</span>
@@ -425,7 +425,7 @@ that may be used in downstream structure learning algorithms.</p>
 the oracle, which is the best case scenario the PC algorithm can learn given
 an infinite amount of data.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pc</span> <span class="o">=</span> <span class="n">PC</span><span class="p">(</span><a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ci_estimator</span></a><span class="o">=</span><a href="../generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle" title="dodiscover.ci.Oracle" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oracle</span></a><span class="p">)</span>
-<span class="n">pc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">,</span> <a href="../generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context" class="sphx-glr-backref-module-dodiscover-context sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">context</span></a><span class="p">)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 <span class="c1"># The resulting completely partially directed acyclic graph (CPDAG) that is learned</span>
 <span class="c1"># is a &quot;Markov equivalence class&quot;, which encodes all the conditional dependences that</span>
@@ -443,7 +443,7 @@ an infinite amount of data.</p>
 to determine CI in the data. Due to finite data and the presence of noise, there is
 always a possibility that the CI test makes a mistake.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pc</span> <span class="o">=</span> <span class="n">PC</span><span class="p">(</span><a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ci_estimator</span></a><span class="o">=</span><a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ci_estimator</span></a><span class="p">)</span>
-<span class="n">pc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">,</span> <a href="../generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context" class="sphx-glr-backref-module-dodiscover-context sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">context</span></a><span class="p">)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 <span class="c1"># The resulting completely partially directed acyclic graph (CPDAG) that is learned</span>
 <span class="c1"># is a &quot;Markov equivalence class&quot;, which encodes all the conditional dependences that</span>
@@ -460,7 +460,7 @@ always a possibility that the CI test makes a mistake.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;ci_cpdag.png&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.707 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.532 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-pc-alg-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/f1c5e835df0a73798ede9531ab050d9e/plot_pc_alg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_pc_alg.py</span></code></a></p>

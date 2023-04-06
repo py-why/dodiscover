@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>dodiscover.constraint.SkeletonMethods &#8212; dodiscover v0.0.0</title>
+    <title>dodiscover.constraint.ConditioningSetSelection &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -214,7 +214,7 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   dodiscover.constraint.SkeletonMethods
+   dodiscover.constraint.ConditioningSetSelection
   </a>
  </li>
  <li class="toctree-l1">
@@ -391,13 +391,60 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dodiscover.constraint.SkeletonMethods">
+  <a class="reference internal nav-link" href="#dodiscover.constraint.ConditioningSetSelection">
    <code class="docutils literal notranslate">
     <span class="pre">
-     SkeletonMethods
+     ConditioningSetSelection
     </span>
    </code>
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.ConditioningSetSelection.COMPLETE">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ConditioningSetSelection.COMPLETE
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.ConditioningSetSelection.NBRS">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ConditioningSetSelection.NBRS
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.ConditioningSetSelection.NBRS_PATH">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ConditioningSetSelection.NBRS_PATH
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.ConditioningSetSelection.PDS">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ConditioningSetSelection.PDS
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.ConditioningSetSelection.PDS_PATH">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ConditioningSetSelection.PDS_PATH
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -418,16 +465,52 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="dodiscover-constraint-skeletonmethods">
-<h1>dodiscover.constraint.SkeletonMethods<a class="headerlink" href="#dodiscover-constraint-skeletonmethods" title="Permalink to this heading">#</a></h1>
+  <section id="dodiscover-constraint-conditioningsetselection">
+<h1>dodiscover.constraint.ConditioningSetSelection<a class="headerlink" href="#dodiscover-constraint-conditioningsetselection" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="dodiscover.constraint.SkeletonMethods">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">SkeletonMethods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/config.html#SkeletonMethods"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.SkeletonMethods" title="Permalink to this definition">#</a></dt>
-<dd><p>Available methods for learning a skeleton from data.</p>
+<dt class="sig sig-object py" id="dodiscover.constraint.ConditioningSetSelection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">ConditioningSetSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/config.html#ConditioningSetSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.ConditioningSetSelection" title="Permalink to this definition">#</a></dt>
+<dd><p>Available methods for selecting the conditioning sets when learning a skeleton.</p>
+<p>Given a pair of nodes in a graph, (X, Y), this enumeration selects a strategy
+for choosing conditioning sets to be checked for conditional independence.</p>
 <p class="rubric">Notes</p>
 <p>Allows ‘contains’ checks because of the metaclass. For example,
-one can do <code class="docutils literal notranslate"><span class="pre">is</span> <span class="pre">'complete'</span> <span class="pre">in</span> <span class="pre">SkeletonMethods</span></code>, which would
-return True.</p>
+one can run <code class="docutils literal notranslate"><span class="pre">&quot;complete&quot;</span> <span class="pre">in</span> <span class="pre">ConditioningSetSelection</span></code>, which would
+return <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dodiscover.constraint.ConditioningSetSelection.COMPLETE">
+<span class="sig-name descname"><span class="pre">COMPLETE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'complete'</span></em><a class="headerlink" href="#dodiscover.constraint.ConditioningSetSelection.COMPLETE" title="Permalink to this definition">#</a></dt>
+<dd><p>Considers all possible combinations of nodes in the graph that are
+not (X,Y).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dodiscover.constraint.ConditioningSetSelection.NBRS">
+<span class="sig-name descname"><span class="pre">NBRS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'neighbors'</span></em><a class="headerlink" href="#dodiscover.constraint.ConditioningSetSelection.NBRS" title="Permalink to this definition">#</a></dt>
+<dd><p>Considers all current neighbors of (X,Y) in the graph.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dodiscover.constraint.ConditioningSetSelection.NBRS_PATH">
+<span class="sig-name descname"><span class="pre">NBRS_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'neighbors_path'</span></em><a class="headerlink" href="#dodiscover.constraint.ConditioningSetSelection.NBRS_PATH" title="Permalink to this definition">#</a></dt>
+<dd><p>Considers all neighbors of (X,Y) in the graph that are on a simple
+path between the two nodes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dodiscover.constraint.ConditioningSetSelection.PDS">
+<span class="sig-name descname"><span class="pre">PDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pds'</span></em><a class="headerlink" href="#dodiscover.constraint.ConditioningSetSelection.PDS" title="Permalink to this definition">#</a></dt>
+<dd><p>Considers all potentially d-separating sets for (X,Y) in the graph.
+This requires some initial collider information in the graph.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dodiscover.constraint.ConditioningSetSelection.PDS_PATH">
+<span class="sig-name descname"><span class="pre">PDS_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pds_path'</span></em><a class="headerlink" href="#dodiscover.constraint.ConditioningSetSelection.PDS_PATH" title="Permalink to this definition">#</a></dt>
+<dd><p>Considers all PDS sets for (X,Y) in the graph that lie on a path
+between the two nodes.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>

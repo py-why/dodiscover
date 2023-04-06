@@ -213,8 +213,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="generated/dodiscover.constraint.SkeletonMethods.html">
-   dodiscover.constraint.SkeletonMethods
+  <a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html">
+   dodiscover.constraint.ConditioningSetSelection
   </a>
  </li>
  <li class="toctree-l1">
@@ -461,8 +461,7 @@
   <section id="api">
 <h1>API<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h1>
 <p><a class="reference internal" href="#module-dodiscover" title="dodiscover"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dodiscover</span></code></a>:</p>
-<span class="target" id="module-dodiscover"></span><p>DoDiscover - a library for Python-based Causal Discovery</p>
-<p>This is the application programming interface (API) reference
+<span class="target" id="module-dodiscover"></span><p>This is the application programming interface (API) reference
 for classes (<code class="docutils literal notranslate"><span class="pre">CamelCase</span></code> names) and functions
 (<code class="docutils literal notranslate"><span class="pre">underscore_case</span></code> names) of dodiscover, grouped thematically by analysis
 stage.</p>
@@ -477,13 +476,13 @@ API for construction of the Context class.</p>
 <p>See docs for <code class="docutils literal notranslate"><span class="pre">Context</span></code> and <code class="docutils literal notranslate"><span class="pre">make_context</span></code> for more information.</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_context</span></code></a>([context])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_context</span></code></a>([context, create_using])</p></td>
 <td><p>Create a new ContextBuilder instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a>()</p></td>
-<td><p>A builder class for creating Context objects ergonomically.</p></td>
+<td><p>A builder class for creating observational data Context objects ergonomically.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context.Context</span></code></a>(variables, latents, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context.Context</span></code></a>(observed_variables, int, ...)</p></td>
 <td><p>Context of assumptions, domain knowledge and data.</p></td>
 </tr>
 </tbody>
@@ -494,13 +493,13 @@ API for construction of the Context class.</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.LearnSkeleton.html#dodiscover.constraint.LearnSkeleton" title="dodiscover.constraint.LearnSkeleton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LearnSkeleton</span></code></a>(ci_estimator[, sep_set, ...])</p></td>
-<td><p>Learn a skeleton graph from a Markovian causal model.</p></td>
+<td><p>Learn a skeleton graph from observational data without latent confounding.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton" title="dodiscover.constraint.LearnSemiMarkovianSkeleton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LearnSemiMarkovianSkeleton</span></code></a>(ci_estimator[, ...])</p></td>
 <td><p>Learning a skeleton from a semi-markovian causal model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods" title="dodiscover.constraint.SkeletonMethods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SkeletonMethods</span></code></a>(value)</p></td>
-<td><p>Available methods for learning a skeleton from data.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a>(value)</p></td>
+<td><p>Available methods for selecting the conditioning sets when learning a skeleton.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC" title="dodiscover.constraint.PC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PC</span></code></a>(ci_estimator[, alpha, min_cond_set_size, ...])</p></td>
 <td><p>Peter and Clarke (PC) algorithm for causal discovery.</p></td>
@@ -578,7 +577,7 @@ learning.</p>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GSquareCITest</span></code></a>([data_type])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GSquareCITest</span></code></a>([data_type, levels])</p></td>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>

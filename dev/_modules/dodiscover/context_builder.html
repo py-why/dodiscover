@@ -205,8 +205,8 @@
               <article class="bd-article" role="main">
                 
   <h1>Source code for dodiscover.context_builder</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">cast</span>
+<span></span><span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -215,23 +215,44 @@
 <span class="kn">from</span> <span class="nn">.context</span> <span class="kn">import</span> <span class="n">Context</span>
 <span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">NetworkxGraph</span>
 
+<span class="n">CALLABLES</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">FunctionType</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">MethodType</span>
+
 
 <div class="viewcode-block" id="ContextBuilder"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder">[docs]</a><span class="k">class</span> <span class="nc">ContextBuilder</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A builder class for creating Context objects ergonomically.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A builder class for creating observational data Context objects ergonomically.</span>
+
+<span class="sd">    The ContextBuilder is meant solely to build Context objects that work</span>
+<span class="sd">    with observational datasets.</span>
 
 <span class="sd">    The context builder provides a way to capture assumptions, domain knowledge,</span>
 <span class="sd">    and data. This should NOT be instantiated directly. One should instead use</span>
 <span class="sd">    `dodiscover.make_context` to build a Context data structure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_init_graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_included_edges</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkxGraph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_excluded_edges</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkxGraph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_observed_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_latent_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_state_variables</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ContextBuilder.graph"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.graph">[docs]</a>    <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ContextBuilder&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># perform an error-check on subclass definitions of ContextBuilder</span>
+        <span class="k">for</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">CALLABLES</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">property</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">attribute</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Context objects has class attributes that do not have &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;a matching class method to set the attribute, </span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="s2">. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;The form of the attribute must be &#39;_&lt;name&gt;&#39; and a &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;corresponding function name &#39;&lt;name&gt;&#39;.&quot;</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="ContextBuilder.init_graph"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.init_graph">[docs]</a>    <span class="k">def</span> <span class="nf">init_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ContextBuilder&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the partial graph to start with.</span>
 
 <span class="sd">        Parameters</span>
@@ -244,7 +265,47 @@
 <span class="sd">        self : ContextBuilder</span>
 <span class="sd">            The builder instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span> <span class="o">=</span> <span class="n">graph</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ContextBuilder.excluded_edges"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.excluded_edges">[docs]</a>    <span class="k">def</span> <span class="nf">excluded_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkxGraph</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ContextBuilder&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set exclusion edge constraints to apply in discovery.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        excluded : Optional[NetworkxGraph]</span>
+<span class="sd">            Edges that should be excluded in the resultant graph</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : ContextBuilder</span>
+<span class="sd">            The builder instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">exclude</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2"> is already specified as an included edge.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span> <span class="o">=</span> <span class="n">exclude</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ContextBuilder.included_edges"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.included_edges">[docs]</a>    <span class="k">def</span> <span class="nf">included_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkxGraph</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ContextBuilder&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set inclusion edge constraints to apply in discovery.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        included : Optional[NetworkxGraph]</span>
+<span class="sd">            Edges that should be included in the resultant graph</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : ContextBuilder</span>
+<span class="sd">            The builder instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">include</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2"> is already specified as an excluded edge.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span> <span class="o">=</span> <span class="n">include</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ContextBuilder.edges"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.edges">[docs]</a>    <span class="k">def</span> <span class="nf">edges</span><span class="p">(</span>
@@ -268,6 +329,46 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span> <span class="o">=</span> <span class="n">include</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span> <span class="o">=</span> <span class="n">exclude</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ContextBuilder.observed_variables"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.observed_variables">[docs]</a>    <span class="k">def</span> <span class="nf">observed_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ContextBuilder&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set observed variables.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        observed : Optional[Set[Column]]</span>
+<span class="sd">            Set of observed variables, by default None. If neither ``latents``,</span>
+<span class="sd">            nor ``variables`` is set, then it is presumed that ``variables`` consists</span>
+<span class="sd">            of the columns of ``data`` and ``latents`` is the empty set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">obs_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span> <span class="k">for</span> <span class="n">obs_var</span> <span class="ow">in</span> <span class="n">observed</span>  <span class="c1"># type: ignore</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Latent variables are set already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;which contain variables you are trying to set as &quot;observed&quot;.&#39;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span> <span class="o">=</span> <span class="n">observed</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ContextBuilder.latent_variables"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.latent_variables">[docs]</a>    <span class="k">def</span> <span class="nf">latent_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ContextBuilder&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set latent variables.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        latents : Optional[Set[Column]]</span>
+<span class="sd">            Set of latent &quot;unobserved&quot; variables, by default None. If neither ``latents``,</span>
+<span class="sd">            nor ``variables`` is set, then it is presumed that ``variables`` consists</span>
+<span class="sd">            of the columns of ``data`` and ``latents`` is the empty set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">latent_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span> <span class="k">for</span> <span class="n">latent_var</span> <span class="ow">in</span> <span class="n">latents</span>  <span class="c1"># type: ignore</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Observed variables are set already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;which contain variables you are trying to set as &quot;latent&quot;.&#39;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span> <span class="o">=</span> <span class="n">latents</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ContextBuilder.variables"><a class="viewcode-back" href="../../generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder.variables">[docs]</a>    <span class="k">def</span> <span class="nf">variables</span><span class="p">(</span>
@@ -352,13 +453,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not infer variables from data or given arguments.&quot;</span><span class="p">)</span>
 
-        <span class="n">empty_graph</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">empty_graph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span>
+        <span class="n">empty_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_graph_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Context</span><span class="p">(</span>
-            <span class="n">init_graph</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_interpolate_graph</span><span class="p">(),</span>
+            <span class="n">init_graph</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_interpolate_graph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">),</span>
             <span class="n">included_edges</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span> <span class="ow">or</span> <span class="n">empty_graph</span><span class="p">(),</span>
             <span class="n">excluded_edges</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span> <span class="ow">or</span> <span class="n">empty_graph</span><span class="p">(),</span>
-            <span class="n">variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">,</span>
-            <span class="n">latents</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(),</span>
+            <span class="n">observed_variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">,</span>
+            <span class="n">latent_variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(),</span>
             <span class="n">state_variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_variables</span><span class="p">,</span>
         <span class="p">)</span></div>
 
@@ -373,7 +474,7 @@
         <span class="k">if</span> <span class="n">observed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">columns</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">latents</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;If observed and latents are set, then they must be &quot;</span>
+                    <span class="s2">&quot;If observed and latents are both set, then they must &quot;</span>
                     <span class="s2">&quot;include all columns in data.&quot;</span>
                 <span class="p">)</span>
         <span class="k">elif</span> <span class="n">observed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -390,26 +491,30 @@
         <span class="n">latents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span> <span class="n">latents</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">latents</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_interpolate_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_interpolate_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_variables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must set variables() before building Context.&quot;</span><span class="p">)</span>
 
-        <span class="n">complete_graph</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">complete_graph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span>
-        <span class="n">has_all_variables</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">)</span>
+        <span class="n">complete_graph</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">complete_graph</span><span class="p">(</span><span class="n">graph_variables</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span>
+        <span class="n">has_all_variables</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">))</span>
 
         <span class="c1"># initialize the starting graph</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">complete_graph</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_all_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_all_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;The nodes within the initial graph, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">nodes</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;The nodes within the initial graph, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span><span class="o">.</span><span class="n">nodes</span><span class="si">}</span><span class="s2">, &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;do not match the nodes in the passed in data, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_graph</span>
+
+    <span class="k">def</span> <span class="nf">_empty_graph_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_variables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="n">empty_graph</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">empty_graph</span><span class="p">(</span><span class="n">graph_variables</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">empty_graph</span></div>
 
 
-<div class="viewcode-block" id="make_context"><a class="viewcode-back" href="../../generated/dodiscover.make_context.html#dodiscover.make_context">[docs]</a><span class="k">def</span> <span class="nf">make_context</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Context</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextBuilder</span><span class="p">:</span>
+<div class="viewcode-block" id="make_context"><a class="viewcode-back" href="../../generated/dodiscover.make_context.html#dodiscover.make_context">[docs]</a><span class="k">def</span> <span class="nf">make_context</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Context</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">ContextBuilder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextBuilder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new ContextBuilder instance.</span>
 
 <span class="sd">    Returns</span>
@@ -423,13 +528,25 @@
 <span class="sd">    variables, ``(1, 2, 3)``.</span>
 <span class="sd">    &gt;&gt;&gt; context_builder = make_context()</span>
 <span class="sd">    &gt;&gt;&gt; context = context_builder.variables([1, 2, 3]).build()</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    :class:`~.context.Context` objects are dataclasses that creates a dictionary-like access</span>
+<span class="sd">    to causal context metadata. Copying relevant information from a Context</span>
+<span class="sd">    object into a `ContextBuilder` is all supported with the exception of</span>
+<span class="sd">    state variables. State variables are not copied over. To set state variables</span>
+<span class="sd">    again, one must build the Context and then call</span>
+<span class="sd">    :py:meth:`~.context.Context.state_variable`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">create_using</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">init_graph</span><span class="p">))</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">included_edges</span><span class="p">),</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">excluded_edges</span><span class="p">))</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">variables</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">observed_variables</span><span class="p">),</span> <span class="n">copy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">latent_variables</span><span class="p">))</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">state_variables</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">state_variables</span><span class="p">))</span>
+        <span class="c1"># we create a copy of the ContextBuilder with the current values</span>
+        <span class="c1"># in the context</span>
+        <span class="n">ctx_params</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ctx_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">param</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
 

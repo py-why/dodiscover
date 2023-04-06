@@ -223,21 +223,42 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="SkeletonMethods"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.SkeletonMethods.html#dodiscover.constraint.SkeletonMethods">[docs]</a><span class="k">class</span> <span class="nc">SkeletonMethods</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaEnum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Available methods for learning a skeleton from data.</span>
+<div class="viewcode-block" id="ConditioningSetSelection"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection">[docs]</a><span class="k">class</span> <span class="nc">ConditioningSetSelection</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Available methods for selecting the conditioning sets when learning a skeleton.</span>
+
+<span class="sd">    Given a pair of nodes in a graph, (X, Y), this enumeration selects a strategy</span>
+<span class="sd">    for choosing conditioning sets to be checked for conditional independence.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    Allows &#39;contains&#39; checks because of the metaclass. For example,</span>
-<span class="sd">    one can do ``is &#39;complete&#39; in SkeletonMethods``, which would</span>
-<span class="sd">    return True.</span>
+<span class="sd">    one can run ``&quot;complete&quot; in ConditioningSetSelection``, which would</span>
+<span class="sd">    return `True`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Considers all possible combinations of nodes in the graph that are</span>
+<span class="sd">    not (X,Y).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">NBRS</span> <span class="o">=</span> <span class="s2">&quot;neighbors&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Considers all current neighbors of (X,Y) in the graph.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">NBRS_PATH</span> <span class="o">=</span> <span class="s2">&quot;neighbors_path&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Considers all neighbors of (X,Y) in the graph that are on a simple</span>
+<span class="sd">    path between the two nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">PDS</span> <span class="o">=</span> <span class="s2">&quot;pds&quot;</span>
-    <span class="n">PDS_PATH</span> <span class="o">=</span> <span class="s2">&quot;pds_path&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Considers all potentially d-separating sets for (X,Y) in the graph.</span>
+<span class="sd">    This requires some initial collider information in the graph.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">PDS_PATH</span> <span class="o">=</span> <span class="s2">&quot;pds_path&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Considers all PDS sets for (X,Y) in the graph that lie on a path</span>
+<span class="sd">    between the two nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 </pre></div>
 
               </article>

@@ -213,8 +213,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.SkeletonMethods.html">
-   dodiscover.constraint.SkeletonMethods
+  <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+   dodiscover.constraint.ConditioningSetSelection
   </a>
  </li>
  <li class="toctree-l1">
@@ -400,10 +400,64 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.context.Context.__hash__">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Context.__hash__()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#dodiscover.context.Context.add_state_variable">
      <code class="docutils literal notranslate">
       <span class="pre">
        Context.add_state_variable()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.context.Context.copy">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Context.copy()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.context.Context.get_non_f_nodes">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Context.get_non_f_nodes()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.context.Context.get_params">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Context.get_params()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.context.Context.reverse_sigma_map">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Context.reverse_sigma_map()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.context.Context.set_params">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Context.set_params()
       </span>
      </code>
     </a>
@@ -418,16 +472,6 @@
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#examples-using-dodiscover-context-context">
-   Examples using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     dodiscover.context.Context
-    </span>
-   </code>
-  </a>
  </li>
 </ul>
 
@@ -452,7 +496,7 @@
 <h1>dodiscover.context.Context<a class="headerlink" href="#dodiscover-context-context" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dodiscover.context.Context">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.context.</span></span><span class="sig-name descname"><span class="pre">Context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover._protocol.Graph"><span class="pre">Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">Graph</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">Graph</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/context.html#Context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.context.</span></span><span class="sig-name descname"><span class="pre">Context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">observed_variables:</span> <span class="pre">~typing.Set[~typing.Union[None,</span> <span class="pre">int,</span> <span class="pre">float,</span> <span class="pre">str,</span> <span class="pre">~typing.Tuple]],</span> <span class="pre">latent_variables:</span> <span class="pre">~typing.Set[~typing.Union[None,</span> <span class="pre">int,</span> <span class="pre">float,</span> <span class="pre">str,</span> <span class="pre">~typing.Tuple]],</span> <span class="pre">state_variables:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">~typing.Any],</span> <span class="pre">init_graph:</span> <span class="pre">~dodiscover._protocol.Graph,</span> <span class="pre">included_edges:</span> <span class="pre">~networkx.classes.graph.Graph,</span> <span class="pre">excluded_edges:</span> <span class="pre">~networkx.classes.graph.Graph,</span> <span class="pre">num_distributions:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">obs_distribution:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">intervention_targets:</span> <span class="pre">~typing.List[~typing.Tuple[~typing.Union[None,</span> <span class="pre">int,</span> <span class="pre">float,</span> <span class="pre">str,</span> <span class="pre">~typing.Tuple]]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">symmetric_diff_map:</span> <span class="pre">~typing.Dict[~typing.Any,</span> <span class="pre">~typing.FrozenSet]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">sigma_map:</span> <span class="pre">~typing.Dict[~typing.Any,</span> <span class="pre">~typing.Tuple]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">f_nodes:</span> <span class="pre">~typing.List</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/context.html#Context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context" title="Permalink to this definition">#</a></dt>
 <dd><p>Context of assumptions, domain knowledge and data.</p>
 <p>This should NOT be instantiated directly. One should instead
 use <a class="reference internal" href="dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dodiscover.make_context</span></code></a> to build a Context data structure.</p>
@@ -473,6 +517,12 @@ of the columns of <code class="docutils literal notranslate"><span class="pre">d
 </dd>
 <dt><strong>excluded_edges</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></span></dt><dd><p>Excluded edges without direction.</p>
 </dd>
+<dt><strong>state_variables</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dict</span></code></span></dt><dd><p>Name of intermediate state variables during the learning process.</p>
+</dd>
+<dt><strong>intervention_targets</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>List of intervention targets (known, or unknown), which correspond to
+the nodes in the graph (known), or indices of datasets that contain
+interventions (unknown).</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -488,32 +538,47 @@ all columns in <code class="docutils literal notranslate"><span class="pre">data
 priors and other structured contexts alongside the datasets. This class
 is used in conjunction with a discovery algorithm.</p>
 <p>Setting the a priori explicit direction of an edge is not supported yet.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>excluded_edges</strong></dt><dd></dd>
-<dt><strong>included_edges</strong></dt><dd></dd>
-<dt><strong>init_graph</strong></dt><dd></dd>
-<dt><strong>latent_variables</strong></dt><dd></dd>
-<dt><strong>observed_variables</strong></dt><dd></dd>
-<dt><strong>state_variables</strong></dt><dd></dd>
-</dl>
-</dd>
-</dl>
+<p><strong>Testing for equality</strong></p>
+<p>Currently, testing for equality is done on all attributes that are not
+graphs. Defining equality among graphs is ill-defined, and as such, we
+leave testing of the internal graphs to users. Some checks of equality
+for example can be <a class="reference external" href="https://networkx.org/documentation/latest/reference/algorithms/generated/networkx.algorithms.isomorphism.is_isomorphic.html#networkx.algorithms.isomorphism.is_isomorphic" title="(in NetworkX v3.2rc0.dev0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">networkx.algorithms.isomorphism.is_isomorphic()</span></code></a>
+for checking isomorphism among two graphs.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.context.Context.add_state_variable" title="dodiscover.context.Context.add_state_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_state_variable</span></code></a>(name, var)</p></td>
 <td><p>Add a state variable.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.context.Context.state_variable" title="dodiscover.context.Context.state_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_variable</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.context.Context.copy" title="dodiscover.context.Context.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
+<td><p>Create a deepcopy of the context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.context.Context.get_non_f_nodes" title="dodiscover.context.Context.get_non_f_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_non_f_nodes</span></code></a>()</p></td>
+<td><p>Get the set of non f-nodes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.context.Context.get_params" title="dodiscover.context.Context.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<td><p>Get parameters for this Context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.context.Context.reverse_sigma_map" title="dodiscover.context.Context.reverse_sigma_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reverse_sigma_map</span></code></a>()</p></td>
+<td><p>Get the reverse sigma-map.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.context.Context.set_params" title="dodiscover.context.Context.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.context.Context.state_variable" title="dodiscover.context.Context.state_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_variable</span></code></a>(name[, on_missing])</p></td>
 <td><p>Get a state variable.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.context.Context.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.context.Context.__hash__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.context.Context.add_state_variable">
-<span class="sig-name descname"><span class="pre">add_state_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.add_state_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.add_state_variable" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_state_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.context.Context" title="dodiscover.context.Context"><span class="pre">Context</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.add_state_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.add_state_variable" title="Permalink to this definition">#</a></dt>
 <dd><p>Add a state variable.</p>
 <p>Called by an algorithm to persist data objects that
 are used in intermediate steps.</p>
@@ -530,13 +595,80 @@ are used in intermediate steps.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.context.Context.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.context.Context" title="dodiscover.context.Context"><span class="pre">Context</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.copy" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a deepcopy of the context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.context.Context.get_non_f_nodes">
+<span class="sig-name descname"><span class="pre">get_non_f_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.get_non_f_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.get_non_f_nodes" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the set of non f-nodes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.context.Context.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.context.Context.get_params" title="Permalink to this definition">#</a></dt>
+<dd><p>Get parameters for this Context.</p>
+<p>TODO: can update this when we build a causal-Pipeline similar to sklearn’s Pipeline.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>deep</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, default=True</span></dt><dd><p>If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.context.Context.reverse_sigma_map">
+<span class="sig-name descname"><span class="pre">reverse_sigma_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.reverse_sigma_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.reverse_sigma_map" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the reverse sigma-map.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.context.Context.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.context.Context.set_params" title="Permalink to this definition">#</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>**params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">instance</span></dt><dd><p>Learner instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.context.Context.state_variable">
-<span class="sig-name descname"><span class="pre">state_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.state_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.state_variable" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">state_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_missing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'raise'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context.html#Context.state_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.context.Context.state_variable" title="Permalink to this definition">#</a></dt>
 <dd><p>Get a state variable.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the state variable.</p>
+</dd>
+<dt><strong>on_missing</strong><span class="classifier">{‘raise’, ‘warn’, ‘ignore’}</span></dt><dd><p>Behavior if <code class="docutils literal notranslate"><span class="pre">name</span></code> is not in the dictionary of state variables.
+If ‘raise’ (default) will raise a RuntimeError. If ‘warn’, will
+raise a UserWarning. If ‘ignore’, will return <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>.</p>
 </dd>
 </dl>
 </dd>
@@ -551,12 +683,6 @@ are used in intermediate steps.</p>
 
 </dd></dl>
 
-<section id="examples-using-dodiscover-context-context">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">dodiscover.context.Context</span></code><a class="headerlink" href="#examples-using-dodiscover-context-context" title="Permalink to this heading">#</a></h2>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="PC algorithm for causal discovery from observational data without latent confounders" src="../_images/sphx_glr_plot_pc_alg_thumb.png" />
-<p><a class="reference internal" href="../auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">PC algorithm for causal discovery from observational data without latent confounders</span></a></p>
-  <div class="sphx-glr-thumbnail-title">PC algorithm for causal discovery from observational data without latent confounders</div>
-</div></div></section>
 </section>
 
 

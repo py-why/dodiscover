@@ -213,8 +213,8 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.SkeletonMethods.html">
-   dodiscover.constraint.SkeletonMethods
+  <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+   dodiscover.constraint.ConditioningSetSelection
   </a>
  </li>
  <li class="toctree-l1">
@@ -418,10 +418,46 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#dodiscover.ContextBuilder.graph">
+    <a class="reference internal nav-link" href="#dodiscover.ContextBuilder.excluded_edges">
      <code class="docutils literal notranslate">
       <span class="pre">
-       ContextBuilder.graph()
+       ContextBuilder.excluded_edges()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.ContextBuilder.included_edges">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ContextBuilder.included_edges()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.ContextBuilder.init_graph">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ContextBuilder.init_graph()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.ContextBuilder.latent_variables">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ContextBuilder.latent_variables()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.ContextBuilder.observed_variables">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ContextBuilder.observed_variables()
       </span>
      </code>
     </a>
@@ -479,7 +515,9 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="dodiscover.ContextBuilder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.</span></span><span class="sig-name descname"><span class="pre">ContextBuilder</span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder" title="Permalink to this definition">#</a></dt>
-<dd><p>A builder class for creating Context objects ergonomically.</p>
+<dd><p>A builder class for creating observational data Context objects ergonomically.</p>
+<p>The ContextBuilder is meant solely to build Context objects that work
+with observational datasets.</p>
 <p>The context builder provides a way to capture assumptions, domain knowledge,
 and data. This should NOT be instantiated directly. One should instead use
 <a class="reference internal" href="dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dodiscover.make_context</span></code></a> to build a Context data structure.</p>
@@ -492,8 +530,20 @@ and data. This should NOT be instantiated directly. One should instead use
 <tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.edges" title="dodiscover.ContextBuilder.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>([include, exclude])</p></td>
 <td><p>Set edge constraints to apply in discovery.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.graph" title="dodiscover.ContextBuilder.graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graph</span></code></a>(graph)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.excluded_edges" title="dodiscover.ContextBuilder.excluded_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">excluded_edges</span></code></a>(exclude)</p></td>
+<td><p>Set exclusion edge constraints to apply in discovery.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.included_edges" title="dodiscover.ContextBuilder.included_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">included_edges</span></code></a>(include)</p></td>
+<td><p>Set inclusion edge constraints to apply in discovery.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.init_graph" title="dodiscover.ContextBuilder.init_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_graph</span></code></a>(graph)</p></td>
 <td><p>Set the partial graph to start with.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.latent_variables" title="dodiscover.ContextBuilder.latent_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">latent_variables</span></code></a>([latents])</p></td>
+<td><p>Set latent variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.observed_variables" title="dodiscover.ContextBuilder.observed_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observed_variables</span></code></a>([observed])</p></td>
+<td><p>Set observed variables.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.ContextBuilder.state_variable" title="dodiscover.ContextBuilder.state_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_variable</span></code></a>(name, var)</p></td>
 <td><p>Add a state variable.</p></td>
@@ -543,8 +593,48 @@ and data. This should NOT be instantiated directly. One should instead use
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.ContextBuilder.graph">
-<span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover._protocol.Graph"><span class="pre">Graph</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.graph" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.ContextBuilder.excluded_edges">
+<span class="sig-name descname"><span class="pre">excluded_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">Graph</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.excluded_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.excluded_edges" title="Permalink to this definition">#</a></dt>
+<dd><p>Set exclusion edge constraints to apply in discovery.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>excluded</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="dodiscover.typing.NetworkxGraph.html#dodiscover.typing.NetworkxGraph" title="dodiscover.typing.NetworkxGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkxGraph</span></code></a>]</span></dt><dd><p>Edges that should be excluded in the resultant graph</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>self</strong><span class="classifier"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a></span></dt><dd><p>The builder instance</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.ContextBuilder.included_edges">
+<span class="sig-name descname"><span class="pre">included_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">Graph</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.included_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.included_edges" title="Permalink to this definition">#</a></dt>
+<dd><p>Set inclusion edge constraints to apply in discovery.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>included</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="dodiscover.typing.NetworkxGraph.html#dodiscover.typing.NetworkxGraph" title="dodiscover.typing.NetworkxGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkxGraph</span></code></a>]</span></dt><dd><p>Edges that should be included in the resultant graph</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>self</strong><span class="classifier"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a></span></dt><dd><p>The builder instance</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.ContextBuilder.init_graph">
+<span class="sig-name descname"><span class="pre">init_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover._protocol.Graph"><span class="pre">Graph</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.init_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.init_graph" title="Permalink to this definition">#</a></dt>
 <dd><p>Set the partial graph to start with.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -556,6 +646,38 @@ and data. This should NOT be instantiated directly. One should instead use
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
 <dt><strong>self</strong><span class="classifier"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a></span></dt><dd><p>The builder instance</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.ContextBuilder.latent_variables">
+<span class="sig-name descname"><span class="pre">latent_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.latent_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.latent_variables" title="Permalink to this definition">#</a></dt>
+<dd><p>Set latent variables.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>latents</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code>[<a class="reference internal" href="dodiscover.typing.Column.html#dodiscover.typing.Column" title="dodiscover.typing.Column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Column</span></code></a>]]</span></dt><dd><p>Set of latent “unobserved” variables, by default None. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
+nor <code class="docutils literal notranslate"><span class="pre">variables</span></code> is set, then it is presumed that <code class="docutils literal notranslate"><span class="pre">variables</span></code> consists
+of the columns of <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> is the empty set.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.ContextBuilder.observed_variables">
+<span class="sig-name descname"><span class="pre">observed_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.observed_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.observed_variables" title="Permalink to this definition">#</a></dt>
+<dd><p>Set observed variables.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>observed</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code>[<a class="reference internal" href="dodiscover.typing.Column.html#dodiscover.typing.Column" title="dodiscover.typing.Column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Column</span></code></a>]]</span></dt><dd><p>Set of observed variables, by default None. If neither <code class="docutils literal notranslate"><span class="pre">latents</span></code>,
+nor <code class="docutils literal notranslate"><span class="pre">variables</span></code> is set, then it is presumed that <code class="docutils literal notranslate"><span class="pre">variables</span></code> consists
+of the columns of <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">latents</span></code> is the empty set.</p>
 </dd>
 </dl>
 </dd>
@@ -602,7 +724,7 @@ are used in intermediate steps.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.ContextBuilder.variables">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+419.gb6353699b8)"><span class="pre">DataFrame</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.variables" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+419.gb6353699b8)"><span class="pre">DataFrame</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#ContextBuilder.variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ContextBuilder.variables" title="Permalink to this definition">#</a></dt>
 <dd><p>Set variable-list information to utilize in discovery.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
