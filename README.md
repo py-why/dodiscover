@@ -49,7 +49,7 @@ Our goal is to provide developers and researchers with guide rails for causal di
 
 The goal of dodiscover is to flatten the on-ramp to causal discovery algorithms.
 DoWhy provides a consistent API for various causal tasks that typically require a graph structure.
-DoDiscover aims to do the same with causal discovery algorithms.
+Similarly, DoDiscover aims to provide a cohesive and user-friendly API to apply causal discovery algorithms for inferring a causal graph from data.
 
 [causal-learn](https://github.com/py-why/causal-learn) is an extensive collection of causal discovery algorithms.
 It continuous to host new cutting-edge algorithms in causal discovery.
