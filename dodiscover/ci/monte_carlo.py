@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 import scipy.spatial
 from numpy.typing import ArrayLike
@@ -5,7 +7,7 @@ from sklearn.neighbors import NearestNeighbors
 
 
 def generate_knn_in_subspace(
-    z_arr: ArrayLike, method: str = "knn", k: int = 1, n_jobs: int = None
+    z_arr: ArrayLike, method: str = "knn", k: int = 1, n_jobs: Optional[int] = None
 ) -> ArrayLike:
     """Generate kNN in subspace.
 

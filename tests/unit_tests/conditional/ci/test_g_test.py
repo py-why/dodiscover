@@ -17,8 +17,8 @@ def test_g_error():
     sets = [[], [2], [2, 3], [3, 4], [2, 3, 4]]
     df = pd.DataFrame.from_records(dm)
     with pytest.raises(ValueError, match="data_type"):
-        ci_estimator = GSquareCITest(data_type="auto")
-        ci_estimator.test(df, {x}, {y}, set(sets[0]), [3, 2, 3, 4, 2])
+        ci_estimator = GSquareCITest(data_type="auto", levels=[3, 2, 3, 4, 2])
+        ci_estimator.test(df, {x}, {y}, set(sets[0]))
 
 
 def test_g_discrete():
@@ -26,12 +26,12 @@ def test_g_discrete():
     dm = np.array([testdata.dis_data]).reshape((10000, 5))
     x = 0
     y = 1
-    ci_estimator = GSquareCITest(data_type="discrete")
+    ci_estimator = GSquareCITest(data_type="discrete", levels=[3, 2, 3, 4, 2])
     df = pd.DataFrame.from_records(dm)
 
     sets = [[], [2], [2, 3], [3, 4], [2, 3, 4]]
     for idx in range(len(sets)):
-        _, p = ci_estimator.test(df, {x}, {y}, set(sets[idx]), [3, 2, 3, 4, 2])
+        _, p = ci_estimator.test(df, {x}, {y}, set(sets[idx]))
         fr_p = frexp(p)
         fr_a = frexp(testdata.dis_answer[idx])
 
@@ -45,9 +45,10 @@ def test_g_discrete():
     dm = np.array([testdata.dis_data]).reshape((2000, 25))
     df = pd.DataFrame.from_records(dm)
     levels = np.ones((25,)) * 3
+    ci_estimator = GSquareCITest(data_type="discrete", levels=levels)
     sets = [[2, 3, 4, 5, 6, 7]]
     with pytest.raises(RuntimeError, match="Not enough samples"):
-        ci_estimator.test(df, {x}, {y}, set(sets[0]), levels)
+        ci_estimator.test(df, {x}, {y}, set(sets[0]))
 
 
 def test_g_binary():

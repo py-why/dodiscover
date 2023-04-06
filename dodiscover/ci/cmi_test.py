@@ -85,7 +85,7 @@ class CMITest(BaseConditionalIndependenceTest, CMIMixin):
         n_jobs: int = -1,
         n_shuffle_nbrs: int = 5,
         n_shuffle: int = 100,
-        random_seed: int = None,
+        random_seed: Optional[int] = None,
     ) -> None:
         self.k = k
         self.n_shuffle_nbrs = n_shuffle_nbrs

@@ -68,10 +68,13 @@ def _calculate_contingency_tble(
             else:
                 # discrete case
                 if zidx == 0:
-                    kdx += data[z][row_idx]  # data[row_idx, z]
+                    # print(zidx, z, row_idx, data.shape)
+                    row = data.iloc[row_idx]
+                    kdx += row[z]  # data[row_idx, z]
                 else:
                     lprod = np.prod(list(map(lambda x: levels[x], sep_set[:zidx])))  # type: ignore
-                    kdx += data[z][row_idx] * lprod
+                    row = data.iloc[row_idx]
+                    kdx += row[z] * lprod
 
         # increment the co-occurrence found
         contingency_tble[idx, jdx, kdx] += 1
@@ -181,6 +184,7 @@ def _calculate_g_statistic(contingency_tble):
     nlevels_x, nlevels_y, dof_count = contingency_tble.shape
 
     # now compute marginal terms across all degrees of freedom
+    # (nlevels_x, dof_count) and (nlevels_y, dof_count) arrays
     tx_dof = contingency_tble.sum(axis=1)
     ty_dof = contingency_tble.sum(axis=0)
 
@@ -337,7 +341,7 @@ def g_square_discrete(
         )
 
     if levels is None:
-        levels = np.amax(data, axis=0) + 1
+        levels = (np.amax(data, axis=0) + 1).astype(int)
     n_samples = data.shape[0]
     s_size = len(sep_set)
     dof = (levels[x] - 1) * (levels[y] - 1) * np.prod(list(map(lambda x: levels[x], sep_set)))
@@ -382,7 +386,7 @@ def g_square_discrete(
 
 
 class GSquareCITest(BaseConditionalIndependenceTest):
-    def __init__(self, data_type: str = "binary"):
+    def __init__(self, data_type: str = "binary", levels: Optional[List] = None):
         r"""G squared CI test for discrete or binary data.
 
         For details of the test see :footcite:`Neapolitan2003`.
@@ -392,6 +396,8 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         data_type : str, optional
             The type of data, which can be "binary", or "discrete".
             By default "binary".
+        levels : List, optional
+            Levels of each column in the data matrix (as a list()).
 
         Notes
         -----
@@ -411,6 +417,7 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         .. footbibliography::
         """
         self.data_type = data_type
+        self.levels = levels
 
     def test(
         self,
@@ -418,7 +425,6 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         x_vars: Set[Column],
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
-        levels: Optional[List] = None,
     ) -> Tuple[float, float]:
         """Abstract method for all conditional independence tests.
 
@@ -450,7 +456,7 @@ class GSquareCITest(BaseConditionalIndependenceTest):
         if self.data_type == "binary":
             stat, pvalue = g_square_binary(df, x_var, y_var, z_covariates)
         elif self.data_type == "discrete":
-            stat, pvalue = g_square_discrete(df, x_var, y_var, z_covariates, levels=levels)
+            stat, pvalue = g_square_discrete(df, x_var, y_var, z_covariates, levels=self.levels)
         else:
             raise ValueError(
                 f"The acceptable data_type for G Square CI test is "
