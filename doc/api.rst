@@ -34,7 +34,6 @@ See docs for ``Context`` and ``make_context`` for more information.
 
    make_context
    ContextBuilder
-   InterventionalContextBuilder
    context.Context
 
 
