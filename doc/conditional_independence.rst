@@ -19,10 +19,10 @@ Similarly, the alternative hypothesis is written as:
 
 :math:`H_0: X \not\perp Y | Z`, or written in terms of their distribution :math:`H_0: P(Y | X, Z) \neq P(Y | Z)`
 
-Then typically, one posits an acceptable Type I error rate (false positive), typically :math:`\alpha = 0.05`
+Then typically, one posits an acceptable upper bound on the Type I error rate (false positive), typically :math:`\alpha = 0.05`
 and then either attempts to sample from the null distribution, or characterizes the asymptotic distribution
 of the test statistic. In both approaches a pvalue is computed, which is compared to :math:`\alpha`. The pvalue
-states the "probability that we observe our data (e.g. test statistic) under the null hypothesis". By rejecting
+states the "probability of observing a test-statistic at least as extreme as our observed test-statistic in null distribution". By rejecting
 the null hypothesis, one claims that :math:`X \not\perp Y | Z`, so that X and Y are in fact (conditionally)
 dependent given Z. Note that if one fails to reject the null hypothesis, it is simply by convention that we
 claim X and Y are conditionally independent. It is not necessarily the case, and it is plausible that there
