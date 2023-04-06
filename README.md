@@ -45,7 +45,7 @@ Further, DoDiscover seeks to help the user feel confident with their assumptions
 DoDiscover is a Python library for causal discovery (causal structure learning).
 Our goal is to provide developers and researchers with guide rails for causal discovery that doesn't require deep knowledge of individual causal discovery algorithms.
 
-## What is the difference between dodiscover and causal-learn?
+## What is the difference between dodiscover and other pywhy packages?
 
 The goal of dodiscover is to flatten the on-ramp to causal discovery algorithms.
 DoWhy provides a consistent API for various causal tasks that typically require a graph structure.
