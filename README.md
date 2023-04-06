@@ -60,6 +60,8 @@ In constrast, dodiscover's focus is on the discovery API and usability.
 When possible, dodiscover prefers to provide an API wrapper to discovery algorithms in causal-learn and other libraries.
 Please consider contributing to [causal-learn](https://github.com/py-why/causal-learn) if you plan to implement an algorithm from scratch, then contributing a wrapper in dodiscover.
 
+In the future we plan on trying to integrate the two libraries.
+
 ## What is the relationship with pywhy-graphs and py-indep?
 
 [pywhy-graphs](https://github.com/py-why/pywhy-graphs) is the home of graph data structures and graph algorithms in PyWhy.
