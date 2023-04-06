@@ -64,7 +64,7 @@ Please consider contributing to [causal-learn](https://github.com/py-why/causal-
 
 [pywhy-graphs](https://github.com/py-why/pywhy-graphs) is the home of graph data structures and graph algorithms in PyWhy.
 
-[py-indep](https://github.com/py-why/py-indep) is the home of implementations of tests for conditional independence and other constraints used in tasks including but not limited to causal discovery.
+[py-indep](https://github.com/py-why/py-indep) serves as a repository for implementations of (un)conditional independence tests, which can be utilized in various tasks, such as causal discovery.
 
 # Documentation
 
