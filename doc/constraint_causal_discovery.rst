@@ -33,10 +33,14 @@ may be familiar with.
 On the other hand, the causal faithfulness assumption states that all
 CI statements in the data map to a d-separation statement. That is, there are no accidental
 CI that occur in the data, which are not represented by a d-separation statement in the underlying
-causal graph. The causal faithfulness assumption is a very problematic assumption because in practice
+causal graph. The causal faithfulness assumption in theory is not an issue due to a theoretical result
+showing that violations of faithfulness in causal diagrams have measure zero (i.e. they do not occur).
+
+However, in practice the causal faithfulness assumption is a very problematic assumption because 
 one might have data that is very weakly dependent, such that a CI test under a specified :math:`\alpha`
-level would fail to reject the null hypothesis and conclude the variables in question are CI. In higher
-dimensions this can occur a large percentage of the time as demonstrated in :footcite:`uhler2013geometry`.
+level would fail to reject the null hypothesis and conclude the variables in question are CI. violations
+of "strong-faithfulness" occurs frequently and almost surely in higher
+dimensions :footcite:`uhler2013geometry`.
 
 Tackling violations of faithfulness in constraint-based causal discovery is a large and active
 area of research.
