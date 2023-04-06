@@ -55,7 +55,7 @@ Similarly, DoDiscover aims to provide a cohesive and user-friendly API to apply 
 It continuous to host new cutting-edge algorithms in causal discovery.
 However, these algorithms do not have a unified API.
 Further, the historic focus of causal-learn is increasing the capabilities of discovery algorithms.
-In constrast, dodiscover's focus is on the discovery API and usability.
+In contrast, dodiscover's focus is on the discovery API and usability.
 
 When possible, dodiscover prefers to provide an API wrapper to discovery algorithms in causal-learn and other libraries.
 Please consider contributing to [causal-learn](https://github.com/py-why/causal-learn) if you plan to implement an algorithm from scratch, then contributing a wrapper in dodiscover.
