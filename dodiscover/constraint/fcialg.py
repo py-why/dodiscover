@@ -6,7 +6,7 @@ import networkx as nx
 import pandas as pd
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
-from dodiscover.constraint.config import SkeletonMethods
+from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
@@ -48,14 +48,22 @@ class FCI(BaseConstraintDiscovery):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    skeleton_method : SkeletonMethods
-        The method to use for testing conditional independence. Must be one of
+    condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets. Must be one of
         ('neighbors', 'complete', 'neighbors_path'). See Notes for more details.
     apply_orientations : bool
         Whether or not to apply orientation rules given the learned skeleton graph
         and separating set per pair of variables. If ``True`` (default), will
         apply Zhang's orientation rules R0-10, orienting colliders and certain
         arrowheads and tails :footcite:`Zhang2008`.
+    keep_sorted : bool
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). The conditioning set is chosen lexographically
+        based on the sorted test statistic values of 'ith Pa(X) -> X', for each possible
+        parent node of 'X'. This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
     max_iter : int
         The maximum number of iterations through the graph to apply
         orientation rules.
@@ -64,11 +72,9 @@ class FCI(BaseConstraintDiscovery):
     selection_bias : bool
         Whether or not to account for selection bias within the causal PAG.
         See :footcite:`Zhang2008`.
-    pds_skeleton_method : SkeletonMethods
-        The method to use for learning the skeleton using PDS. Must be one of
+    pds_condsel_method : ConditioningSetSelection
+        The method to use for selecting the conditioning sets using PDS. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
-    ci_estimator_kwargs : dict
-        Keyword arguments for the ``ci_estimator`` function.
 
     References
     ----------
@@ -91,13 +97,13 @@ class FCI(BaseConstraintDiscovery):
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
-        skeleton_method: SkeletonMethods = SkeletonMethods.NBRS,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
+        keep_sorted: bool = False,
         max_iter: int = 1000,
         max_path_length: Optional[int] = None,
         selection_bias: bool = True,
-        pds_skeleton_method: SkeletonMethods = SkeletonMethods.PDS,
-        **ci_estimator_kwargs,
+        pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
     ):
         super().__init__(
             ci_estimator,
@@ -105,14 +111,14 @@ class FCI(BaseConstraintDiscovery):
             min_cond_set_size=min_cond_set_size,
             max_cond_set_size=max_cond_set_size,
             max_combinations=max_combinations,
-            skeleton_method=skeleton_method,
-            **ci_estimator_kwargs,
+            condsel_method=condsel_method,
+            keep_sorted=keep_sorted,
+            apply_orientations=apply_orientations,
         )
         self.max_iter = max_iter
-        self.apply_orientations = apply_orientations
         self.max_path_length = max_path_length
         self.selection_bias = selection_bias
-        self.pds_skeleton_method = pds_skeleton_method
+        self.pds_condsel_method = pds_condsel_method
 
     def orient_unshielded_triples(self, graph: EquivalenceClass, sep_set: SeparatingSet) -> None:
         """Orient colliders given a graph and separation set.
@@ -379,7 +385,7 @@ class FCI(BaseConstraintDiscovery):
             # now check if u is in SepSet(v, c)
             # handle edge case where sep_set is empty.
             if last_node in sep_set:
-                if is_in_sep_set(u, sep_set, last_node, c, "any"):  # u in sep_set[last_node][c]:
+                if is_in_sep_set(u, sep_set, last_node, c, "any"):
                     # orient u -> c
                     graph.remove_edge(c, u, graph.circle_edge_name)
                 if graph.has_edge(u, c, graph.circle_edge_name):
@@ -525,9 +531,10 @@ class FCI(BaseConstraintDiscovery):
     def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 8 of FCI algorithm.
 
-        If A -> u -> C, or A -o u -> C
-        and A o-> C, then orient A o-> C as A -> C.
-
+        If:
+        - A -> u -> C, or A -o u -> C, (the second condition is only present with selection bias)
+        - and A o-> C,
+        - then orient A o-> C as A -> C.
 
         Parameters
         ----------
@@ -746,7 +753,7 @@ class FCI(BaseConstraintDiscovery):
 
         return added_arrows, a_to_u_path, a_to_v_path
 
-    def _apply_rules_1to10(self, graph: EquivalenceClass, sep_set: SeparatingSet):
+    def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):
         idx = 0
         finished = False
         while idx < self.max_iter and not finished:
@@ -756,6 +763,7 @@ class FCI(BaseConstraintDiscovery):
             for u in graph.nodes:
                 for (a, c) in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")
+
                     # apply R1-3 to orient triples and arrowheads
                     r1_add = self._apply_rule1(graph, u, a, c)
                     r2_add = self._apply_rule2(graph, u, a, c)
@@ -813,34 +821,7 @@ class FCI(BaseConstraintDiscovery):
     def learn_skeleton(
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
-        import pywhy_graphs
-
-        from dodiscover import make_context
-
-        # initially learn the skeleton
-        skel_graph, sep_set = super().learn_skeleton(data, context, sep_set)
-
-        # convert the undirected skeleton graph to a PAG, where
-        # all left-over edges have a "circle" endpoint
-        pag = pywhy_graphs.PAG(incoming_circle_edges=skel_graph, name="PAG derived with FCI")
-
-        # orient colliders
-        self.orient_unshielded_triples(pag, sep_set)
-
-        # convert the adjacency graph
-        new_init_graph = pag.to_undirected()
-
-        # Update the Context:
-        # add the corresponding intermediate PAG now to the context
-        # new initialization graph
-        for (_, _, d) in new_init_graph.edges(data=True):
-            if "test_stat" in d:
-                d.pop("test_stat")
-            if "pvalue" in d:
-                d.pop("pvalue")
-        context = make_context(context).graph(new_init_graph).state_variable("PAG", pag).build()
-
-        # # now compute all possibly d-separating sets and learn a better skeleton
+        # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(
             self.ci_estimator,
             sep_set=sep_set,
@@ -848,10 +829,10 @@ class FCI(BaseConstraintDiscovery):
             min_cond_set_size=self.min_cond_set_size,
             max_cond_set_size=self.max_cond_set_size,
             max_combinations=self.max_combinations,
-            skeleton_method=self.pds_skeleton_method,
-            keep_sorted=False,
+            condsel_method=self.condsel_method,
+            second_stage_condsel_method=self.pds_condsel_method,
+            keep_sorted=self.keep_sorted,
             max_path_length=self.max_path_length,
-            **self.ci_estimator_kwargs,
         )
         skel_alg.fit(data, context)
 
@@ -860,16 +841,13 @@ class FCI(BaseConstraintDiscovery):
         self.n_ci_tests += skel_alg.n_ci_tests
         return skel_graph, sep_set
 
-    def fit(self, data: pd.DataFrame, context: Context) -> None:
-        return super().fit(data, context)
-
     def orient_edges(self, graph: EquivalenceClass):
         # orient colliders again
         self.orient_unshielded_triples(graph, self.separating_sets_)
 
         # run the rest of the rules to orient as many edges
         # as possible
-        self._apply_rules_1to10(graph, self.separating_sets_)
+        self._apply_orientation_rules(graph, self.separating_sets_)
 
     def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:
         import pywhy_graphs as pgraph
