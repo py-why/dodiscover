@@ -8,11 +8,25 @@ from pywhy_graphs import ADMG, CPDAG
 from dodiscover import make_context
 from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint import PC
+from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import dummy_sample
 from dodiscover.metrics import confusion_matrix_networks
 from dodiscover.testdata.testdata import bin_data, dis_data
 
 
+@pytest.mark.parametrize(
+    "pc_kwargs",
+    [
+        {
+            "min_cond_set_size": 0,
+            "max_cond_set_size": 3,
+            "max_combinations": 10,
+            "max_iter": 10,
+            "condsel_method": ConditioningSetSelection.NBRS_PATH,
+        },
+        {},
+    ],
+)
 @pytest.mark.parametrize(
     ("indep_test_func", "data_matrix", "g_answer", "alpha"),
     [
@@ -46,7 +60,7 @@ from dodiscover.testdata.testdata import bin_data, dis_data
         ),
     ],
 )
-def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha):
+def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha, pc_kwargs):
     """Test PC algorithm for estimating the causal DAG.
 
     Test data is imported from pcalg, which is sensitive to the CI test
@@ -56,7 +70,7 @@ def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha):
     """
     data_df = pd.DataFrame(data_matrix)
     context = make_context().variables(data=data_df).build()
-    alg = PC(ci_estimator=indep_test_func, alpha=alpha)
+    alg = PC(ci_estimator=indep_test_func, alpha=alpha, **pc_kwargs)
     alg.fit(data_df, context)
     graph = alg.graph_
 
