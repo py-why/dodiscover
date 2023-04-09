@@ -46,7 +46,6 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
     -----
     Currently only testing among two groups are supported. Therefore ``df[group_col]`` must
     only contain binary indicators and ``propensity_est`` must contain only two columns.
-
     References
     ----------
     .. footbibliography::

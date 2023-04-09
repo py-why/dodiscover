@@ -41,8 +41,8 @@ def f_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike) -> float:
     sake of gradient descent.
 
     The f-divergence bound gives an upper bound on KL-divergence:
-    .. math::
 
+    .. math::
         D_{KL}(p || q) \le \sup_f E_{x \sim q}[exp(f(x) - 1)] - E_{x \sim p}[f(x)]
 
     Parameters
@@ -69,8 +69,8 @@ def kl_divergence_score(y_stat_q: ArrayLike, y_stat_p: ArrayLike, eps: float) ->
     sake of gradient descent.
 
     The KL-divergence can be estimated with the following formula:
-    .. math::
 
+    .. math::
         \hat{D}_{KL}(p || q) = \frac{1}{n} \sum_{i=1}^n log L(Y_i^p) -
         log (\frac{1}{m} \sum_{j=1}^m L(Y_j^q))
 

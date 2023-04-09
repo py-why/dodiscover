@@ -16,6 +16,7 @@ Changes proposed in this pull request:
     [Writing docstrings](https://github.com/py-why/dodiscover/blob/main/CONTRIBUTING.md#writing-docstrings) section of the `CONTRIBUTING` docs.
 - [ ] If this PR fixes a bug, I've added a test that will fail without my fix.
 - [ ] If this PR adds a new feature, I've added tests that sufficiently cover my new functionality.
+- [ ] I have added a changelog entry succintly describing the change in this PR in the [whats_new](https://github.com/py-why/dodiscover/blob/main/docs/whats_new/) relevant version document.
 
 ## After submitting
 

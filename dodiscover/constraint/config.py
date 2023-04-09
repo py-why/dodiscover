@@ -25,7 +25,7 @@ class ConditioningSetSelection(Enum, metaclass=MetaEnum):
     Notes
     -----
     Allows 'contains' checks because of the metaclass. For example,
-    one can run ``"complete" in SkeletonMethods``, which would
+    one can run ``"complete" in ConditioningSetSelection``, which would
     return `True`.
     """
 

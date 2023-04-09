@@ -106,7 +106,7 @@ class KernelCITest(BaseConditionalIndependenceTest):
         y_vars: Set[Column],
         z_covariates: Optional[Set[Column]] = None,
     ) -> Tuple[float, float]:
-        """Abstract method for all conditional independence tests.
+        """Run CI test.
 
         Parameters
         ----------
@@ -243,10 +243,8 @@ class KernelCITest(BaseConditionalIndependenceTest):
         Notes
         -----
         X ~ Gamma(k, theta) with a probability density function of the following:
-
         .. math::
             f(x; k, \\theta) = \\frac{x^{k-1} e^{-x / \\theta}}{\\theta^k \\Gamma(k)}
-
         where $\\Gamma(k)$ is the Gamma function evaluated at k. In this scenario
         k governs the shape of the pdf, while $\\theta$ governs more how spread out
         the data is.

@@ -258,12 +258,10 @@ class ClassifierCIMixin:
         k: int = 1,
     ) -> Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]:
         """Generate dataset for CI testing as binary classification problem.
-
         Based on input data ``(X, Y, Z)``, partitions the dataset into halves, where
         one-half represents the joint distribution of ``P(X, Y, Z)`` and the other
         represents the conditionally independent distribution of ``P(X | Z)P(Y)``.
         This is done by a nearest-neighbor bootstrap approach.
-
         Parameters
         ----------
         x_arr : ArrayLike of shape (n_samples, n_dims_x)
@@ -276,7 +274,6 @@ class ClassifierCIMixin:
             Method to use, by default 'knn'. Can be ('knn', 'kdtree').
         k : int, optional
             Number of nearest neighbors to swap, by default 1.
-
         Returns
         -------
         X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]
@@ -286,7 +283,6 @@ class ClassifierCIMixin:
             is the data features from the original jointly distributed data.
             ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1
             respectively.
-
         Notes
         -----
         This algorithm implements a nearest-neighbor bootstrap approach for generating
@@ -326,7 +322,6 @@ class CMIMixin:
         """Compute pvalue by performing a nearest-neighbor shuffle test.
 
         XXX: improve with parallelization with joblib
-
         Parameters
         ----------
         data : pd.DataFrame
