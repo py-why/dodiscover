@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dodiscover.ci.categorical_test &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../use.html">
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <h1>Source code for dodiscover.ci.categorical_test</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2013-2021 pgmpy</span>
+<span class="c1"># Modified from pgmpy.</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+
+<span class="kn">from</span> <span class="nn">dodiscover.ci.base</span> <span class="kn">import</span> <span class="n">BaseConditionalIndependenceTest</span>
+<span class="kn">from</span> <span class="nn">dodiscover.typing</span> <span class="kn">import</span> <span class="n">Column</span>
+
+
+<span class="k">def</span> <span class="nf">power_divergence</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cressie-read&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the Cressie-Read power divergence statistic [1]. The null hypothesis</span>
+<span class="sd">    for the test is X is independent of Y given Z. A lot of the frequency comparison</span>
+<span class="sd">    based statistics (eg. chi-square, G-test etc) belong to power divergence family,</span>
+<span class="sd">    and are special cases of this test.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X: int, string, hashable object</span>
+<span class="sd">        A variable name contained in the data set</span>
+
+<span class="sd">    Y: int, string, hashable object</span>
+<span class="sd">        A variable name contained in the data set, different from X</span>
+
+<span class="sd">    Z: list, array-like</span>
+<span class="sd">        A list of variable names contained in the data set, different from X and Y.</span>
+<span class="sd">        This is the separating set that (potentially) makes X and Y independent.</span>
+<span class="sd">        Default: []</span>
+
+<span class="sd">    data: pandas.DataFrame</span>
+<span class="sd">        The dataset on which to test the independence condition.</span>
+
+<span class="sd">    lambda_: float or string</span>
+<span class="sd">        The lambda parameter for the power_divergence statistic. Some values of</span>
+<span class="sd">        lambda_ results in other well known tests:</span>
+<span class="sd">            &quot;pearson&quot;             1          &quot;Chi-squared test&quot;</span>
+<span class="sd">            &quot;log-likelihood&quot;      0          &quot;G-test or log-likelihood&quot;</span>
+<span class="sd">            &quot;freeman-tukey&quot;     -1/2        &quot;freeman-tukey Statistic&quot;</span>
+<span class="sd">            &quot;mod-log-likelihood&quot;  -1         &quot;Modified Log-likelihood&quot;</span>
+<span class="sd">            &quot;neyman&quot;              -2         &quot;Neyman&#39;s statistic&quot;</span>
+<span class="sd">            &quot;cressie-read&quot;        2/3        &quot;The value recommended in the paper</span>
+<span class="sd">                                             :footcite:`cressieread1984`&quot;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CI Test Results: tuple</span>
+<span class="sd">        Returns a tuple (chi, p_value, dof). `chi` is the</span>
+<span class="sd">        chi-squared test statistic. The `p_value` for the test, i.e. the</span>
+<span class="sd">        probability of observing the computed chi-square statistic (or an even</span>
+<span class="sd">        higher value), given the null hypothesis that X \u27C2 Y | Zs is True.</span>
+<span class="sd">        If boolean = True, returns True if the p_value of the test is greater</span>
+<span class="sd">        than `significance_level` else returns False.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    scipy.stats.power_divergence</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. footbibliography::</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; data = pd.DataFrame(np.random.randint(0, 2, size=(50000, 4)), columns=list(&#39;ABCD&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; data[&#39;E&#39;] = data[&#39;A&#39;] + data[&#39;B&#39;] + data[&#39;C&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; chi_square(X=&#39;A&#39;, Y=&#39;C&#39;, Z=[], data=data, boolean=True, significance_level=0.05)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; chi_square(X=&#39;A&#39;, Y=&#39;B&#39;, Z=[&#39;D&#39;], data=data, boolean=True, significance_level=0.05)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; chi_square(X=&#39;A&#39;, Y=&#39;B&#39;, Z=[&#39;D&#39;, &#39;E&#39;], data=data, boolean=True, significance_level=0.05)</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Step 1: Check if the arguments are valid and type conversions.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="p">[</span><span class="n">Z</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">X</span> <span class="ow">in</span> <span class="n">Z</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Y</span> <span class="ow">in</span> <span class="n">Z</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The variables X or Y can&#39;t be in Z. Found </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">Z</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">Y</span><span class="si">}</span><span class="s2"> in Z.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Do a simple contingency test if there are no conditional variables.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">chi</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">dof</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lambda_</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Step 3: If there are conditionals variables, iterate over unique states and do</span>
+    <span class="c1">#         the contingency test.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">chi</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dof</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">z_state</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">Z</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Note: The fill value is set to 1e-7 to avoid the following error:</span>
+                <span class="c1"># where there are not enough samples in the data, which results in a nan pvalue</span>
+                <span class="n">sub_table_z</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+                <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span><span class="n">sub_table_z</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="n">lambda_</span><span class="p">)</span>
+                <span class="n">chi</span> <span class="o">+=</span> <span class="n">c</span>
+                <span class="n">dof</span> <span class="o">+=</span> <span class="n">d</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="c1"># If one of the values is 0 in the 2x2 table.</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z_state</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Skipping the test </span><span class="si">{</span><span class="n">X</span><span class="si">}</span><span class="s2"> </span><span class="se">\u27C2</span><span class="s2"> </span><span class="si">{</span><span class="n">Y</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">z_state</span><span class="si">}</span><span class="s2">. Not enough samples&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">z_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">z_state</span><span class="p">)])</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping the test </span><span class="si">{</span><span class="n">X</span><span class="si">}</span><span class="s2"> </span><span class="se">\u27C2</span><span class="s2"> </span><span class="si">{</span><span class="n">Y</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">z_str</span><span class="si">}</span><span class="s2">. Not enough samples&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The resulting chi square test statistic is NaN, which occurs &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;when there are not enough samples in your data &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">sub_table_z</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">dof</span><span class="p">)</span>
+
+    <span class="c1"># Step 4: Return the values</span>
+    <span class="k">return</span> <span class="n">chi</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">dof</span>
+
+
+<div class="viewcode-block" id="CategoricalCITest"><a class="viewcode-back" href="../../../generated/dodiscover.ci.CategoricalCITest.html#dodiscover.ci.CategoricalCITest">[docs]</a><span class="k">class</span> <span class="nc">CategoricalCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="s2">&quot;cressie-read&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;CI test for categorical data.</span>
+
+<span class="sd">        Uses the power-divergence class of test statistics to test categorical data</span>
+<span class="sd">        for (conditional) independences.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lambda_ : str, optional</span>
+<span class="sd">            The lambda parameter for the power_divergence statistic, by default &#39;cressie-read&#39;.</span>
+<span class="sd">            Some values of lambda_ results in other well known tests:</span>
+<span class="sd">                &quot;pearson&quot;             1          &quot;Chi-squared test&quot;</span>
+<span class="sd">                &quot;log-likelihood&quot;      0          &quot;G-test or log-likelihood&quot;</span>
+<span class="sd">                &quot;freeman-tukey&quot;     -1/2        &quot;freeman-tukey Statistic&quot;</span>
+<span class="sd">                &quot;mod-log-likelihood&quot;  -1         &quot;Modified Log-likelihood&quot;</span>
+<span class="sd">                &quot;neyman&quot;              -2         &quot;Neyman&#39;s statistic&quot;</span>
+<span class="sd">                &quot;cressie-read&quot;        2/3        &quot;The value recommended in the paper</span>
+<span class="sd">                                                 :footcite:`cressieread1984`&quot;</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        scipy.stats.power_divergence</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. footbibliography::</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_</span> <span class="o">=</span> <span class="n">lambda_</span>
+
+<div class="viewcode-block" id="CategoricalCITest.test"><a class="viewcode-back" href="../../../generated/dodiscover.ci.CategoricalCITest.html#dodiscover.ci.CategoricalCITest.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="n">x_vars</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">y_vars</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">,</span> <span class="n">dof</span> <span class="o">=</span> <span class="n">power_divergence</span><span class="p">(</span>
+            <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dof_</span> <span class="o">=</span> <span class="n">dof</span>
+        <span class="k">return</span> <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">CausalLearnCITest</span><span class="p">(</span><span class="n">BaseConditionalIndependenceTest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s2">&quot;gsq&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_name</span> <span class="o">=</span> <span class="n">method_name</span>
+
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">y_vars</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">],</span>
+        <span class="n">z_covariates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="kn">from</span> <span class="nn">causallearn.utils.cit</span> <span class="kn">import</span> <span class="n">Chisq_or_Gsq</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">x_vars</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">y_vars</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">==</span> <span class="n">x_vars</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">==</span> <span class="n">y_vars</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_z</span> <span class="ow">in</span> <span class="n">z_covariates</span><span class="p">:</span>
+                <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">==</span> <span class="n">_z</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">tester</span> <span class="o">=</span> <span class="n">Chisq_or_Gsq</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">tester</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

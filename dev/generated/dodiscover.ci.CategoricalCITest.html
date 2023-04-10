@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>dodiscover.metrics.confusion_matrix_networks &#8212; dodiscover v0.0.0</title>
+    <title>dodiscover.ci.CategoricalCITest &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -48,8 +48,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dodiscover.metrics.structure_hamming_dist" href="dodiscover.metrics.structure_hamming_dist.html" />
-    <link rel="prev" title="dodiscover.constraint.FCI" href="dodiscover.constraint.FCI.html" />
+    <link rel="next" title="dodiscover.cd.BaseConditionalDiscrepancyTest" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html" />
+    <link rel="prev" title="2.1.2. dodiscover.ci.ClassifierCMITest" href="dodiscover.ci.ClassifierCMITest.html" />
     <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
@@ -235,9 +235,9 @@
   </a>
  </li>
 </ul>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.confusion_matrix_networks.html">
    dodiscover.metrics.confusion_matrix_networks
   </a>
  </li>
@@ -276,7 +276,7 @@
   </a>
  </li>
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
    dodiscover.ci.BaseConditionalIndependenceTest
@@ -317,8 +317,8 @@
    2.1.2. dodiscover.ci.ClassifierCMITest
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.CategoricalCITest.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    dodiscover.ci.CategoricalCITest
   </a>
  </li>
@@ -403,13 +403,24 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dodiscover.metrics.confusion_matrix_networks">
+  <a class="reference internal nav-link" href="#dodiscover.ci.CategoricalCITest">
    <code class="docutils literal notranslate">
     <span class="pre">
-     confusion_matrix_networks()
+     CategoricalCITest
     </span>
    </code>
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.ci.CategoricalCITest.test">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CategoricalCITest.test()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -430,52 +441,49 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="dodiscover-metrics-confusion-matrix-networks">
-<h1>dodiscover.metrics.confusion_matrix_networks<a class="headerlink" href="#dodiscover-metrics-confusion-matrix-networks" title="Permalink to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="dodiscover.metrics.confusion_matrix_networks">
-<span class="sig-prename descclassname"><span class="pre">dodiscover.metrics.</span></span><span class="sig-name descname"><span class="pre">confusion_matrix_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover._protocol.Graph"><span class="pre">Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.Graph.html#dodiscover.Graph" title="dodiscover._protocol.Graph"><span class="pre">Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.24)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/metrics.html#confusion_matrix_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.metrics.confusion_matrix_networks" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute the confusion matrix comparing a predicted graph from the true graph.</p>
-<p>Converts the graphs into an undirected graph, and then compares their adjacency
-matrix, which are symmetric.</p>
+  <section id="dodiscover-ci-categoricalcitest">
+<h1>dodiscover.ci.CategoricalCITest<a class="headerlink" href="#dodiscover-ci-categoricalcitest" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dodiscover.ci.CategoricalCITest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.ci.</span></span><span class="sig-name descname"><span class="pre">CategoricalCITest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cressie-read'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/ci/categorical_test.html#CategoricalCITest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ci.CategoricalCITest" title="Permalink to this definition">#</a></dt>
+<dd><p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.ci.CategoricalCITest.test" title="dodiscover.ci.CategoricalCITest.test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test</span></code></a>(df, x_vars, y_vars[, z_covariates])</p></td>
+<td><p>Abstract method for all conditional independence tests.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.ci.CategoricalCITest.test">
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+463.ge9e034badb)"><span class="pre">DataFrame</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_covariates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/dodiscover/ci/categorical_test.html#CategoricalCITest.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ci.CategoricalCITest.test" title="Permalink to this definition">#</a></dt>
+<dd><p>Abstract method for all conditional independence tests.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>true_graph</strong><span class="classifier">instance of causal graph</span></dt><dd><p>The true graph.</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+463.ge9e034badb)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataframe containing the dataset.</p>
 </dd>
-<dt><strong>pred_graph</strong><span class="classifier">instance of causal graph</span></dt><dd><p>The predicted graph. The predicted graph and true graph must be
-the same type.</p>
+<dt><strong>x_vars</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.1.0.dev0+463.ge9e034badb)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
 </dd>
-<dt><strong>labels</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v1.24)"><span>array_like</span></a> of shape (n_classes), default=None</span></dt><dd><p>List of labels to index the matrix. This may be used to reorder
-or select a subset of labels.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, those that appear at least once
-in <code class="docutils literal notranslate"><span class="pre">y_true</span></code> or <code class="docutils literal notranslate"><span class="pre">y_pred</span></code> are used in sorted order.</p>
+<dt><strong>y_vars</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.1.0.dev0+463.ge9e034badb)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
 </dd>
-<dt><strong>normalize</strong><span class="classifier">{‘true’, ‘pred’, ‘all’}, default=None</span></dt><dd><p>Normalizes confusion matrix over the true (rows), predicted (columns)
-conditions or all the population. If None, confusion matrix will not be
-normalized.</p>
+<dt><strong>z_covariates</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code>, optional</span></dt><dd><p>A set of columns in <code class="docutils literal notranslate"><span class="pre">df</span></code>, by default None. If None, then
+the test should run a standard independence test.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl>
-<dt><strong>cm</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (2, 2)</span></dt><dd><p>The confusion matrix.</p>
+<dd class="field-even"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>]</dt><dd><p>Test statistic and pvalue.</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="(in scikit-learn v1.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.metrics.confusion_matrix</span></code></a></dt><dd></dd>
-</dl>
-</div>
-<p class="rubric">Notes</p>
-<p>This function only compares the graph’s adjacency structure, which does
-not take into consideration the directionality of edges.</p>
 </dd></dl>
 
-<div style='clear:both'></div></section>
+</dd></dl>
+
+</section>
 
 
               </article>
@@ -485,17 +493,17 @@ not take into consideration the directionality of edges.</p>
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="dodiscover.constraint.FCI.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="dodiscover.ci.ClassifierCMITest.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">dodiscover.constraint.FCI</p>
+          <p class="prev-next-title"><span class="section-number">2.1.2. </span>dodiscover.ci.ClassifierCMITest</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="dodiscover.metrics.structure_hamming_dist.html" title="next page">
+  <a class='right-next' id="next-link" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">dodiscover.metrics.structure_hamming_dist</p>
+      <p class="prev-next-title">dodiscover.cd.BaseConditionalDiscrepancyTest</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>
