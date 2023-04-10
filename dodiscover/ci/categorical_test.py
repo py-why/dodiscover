@@ -84,7 +84,7 @@ def power_divergence(
     """
 
     # Step 1: Check if the arguments are valid and type conversions.
-    if isinstance(Z, str): 
+    if isinstance(Z, str):
         Z = [Z]
     if (X in Z) or (Y in Z):
         raise ValueError(f"The variables X or Y can't be in Z. Found {X if X in Z else Y} in Z.")
