@@ -112,6 +112,7 @@ learning.
    ClassifierCITest
    CMITest
    ClassifierCMITest
+   CategoricalCITest
 
 Conditional k-sample testing
 ============================
