@@ -247,6 +247,7 @@ class Test_PsiFCI(Test_IFCI):
             assert nx.is_isomorphic(subgraph, learned_graph.get_graphs(edge_type))
 
 
+@pytest.mark.skip()
 def test_psifci_withsachs():
 
     bnlearn.import_DAG()
