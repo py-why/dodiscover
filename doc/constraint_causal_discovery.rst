@@ -8,10 +8,14 @@ Constraint-based causal discovery
     :no-inherited-members:
 .. currentmodule:: dodiscover
 
+Testing for invariances in the data, such as conditional independence (CI) can be represented graphically
+in the form of d-separation statements under the causal faithfulness assumption. Given this, one
+is interested in high-powered and well-controlled CI tests that can be used to test for CI in data.
+
 The following are a set of methods intended for (non-parametric) structure learning
 of causal graphs (i.e. causal discovery) given observational and/or interventional data
-by checking constraints in the form of conditional independences (CI). At a high level
-all constraint-based causal discovery, tests CI statements, where we use different CI
+by checking constraints in the form of conditional independences (CI). At a high level, all constraint-based
+causal discovery algorithms test CI statements, where we use different CI
 statistical tests to test the following null hypothesis:
 
 :math:`H_0: X \perp Y | Z` and :math:`H_A: X \not\perp Y | Z`
@@ -26,17 +30,21 @@ Fundamental Assumptions of Constraint-Based Causal Discovery
 The fundamental assumptions of all algorithms in this section are the Markov property assumption
 and the causal faithfulness assumption :footcite:`Spirtes1993` and :footcite:`Pearl_causality_2009`.
 
-The Markov assumption states that all d-separation statements in the causal graph imply a
-corresponding CI statement in the data. This is a core-assumption that users from graphical modeling
-may be familiar with.
+The Markov assumption states that any d-separation statement implies a CI statement. This is a
+core-assumption that users from graphical modeling may be familiar with. It is a
+general assumption that connects graphical models to probabilistic models.
 
 On the other hand, the causal faithfulness assumption states that all
 CI statements in the data map to a d-separation statement. That is, there are no accidental
 CI that occur in the data, which are not represented by a d-separation statement in the underlying
-causal graph. The causal faithfulness assumption is a very problematic assumption because in practice
+causal graph. The causal faithfulness assumption in theory is not an issue due to a theoretical result
+showing that violations of faithfulness in causal diagrams have measure zero (i.e. they do not occur).
+
+However, in practice the causal faithfulness assumption is a very problematic assumption because 
 one might have data that is very weakly dependent, such that a CI test under a specified :math:`\alpha`
-level would fail to reject the null hypothesis and conclude the variables in question are CI. In higher
-dimensions this can occur a large percentage of the time as demonstrated in :footcite:`uhler2013geometry`.
+level would fail to reject the null hypothesis and conclude the variables in question are CI. violations
+of "strong-faithfulness" occurs frequently and almost surely in higher
+dimensions :footcite:`uhler2013geometry`.
 
 Tackling violations of faithfulness in constraint-based causal discovery is a large and active
 area of research.
