@@ -1,16 +1,23 @@
+# Copyright (c) 2013-2021 pgmpy
+# Modified from pgmpy.
+# License: MIT
+
 import logging
 from functools import reduce
 from typing import Optional, Set, Tuple
 
+import numpy as np
 import pandas as pd
+from numpy.typing import ArrayLike
 from scipy import stats
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.typing import Column
 
 
-# copied from pgmpy
-def power_divergence(X, Y, Z, data, lambda_="cressie-read"):
+def power_divergence(
+    X: ArrayLike, Y: ArrayLike, Z: ArrayLike, data: pd.DataFrame, lambda_: str = "cressie-read"
+) -> Tuple[float, float, int]:
     """
     Computes the Cressie-Read power divergence statistic [1]. The null hypothesis
     for the test is X is independent of Y given Z. A lot of the frequency comparison
@@ -77,11 +84,8 @@ def power_divergence(X, Y, Z, data, lambda_="cressie-read"):
     """
 
     # Step 1: Check if the arguments are valid and type conversions.
-    if hasattr(Z, "__iter__"):
-        Z = list(Z)
-    else:
-        raise (f"Z must be an iterable. Got object type: {type(Z)}")
-
+    if isinstance(Z, str):
+        Z = [Z]
     if (X in Z) or (Y in Z):
         raise ValueError(f"The variables X or Y can't be in Z. Found {X if X in Z else Y} in Z.")
 
@@ -98,9 +102,10 @@ def power_divergence(X, Y, Z, data, lambda_="cressie-read"):
         dof = 0
         for z_state, df in data.groupby(Z):
             try:
-                c, _, d, _ = stats.chi2_contingency(
-                    df.groupby([X, Y]).size().unstack(Y, fill_value=0), lambda_=lambda_
-                )
+                # Note: The fill value is set to 1e-7 to avoid the following error:
+                # where there are not enough samples in the data, which results in a nan pvalue
+                sub_table_z = df.groupby([X, Y]).size().unstack(Y, fill_value=1e-7)
+                c, _, d, _ = stats.chi2_contingency(sub_table_z, lambda_=lambda_)
                 chi += c
                 dof += d
             except ValueError:
@@ -112,15 +117,16 @@ def power_divergence(X, Y, Z, data, lambda_="cressie-read"):
                 else:
                     z_str = ", ".join([f"{var}={state}" for var, state in zip(Z, z_state)])
                     logging.info(f"Skipping the test {X} \u27C2 {Y} | {z_str}. Not enough samples")
-        p_value = 1 - stats.chi2.cdf(chi, df=dof)
-        import numpy as np
 
-        if np.isnan(p_value):
-            print(p_value, chi, c, dof, X, Y, Z)
-            c, _, d, _ = stats.chi2_contingency(
-                df.groupby([X, Y]).size().unstack(Y, fill_value=0), lambda_=lambda_
-            )
-            print(c, d)
+            if np.isnan(c):
+                raise RuntimeError(
+                    f"The resulting chi square test statistic is NaN, which occurs "
+                    f"when there are not enough samples in your data "
+                    f"{df.shape}, {sub_table_z}."
+                )
+
+        p_value = 1 - stats.chi2.cdf(chi, df=dof)
+
     # Step 4: Return the values
     return chi, p_value, dof
 
