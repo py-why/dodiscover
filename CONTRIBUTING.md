@@ -132,7 +132,7 @@ When you're ready to contribute code to address an open issue, please follow the
 
     Our continuous integration (CI) testing runs [a number of checks](https://github.com/py-why/dodiscover/actions) for each pull request on [GitHub Actions](https://github.com/features/actions). You can run most of these tests locally, which is something you should do *before* opening a PR to help speed up the review process and make it easier for us. Please see our [development guide](https://github.com/py-why/dodiscover/blob/main/DEVELOPING.md) for a comprehensive overview of useful commands leveraging [poetry](https://python-poetry.org). This will cover aspects of code style checking, unit testing, integration testing, and building the documentation. We try to make it as easy as possible with copy/paste commands leveraging poetry which will guide your development process!
 
-    And finally, please update the [CHANGELOG](https://github.com/py-why/dodiscover/docs/whats_new.rst) with notes on your contribution in the "Unreleased" section at the top.
+    And finally, please update the CHANGELOG file in the [changelog folder](https://github.com/py-why/dodiscover/docs/whats_new/) with notes on your contribution in the latest version file.
 
     After all of the above checks have passed, you can now open [a new GitHub pull request](https://github.com/py-why/dodiscover/pulls).
     Make sure you have a clear description of the problem and the solution, and include a link to relevant issues.
