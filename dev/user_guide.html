@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>dodiscover &#8212; dodiscover v0.0.0</title>
+    <title>User guide: contents &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -48,7 +48,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="next" title="1. Constraint-based causal discovery" href="constraint_causal_discovery.html" />
+    <link rel="prev" title="PC algorithm for causal discovery from observational data without latent confounders" href="auto_examples/plot_pc_alg.html" />
     <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <script type="text/javascript" src="_static/scrollfix.js"></script>
@@ -74,7 +75,7 @@
   
 
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -114,8 +115,8 @@
  </a>
 </li>
 
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="user_guide.html">
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
   User Guide
  </a>
 </li>
@@ -188,7 +189,72 @@
   <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form>
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="constraint_causal_discovery.html">
+   1. Constraint-based causal discovery
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html">
+     1.5.1. dodiscover.constraint.ConditioningSetSelection
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="conditional_independence.html">
+   2. Independence
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.CMITest.html">
+     2.1.1. dodiscover.ci.CMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html">
+     2.1.2. dodiscover.ci.ClassifierCMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html">
+     2.2.1. dodiscover.ci.FisherZCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html">
+     2.3.1. dodiscover.ci.GSquareCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html">
+     2.4.1. dodiscover.ci.KernelCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html">
+     2.5.1. dodiscover.ci.ClassifierCITest
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+  </div>
+</nav>
   </div>
   <div class="sidebar-end-items">
   </div>
@@ -203,31 +269,9 @@
     
     <div class="toc-item">
       
-<div class="tocsection onthispage mt-5 pt-1 pb-3">
-    <i class="fas fa-list"></i> On this page
-</div>
 
 <nav id="bd-toc-nav">
-    <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contents">
-   Contents
-  </a>
-  <ul class="nav section-nav flex-column">
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#team">
-   Team
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#indices-and-tables">
-   Indices and tables
-  </a>
- </li>
-</ul>
-
+    
 </nav>
     </div>
     
@@ -245,73 +289,61 @@
               
               <article class="bd-article" role="main">
                 
-  <section id="dodiscover">
-<h1><strong>dodiscover</strong><a class="headerlink" href="#dodiscover" title="Permalink to this heading">#</a></h1>
-<p>dodiscover is a Python package for representing causal graphs. For example, Acyclic
-Directed Mixed Graphs (ADMG), also known as causal DAGs and Partial Ancestral Graphs (PAGs).
-We build on top of <code class="docutils literal notranslate"><span class="pre">networkx's</span></code> <code class="docutils literal notranslate"><span class="pre">MixedEdgeGraph</span></code> such that we maintain all the well-tested and efficient
-algorithms and data structures of <code class="docutils literal notranslate"><span class="pre">networkx</span></code>.</p>
-<p>We encourage you to use the package for your causal inference research and also build on top
-with relevant Pull Requests.</p>
-<p>See our examples for walk-throughs of how to use the package, or</p>
-<p>Please refer to our <a class="reference internal" href="user_guide.html#user-guide"><span class="std std-ref">User Guide</span></a> for details on all the tools that we
-provide. You can also find an exhaustive list of the public API in the
-<a class="reference internal" href="api.html#api-ref"><span class="std std-ref">API</span></a>. You can also look at our numerous <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/index.html#general-examples" title="(in scikit-learn v1.2)"><span class="xref std std-ref">examples</span></a>
-that illustrate the use of <code class="docutils literal notranslate"><span class="pre">dodiscover</span></code> in many different contexts.</p>
-<section id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading">#</a></h2>
+  <section id="user-guide">
+<span id="id1"></span><h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Reference API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#context-for-causal-discovery">Context for causal discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#constraint-based-structure-learning">Constraint-based structure learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#comparing-causal-discovery-algorithms">Comparing causal discovery algorithms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#typing">Typing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#graph-protocols">Graph protocols</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#conditional-independence-testing">Conditional Independence Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#conditional-k-sample-testing">Conditional k-sample testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#utilities">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraint_causal_discovery.html">1. Constraint-based causal discovery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#fundamental-assumptions-of-constraint-based-causal-discovery">1.1. Fundamental Assumptions of Constraint-Based Causal Discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#non-parametric-markovian-scms-with-observational-data">1.2. (Non-parametric) Markovian SCMs with Observational Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#non-parametric-semi-markovian-scms-with-observational-data">1.3. (Non-parametric) Semi-Markovian SCMs with Observational Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#non-parametric-scms-with-interventional-data">1.4. (Non-parametric) SCMs with Interventional Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#choosing-the-conditioning-sets">1.5. Choosing the conditioning sets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html">1.5.1. dodiscover.constraint.ConditioningSetSelection</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="use.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="use.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#hyperparameters-and-controlling-overfitting">1.6. Hyperparameters and controlling overfitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html#robust-learning">1.7. Robust learning</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="constraint_causal_discovery.html">1. Constraint-based causal discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html">2. Independence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#conditional-discrepancy">3. Conditional Discrepancy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional_independence.html">2. Independence</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#conditional-mutual-information">2.1. Conditional Mutual Information</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.ci.CMITest.html">2.1.1. dodiscover.ci.CMITest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html">2.1.2. dodiscover.ci.ClassifierCMITest</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/index.html#basic-causal-discovery-models-without-latent-confounders">Basic causal discovery models without latent confounders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#partial-pearson-correlation">2.2. Partial (Pearson) Correlation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html">2.2.1. dodiscover.ci.FisherZCITest</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="whats_new.html">Release History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="whats_new/v0.1.html">What’s new?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="whats_new/v0.1.html#version-0-1">Version 0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#discrete-categorical-and-binary-data">2.3. Discrete, Categorical and Binary Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html">2.3.1. dodiscover.ci.GSquareCITest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#kernel-approaches">2.4. Kernel-Approaches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html">2.4.1. dodiscover.ci.KernelCITest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#classifier-based-approaches">2.5. Classifier-based Approaches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html">2.5.1. dodiscover.ci.ClassifierCITest</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conditional_independence.html#conditional-discrepancy">3. Conditional Discrepancy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#id6">3.1. Discrete, Categorical and Binary Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#id7">3.2. Kernel-Approaches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.cd.KernelCDTest.html">3.2.1. dodiscover.cd.KernelCDTest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="conditional_independence.html#bregman-divergences">3.3. Bregman-Divergences</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dodiscover.cd.BregmanCDTest.html">3.3.1. dodiscover.cd.BregmanCDTest</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="toctree-wrapper compound">
-</div>
-</section>
-<section id="team">
-<h2>Team<a class="headerlink" href="#team" title="Permalink to this heading">#</a></h2>
-<p><strong>dodiscover</strong> is developed and maintained by pywhy.
-To learn more about who specifically contributed to this codebase, see
-<a class="reference external" href="https://github.com/py-why/dodiscover/graphs/contributors">our contributors</a> page.</p>
-</section>
-<section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-</ul>
-</section>
 </section>
 
 
@@ -322,10 +354,17 @@ To learn more about who specifically contributed to this codebase, see
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='right-next' id="next-link" href="installation.html" title="next page">
+  <a class='left-prev' id="prev-link" href="auto_examples/plot_pc_alg.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">PC algorithm for causal discovery from observational data without latent confounders</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="constraint_causal_discovery.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Installation</p>
+      <p class="prev-next-title"><span class="section-number">1. </span>Constraint-based causal discovery</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>dodiscover.ci.GSquareCITest &#8212; dodiscover v0.0.0</title>
+    <title>2.3.1. dodiscover.ci.GSquareCITest &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -26,6 +26,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -47,9 +48,9 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="dodiscover.ci.FisherZCITest" href="dodiscover.ci.FisherZCITest.html" />
-    <link rel="prev" title="dodiscover.ci.KernelCITest" href="dodiscover.ci.KernelCITest.html" />
-    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <link rel="next" title="2.2.1. dodiscover.ci.FisherZCITest" href="dodiscover.ci.FisherZCITest.html" />
+    <link rel="prev" title="2.4.1. dodiscover.ci.KernelCITest" href="dodiscover.ci.KernelCITest.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
 
@@ -102,15 +103,21 @@
  </a>
 </li>
 
-<li class="toctree-l1 current active nav-item">
+<li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../api.html">
-  API
+  Reference API
  </a>
 </li>
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../use.html">
-  Using dodiscover
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
  </a>
 </li>
 
@@ -153,7 +160,7 @@
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
     </div>
 </div>
       </div>
@@ -184,187 +191,65 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
-    <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.make_context.html">
-   dodiscover.make_context
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../constraint_causal_discovery.html">
+   1. Constraint-based causal discovery
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+     1.5.1. dodiscover.constraint.ConditioningSetSelection
+    </a>
+   </li>
+  </ul>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ContextBuilder.html">
-   dodiscover.ContextBuilder
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../conditional_independence.html">
+   2. Independence
   </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.context.Context.html">
-   dodiscover.context.Context
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.LearnSkeleton.html">
-   dodiscover.constraint.LearnSkeleton
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html">
-   dodiscover.constraint.LearnSemiMarkovianSkeleton
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
-   dodiscover.constraint.ConditioningSetSelection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.PC.html">
-   dodiscover.constraint.PC
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.constraint.FCI.html">
-   dodiscover.constraint.FCI
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.metrics.confusion_matrix_networks.html">
-   dodiscover.metrics.confusion_matrix_networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.metrics.structure_hamming_dist.html">
-   dodiscover.metrics.structure_hamming_dist
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.typing.Column.html">
-   dodiscover.typing.Column
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.typing.SeparatingSet.html">
-   dodiscover.typing.SeparatingSet
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.typing.NetworkxGraph.html">
-   dodiscover.typing.NetworkxGraph
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.Graph.html">
-   dodiscover.Graph
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.EquivalenceClass.html">
-   dodiscover.EquivalenceClass
-  </a>
- </li>
-</ul>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
-   dodiscover.ci.BaseConditionalIndependenceTest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.Oracle.html">
-   dodiscover.ci.Oracle
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
-   dodiscover.ci.KernelCITest
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   dodiscover.ci.GSquareCITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
-   dodiscover.ci.FisherZCITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.ClassifierCITest.html">
-   dodiscover.ci.ClassifierCITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.CMITest.html">
-   dodiscover.ci.CMITest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.ClassifierCMITest.html">
-   dodiscover.ci.ClassifierCMITest
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html">
-   dodiscover.cd.BaseConditionalDiscrepancyTest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.cd.KernelCDTest.html">
-   dodiscover.cd.KernelCDTest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.cd.BregmanCDTest.html">
-   dodiscover.cd.BregmanCDTest
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.kernel_utils.compute_kernel.html">
-   dodiscover.ci.kernel_utils.compute_kernel
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.kernel_utils.corrent_matrix.html">
-   dodiscover.ci.kernel_utils.corrent_matrix
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.kernel_utils.von_neumann_divergence.html">
-   dodiscover.ci.kernel_utils.von_neumann_divergence
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.kernel_utils.f_divergence_score.html">
-   dodiscover.ci.kernel_utils.f_divergence_score
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.kernel_utils.kl_divergence_score.html">
-   dodiscover.ci.kernel_utils.kl_divergence_score
-  </a>
- </li>
-</ul>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.monte_carlo.generate_knn_in_subspace.html">
-   dodiscover.ci.monte_carlo.generate_knn_in_subspace
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dodiscover.ci.monte_carlo.restricted_nbr_permutation.html">
-   dodiscover.ci.monte_carlo.restricted_nbr_permutation
-  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.CMITest.html">
+     2.1.1. dodiscover.ci.CMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.ClassifierCMITest.html">
+     2.1.2. dodiscover.ci.ClassifierCMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
+     2.2.1. dodiscover.ci.FisherZCITest
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     2.3.1. dodiscover.ci.GSquareCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
+     2.4.1. dodiscover.ci.KernelCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.ClassifierCITest.html">
+     2.5.1. dodiscover.ci.ClassifierCITest
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -412,7 +297,7 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#examples-using-dodiscover-ci-gsquarecitest">
-   Examples using
+   2.3.1.1. Examples using
    <code class="docutils literal notranslate">
     <span class="pre">
      dodiscover.ci.GSquareCITest
@@ -440,7 +325,7 @@
               <article class="bd-article" role="main">
                 
   <section id="dodiscover-ci-gsquarecitest">
-<h1>dodiscover.ci.GSquareCITest<a class="headerlink" href="#dodiscover-ci-gsquarecitest" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">2.3.1. </span>dodiscover.ci.GSquareCITest<a class="headerlink" href="#dodiscover-ci-gsquarecitest" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="dodiscover.ci.GSquareCITest">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.ci.</span></span><span class="sig-name descname"><span class="pre">GSquareCITest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/ci/g_test.html#GSquareCITest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.ci.GSquareCITest" title="Permalink to this definition">#</a></dt>
@@ -484,7 +369,7 @@ the test should run a standard independence test.</p>
 </dd></dl>
 
 <section id="examples-using-dodiscover-ci-gsquarecitest">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">dodiscover.ci.GSquareCITest</span></code><a class="headerlink" href="#examples-using-dodiscover-ci-gsquarecitest" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.3.1.1. </span>Examples using <code class="docutils literal notranslate"><span class="pre">dodiscover.ci.GSquareCITest</span></code><a class="headerlink" href="#examples-using-dodiscover-ci-gsquarecitest" title="Permalink to this heading">#</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="PC algorithm for causal discovery from observational data without latent confounders" src="../_images/sphx_glr_plot_pc_alg_thumb.png" />
 <p><a class="reference internal" href="../auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">PC algorithm for causal discovery from observational data without latent confounders</span></a></p>
   <div class="sphx-glr-thumbnail-title">PC algorithm for causal discovery from observational data without latent confounders</div>
@@ -503,13 +388,13 @@ the test should run a standard independence test.</p>
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">dodiscover.ci.KernelCITest</p>
+          <p class="prev-next-title"><span class="section-number">2.4.1. </span>dodiscover.ci.KernelCITest</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="dodiscover.ci.FisherZCITest.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">dodiscover.ci.FisherZCITest</p>
+      <p class="prev-next-title"><span class="section-number">2.2.1. </span>dodiscover.ci.FisherZCITest</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

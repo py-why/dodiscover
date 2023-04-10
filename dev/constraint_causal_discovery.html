@@ -1,0 +1,522 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>1. Constraint-based causal discovery &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Independence" href="conditional_independence.html" />
+    <link rel="prev" title="User Guide" href="user_guide.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+    <script type="text/javascript" src="_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="use.html">
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="current reference internal" href="#">
+   1. Constraint-based causal discovery
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html">
+     1.5.1. dodiscover.constraint.ConditioningSetSelection
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="conditional_independence.html">
+   2. Independence
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.CMITest.html">
+     2.1.1. dodiscover.ci.CMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html">
+     2.1.2. dodiscover.ci.ClassifierCMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.FisherZCITest.html">
+     2.2.1. dodiscover.ci.FisherZCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.GSquareCITest.html">
+     2.3.1. dodiscover.ci.GSquareCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html">
+     2.4.1. dodiscover.ci.KernelCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html">
+     2.5.1. dodiscover.ci.ClassifierCITest
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fundamental-assumptions-of-constraint-based-causal-discovery">
+   1.1. Fundamental Assumptions of Constraint-Based Causal Discovery
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#non-parametric-markovian-scms-with-observational-data">
+   1.2. (Non-parametric) Markovian SCMs with Observational Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#non-parametric-semi-markovian-scms-with-observational-data">
+   1.3. (Non-parametric) Semi-Markovian SCMs with Observational Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#non-parametric-scms-with-interventional-data">
+   1.4. (Non-parametric) SCMs with Interventional Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#choosing-the-conditioning-sets">
+   1.5. Choosing the conditioning sets
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hyperparameters-and-controlling-overfitting">
+   1.6. Hyperparameters and controlling overfitting
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#robust-learning">
+   1.7. Robust learning
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="module-dodiscover.constraint">
+<span id="constraint-based-causal-discovery"></span><span id="constraint-causal-discovery"></span><h1><span class="section-number">1. </span>Constraint-based causal discovery<a class="headerlink" href="#module-dodiscover.constraint" title="Permalink to this heading">#</a></h1>
+<p>Testing for invariances in the data, such as conditional independence (CI) can be represented graphically
+in the form of d-separation statements under the causal faithfulness assumption. Given this, one
+is interested in high-powered and well-controlled CI tests that can be used to test for CI in data.</p>
+<p>The following are a set of methods intended for (non-parametric) structure learning
+of causal graphs (i.e. causal discovery) given observational and/or interventional data
+by checking constraints in the form of conditional independences (CI). At a high level, all constraint-based
+causal discovery algorithms test CI statements, where we use different CI
+statistical tests to test the following null hypothesis:</p>
+<p><span class="math notranslate nohighlight">\(H_0: X \perp Y | Z\)</span> and <span class="math notranslate nohighlight">\(H_A: X \not\perp Y | Z\)</span></p>
+<p>For a given node <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code> in the underlying causal graph of interest, and
+a conditioning set, <code class="docutils literal notranslate"><span class="pre">Z</span></code>. CI tests can have a variety of different assumptions
+that make one better than another in different settings and data assumptions.
+For more information on the CI tests themselves, see <a class="reference internal" href="conditional_independence.html#conditional-independence"><span class="std std-ref">Independence</span></a>.</p>
+<section id="fundamental-assumptions-of-constraint-based-causal-discovery">
+<h2><span class="section-number">1.1. </span>Fundamental Assumptions of Constraint-Based Causal Discovery<a class="headerlink" href="#fundamental-assumptions-of-constraint-based-causal-discovery" title="Permalink to this heading">#</a></h2>
+<p>The fundamental assumptions of all algorithms in this section are the Markov property assumption
+and the causal faithfulness assumption <a class="footnote-reference brackets" href="#footcite-spirtes1993" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and <a class="footnote-reference brackets" href="#footcite-pearl-causality-2009" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>The Markov assumption states that any d-separation statement implies a CI statement. This is a
+core-assumption that users from graphical modeling may be familiar with. It is a
+general assumption that connects graphical models to probabilistic models.</p>
+<p>On the other hand, the causal faithfulness assumption states that all
+CI statements in the data map to a d-separation statement. That is, there are no accidental
+CI that occur in the data, which are not represented by a d-separation statement in the underlying
+causal graph. The causal faithfulness assumption in theory is not an issue due to a theoretical result
+showing that violations of faithfulness in causal diagrams have measure zero (i.e. they do not occur).</p>
+<p>However, in practice the causal faithfulness assumption is a very problematic assumption because
+one might have data that is very weakly dependent, such that a CI test under a specified <span class="math notranslate nohighlight">\(\alpha\)</span>
+level would fail to reject the null hypothesis and conclude the variables in question are CI. violations
+of “strong-faithfulness” occurs frequently and almost surely in higher
+dimensions <a class="footnote-reference brackets" href="#footcite-uhler2013geometry" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<p>Tackling violations of faithfulness in constraint-based causal discovery is a large and active
+area of research.</p>
+</section>
+<section id="non-parametric-markovian-scms-with-observational-data">
+<h2><span class="section-number">1.2. </span>(Non-parametric) Markovian SCMs with Observational Data<a class="headerlink" href="#non-parametric-markovian-scms-with-observational-data" title="Permalink to this heading">#</a></h2>
+<p>If one assumes that the underlying structural causal model (SCM) is Markovian,
+then the Peter and Clarke (PC) algorithm has been shown to be sound and complete
+for learning a completed partially directed acyclic graph (CPDAG) <a class="footnote-reference brackets" href="#footcite-meek1995" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<p>The <a class="reference internal" href="generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC" title="dodiscover.constraint.PC"><code class="xref py py-class docutils literal notranslate"><span class="pre">dodiscover.constraint.PC</span></code></a> algorithm and its variants assume Markovianity, which is
+also known as causal-sufficiency in the literature. In other words, it assumes a lack of latent
+confounders, where there is no latent variable that is a confounder of the observed data.</p>
+<p>The PC algorithm learns a CPDAG in three stages:</p>
+<ol class="arabic">
+<li><dl>
+<dt>skeleton discovery: This first phase is the process of leveraging CI tests to test</dt><dd><p>edges for conditional independence. Along the way, connections of the graph are trimmed
+(when CI is detected) and the separating sets among pairs of variables are tracked.</p>
+<p>A separating set is a set of nodes in the graph that d-separate a pair of variables.
+Note that a pair of variables may contain many d-separators, and thus there may be
+many separating sets.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>unshielded triplet orientation: This takes triplets on a path of the form <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">*-*</span> <span class="pre">Y</span> <span class="pre">*-*</span> <span class="pre">Z</span></code>,</dt><dd><p>where the triplet path is “unshielded” meaning <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">Z</span></code> are not connected. Then
+it checks that <code class="docutils literal notranslate"><span class="pre">Y</span></code> is not in the separating set of X and Z. Given these two conditions,
+Y must be a collider and is oriented as <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">*-&gt;</span> <span class="pre">Y</span> <span class="pre">&lt;-*</span> <span class="pre">Z</span></code>. The stars in the path indicate
+that it can be any kind of edge endpoint (e.g. in a PAG it could be a circle endpoint edge).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>deterministic path orientations: Once all colliders are oriented, there are a set of</dt><dd><p>deterministic logical rules that allow us to orient more edges. In the PC algorithm,
+these are the so-called “Meek’s orientation rules”, which are 4 rules that are applied
+repeatedly until no more changes to the graph are made <a class="footnote-reference brackets" href="#footcite-meek1995" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>The resulting graph is an equivalence class of DAGs without latent confounders, the CPDAG.
+For more information on CPDAGs, one can also see <a class="reference external" href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="(in pywhy-graphs v0.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pywhy_graphs.CPDAG</span></code></a>.</p>
+</section>
+<section id="non-parametric-semi-markovian-scms-with-observational-data">
+<h2><span class="section-number">1.3. </span>(Non-parametric) Semi-Markovian SCMs with Observational Data<a class="headerlink" href="#non-parametric-semi-markovian-scms-with-observational-data" title="Permalink to this heading">#</a></h2>
+<p>If one assumes that the underlying SCM is Semi-Markovian, then the “Fast Causal Inference”
+(FCI) algorithm has been shown to be sound and complete for learning a partial ancestral
+graph (PAG) <a class="footnote-reference brackets" href="#footcite-zhang2008ancestralgraphs" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a><a class="footnote-reference brackets" href="#footcite-zhang2008" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
+<p>The FCI algorithm and its variants assume Semi-Markovianity, which assumes the
+possible presence of latent confounders and even selection bias in the observational data.</p>
+<p>The <a class="reference internal" href="generated/dodiscover.constraint.FCI.html#dodiscover.constraint.FCI" title="dodiscover.constraint.FCI"><code class="xref py py-class docutils literal notranslate"><span class="pre">dodiscover.constraint.FCI</span></code></a> algorithm follows the three stages of learning that the PC
+algorithm does, but with a few minor modifications that we will outline here:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>skeleton discovery: The skeleton discovery phase is now composed of two stages. The first</dt><dd><p>stage is the same as the PC algorithm. The second phase, takes the output graph of the first
+phase and tries to orient colliders. This results in a PAG that can be queried for the
+potentially d-separating (PDS) sets for any pair of variables <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">Y)</span></code>. The skeleton
+discovery phase is restarted from scratch, but now the conditioning sets are chosen from
+the PDS sets. The PDS set approach is described in <a class="footnote-reference brackets" href="#footcite-colombo2012" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a> and
+<a class="footnote-reference brackets" href="#footcite-spirtes1993" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>deterministic path orientations: The four orientation rules of the PC algorithm are still</dt><dd><p>the same, but in the FCI case, we add an additional six orientation rules. The additional
+rules account for latent confounding and selection bias. Three of those rules
+only apply if we assume selection bias is present.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="non-parametric-scms-with-interventional-data">
+<h2><span class="section-number">1.4. </span>(Non-parametric) SCMs with Interventional Data<a class="headerlink" href="#non-parametric-scms-with-interventional-data" title="Permalink to this heading">#</a></h2>
+<p>When we have access to experimental data, there are multiple datasets corresponding to multiple
+distributions (e.g. observational and different interventions), we can improve causal discovery.
+If one assumes we have access to multiple distributions, one may know the targets of
+each intervention, where one can apply the I-FCI algorithm to learn an Interventional-PAG
+(I-PAG) <a class="footnote-reference brackets" href="#footcite-kocaoglu2019characterization" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>.</p>
+<p>Alternatively, one may assume they do not know where the intervention was applied in each
+distribution. In this case, one may apply the <span class="math notranslate nohighlight">\(Psi\)</span>-FCI algorithm to learn a
+<span class="math notranslate nohighlight">\(Psi\)</span>-PAG <a class="footnote-reference brackets" href="#footcite-jaber2020causal" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
+</section>
+<section id="choosing-the-conditioning-sets">
+<h2><span class="section-number">1.5. </span>Choosing the conditioning sets<a class="headerlink" href="#choosing-the-conditioning-sets" title="Permalink to this heading">#</a></h2>
+<p>We briefly describe how <code class="docutils literal notranslate"><span class="pre">dodiscover</span></code> chooses conditioning sets, <code class="docutils literal notranslate"><span class="pre">Z</span></code> that are tested given
+a pair of nodes <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">Y)</span></code>. The test we are doing is <span class="math notranslate nohighlight">\(X \perp Y | Z\)</span>, where <code class="docutils literal notranslate"><span class="pre">Z</span></code> can
+be the empty set. There are multiple strategies for choosing <code class="docutils literal notranslate"><span class="pre">Z</span></code>.</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constraint.ConditioningSetSelection</span></code></a>(value)</p></td>
+<td><p>Available methods for selecting the conditioning sets when learning a skeleton.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hyperparameters-and-controlling-overfitting">
+<h2><span class="section-number">1.6. </span>Hyperparameters and controlling overfitting<a class="headerlink" href="#hyperparameters-and-controlling-overfitting" title="Permalink to this heading">#</a></h2>
+<p>To describe.</p>
+</section>
+<section id="robust-learning">
+<h2><span class="section-number">1.7. </span>Robust learning<a class="headerlink" href="#robust-learning" title="Permalink to this heading">#</a></h2>
+<p>Conservative orientations, etc.</p>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="user_guide.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">User Guide</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="conditional_independence.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title"><span class="section-number">2. </span>Independence</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

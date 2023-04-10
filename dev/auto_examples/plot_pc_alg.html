@@ -26,6 +26,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -47,9 +48,9 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tutorials" href="../tutorials/index.html" />
-    <link rel="prev" title="Using dodiscover" href="../use.html" />
-    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <link rel="next" title="User Guide" href="../user_guide.html" />
+    <link rel="prev" title="Examples and Tutorials using DoDiscover" href="../use.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
 
@@ -104,13 +105,19 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../api.html">
-  API
+  Reference API
  </a>
 </li>
 
 <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="../use.html">
-  Using dodiscover
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
  </a>
 </li>
 
@@ -153,7 +160,7 @@
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
     </div>
 </div>
       </div>
@@ -271,7 +278,7 @@ independent.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">pywhy_graphs.viz</span> <span class="kn">import</span> <span class="n">draw</span>
+<span class="kn">from</span> <span class="nn">pywhy_graphs.viz</span> <span class="kn">import</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a>
 <span class="kn">from</span> <span class="nn">dodiscover.ci</span> <span class="kn">import</span> <a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class"><span class="n">GSquareCITest</span></a><span class="p">,</span> <a href="../generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle" title="dodiscover.ci.Oracle" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class"><span class="n">Oracle</span></a>
 <span class="kn">from</span> <span class="nn">dodiscover</span> <span class="kn">import</span> <span class="n">PC</span><span class="p">,</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -343,7 +350,7 @@ are conditionally independent.</p>
 
 <span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.head.html#pandas.DataFrame.head" title="pandas.DataFrame.head" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">data</span><span class="o">.</span><span class="n">head</span></a><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.core.series.Series" class="sphx-glr-backref-module-pandas-core-series sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">({</span><span class="n">col</span><span class="p">:</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">}))</span>
-<span class="n">draw</span><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">G</span></a><span class="p">)</span>
+<a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">G</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fitting causal models:   0%|          | 0/4 [00:00&lt;?, ?it/s]
@@ -351,7 +358,7 @@ Fitting causal mechanism of node x:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node y:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node z:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node w:   0%|          | 0/4 [00:00&lt;?, ?it/s]
-Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1765.65it/s]
+Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1832.37it/s]
    x  ...  w
 0  0  ...  1
 1  1  ...  2
@@ -366,7 +373,7 @@ y    [1, 2, 0]
 w    [1, 2, 0]
 dtype: object
 
-&lt;graphviz.graphs.Digraph object at 0x7fe82f6d58e0&gt;
+&lt;graphviz.graphs.Digraph object at 0x7f26ab5cd460&gt;
 </pre></div>
 </div>
 </section>
@@ -430,13 +437,13 @@ an infinite amount of data.</p>
 <span class="c1"># The resulting completely partially directed acyclic graph (CPDAG) that is learned</span>
 <span class="c1"># is a &quot;Markov equivalence class&quot;, which encodes all the conditional dependences that</span>
 <span class="c1"># were learned from the data.</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">graph_</span>
+<a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="pywhy_graphs.CPDAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="pywhy_graphs.CPDAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pc</span><span class="o">.</span><span class="n">graph_</span></a>
 
-<span class="n">dot_graph</span> <span class="o">=</span> <span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="pywhy_graphs.CPDAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">)</span>
 <span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;oracle_cpdag.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;oracle_cpdag.png&#39;
+<img src="../_images/sphx_glr_plot_pc_alg_001.png" srcset="../_images/sphx_glr_plot_pc_alg_001.png" alt="plot pc alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;oracle_cpdag.png&#39;
 </pre></div>
 </div>
 <p>Now, we will show the output given a real CI test, which performs CI hypothesis testing
@@ -451,16 +458,16 @@ always a possibility that the CI test makes a mistake.</p>
 <span class="c1"># dependency between &#39;z&#39; and &#39;y&#39;, then we fail to also orient the corresponding</span>
 <span class="c1"># collider in the data. This illustrates the dependency of constraint-based</span>
 <span class="c1"># structure learning algorithms on the implicit Type I/II error in hypothesis tests.</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">graph_</span>
+<a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="pywhy_graphs.CPDAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="pywhy_graphs.CPDAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pc</span><span class="o">.</span><span class="n">graph_</span></a>
 
-<span class="n">dot_graph</span> <span class="o">=</span> <span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.CPDAG.html#pywhy_graphs.CPDAG" title="pywhy_graphs.CPDAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">)</span>
 <span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;ci_cpdag.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;ci_cpdag.png&#39;
+<img src="../_images/sphx_glr_plot_pc_alg_002.png" srcset="../_images/sphx_glr_plot_pc_alg_002.png" alt="plot pc alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;ci_cpdag.png&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.852 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.826 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-pc-alg-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/f1c5e835df0a73798ede9531ab050d9e/plot_pc_alg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_pc_alg.py</span></code></a></p>
@@ -485,13 +492,13 @@ always a possibility that the CI test makes a mistake.</p>
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Using dodiscover</p>
+          <p class="prev-next-title">Examples and Tutorials using DoDiscover</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="../tutorials/index.html" title="next page">
+  <a class='right-next' id="next-link" href="../user_guide.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Tutorials</p>
+      <p class="prev-next-title">User Guide</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

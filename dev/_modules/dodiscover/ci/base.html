@@ -25,6 +25,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
@@ -46,7 +47,7 @@
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="canonical" href="https://pywhy.github.io/dodiscover/stable/index.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../../../_static/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/scrollfix.js"></script>
 
@@ -101,13 +102,19 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../../api.html">
-  API
+  Reference API
  </a>
 </li>
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../../use.html">
-  Using dodiscover
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../../user_guide.html">
+  User Guide
  </a>
 </li>
 
@@ -150,7 +157,7 @@
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action py-1" href="https://pywhy.github.io/dodiscover/dev/index.html">v0.1 (devel)</a>
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
     </div>
 </div>
       </div>
@@ -465,10 +472,12 @@
         <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate dataset for CI testing as binary classification problem.</span>
+
 <span class="sd">        Based on input data ``(X, Y, Z)``, partitions the dataset into halves, where</span>
 <span class="sd">        one-half represents the joint distribution of ``P(X, Y, Z)`` and the other</span>
 <span class="sd">        represents the conditionally independent distribution of ``P(X | Z)P(Y)``.</span>
 <span class="sd">        This is done by a nearest-neighbor bootstrap approach.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        x_arr : ArrayLike of shape (n_samples, n_dims_x)</span>
@@ -481,6 +490,7 @@
 <span class="sd">            Method to use, by default &#39;knn&#39;. Can be (&#39;knn&#39;, &#39;kdtree&#39;).</span>
 <span class="sd">        k : int, optional</span>
 <span class="sd">            Number of nearest neighbors to swap, by default 1.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        X_ind, y_ind, X_joint, y_joint : Tuple[ArrayLike, ArrayLike, ArrayLike, ArrayLike]</span>
@@ -490,6 +500,7 @@
 <span class="sd">            is the data features from the original jointly distributed data.</span>
 <span class="sd">            ``y_ind`` and ``y_joint`` correspond to the class labels 0 and 1</span>
 <span class="sd">            respectively.</span>
+
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        This algorithm implements a nearest-neighbor bootstrap approach for generating</span>
@@ -529,6 +540,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pvalue by performing a nearest-neighbor shuffle test.</span>
 
 <span class="sd">        XXX: improve with parallelization with joblib</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        data : pd.DataFrame</span>
