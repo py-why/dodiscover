@@ -102,6 +102,8 @@ def power_divergence(
         dof = 0
         for z_state, df in data.groupby(Z):
             try:
+                # Note: The fill value is set to 1e-7 to avoid the following error:
+                # where there are not enough samples in the data, which results in a nan pvalue
                 sub_table_z = df.groupby([X, Y]).size().unstack(Y, fill_value=1e-7)
                 c, _, d, _ = stats.chi2_contingency(sub_table_z, lambda_=lambda_)
                 chi += c
