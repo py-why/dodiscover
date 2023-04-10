@@ -157,11 +157,11 @@ You can verify that your code will pass certain style, formatting and lint check
 
 ``verify`` runs a sequence of tests that can also be run individually. For example, you can check code formatting with black:
 
-    poetry run poe check_format
+    poetry run poe format_check
 
 If you would like to automatically black format your changes:
 
-    poetry run poe apply_format
+    poetry run poe format
 
 You can then check for code style and general linting:
 

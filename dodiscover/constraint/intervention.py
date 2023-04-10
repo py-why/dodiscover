@@ -107,6 +107,7 @@ class PsiFCI(FCI):
         max_path_length: Optional[int] = None,
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         known_intervention_targets: bool = False,
+        n_jobs: Optional[int] = None,
     ):
         super().__init__(
             ci_estimator,
@@ -121,6 +122,7 @@ class PsiFCI(FCI):
             max_path_length=max_path_length,
             selection_bias=False,
             pds_condsel_method=pds_condsel_method,
+            n_jobs=n_jobs,
         )
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
@@ -141,6 +143,7 @@ class PsiFCI(FCI):
             second_stage_condsel_method=self.pds_condsel_method,
             keep_sorted=False,
             max_path_length=self.max_path_length,
+            n_jobs=self.n_jobs,
         )
         self.skeleton_learner_.fit(data, context)
 

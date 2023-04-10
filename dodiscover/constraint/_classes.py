@@ -99,6 +99,7 @@ class BaseConstraintDiscovery:
         condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
         apply_orientations: bool = True,
         keep_sorted: bool = False,
+        n_jobs: Optional[int] = None,
     ):
         self.alpha = alpha
         self.ci_estimator = ci_estimator
@@ -116,6 +117,8 @@ class BaseConstraintDiscovery:
             max_combinations = np.inf
         self.max_combinations = max_combinations
         self.keep_sorted = keep_sorted
+
+        self.n_jobs = n_jobs
 
         # initialize the result properties we want to fit
         self.separating_sets_ = defaultdict(lambda: defaultdict(list))

@@ -104,6 +104,7 @@ class FCI(BaseConstraintDiscovery):
         max_path_length: Optional[int] = None,
         selection_bias: bool = True,
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
+        n_jobs: Optional[int] = None,
     ):
         super().__init__(
             ci_estimator,
@@ -114,6 +115,7 @@ class FCI(BaseConstraintDiscovery):
             condsel_method=condsel_method,
             keep_sorted=keep_sorted,
             apply_orientations=apply_orientations,
+            n_jobs=n_jobs,
         )
         self.max_iter = max_iter
         self.max_path_length = max_path_length
@@ -833,6 +835,7 @@ class FCI(BaseConstraintDiscovery):
             second_stage_condsel_method=self.pds_condsel_method,
             keep_sorted=self.keep_sorted,
             max_path_length=self.max_path_length,
+            n_jobs=self.n_jobs,
         )
         skel_alg.fit(data, context)
 

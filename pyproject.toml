@@ -158,11 +158,11 @@ ignore_fail = 'return_non_zero'
 sequence = ['_flake8', '_bandit', '_codespell', '_pydocstyle']
 ignore_fail = 'return_non_zero'
 
-[[tool.poe.tasks.apply_format]]
+[[tool.poe.tasks.format]]
 sequence = ['_black', '_isort']
 ignore_fail = 'return_non_zero'
 
-[[tool.poe.tasks.check_format]]
+[[tool.poe.tasks.format_check]]
 sequence = ['_black_check', '_isort_check']
 ignore_fail = 'return_non_zero'
 
@@ -170,7 +170,7 @@ ignore_fail = 'return_non_zero'
 # a standard verification sequence for use in pull requests
 #
 [[tool.poe.tasks.verify]]
-sequence = ['apply_format', 'lint', 'type_check', 'unit_test']
+sequence = ['format', 'lint', 'type_check', 'unit_test']
 ignore_fail = "return_non_zero"
 
 [[tool.poe.tasks.release]]

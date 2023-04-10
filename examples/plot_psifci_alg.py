@@ -94,16 +94,12 @@ ci_estimator = GSquareCITest(data_type="discrete")
 cd_estimator = GSquareCITest(data_type="discrete")
 
 alpha = 0.05
-learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=cd_estimator, alpha=alpha)
+learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=cd_estimator, alpha=alpha, n_jobs=-1)
 
 # create context with information about the interventions
 ctx_builder = make_context(create_using=InterventionalContextBuilder)
 ctx: Context = (
-    ctx_builder.variables(data=data[0])
-    # .intervention_targets(intervention_targets)
-    .num_distributions(6)
-    .obs_distribution(False)
-    .build()
+    ctx_builder.variables(data=data[0]).num_distributions(6).obs_distribution(False).build()
 )
 
 print(ctx.init_graph)

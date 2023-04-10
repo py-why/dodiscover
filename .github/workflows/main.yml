@@ -43,7 +43,7 @@ jobs:
 
       # check formatting of the code style
       - name: Check code formatting
-        run: poetry run poe check_format
+        run: poetry run poe format_check
 
       # this applies various linting
       - name: Lint codebase
