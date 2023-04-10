@@ -1093,11 +1093,6 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
     def _prep_second_stage_skeleton(self) -> Context:
         import pywhy_graphs as pgraphs
 
-        if self.max_path_length is None:
-            self.max_path_length_ = np.inf
-        else:
-            self.max_path_length_ = self.max_path_length
-
         # convert the undirected skeleton graph to a PAG, where
         # all left-over edges have a "circle" endpoint
         sep_set = self.sep_set_
@@ -1125,6 +1120,14 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             .build()
         )
         return context
+
+    def _initialize_params(self) -> None:
+        if self.max_path_length is None:
+            self.max_path_length_ = np.inf
+        else:
+            self.max_path_length_ = self.max_path_length
+
+        return super()._initialize_params()
 
     def fit(self, data: pd.DataFrame, context: Context):
         # initially learn the skeleton without using PDS information
@@ -1235,41 +1238,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
 
-    def _initialize_params(self) -> None:
-        """Initialize parameters for learning skeleton.
-
-        Basic parameters that are used by any constraint-based causal discovery algorithms.
-        """
-        # error checks of passed in arguments
-        if self.max_combinations is not None and self.max_combinations <= 0:
-            raise RuntimeError(f"Max combinations must be at least 1, not {self.max_combinations}")
-
-        if self.condsel_method not in ConditioningSetSelection:
-            raise ValueError(
-                f"Skeleton method must be one of {ConditioningSetSelection}, not "
-                f"{self.condsel_method}."
-            )
-
-        if self.sep_set is None and not hasattr(self, "sep_set_"):
-            # keep track of separating sets
-            self.sep_set_ = defaultdict(lambda: defaultdict(list))
-        elif not hasattr(self, "sep_set_"):
-            self.sep_set_ = self.sep_set  # type: ignore
-
-        # control of the conditioning set
-        if self.max_cond_set_size is None:
-            self.max_cond_set_size_ = np.inf
-        else:
-            self.max_cond_set_size_ = self.max_cond_set_size
-        if self.min_cond_set_size is None:
-            self.min_cond_set_size_ = 0
-        else:
-            self.min_cond_set_size_ = self.min_cond_set_size
-        if self.max_combinations is None:
-            self.max_combinations_ = np.inf
-        else:
-            self.max_combinations_ = self.max_combinations
-
     def evaluate_edge(
         self, data: pd.DataFrame, X: Column, Y: Column, Z: Optional[Set[Column]] = None
     ) -> Tuple[float, float]:
@@ -1336,8 +1304,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         data_j = data[distribution_idx[1]].copy()
 
         # name the group column the F-node, so Oracle works as expected
-        data_i[X] = 1
-        data_j[X] = 0
+        data_i[X] = 0
+        data_j[X] = 1
         data = pd.concat((data_i, data_j), axis=0)
 
         # compare conditional distributions P(Y | X) vs P'(Y | X), where 'group_col'
@@ -1531,8 +1499,14 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # orient colliders
         self._orient_unshielded_triples(pag, sep_set)
 
-        # convert the adjacency graph
-        self.context_.add_state_variable("pag", pag)
+        # convert the adjacency graph into a PAG
+        # Note: in order to preserve PDS sets for PAG augmented with the F-node, we simply have
+        # to make it fully-connected, since at this stage, the intermediate PAG learned from FCI
+        # has not done anything with the F-node edges.
+        for f_node in f_nodes:
+            for node in non_f_nodes:
+                pag.add_edge(f_node, node, pag.directed_edge_name)
+        self.context_.add_state_variable("PAG", pag)
 
         # now, we'll fit the data using interventional data by looping over all
         # combinations of F-nodes and their neighbors
@@ -1552,9 +1526,3 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 f_nodes_without_this = f_nodes.copy()
                 f_nodes_without_this.remove(f_node)
                 sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
-                if len(sep_sets) > 0:
-                    print(
-                        f"Updated separating set for {x_var}, {y_var} with {f_nodes_without_this}"
-                    )
-                    for idx in range(len(sep_sets)):
-                        self.sep_set_[x_var][y_var][idx].update(f_nodes_without_this)

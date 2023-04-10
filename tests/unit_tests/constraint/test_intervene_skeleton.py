@@ -92,6 +92,11 @@ def test_fnode_skeleton_unknown_targets():
     obs_expected_skeleton = expected_skeleton.copy()
     obs_expected_skeleton.remove_node(("F", 0))
 
+    # import pywhy_graphs.networkx as pywhy_nx
+    # # 0 y ('F', 0) {'x'}
+    # print(pywhy_nx.m_separated(graph, {'y'}, ('F', 0), {'x'}))
+    # print(oracle.test(dummy_sample(graph), {'y'}, {('F', 0)}, {'x'}))
+
     # define the learner and the context
     learner = LearnInterventionSkeleton(
         ci_estimator=oracle, cd_estimator=oracle, known_intervention_targets=False
@@ -110,6 +115,11 @@ def test_fnode_skeleton_unknown_targets():
     obs_skel_graph = learner.context_.state_variable("obs_skel_graph")
 
     assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
+    print(expected_skeleton.edges())
+    print(skel_graph.edges())
+    for edge in skel_graph.edges():
+        if not expected_skeleton.has_edge(*edge):
+            print(edge)
     assert nx.is_isomorphic(expected_skeleton, skel_graph)
 
 
