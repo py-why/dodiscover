@@ -1,3 +1,5 @@
+.. _api_ref:
+
 ###
 API
 ###
@@ -44,7 +46,7 @@ Constraint-based structure learning
 
    LearnSkeleton
    LearnSemiMarkovianSkeleton
-   SkeletonMethods
+   ConditioningSetSelection
    PC
    FCI
 
@@ -110,6 +112,7 @@ learning.
    ClassifierCITest
    CMITest
    ClassifierCMITest
+   CategoricalCITest
 
 Conditional k-sample testing
 ============================
