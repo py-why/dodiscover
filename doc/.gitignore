@@ -11,7 +11,7 @@ generated/
 auto_examples
 
 # dev tools
-
+.vscode
 .envrc
 .python-version
 .idea
