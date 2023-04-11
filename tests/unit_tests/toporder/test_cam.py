@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from dodiscover import make_context
-from dodiscover.metrics import structure_hamming_dist, toporder_divergence_arr
+from dodiscover.metrics import structure_hamming_dist, toporder_divergence
 from dodiscover.toporder.cam import CAM
 from dodiscover.toporder.utils import full_DAG, orders_consistency
 
@@ -150,12 +150,14 @@ def test_given_dataset_when_fitting_CAM_then_shd_larger_equal_dtop(dummy_sample,
     model.fit(dummy_sample, context)
     A_pred = nx.to_numpy_array(model.graph_)
     order_pred = model.order_
+
+    true_graph = nx.from_numpy_array(dummy_groundtruth, create_using=nx.DiGraph)
     shd = structure_hamming_dist(
-        true_graph=nx.from_numpy_array(dummy_groundtruth, create_using=nx.DiGraph),
+        true_graph=true_graph,
         pred_graph=nx.from_numpy_array(A_pred, create_using=nx.DiGraph),
         double_for_anticausal=False,
     )
-    d_top = toporder_divergence_arr(dummy_groundtruth, order_pred)
+    d_top = toporder_divergence(true_graph, order_pred)
     assert shd >= d_top
 
 

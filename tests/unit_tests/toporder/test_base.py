@@ -6,7 +6,7 @@ import pytest
 from dodiscover import make_context
 from dodiscover.toporder._base import SteinMixin
 from dodiscover.toporder.score import SCORE
-from dodiscover.toporder.utils import full_DAG, fullAdj2Order
+from dodiscover.toporder.utils import full_DAG, full_adj_to_order
 
 
 # -------------------- Fixtures -------------------- #
@@ -144,10 +144,10 @@ def dummy_dense():
 
 
 # -------------------- Unit Tests -------------------- #
-def test_given_fully_connected_adjacency_when_applying_fullAdj2Order_then_order_is_correct(
+def test_given_fully_connected_adjacency_when_applying_full_adj_to_order_then_order_is_correct(
     dummy_dense,
 ):
-    order = fullAdj2Order(dummy_dense)
+    order = full_adj_to_order(dummy_dense)
     assert order == [2, 1, 3, 0]
 
 
@@ -177,7 +177,7 @@ def test_given_order_and_alternative_order_when_pruning_then_return_equal_output
 def test_given_adjacency_when_pruning_then_excluded_edges_are_removed(dummy_sample, dummy_dense):
     model = SCORE()
     model.context = make_context().variables(observed=dummy_sample.columns).build()
-    order = fullAdj2Order(dummy_dense)
+    order = full_adj_to_order(dummy_dense)
     model.order_ = order
     X = dummy_sample.to_numpy()
     A = model.prune(X, dummy_dense)  # find prediction without excluded edges
@@ -197,7 +197,7 @@ def test_given_adjacency_when_pruning_with_pns_then_excluded_edges_are_removed(
 ):
     model = SCORE(pns=True)
     model.context = make_context().variables(observed=dummy_sample.columns).build()
-    order = fullAdj2Order(dummy_dense)
+    order = full_adj_to_order(dummy_dense)
     model.order_ = order
     X = dummy_sample.to_numpy()
     A = model.prune(X, dummy_dense.astype(np.float_))  # find prediction without excluded edges

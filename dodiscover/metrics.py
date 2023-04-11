@@ -173,12 +173,13 @@ def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
     """
     if not nx.is_directed_acyclic_graph(true_graph):
         raise ValueError("The input graph must be directed and acyclic.")
+    
+    # convert graphs to adjacency matrix in numpy array format
+    A = nx.to_numpy_array(true_graph)
+
     if len(order) != A.shape[0] or A.shape[0] != A.shape[1]:
         raise ValueError("The dimensions of the graph and the order list do not match.")
     
-    # convert graphs to adjacency matrix in numpy array format
-    A = nx.to_numpy_array(true_graph, create_using=nx.DiGraph)
-
     false_negatives_from_order = 0
     for i in range(len(order)):
         false_negatives_from_order += A[order[i + 1 :], order[i]].sum()

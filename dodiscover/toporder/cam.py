@@ -5,7 +5,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from dodiscover.toporder._base import BaseCAMPruning
-from dodiscover.toporder.utils import fullAdj2Order
+from dodiscover.toporder.utils import full_adj_to_order
 
 
 class CAM(BaseCAMPruning):
@@ -95,7 +95,7 @@ class CAM(BaseCAMPruning):
             # Update score column associated to child node
             self._update_score(X, A, child, score_gains, score[child])
 
-        order = fullAdj2Order(A)
+        order = full_adj_to_order(A)
         return A, order
 
     def _update_score(self, X: NDArray, A: NDArray, c: int, score_gains: NDArray, score_c: float):

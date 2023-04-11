@@ -306,15 +306,14 @@ class BaseCAMPruning(TopOrderInterface):
         leaf : int
             Leaf index in the list of graph nodes.
         """
-        # descend enforced by edges included in self.context and not in the order are used as leaf
+        # descend. enforced by edges included in self.context and not in the order are used as leaf
         leaf_descendants = self.order_constraints[remaining_nodes[leaf]]
         if not set(leaf_descendants).issubset(set(current_order)):
-            found_leaf = False
             k = 0
-            while not found_leaf:
+            while True:
                 if leaf_descendants[k] not in current_order:
                     leaf = remaining_nodes.index(leaf_descendants[k])
-                    found_leaf = True
+                    break
                 k += 1
         return leaf
 

@@ -4,7 +4,7 @@ from scipy.stats import ttest_ind
 
 from dodiscover.toporder._base import SteinMixin
 from dodiscover.toporder.score import SCORE
-from dodiscover.toporder.utils import fullAdj2Order
+from dodiscover.toporder.utils import full_adj_to_order
 
 
 class DAS(SCORE):
@@ -80,7 +80,7 @@ class DAS(SCORE):
             Sparse adjacency matrix representing the pruned DAG.
         """
         _, d = X.shape
-        order = fullAdj2Order(A_dense)
+        order = full_adj_to_order(A_dense)
         stein = SteinMixin()
         max_parents = self.max_parents + 1  # +1 to account for A[l, l] = 1
         remaining_nodes = list(range(d))
