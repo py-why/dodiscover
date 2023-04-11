@@ -4,10 +4,6 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![codecov](https://codecov.io/gh/py-why/dodiscover/branch/main/graph/badge.svg?token=H1reh7Qwf4)](https://codecov.io/gh/py-why/dodiscover)
 
-# dodiscover is moving to causal-learn!
-
-We are excited to welcome [causal-learn](https://github.com/py-why/causal-learn) to the PyWhy community.  We are currently incorporating do-discover innovations into causal-learn and integrating causal-learn with other PyWhy libraries.  Please use causal-learn as your primary interface for causal discovery.
-
 # DoDiscover
 
 DoDiscover is a Python library for causal discovery (causal structure learning). If one does not have access to a causal graph for their modeling problem, they may use DoDiscover to learn causal structure from their data (e.g., in the form of a graph).
@@ -42,8 +38,35 @@ Further, DoDiscover seeks to help the user feel confident with their assumptions
 
 ## Unite causal discovery and causal representation learning
 
-Causal representation learning is the task of learning high-level latent variables and the causal structure between them from low-level variables observed in data.
-DoDiscover seeks to support causal representation learning algorithms in the context of traditional causal discovery settings.
+DoDiscover is a Python library for causal discovery (causal structure learning).
+Our goal is to provide developers and researchers with guide rails for causal discovery that doesn't require deep knowledge of individual causal discovery algorithms.
+
+## What is the difference between dodiscover and other pywhy packages?
+
+The goal of dodiscover is to flatten the on-ramp to causal discovery algorithms.
+DoWhy provides a consistent API for various causal tasks that typically require a graph structure.
+Similarly, DoDiscover aims to provide a cohesive and user-friendly API to apply causal discovery algorithms for inferring a causal graph from data.
+
+[causal-learn](https://github.com/py-why/causal-learn) is an extensive collection of causal discovery algorithms.
+It continuous to host new cutting-edge algorithms in causal discovery.
+However, these algorithms do not have a unified API.
+Further, the historic focus of causal-learn is increasing the capabilities of discovery algorithms.
+In contrast, dodiscover's focus is on the discovery API and usability.
+
+When possible, dodiscover prefers to provide an API wrapper to discovery algorithms in causal-learn and other libraries.
+Please consider contributing to [causal-learn](https://github.com/py-why/causal-learn) if you plan to implement an algorithm from scratch, then contributing a wrapper in dodiscover.
+
+In the future we plan on trying to integrate the two libraries.
+
+## What is the relationship with pywhy-graphs and py-indep?
+
+[pywhy-graphs](https://github.com/py-why/pywhy-graphs) is the home of graph data structures and graph algorithms in PyWhy.
+
+[py-indep](https://github.com/py-why/py-indep) serves as a repository for implementations of (un)conditional independence tests, which can be utilized in various tasks, such as causal discovery.
+
+# dodiscover is moving to causal-learn eventually!
+
+We are excited to welcome [causal-learn](https://github.com/py-why/causal-learn) to the PyWhy community.  We are currently incorporating do-discover innovations into causal-learn and integrating causal-learn with other PyWhy libraries. This will occur over the course of many release cycles though. In the meantime, feel free to open up issues/PRs related to API and algorithm issues you find. 
 
 # Documentation
 
