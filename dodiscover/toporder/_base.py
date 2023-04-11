@@ -29,8 +29,8 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray
-            n x d tensor of i.i.d. samples from p(X) joint distribution
+        X : np.ndarray of shape (n_samples, n_dims)
+            I.i.d. samples from p(X) joint distribution
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator
         eta_H: float
@@ -62,8 +62,8 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray
-            n x d tensor of i.i.d. samples from p(X) joint distribution
+        X : np.ndarray of shape (n_samples, n_dims)
+            I.i.d. samples from p(X) joint distribution
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator
         K : np.ndarray
@@ -91,9 +91,8 @@ class SteinMixin:
 
         Parameters
         ----------
-        X_diff : np.ndarray
-            n x n x d tensor of i.i.d. samples from p(X)
-            joint distribution
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+            I.i.d. samples from p(X) joint distribution
         G : np.ndarray
             estimator of the score function
         c : int
@@ -131,8 +130,8 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray
-            n x d tensor of i.i.d. samples from p(X) joint distribution.
+        X : np.ndarray (n_samples, n_dims) 
+            I.i.d. samples from p(X) joint distribution.
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator.
         eta_H: float
@@ -161,8 +160,8 @@ class SteinMixin:
 
         Parameters
         ----------
-        X_diff : np.ndarray
-            n x n x d matrix of the difference between samples.
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+            Matrix of the difference between samples.
         """
         D = np.linalg.norm(X_diff, axis=2)
         s = np.median(D.flatten())
@@ -176,16 +175,16 @@ class SteinMixin:
 
         Parameters:
         ----------
-        X_diff : np.ndarray
-            n x n x d matrix of the difference between samples.
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+            Matrix of the difference between samples.
         evalaue_nabla : bool
             if True evaluate <nabla, K> dot product.
 
         Return:
         -------
-        K : np.ndarray
+        K : np.ndarray of shape (n_samples, n_samples)
             evaluated gaussian kernel.
-        nablaK : Union[np.ndarray, None]
+        nablaK : np.ndarray of shape (n_samples, n_dims)
             <nabla, K> dot product.
         """
         nablaK = None
@@ -201,15 +200,14 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray
-            n x d matrix of the data.
+        X : np.ndarray of shape (n_samples, n_dims)
+            Matrix of the data.
 
         Return
         ------
-        X_diff : np.ndarray
-            n x n x d matrix of the difference between samples.
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+            Matrix of the difference between samples.
         """
-        # return X.detach().unsqueeze(1)-X.detach()
         return np.expand_dims(X, axis=1) - X
 
 
@@ -306,14 +304,14 @@ class BaseCAMPruning(TopOrderInterface):
         leaf : int
             Leaf index in the list of graph nodes.
         """
-        # descend. enforced by edges included in self.context and not in the order are used as leaf
+        # descendants enforced by edges in self.context and not in the order are used as leaf
         leaf_descendants = self.order_constraints[remaining_nodes[leaf]]
         if not set(leaf_descendants).issubset(set(current_order)):
             k = 0
             while True:
                 if leaf_descendants[k] not in current_order:
                     leaf = remaining_nodes.index(leaf_descendants[k])
-                    break
+                    break # exit when leaf is found
                 k += 1
         return leaf
 
@@ -352,10 +350,10 @@ class BaseCAMPruning(TopOrderInterface):
 
         Parameters
         ----------
-        X : np.ndarray
-            n x d matrix of the data.
-        A_dense : np.ndarray
-            d x d dense adjacency matrix to be pruned.
+        X : np.ndarray of shape (n_samples, n_dims)
+            Matrix of the data.
+        A_dense : np.ndarray of shape (n_dims, n_dims)
+            Dense adjacency matrix to be pruned.
 
         Return
         ------
@@ -363,7 +361,6 @@ class BaseCAMPruning(TopOrderInterface):
             The pruned adjacency matrix output of the causal discovery algorithm.
         """
         _, d = X.shape
-        # X = X.detach().cpu()
         G_excluded = self.context.excluded_edges
         G_included = self.context.included_edges
         A = np.zeros((d, d))
@@ -429,8 +426,8 @@ class BaseCAMPruning(TopOrderInterface):
         ----------
         A : np.ndarray
             Adjacency matrix representation of a dense graph.
-        X : np.ndarray
-            Dataset with n x d observations of the causal variables.
+        X : np.ndarray of shape (n_samples, n_dims)
+            Dataset with observations of the causal variables.
 
         Return
         ------

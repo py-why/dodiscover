@@ -43,6 +43,20 @@ def full_adj_to_order(A: NDArray) -> List[int]:
 
 
 def orders_consistency(order_full, order_noleaf) -> bool:
+    """Check consistency of topological order with and without a single leaf.
+
+    Parameters
+    ----------
+    order_full : List[int]
+        Inferred topological order on the full graph.
+    order_noleaf : List[int]
+        Inferred topological order on the graph pruned by a leaf.
+
+    Return
+    ------
+    bool
+        True if the two orders are consistent    
+    """
     for node in order_noleaf:
         if node not in order_full:
             return False

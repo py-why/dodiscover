@@ -125,7 +125,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         return super().prune(X, A_dense)
 
     def _mse(self, X: NDArray, Y: NDArray) -> List[float]:
-        """Predict each column of Y from X and compute the Mean Squared Error.
+        """Predict each column of Y from X and compute the Mean Squared Error (MSE).
 
         Parameters
         ----------
@@ -138,19 +138,16 @@ class NoGAM(BaseCAMPruning, SteinMixin):
 
         Return
         ------
-        err : np.ndarray
-            d x 1 vector with mean squared error in the prediction of score_i from residual_i
+        err : np.array of shape (n_dims, )
+            Vector with MSE in the prediction of score_i from residual_i
         """
         err = []
         _, d = Y.shape
-        for col in range(d):
-            response = Y[:, col]
-            explanatory = X[:, col].reshape(-1, 1)
-            regr = KernelRidge(kernel="rbf", gamma=self.ridge_alpha, alpha=self.ridge_alpha)
-            pred = cross_val_predict(regr, explanatory, response, cv=self.n_crossval)
-            res = response - pred
-            mse = (res**2).mean().item()  # rmse = mse / (pred**2).mean().item() # relative MSE
-            err.append(mse)
+        err = [
+            np.mean((Y[:, col] -cross_val_predict(
+            self._create_kernel_ridge(), X[:, col].reshape(-1, 1), Y[:, col], cv=self.n_crossval
+            ))**2).item() for col in range(d)
+        ]
         return err
 
     def _estimate_residuals(self, X: NDArray) -> NDArray:
@@ -161,21 +158,23 @@ class NoGAM(BaseCAMPruning, SteinMixin):
 
         Parameters
         ----------
-        X : np.ndarray
-            The n x d matrix of the data.
+        X : np.ndarray of shape (n_samples, n_dims)
+            Matrix of the data.
 
         Return
         ------
-        R : np.ndarray
-            n x d matrix of the residuals estimates.
+        R : np.ndarray of shape (n_samples, n_dims)
+            Matrix of the residuals estimates.
         """
         R = []
-        for i in range(X.shape[1]):
-            response = X[:, i]
-            explanatory = np.hstack([X[:, 0:i], X[:, i + 1 :]])
-            regr = KernelRidge(kernel="rbf", gamma=self.ridge_gamma, alpha=self.ridge_alpha)
-            pred = cross_val_predict(regr, explanatory, response, cv=self.n_crossval)
-            R_i = response - pred
-            R.append(R_i)
-
+        R = [
+            X[:, i] - cross_val_predict(
+            self._create_kernel_ridge(), np.hstack([X[:, 0:i], X[:, i + 1 :]]),\
+            X[:, i], cv=self.n_crossval
+            ) for i in range(X.shape[1])
+        ]
         return np.vstack(R).transpose()
+    
+
+    def _create_kernel_ridge(self):
+        return KernelRidge(kernel="rbf", gamma=self.ridge_alpha, alpha=self.ridge_alpha)

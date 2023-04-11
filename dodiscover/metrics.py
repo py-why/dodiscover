@@ -154,9 +154,9 @@ def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
     i.e. missing edges, associated to a topological order of the nodes of a
     graph with respect to the ground truth structure. 
     If the topological ordering is compatible with the graph ground truth,
-    the divergence is equal to zero. In the worst case of completely reversed
-    ordering, toporder_divergence a number of false negatives equal to the
-    number of edges in the graph.
+    the divergence is equal to 0. In the worst case of completely reversed
+    ordering, toporder_divergence is equals to P, the number of edges (positives)
+    in the ground truth graph.
     Note that the divergence defines a lower bound for the Structural Hamming Distance.
 
     Parameters

@@ -54,13 +54,13 @@ class CAM(BaseCAMPruning):
 
         Parameter
         ---------
-        X : np.ndarray
-            Dataset with n x d observations of the causal variables
+        X : np.ndarray of shape (n_samples, n_dims)
+            Dataset of observations of the causal variables.
 
         Return
         ------
         A_dense : np.ndarray
-            Fully connexted matrix admitted by the topological ordering
+            Fully connexted matrix admitted by the topological ordering.
         order : List[int]
             Inferred causal order
         """
@@ -104,10 +104,10 @@ class CAM(BaseCAMPruning):
 
         Parameters
         ----------
-        X : np.ndarray
-            n x d matrix if the data
-        A : np.ndarray
-            Current d x d adjacency matrix
+        X : np.ndarray of shape (n_samples, n_dims)
+            Matrix if the data
+        A : np.ndarray of shape (n_dims, n_dims)
+            Current adjacency matrix.
         c : int
             Column of score_gains to be updated
         score_gains : np.ndarray
@@ -189,19 +189,20 @@ class CAM(BaseCAMPruning):
 
         Parameters
         ----------
-        X : np.array
-            n x d matrix of the data
-        directed_paths : np.ndarray
-            d x d matrix encoding the directed paths in the graph.
+        X : np.array of shape (n_samples, n_dims)
+            Matrix of the data.
+        directed_paths : np.ndarray of shape (n_dims, n_dims)
+            Matrix encoding the directed paths in the graph.
             directed_paths[i,j]=1 if there is a directed path from i to j.
 
         Return
         ------
-        score_gain : np.ndarray
-            d x d matrix of gains. score_gain[i, j] is the additive contribute to the score
-            (i.e. the gain) in adding i as parent of j
-        init_score : np.ndarray
-            d x 1 vector of the score contribute of each node.
+        score_gain : np.ndarray of shape (n_dims, n_dims)
+            Matrix of the gains.
+            score_gain[i, j] is the additive contribute to the score (i.e. the gain)
+            in adding i as parent of j
+        init_score : np.ndarray of shape (n_dims,)
+            Vector with the score contribute of each node.
             Since the initial topological ordering is empty,
             all nodes are initially treated as source.
         """
@@ -221,16 +222,15 @@ class CAM(BaseCAMPruning):
 
         # Score gain for each edge i -> j
         for i in range(d):
+            prediction = gam.predict(X[:, i].reshape(-1, 1))
             for j in range(d):
                 if G_excluded.has_edge(i, j):
                     score_gains[i, j] = self.inf
                 elif score_gains[i, j] != self.inf:
                     gam = self._fit_model(X[:, i].reshape(-1, 1), X[:, j].reshape(-1, 1))
-                    residuals = X[:, j] - gam.predict(
-                        X[:, i].reshape(-1, 1)
-                    )  # Overfitting? Also, recomputing gam.predict(•) is likely inefficient
+                    residuals = X[:, j] - prediction
                     gain = (
                         -np.log(np.var(residuals)) - init_score[j]
-                    )  # np.var(residuals) different from 1/n * np.sum(np.square(residuals))...
+                    )
                     score_gains[i, j] = gain
         return score_gains, init_score
