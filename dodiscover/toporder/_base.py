@@ -130,7 +130,7 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray (n_samples, n_dims) 
+        X : np.ndarray (n_samples, n_dims)
             I.i.d. samples from p(X) joint distribution.
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator.
@@ -311,7 +311,7 @@ class BaseCAMPruning(TopOrderInterface):
             while True:
                 if leaf_descendants[k] not in current_order:
                     leaf = remaining_nodes.index(leaf_descendants[k])
-                    break # exit when leaf is found
+                    break  # exit when leaf is found
                 k += 1
         return leaf
 

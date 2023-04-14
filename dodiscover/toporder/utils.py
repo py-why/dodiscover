@@ -1,10 +1,12 @@
 from typing import List
 
+import networkx as nx
 import numpy as np
+import pandas as pd
 from numpy.typing import NDArray
 
 
-def full_DAG(top_order: List[int]) -> NDArray:
+def full_dag(top_order: List[int]) -> NDArray:
     """Find adjacency matrix of the fully connected DAG from the topological order.
 
     Parameters
@@ -55,9 +57,57 @@ def orders_consistency(order_full, order_noleaf) -> bool:
     Return
     ------
     bool
-        True if the two orders are consistent    
+        True if the two orders are consistent
     """
     for node in order_noleaf:
         if node not in order_full:
             return False
     return True
+
+
+def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.DataFrame:
+    """Generate data from an additive noise model.
+
+    Data are generated from a Structural Causal Model consistent with the input graph G.
+    Nonlinear functional mechanisms are a simple sum of the sine of the parents node.
+
+    Parameters
+    ----------
+    G : nx.DiGraph
+        Directed acyclic graph.
+    seed : int
+        Fixed random seed.
+    n_samples : int
+        Number of samples in the dataset
+    Return : pd.DataFrame
+        Pandas dataframe of samples generated according to the input DAG from an
+        additive noise model.
+    """
+    if G is None:
+        G = dummy_groundtruth()
+    assert nx.is_directed_acyclic_graph(G), "Input graph must be a DAG"
+    np.random.seed(seed)
+    A = nx.to_numpy_array(G)
+    order = list(nx.topological_sort(G))
+    X = np.random.randn(n_samples, len(order)) * np.random.uniform(0.5, 1)  # sample noise
+    for node in order:  # iterate starting from source
+        parents = np.flatnonzero(A[:, node])
+        if len(parents) > 0:
+            X[:, node] += np.sum(np.sin(X[:, parents]), axis=1)
+    return pd.DataFrame(X)
+
+
+def dummy_groundtruth():
+    """
+    Ground truth associated to dummy_sample dataset
+    """
+    A = np.array([[0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 1], [1, 0, 0, 0]])
+    return nx.from_numpy_array(A, create_using=nx.DiGraph)
+
+
+def dummy_dense():
+    """
+    Dense adjacency matrix associated to order = [2, 1, 3, 0]
+    """
+    A = np.array([[0, 0, 0, 0], [1, 0, 0, 1], [1, 1, 0, 1], [1, 0, 0, 0]])
+    return nx.from_numpy_array(A, create_using=nx.DiGraph)

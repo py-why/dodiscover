@@ -4,7 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from dodiscover.toporder._base import BaseCAMPruning, SteinMixin
-from dodiscover.toporder.utils import full_DAG
+from dodiscover.toporder.utils import full_dag
 
 
 class SCORE(BaseCAMPruning, SteinMixin):
@@ -92,7 +92,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         if self.estimate_variance:
             self.var.append(_estimate_var(stein, X))
         order.reverse()
-        return full_DAG(order), order
+        return full_dag(order), order
 
     def prune(self, X, A_dense: NDArray) -> NDArray:
         """SCORE pruning of the fully connected adj. matrix representation of the inferred order.

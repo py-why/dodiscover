@@ -222,15 +222,12 @@ class CAM(BaseCAMPruning):
 
         # Score gain for each edge i -> j
         for i in range(d):
-            prediction = gam.predict(X[:, i].reshape(-1, 1))
             for j in range(d):
                 if G_excluded.has_edge(i, j):
                     score_gains[i, j] = self.inf
                 elif score_gains[i, j] != self.inf:
                     gam = self._fit_model(X[:, i].reshape(-1, 1), X[:, j].reshape(-1, 1))
-                    residuals = X[:, j] - prediction
-                    gain = (
-                        -np.log(np.var(residuals)) - init_score[j]
-                    )
+                    residuals = X[:, j] - gam.predict(X[:, i].reshape(-1, 1))
+                    gain = -np.log(np.var(residuals)) - init_score[j]
                     score_gains[i, j] = gain
         return score_gains, init_score

@@ -152,7 +152,7 @@ def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
 
     Topological order divergence is used to compute the number of false negatives,
     i.e. missing edges, associated to a topological order of the nodes of a
-    graph with respect to the ground truth structure. 
+    graph with respect to the ground truth structure.
     If the topological ordering is compatible with the graph ground truth,
     the divergence is equal to 0. In the worst case of completely reversed
     ordering, toporder_divergence is equals to P, the number of edges (positives)
@@ -173,13 +173,13 @@ def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
     """
     if not nx.is_directed_acyclic_graph(true_graph):
         raise ValueError("The input graph must be directed and acyclic.")
-    
+
     # convert graphs to adjacency matrix in numpy array format
     A = nx.to_numpy_array(true_graph)
 
     if len(order) != A.shape[0] or A.shape[0] != A.shape[1]:
         raise ValueError("The dimensions of the graph and the order list do not match.")
-    
+
     false_negatives_from_order = 0
     for i in range(len(order)):
         false_negatives_from_order += A[order[i + 1 :], order[i]].sum()

@@ -13,7 +13,7 @@ CAM :footcite:`Buhlmann2013`, SCORE :footcite:`rolland2022`, DAS :footcite:`Mont
 NoGAM :footcite:`Montagna2023b` algorithms perform causal discovery in a two steps procedure.
 Given observational i.i.d. data from an Additive Noise Model without
 latent confounders, first the method estimates a topological ordering of the causal variables.
-This partial oredring can be represented as a fully connected graph, where every node has an
+This partial ordering can be represented as a fully connected graph, where every node has an
 incoming edge from all its predecessors in the ordering. Second, the resulting fully connected
 DAG is pruned by some variable selection procedure.
 Note that knowing the topological ordering is already sufficient for estimating causal effects.
@@ -22,6 +22,10 @@ statistically more efficient.
 
 The four methods differ as follow
 - CAM is the original proposal of inference of the causal graph by topological ordering and pruning.
+The topological ordering is found by greedily finding a lower triangular permutation of the graph
+nodes, encoded in a fully connected DAG: the DAG is constructed one edge at the time, where at each
+step we greedily add the connection that mostly improves the log-likelihood of the data.
+
 - SCORE makes the topological ordering more efficient with respect to CAM. It inherits CAM pruning.
 - DAS makes the pruning step more efficient. It inherits SCORE topological ordering procedure.
 (It can be seen as an efficient version of SCORE, with better scaling in the graph size.)

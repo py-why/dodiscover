@@ -6,7 +6,7 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.model_selection import cross_val_predict
 
 from dodiscover.toporder._base import BaseCAMPruning, SteinMixin
-from dodiscover.toporder.utils import full_DAG
+from dodiscover.toporder.utils import full_dag
 
 
 class NoGAM(BaseCAMPruning, SteinMixin):
@@ -110,7 +110,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
 
         top_order.append(remaining_nodes[0])
         top_order = top_order[::-1]
-        return full_DAG(top_order), top_order
+        return full_dag(top_order), top_order
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """NoGAM pruning of the fully connected adjacency matrix representation of the
@@ -144,9 +144,19 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         err = []
         _, d = Y.shape
         err = [
-            np.mean((Y[:, col] -cross_val_predict(
-            self._create_kernel_ridge(), X[:, col].reshape(-1, 1), Y[:, col], cv=self.n_crossval
-            ))**2).item() for col in range(d)
+            np.mean(
+                (
+                    Y[:, col]
+                    - cross_val_predict(
+                        self._create_kernel_ridge(),
+                        X[:, col].reshape(-1, 1),
+                        Y[:, col],
+                        cv=self.n_crossval,
+                    )
+                )
+                ** 2
+            ).item()
+            for col in range(d)
         ]
         return err
 
@@ -168,13 +178,16 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         """
         R = []
         R = [
-            X[:, i] - cross_val_predict(
-            self._create_kernel_ridge(), np.hstack([X[:, 0:i], X[:, i + 1 :]]),\
-            X[:, i], cv=self.n_crossval
-            ) for i in range(X.shape[1])
+            X[:, i]
+            - cross_val_predict(
+                self._create_kernel_ridge(),
+                np.hstack([X[:, 0:i], X[:, i + 1 :]]),
+                X[:, i],
+                cv=self.n_crossval,
+            )
+            for i in range(X.shape[1])
         ]
         return np.vstack(R).transpose()
-    
 
     def _create_kernel_ridge(self):
         return KernelRidge(kernel="rbf", gamma=self.ridge_alpha, alpha=self.ridge_alpha)
