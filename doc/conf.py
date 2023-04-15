@@ -70,7 +70,7 @@ copybutton_prompt_is_regexp = True
 autosummary_generate = True
 
 autodoc_default_options = {"inherited-members": None}
-autodoc_typehints = "signature"
+autodoc_typehints = "none"
 
 # -- numpydoc
 # Below is needed to prevent errors
