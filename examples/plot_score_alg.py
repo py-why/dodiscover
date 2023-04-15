@@ -21,16 +21,34 @@ Nevertheless, the pruning step is justified by the fact that operating with a sp
 statistically more efficient.
 
 The four methods differ as follow
-- CAM is the original proposal of inference of the causal graph by topological ordering and pruning.
-The topological ordering is found by greedily finding a lower triangular permutation of the graph
-nodes, encoded in a fully connected DAG: the DAG is constructed one edge at the time, where at each
-step we greedily add the connection that mostly improves the log-likelihood of the data.
+- In CAM algorithm the topological ordering is inferred by finding the permutation of the graph
+nodes corresponding to the fully connected graph that maximizes the log-likelihood of the data.
+After inference of the topological ordering, the pruning step is done by variable selection with
+regression. In particular, for each variable ``j`` CAM fits a generalized additive model using as
+covariates all the predecessor of ``j`` in the ordering, and performs hypothesis testing to select
+relevant parent variables.
+- SCORE provides a more efficient topological ordering than CAM, while it inherits the pruning
+procedure. In order to infer the topological ordering, SCORE estimates the Hessian matrix of the
+log-likelihood. Then, it finds a leaf (i.e. a node without children) by taking the ``argmin`` of the
+variance over the diagonal elements of the Hessian matrix. Once a leaf is found, it is removed from
+the graph and the procedure is iteratively repeated, evantually assigning a position to each node.
+- DAS provides a more efficient pruning step, while it inherits the ordering method from SCORE.
+Let ``H`` be the Hessian matrix of the log-likelihood: given a leaf node ``j``, DAS selects an edge
+``i -> j`` if the pair satisfies ``mean(abs(H[i, j])) = 0``. Vanishing mean is verified by
+hypothesis testing. Finally, CAM-pruning is applied on the resulting sparse graph, in order to
+further reduce the number of false positives in the inferred DAG. Sparsity ensures linear
+computational complexity of this final pruning step. (DAS can be seen as an efficient version of
+SCORE, with better scaling properties in the graph size.)
+- NoGAM introduces a topological ordering procedure that does not assume any distribution
+of the noise terms, whereas CAM, SCORE and DAS all require the noise to be Gaussian.
+The pruning of the graph is done via CAM procedure. In order to define the topological order, NoGAM
+identifies one leaf at the time: first, for each node in the graph, it estimates the residuals of
+the regression problem that predicts a variable ``j`` from all the remaining nodes
+``1, 2, .., j-1, j+1, .., |V|`` (with ``|V|`` the number of nodes). Then, NoGAM tries to estimate
+each entry ``j`` of the vector of the gradient of log-likelihood using the residual of the
+variable ``j``as covariate: a leaf is found by selection of the ``argmin`` of the mean squared
+error of the predictions.
 
-- SCORE makes the topological ordering more efficient with respect to CAM. It inherits CAM pruning.
-- DAS makes the pruning step more efficient. It inherits SCORE topological ordering procedure.
-(It can be seen as an efficient version of SCORE, with better scaling in the graph size.)
-- NoGAM introduces a topological ordering procedure that does not assume Gaussianity
-of the noise terms, whereas this assumption is required by all previous methods.
 
 .. currentmodule:: dodiscover
 """
@@ -42,11 +60,11 @@ of the noise terms, whereas this assumption is required by all previous methods.
 import numpy as np
 import networkx as nx
 from scipy import stats
+import pandas as pd
 from pywhy_graphs.viz import draw
 from dodiscover import make_context
 from dodiscover.toporder.score import SCORE
-from dodiscover.toporder.utils import full_DAG
-import pandas as pd
+from dodiscover.toporder.utils import full_dag
 from dowhy import gcm
 from dowhy.gcm.util.general import set_random_seed
 
@@ -153,21 +171,21 @@ context = make_context().variables(data=data).build()
 # Now we are ready to run the SCORE algorithm. The methods performs inference
 # in two phases. First it estimates the topological order of the nodes in the
 # graphs. This is done iteratively according to the following procedure
-# 1. SCORE estimates the Hessian of log p(x), with p(x) joint distribution of
-# nodes in the graph
-# 2. Let H := Hessian(log p(x)). SCORE selects a leaf in the graph by finding
+#. 1. SCORE estimates the Hessian of :math:`log p(x)`, with :math:`p(x)` joint
+# distribution of nodes in the graph
+#. 2. Let `H := Hessian(log p(x))`. SCORE selects a leaf in the graph by finding
 # the diagonal term of H with minimum variance,
-# i.e. by computing "argmin Var[diagonal(H)]"
-# 3. SCORE remove the leaf in from the graph,  and repeats from 1. to 3.
+# i.e. by computing `np.argmin(np.var(np.diag(H))`.
+#. 3. SCORE remove the leaf in from the graph, and repeats steps from 1. to 3.
 # iteratively up to the source nodes.
 # Given the inferred topological order, SCORE prunes the graph by with all
 # edges admitted by such ordering, by doing sparse regression to choose the
 # relevant variables. Variable selection is done by thresholding on the
 # p-values of the coefficients associated to the potential parents of a node.
-# For instance, consider a graph G with 3 vertices V = {1, 2, 3}. For
-# simplicity let the topological order be trivial, i.e. {1, 2, 3}. The unique
+# For instance, consider a graph `G` with 3 vertices :math:`V = {1, 2, 3}`. For
+# simplicity let the topological order be trivial, i.e. :math:`{1, 2, 3}`. The unique
 # fully connected adjacency matrix compatible with such ordering is the upper
-# triangular matrix np.triu(np.ones((3, 3)), k=1) with all ones above the
+# triangular matrix `np.triu(np.ones((3, 3)), k=1)` with all ones above the
 # diagonal.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
 score.fit(data, context)
@@ -179,11 +197,11 @@ score.fit(data, context)
 graph = score.graph_
 order = score.order_
 
-# "score_full_dag.png" visualizes the fully connected DAG representation of
-# the inferred topological ordering "order".
-# "score_dag.png" visualizes the fully connected DAG after pruning with
+# `score_full_dag.png` visualizes the fully connected DAG representation of
+# the inferred topological ordering.
+# `score_dag.png` visualizes the fully connected DAG after pruning with
 # sparse regression.
-dot_graph = draw(nx.from_numpy_array(full_DAG(order), create_using=nx.DiGraph))
+dot_graph = draw(nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph))
 dot_graph.render(outfile="score_full_dag.png", view=True)
 
 dot_graph = draw(graph)

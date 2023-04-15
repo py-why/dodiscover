@@ -30,16 +30,20 @@ class SteinMixin:
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_dims)
-            I.i.d. samples from p(X) joint distribution
+            I.i.d. samples from p(X) joint distribution.
         eta_G: float
-            regularization parameter for ridge regression in Stein gradient estimator
+            regularization parameter for ridge regression in Stein gradient estimator.
         eta_H: float
-            regularization parameter for ridge regression in Stein hessian estimator
+            regularization parameter for ridge regression in Stein hessian estimator.
 
         Return
         ------
         H : np.ndarray
-            Stein estimator of the Hessian matrix of log p(x)
+            Stein estimator of the Hessian matrix of log p(x).
+
+        References
+        ----------
+        .. footbibliography::
         """
         _, d = X.shape
         X_diff = self._X_diff(X)
@@ -63,18 +67,24 @@ class SteinMixin:
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_dims)
-            I.i.d. samples from p(X) joint distribution
+            I.i.d. samples from p(X) joint distribution.
         eta_G: float
-            regularization parameter for ridge regression in Stein gradient estimator
-        K : np.ndarray
-            Gaussian kernel evaluated at X
-        nablaK : np.ndarray
-            <nabla, K> evaluated dot product
+            regularization parameter for ridge regression in Stein gradient estimator.
+        K : np.ndarray of shape (n_samples, n_samples)
+            Gaussian kernel evaluated at X, by default None. If `K` is None, it is
+            computed inside of the method.
+        nablaK : np.ndarray of shape (n_samples, )
+            <nabla, K> evaluated dot product, by default None. If `nablaK` is None, it is
+            computed inside of the method.
 
         Return
         ------
         G : np.ndarray
-            Stein estimator of the score function
+            Stein estimator of the score function.
+
+        References
+        ----------
+        .. footbibliography::
         """
         n, _ = X.shape
         if K is None:
@@ -92,18 +102,19 @@ class SteinMixin:
         Parameters
         ----------
         X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
-            I.i.d. samples from p(X) joint distribution
+            I.i.d. samples from p(X) joint distribution.
         G : np.ndarray
-            estimator of the score function
+            estimator of the score function.
         c : int
-            index of the column of interest
+            index of the column of interest.
         eta: float
-            regularization parameter for ridge regression in Stein
-            hessian estimator
-        K : np.ndarray
-            Gaussian kernel evaluated at X
-        s : float
-            Width of the Gaussian kernel
+            regularization parameter for ridge regression in Stein hessian estimator
+        K : np.ndarray of shape (n_samples, n_samples), optional
+            Gaussian kernel evaluated at X, by default None. If `K` is None, it is
+            computed inside of the method.
+        s : float, optional
+            Width of the Gaussian kernel, by default None. If `s` is None, it is
+            computed inside of the method.
 
         Return
         ------
@@ -177,8 +188,11 @@ class SteinMixin:
         ----------
         X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
             Matrix of the difference between samples.
-        evalaue_nabla : bool
-            if True evaluate <nabla, K> dot product.
+        evalaue_nabla : bool, optional
+            if True evaluate <nabla, K> dot product. Default is False.
+        s : float, optional
+            Width of the Gaussian kernel, by default None. If `s` is None, it is
+            computed inside of the method.
 
         Return:
         -------
@@ -236,7 +250,7 @@ class TopOrderInterface(metaclass=ABCMeta):
 class BaseCAMPruning(TopOrderInterface):
     """Class for topological order based methods with CAM pruning :footcite:`Buhlmann2013`.
 
-    Implementation `TopOrderInterface` defining `fit` method for causal discovery.
+    Implementation of `TopOrderInterface` defining `fit` method for causal discovery.
     Class inheriting from `BaseCAMPruning` need to implement the `top_order` method for inference
     of the topological ordering of the nodes in the causal graph.
     The resulting fully connected matrix is pruned by `prune` method implementation of
@@ -244,21 +258,21 @@ class BaseCAMPruning(TopOrderInterface):
 
     Parameters
     ----------
-    cam_cutoff : float
-        cutoff value for variable selection with hypothesi testing over regression coefficients.
-    n_splines : int
-        Default number of splines to use for the feature function. Automatically decreased in
-        case of insufficient samples.
-    splines_degree: int
-        Order of spline to use for the feature function.
-    pns : bool
-        If True, perform Preliminary Neighbour Search (PNS).
+    cam_cutoff : float, optional
+        Alpha cutoff value for variable selection with hypothesis testing over regression
+        coefficients, default is 0.001.
+    n_splines : int, optional
+        Number of splines to use for the feature function, default is 10. Automatically decreased
+        in case of insufficient samples.
+    splines_degree: int, optional
+        Order of spline to use for the feature function, default is 3.
+    pns : bool, optional
+        If True, perform Preliminary Neighbour Search (PNS). Default is False.
         Allows scaling CAM pruning and ordering to large graphs.
-        If None, default behaviour for each subclass is enabled.
     pns_num_neighbors: int, optional
         Number of neighbors to use for PNS. If None (default) use all variables.
-    pns_threshold: float
-        Threshold to use for PNS.
+    pns_threshold: float, optional
+        Threshold to use for PNS, default is 1.
 
     Attributes
     ----------
@@ -266,6 +280,10 @@ class BaseCAMPruning(TopOrderInterface):
         Adjacency matrix representation of the inferred causal graph.
     order_ : List[int]
         Topological order of the nodes from source to leaf.
+
+    References
+    ----------
+    .. footbibliography::
     """
 
     def __init__(
@@ -330,8 +348,8 @@ class BaseCAMPruning(TopOrderInterface):
         self.context = context
 
         # Check acyclicity condition on included_edges
-        self.dag_check_included_edges()
-        self.order_constraints = self.included_edges_order_constraints()
+        self._dag_check_included_edges()
+        self.order_constraints = self._included_edges_order_constraints()
 
         # Inference of the causal order.
         A_dense, order = self.top_order(X)
@@ -394,27 +412,6 @@ class BaseCAMPruning(TopOrderInterface):
                 if i != j and A[i, j] == 0 and (not self.context.included_edges.has_edge(i, j)):
                     self.context.excluded_edges.add_edge(i, j)
 
-    def dag_check_included_edges(self) -> bool:
-        """Check that the edges included in `self.context` does not violate DAG condition."""
-        is_dag = nx.is_directed_acyclic_graph(self.context.included_edges)
-        if nx.is_empty(self.context.included_edges):
-            is_dag = True
-        if not is_dag:
-            raise ValueError("Edges included in the graph violate the acyclicity condition!")
-
-    def included_edges_order_constraints(self) -> List[int]:
-        """For each node find the predecessors enforced by the edges included in `self.context`."""
-        adj = nx.to_numpy_array(self.context.included_edges)
-        d, _ = adj.shape
-        descendants = {i: list() for i in range(d)}
-        for row in range(d):
-            for col in range(d):
-                if adj[row, col] == 1:
-                    row_descendants = descendants.get(row)
-                    row_descendants.append(col)
-                    descendants[row] = row_descendants
-        return descendants
-
     def pns(self, A: NDArray, X: NDArray) -> NDArray:
         """Preliminary Neighbors Selection :footcite:`Buhlmann2013` pruning on adj. matrix `A`.
 
@@ -433,6 +430,10 @@ class BaseCAMPruning(TopOrderInterface):
         ------
         A : np.ndarray
             Pruned adjacency matrix.
+
+        References
+        ----------
+        .. footbibliography::
         """
         num_nodes = X.shape[1]
         for node in range(num_nodes):
@@ -452,6 +453,27 @@ class BaseCAMPruning(TopOrderInterface):
             A[:, node] *= mask_selected
 
         return A
+
+    def _dag_check_included_edges(self) -> bool:
+        """Check that the edges included in `self.context` does not violate DAG condition."""
+        is_dag = nx.is_directed_acyclic_graph(self.context.included_edges)
+        if nx.is_empty(self.context.included_edges):
+            is_dag = True
+        if not is_dag:
+            raise ValueError("Edges included in the graph violate the acyclicity condition!")
+
+    def _included_edges_order_constraints(self) -> List[int]:
+        """For each node find the predecessors enforced by the edges included in `self.context`."""
+        adj = nx.to_numpy_array(self.context.included_edges)
+        d, _ = adj.shape
+        descendants = {i: list() for i in range(d)}
+        for row in range(d):
+            for col in range(d):
+                if adj[row, col] == 1:
+                    row_descendants = descendants.get(row)
+                    row_descendants.append(col)
+                    descendants[row] = row_descendants
+        return descendants
 
     def _variable_selection(
         self, X: NDArray, y: NDArray, pot_parents: List[int], child: int
@@ -501,8 +523,6 @@ class BaseCAMPruning(TopOrderInterface):
             exogenous variables.
         y : np.ndarray
             endogenous variables.
-        formula : TermList
-            List of the additive splines for the GAM fitting formula.
 
         Return
         ------
@@ -539,7 +559,7 @@ class BaseCAMPruning(TopOrderInterface):
         )
         return gam
 
-    def _n_splines(self, n, d) -> int:
+    def _n_splines(self, n: int, d: int) -> int:
         """
         During GAM fitting, decrease number of splines in case of small sample size.
 

@@ -44,7 +44,7 @@ def full_adj_to_order(A: NDArray) -> List[int]:
     return order
 
 
-def orders_consistency(order_full, order_noleaf) -> bool:
+def orders_consistency(order_full: List[int], order_noleaf: List[int]) -> bool:
     """Check consistency of topological order with and without a single leaf.
 
     Parameters
@@ -73,13 +73,17 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
 
     Parameters
     ----------
-    G : nx.DiGraph
-        Directed acyclic graph.
-    seed : int
-        Fixed random seed.
-    n_samples : int
-        Number of samples in the dataset
-    Return : pd.DataFrame
+    G : nx.DiGraph, optional
+        Directed acyclic graph. If None (default) get the groundtruth from `dummy_groundtruth()`
+        method of dodiscover.toporder.utils module.
+    seed : int, optional
+        Fixed random seed, default is 42.
+    n_samples : int, optional
+        Number of samples in the dataset, default is 100.
+
+    Return
+    ------
+    pd.DataFrame
         Pandas dataframe of samples generated according to the input DAG from an
         additive noise model.
     """
@@ -97,7 +101,7 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
     return pd.DataFrame(X)
 
 
-def dummy_groundtruth():
+def dummy_groundtruth() -> None:
     """
     Ground truth associated to dummy_sample dataset
     """
@@ -105,7 +109,7 @@ def dummy_groundtruth():
     return nx.from_numpy_array(A, create_using=nx.DiGraph)
 
 
-def dummy_dense():
+def dummy_dense() -> None:
     """
     Dense adjacency matrix associated to order = [2, 1, 3, 0]
     """

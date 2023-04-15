@@ -17,28 +17,32 @@ class SCORE(BaseCAMPruning, SteinMixin):
 
     Parameters
     ----------
-    eta_G: float
-        Regularization parameter for Stein gradient estimator
-    eta_H : float
-        Regularization parameter for Stein Hessian estimator
-    cam_cutoff : float
-        alpha value for independence testing for edge pruning
-    n_splines : int
-        Default number of splines to use for the feature function.
+    eta_G: float, optional
+        Regularization parameter for Stein gradient estimator, default is 0.001.
+    eta_H : float, optional
+        Regularization parameter for Stein Hessian estimator, default is 0.001.
+    cam_cutoff : float, optional
+        Alpha cutoff value for variable selection with hypothesis testing over regression
+        coefficients, default is 0.001.
+    n_splines : int, optional
+        Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
-    splines_degree: int
-        Order of spline to use for the feature function
-    estimate_variance : bool
+    splines_degree: int, optional
+        Order of spline to use for the feature function, default is 3.
+    estimate_variance : bool, optional
         If True, store estimates the variance of the noise terms from the diagonal of
-        Stein Hessian estimator
-    pns : bool
-        If True, perform Preliminary Neighbour Search (PNS) before CAM pruning step.
-        Allows scaling CAM pruning to large graphs.
-        If None, execute PNS only for graphs with strictly more than 20 nodes.
+        Stein Hessian estimator. Default is False.
+    pns : bool, optional
+        If True, perform Preliminary Neighbour Search (PNS) before CAM pruning step,
+        default is False. Allows scaling CAM pruning and ordering to large graphs.
     pns_num_neighbors: int, optional
         Number of neighbors to use for PNS. If None (default) use all variables.
-    pns_threshold: float
-        Threshold to use for PNS.
+    pns_threshold: float, optional
+        Threshold to use for PNS, default is 1.
+
+    References
+    ----------
+    .. footbibliography::
     """
 
     def __init__(
@@ -94,11 +98,27 @@ class SCORE(BaseCAMPruning, SteinMixin):
         order.reverse()
         return full_dag(order), order
 
-    def prune(self, X, A_dense: NDArray) -> NDArray:
+    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """SCORE pruning of the fully connected adj. matrix representation of the inferred order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
         Preliminary Neighbors Search :footcite:`Buhlmann2013` is applied before CAM pruning.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_dims)
+            Matrix of the data.
+        A_dense : np.ndarray of shape (n_dims, n_dims)
+            Dense adjacency matrix to be pruned.
+
+        Return
+        ------
+        A : np.ndarray
+            The pruned adjacency matrix output of the causal discovery algorithm.
+
+        References
+        ----------
+        .. footbibliography::
         """
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):

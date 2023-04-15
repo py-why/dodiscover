@@ -21,27 +21,32 @@ class DAS(SCORE):
 
     Parameters
     ----------
-    eta_G: float
-        Regularization parameter for Stein gradient estimator
-    eta_H : float
-        Regularization parameter for Stein Hessian estimator
-    cam_cutoff : float
-        alpha value for independence testing for CAM edge pruning
-    das_cutoff : float
-        alpha value for hypothesis testing in preliminary DAS pruning
-    n_splines : int
-        Number of splines to use for feature selection with GAM
-        (Generalized Additive Model) fitting.
+    eta_G: float, optional
+        Regularization parameter for Stein gradient estimator, default is 0.001.
+    eta_H : float, optional
+        Regularization parameter for Stein Hessian estimator, default is 0.001.
+    cam_cutoff : float, optional
+        Alpha cutoff value for variable selection with hypothesis testing over regression
+        coefficients, default is 0.001.
+    das_cutoff : float, optional
+        Alpha value for hypothesis testing in preliminary DAS pruning, default is 0.05.
+    n_splines : int, optional
+        Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
-    splines_degree: int
-        Order of splines for feature selection with GAM (Generalized Additive Model) fitting.
-    min_parents : int
-        Minimum number of edges retained by DAS preliminary pruning step.
-        min_parents < 5 doesn't significantly affects execution time, while increasing the accuracy.
-    max_parents : int
-        Maximum number of parents allowed for a single node.
+    splines_degree: int, optional
+        Order of spline to use for the feature function, default is 3.
+    min_parents : int, optional
+        Minimum number of edges retained by DAS preliminary pruning step, default is 5.
+        min_parents <= 5 doesn't significantly affects execution time, while increasing the
+        accuracy.
+    max_parents : int, optional
+        Maximum number of parents allowed for a single node, default is 20.
         Given that CAM pruning is inefficient for > ~20 nodes, larger values are not advised.
         The value of max_parents should be decrease under the assumption of sparse graphs.
+
+    References
+    ----------
+    .. footbibliography::
     """
 
     def __init__(
@@ -49,7 +54,7 @@ class DAS(SCORE):
         eta_G: float = 0.001,
         eta_H: float = 0.001,
         cam_cutoff: float = 0.001,
-        das_cutoff: float = 0.01,
+        das_cutoff: float = 0.05,
         n_splines: int = 10,
         splines_degree: int = 3,
         min_parents: int = 5,

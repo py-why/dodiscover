@@ -17,21 +17,25 @@ class CAM(BaseCAMPruning):
 
     Parameters
     ----------
-    cam_cutoff : float
-        alpha value for independence testing for edge pruning
-    n_splines : int
-        Default number of splines to use for the feature function.
+    cam_cutoff : float, optional
+        Alpha cutoff value for variable selection with hypothesis testing over regression coefficients,
+        default is 0.001.
+    n_splines : int, optional
+        Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
-    splines_degree: int
-        Order of spline to use for the feature function
-    pns : bool
-        If True, perform Preliminary Neighbour Search (PNS) before CAM pruning step.
-        Allows scaling CAM pruning and ordering to large graphs.
-        If None, execute PNS only for graphs with strictly more than 20 nodes.
+    splines_degree: int, optional
+        Order of spline to use for the feature function, default is 3.
+    pns : bool, optional
+        If True, perform Preliminary Neighbour Search (PNS) before CAM pruning step,
+        default is False. Allows scaling CAM pruning and ordering to large graphs.
     pns_num_neighbors: int, optional
         Number of neighbors to use for PNS. If None (default) use all variables.
-    pns_threshold: float
-        Threshold to use for PNS.
+    pns_threshold: float, optional
+        Threshold to use for PNS, default is 1.
+
+    References
+    ----------
+    .. footbibliography::
     """
 
     def __init__(
@@ -105,15 +109,15 @@ class CAM(BaseCAMPruning):
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_dims)
-            Matrix if the data
+            Matrix of the data.
         A : np.ndarray of shape (n_dims, n_dims)
             Current adjacency matrix.
         c : int
-            Column of score_gains to be updated
+            Column of score_gains to be updated.
         score_gains : np.ndarray
-            Matrix of score gains to be updated
+            Matrix of score gains to be updated.
         score_c : float
-            Score of c-th node under current ordering
+            Score of c-th node under current ordering.
         """
 
         def valid_parent(pot_parent, current_parents):
@@ -134,16 +138,16 @@ class CAM(BaseCAMPruning):
                 gain = -np.log(np.var(residuals)) - score_c
                 score_gains[pot_parent, c] = gain
 
-    def _update_directed_paths(self, parent, child, directed_paths):
+    def _update_directed_paths(self, parent: int, child: int, directed_paths: NDArray):
         """Update directed paths in the graph given the new (parent, child) edge.
 
         Parameters
         ----------
         parent : int
-            Parent of the child node in the input `parent`,`child` edge
+            Parent of the child node in the input `parent`,`child` edge.
         child : int
-            Child of the parent node in the input `parent`,`child` edge
-        directed_paths : NDArray
+            Child of the parent node in the input `parent`,`child` edge.
+        directed_paths : np.ndarray
             Existing directed paths in the graph.
         """
         directed_paths[
@@ -167,13 +171,13 @@ class CAM(BaseCAMPruning):
         Parameters
         ----------
         parent : int
-            Parent of the child node in the input `parent`,`child` edge
+            Parent of the child node in the input `parent`,`child` edge.
         child : int
-            Child of the parent node in the input `parent`,`child` edge
-        score_gains : NDArray
+            Child of the parent node in the input `parent`,`child` edge.
+        score_gains : np.ndarray
             Matrix of the score gain.
             score_gain[i,j] is the gain in score obtaied by addition of i -> j edge to the graph.
-        directed_paths : NDArray
+        directed_paths : np.ndarray
             Existing directed paths in the graph.
         """
         score_gains[parent, child] = self.inf  # do not select same edge twice
@@ -200,7 +204,7 @@ class CAM(BaseCAMPruning):
         score_gain : np.ndarray of shape (n_dims, n_dims)
             Matrix of the gains.
             score_gain[i, j] is the additive contribute to the score (i.e. the gain)
-            in adding i as parent of j
+            in adding i as parent of j.
         init_score : np.ndarray of shape (n_dims,)
             Vector with the score contribute of each node.
             Since the initial topological ordering is empty,

@@ -1,6 +1,5 @@
 import networkx as nx
 import numpy as np
-import pandas as pd
 import pytest
 
 from dodiscover import make_context
@@ -123,7 +122,6 @@ def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edg
 def test_given_adjacency_when_pruning_with_pns_then_returns_dag_with_context_included_edges(seed):
     X = dummy_sample(seed=seed)
     model = CAM(pns=True)
-    d = len(X.columns)
     G_dense = dummy_dense()
     context_builder = make_context()
     context = context_builder.variables(observed=X.columns).edges(include=G_dense).build()
