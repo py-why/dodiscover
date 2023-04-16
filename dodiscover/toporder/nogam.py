@@ -97,7 +97,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
             Inferred causal order
         """
         _, d = X.shape
-        top_order = []
+        top_order: List[int] = list()
 
         remaining_nodes = list(range(d))
         for _ in range(d - 1):
@@ -121,23 +121,19 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         inferred topological order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
-        Preliminary Neighbors Search :footcite:`Buhlmann2013` is applied before CAM pruning.
+        Preliminary Neighbors Search is applied before CAM pruning.
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
-        A_dense : np.ndarray of shape (n_dims, n_dims)
+        A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
 
         Return
         ------
         A : np.ndarray
             The pruned adjacency matrix output of the causal discovery algorithm.
-
-        References
-        ----------
-        .. footbibliography::
         """
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):
@@ -158,7 +154,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
 
         Return
         ------
-        err : np.array of shape (n_dims, )
+        err : np.array of shape (n_nodes, )
             Vector with MSE in the prediction of score_i from residual_i
         """
         err = []
@@ -188,12 +184,12 @@ class NoGAM(BaseCAMPruning, SteinMixin):
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
 
         Return
         ------
-        R : np.ndarray of shape (n_samples, n_dims)
+        R : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the residuals estimates.
         """
         R = []

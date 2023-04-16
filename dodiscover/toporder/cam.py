@@ -18,8 +18,8 @@ class CAM(BaseCAMPruning):
     Parameters
     ----------
     cam_cutoff : float, optional
-        Alpha cutoff value for variable selection with hypothesis testing over regression coefficients,
-        default is 0.001.
+        Alpha cutoff value for variable selection with hypothesis testing over regression
+        coefficients, default is 0.001.
     n_splines : int, optional
         Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
@@ -58,7 +58,7 @@ class CAM(BaseCAMPruning):
 
         Parameter
         ---------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Dataset of observations of the causal variables.
 
         Return
@@ -108,9 +108,9 @@ class CAM(BaseCAMPruning):
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
-        A : np.ndarray of shape (n_dims, n_dims)
+        A : np.ndarray of shape (n_nodes, n_nodes)
             Current adjacency matrix.
         c : int
             Column of score_gains to be updated.
@@ -193,19 +193,19 @@ class CAM(BaseCAMPruning):
 
         Parameters
         ----------
-        X : np.array of shape (n_samples, n_dims)
+        X : np.array of shape (n_samples, n_nodes)
             Matrix of the data.
-        directed_paths : np.ndarray of shape (n_dims, n_dims)
+        directed_paths : np.ndarray of shape (n_nodes, n_nodes)
             Matrix encoding the directed paths in the graph.
             directed_paths[i,j]=1 if there is a directed path from i to j.
 
         Return
         ------
-        score_gain : np.ndarray of shape (n_dims, n_dims)
+        score_gain : np.ndarray of shape (n_nodes, n_nodes)
             Matrix of the gains.
             score_gain[i, j] is the additive contribute to the score (i.e. the gain)
             in adding i as parent of j.
-        init_score : np.ndarray of shape (n_dims,)
+        init_score : np.ndarray of shape (n_nodes,)
             Vector with the score contribute of each node.
             Since the initial topological ordering is empty,
             all nodes are initially treated as source.

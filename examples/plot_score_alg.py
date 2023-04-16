@@ -9,8 +9,7 @@ We will simulate some observational data from a Structural Causal Model (SCM) an
 demonstrate how we will use the SCORE algorithm. The example can be easily adapted
 to CAM, DAS and  NoGAM methods.
 
-CAM :footcite:`Buhlmann2013`, SCORE :footcite:`rolland2022`, DAS :footcite:`Montagna2023a`,
-NoGAM :footcite:`Montagna2023b` algorithms perform causal discovery in a two steps procedure.
+CAM, SCORE, DAS, NoGAM algorithms perform causal discovery in a two steps procedure.
 Given observational i.i.d. data from an Additive Noise Model without
 latent confounders, first the method estimates a topological ordering of the causal variables.
 This partial ordering can be represented as a fully connected graph, where every node has an
@@ -171,12 +170,12 @@ context = make_context().variables(data=data).build()
 # Now we are ready to run the SCORE algorithm. The methods performs inference
 # in two phases. First it estimates the topological order of the nodes in the
 # graphs. This is done iteratively according to the following procedure
-#. 1. SCORE estimates the Hessian of :math:`log p(x)`, with :math:`p(x)` joint
+# . 1. SCORE estimates the Hessian of :math:`log p(x)`, with :math:`p(x)` joint
 # distribution of nodes in the graph
-#. 2. Let `H := Hessian(log p(x))`. SCORE selects a leaf in the graph by finding
+# . 2. Let `H := Hessian(log p(x))`. SCORE selects a leaf in the graph by finding
 # the diagonal term of H with minimum variance,
 # i.e. by computing `np.argmin(np.var(np.diag(H))`.
-#. 3. SCORE remove the leaf in from the graph, and repeats steps from 1. to 3.
+# . 3. SCORE remove the leaf in from the graph, and repeats steps from 1. to 3.
 # iteratively up to the source nodes.
 # Given the inferred topological order, SCORE prunes the graph by with all
 # edges admitted by such ordering, by doing sparse regression to choose the
@@ -206,6 +205,3 @@ dot_graph.render(outfile="score_full_dag.png", view=True)
 
 dot_graph = draw(graph)
 dot_graph.render(outfile="score_dag.png", view=True)
-
-# %%
-#

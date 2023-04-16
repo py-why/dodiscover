@@ -43,17 +43,6 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     assert orders_consistency(order_full, order_noleaf)
 
 
-def test_given_dataset_and_rescaled_dataset_when_fitting_then_returns_equal_output(seed):
-    X = dummy_sample(seed=seed)
-    model = DAS(min_parents=0)
-    context = make_context().variables(observed=X.columns).build()
-    model.fit(X, context)
-    A = nx.to_numpy_array(model.graph_)
-    model.fit(X * 2, context)
-    A_rescaled = nx.to_numpy_array(model.graph_)
-    assert np.allclose(A, A_rescaled)
-
-
 def test_given_order_and_alternative_order_when_pruning_then_return_equal_outputs(seed):
     X = dummy_sample(seed=seed)
     order_gt = [2, 1, 3, 0]

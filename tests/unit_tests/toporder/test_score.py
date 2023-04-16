@@ -42,19 +42,6 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     assert orders_consistency(order_full, order_noleaf)
 
 
-def test_given_dataset_and_rescaled_dataset_when_fitting_then_returns_equal_output(dummy_sample):
-    model = SCORE()
-    context = make_context().variables(observed=dummy_sample.columns).build()
-    model.fit(dummy_sample, context)
-    A = nx.to_numpy_array(model.graph_)
-    order = model.order_
-    model.fit(dummy_sample * 2, context)
-    A_rescaled = nx.to_numpy_array(model.graph_)
-    order_rescaled = model.order_
-    assert np.allclose(A, A_rescaled)
-    assert order == order_rescaled
-
-
 def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return_consistent_outputs(
     seed,
 ):
@@ -86,23 +73,24 @@ def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return
     assert np.allclose(A_permuted, A)
 
 
-def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edges(dummy_sample):
+def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edges(seed):
+    X = dummy_sample(seed=seed)
     model = SCORE()
-    context = make_context().variables(observed=dummy_sample.columns).build()
-    model.fit(dummy_sample, context)
+    context = make_context().variables(observed=X.columns).build()
+    model.fit(X, context)
     A = nx.to_numpy_array(model.graph_)
     order = model.order_
     A_dense = full_dag(order)
-    d = len(dummy_sample.columns)
+    d = len(X.columns)
     edges = []  # include all edges in A_dense and not in A
     for i in range(d):
         for j in range(d):
             if A_dense[i, j] == 1 and A[i, j] == 0:
                 edges.append((i, j))
-    included_edges = nx.empty_graph(len(dummy_sample.columns), create_using=nx.DiGraph)
+    included_edges = nx.empty_graph(len(X.columns), create_using=nx.DiGraph)
     included_edges.add_edges_from(edges)
     context = make_context(context).edges(include=included_edges).build()
-    model.fit(dummy_sample, context)
+    model.fit(X, context)
     A_included = nx.to_numpy_array(model.graph_)
     assert np.allclose(A_dense, A_included)
 

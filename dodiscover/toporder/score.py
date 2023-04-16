@@ -62,7 +62,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         )
         self.eta_G = eta_G
         self.eta_H = eta_H
-        self.var = list()  # data structure for estimated variance of SCM noise terms
+        self.var: List[float] = list()  # data structure for estimated variance of SCM noise terms
         self.estimate_variance = estimate_variance
 
     def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
@@ -71,7 +71,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         Parameter
         ---------
         X : np.ndarray
-            Dataset with n x d observations of the causal variables
+            Dataset of observations of the causal variables
 
         Return
         ------
@@ -87,7 +87,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
             return 1 / H_diag[:, 0].var(axis=0).item()
 
         _, d = X.shape
-        order = []
+        order: List[int] = list()
         active_nodes = list(range(d))
         stein = SteinMixin()
         for _ in range(d - 1):
@@ -102,23 +102,19 @@ class SCORE(BaseCAMPruning, SteinMixin):
         """SCORE pruning of the fully connected adj. matrix representation of the inferred order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
-        Preliminary Neighbors Search :footcite:`Buhlmann2013` is applied before CAM pruning.
+        Preliminary Neighbors Search is applied before CAM pruning.
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
-        A_dense : np.ndarray of shape (n_dims, n_dims)
+        A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
 
         Return
         ------
         A : np.ndarray
             The pruned adjacency matrix output of the causal discovery algorithm.
-
-        References
-        ----------
-        .. footbibliography::
         """
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):

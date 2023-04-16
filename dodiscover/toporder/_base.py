@@ -1,7 +1,7 @@
 import math
 import warnings
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import networkx as nx
 import numpy as np
@@ -29,7 +29,7 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             I.i.d. samples from p(X) joint distribution.
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator.
@@ -66,7 +66,7 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             I.i.d. samples from p(X) joint distribution.
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator.
@@ -101,7 +101,7 @@ class SteinMixin:
 
         Parameters
         ----------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
             I.i.d. samples from p(X) joint distribution.
         G : np.ndarray
             estimator of the score function.
@@ -141,7 +141,7 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray (n_samples, n_dims)
+        X : np.ndarray (n_samples, n_nodes)
             I.i.d. samples from p(X) joint distribution.
         eta_G: float
             regularization parameter for ridge regression in Stein gradient estimator.
@@ -171,7 +171,7 @@ class SteinMixin:
 
         Parameters
         ----------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
             Matrix of the difference between samples.
         """
         D = np.linalg.norm(X_diff, axis=2)
@@ -186,7 +186,7 @@ class SteinMixin:
 
         Parameters:
         ----------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
             Matrix of the difference between samples.
         evalaue_nabla : bool, optional
             if True evaluate <nabla, K> dot product. Default is False.
@@ -198,7 +198,7 @@ class SteinMixin:
         -------
         K : np.ndarray of shape (n_samples, n_samples)
             evaluated gaussian kernel.
-        nablaK : np.ndarray of shape (n_samples, n_dims)
+        nablaK : np.ndarray of shape (n_samples, n_nodes)
             <nabla, K> dot product.
         """
         nablaK = None
@@ -214,12 +214,12 @@ class SteinMixin:
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
 
         Return
         ------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_dims)
+        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
             Matrix of the difference between samples.
         """
         return np.expand_dims(X, axis=1) - X
@@ -242,7 +242,7 @@ class TopOrderInterface(metaclass=ABCMeta):
         raise NotImplementedError()
 
     @abstractmethod
-    def prune(self, A: NDArray, X: NDArray) -> NDArray:
+    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         raise NotImplementedError()
 
 
@@ -276,7 +276,7 @@ class BaseCAMPruning(TopOrderInterface):
 
     Attributes
     ----------
-    graph_ : np.ndarray
+    graph_ : nx.DiGraph
         Adjacency matrix representation of the inferred causal graph.
     order_ : List[int]
         Topological order of the nodes from source to leaf.
@@ -302,8 +302,8 @@ class BaseCAMPruning(TopOrderInterface):
         self.pns_num_neighbors = pns_num_neighbors
         self.pns_threshold = pns_threshold
 
-        self.order_ = None
-        self.graph_ = None
+        self.order_: nx.DiGraph = nx.empty_graph()
+        self.graph_: List[int] = list()
 
     def get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
         """Get leaf node from the list of `remaining_nodes` without an assigned order.
@@ -368,9 +368,9 @@ class BaseCAMPruning(TopOrderInterface):
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
-        A_dense : np.ndarray of shape (n_dims, n_dims)
+        A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
 
         Return
@@ -423,7 +423,7 @@ class BaseCAMPruning(TopOrderInterface):
         ----------
         A : np.ndarray
             Adjacency matrix representation of a dense graph.
-        X : np.ndarray of shape (n_samples, n_dims)
+        X : np.ndarray of shape (n_samples, n_nodes)
             Dataset with observations of the causal variables.
 
         Return
@@ -454,7 +454,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         return A
 
-    def _dag_check_included_edges(self) -> bool:
+    def _dag_check_included_edges(self) -> None:
         """Check that the edges included in `self.context` does not violate DAG condition."""
         is_dag = nx.is_directed_acyclic_graph(self.context.included_edges)
         if nx.is_empty(self.context.included_edges):
@@ -462,15 +462,22 @@ class BaseCAMPruning(TopOrderInterface):
         if not is_dag:
             raise ValueError("Edges included in the graph violate the acyclicity condition!")
 
-    def _included_edges_order_constraints(self) -> List[int]:
-        """For each node find the predecessors enforced by the edges included in `self.context`."""
+    def _included_edges_order_constraints(self) -> Dict[int, List[int]]:
+        """For each node find the predecessors enforced by the edges included in `self.context`.
+
+        Return
+        ------
+        descendants : Dict[int, List[int]]
+            Dictionary with index of a node of the graph as key, list of the descendants of the
+            node enforced by self.context.included_edges as value.
+        """
         adj = nx.to_numpy_array(self.context.included_edges)
         d, _ = adj.shape
-        descendants = {i: list() for i in range(d)}
+        descendants: Dict = {i: list() for i in range(d)}
         for row in range(d):
             for col in range(d):
                 if adj[row, col] == 1:
-                    row_descendants = descendants.get(row)
+                    row_descendants = descendants[row]
                     row_descendants.append(col)
                     descendants[row] = row_descendants
         return descendants
@@ -546,14 +553,14 @@ class BaseCAMPruning(TopOrderInterface):
         # Preliminary search of the best lambda between lambda_grid.keys()
         splines = [s(i, n_splines=n_splines, spline_order=self.degree) for i in range(d)]
         formula = self._make_formula(splines)
-        lam = lambda_grid.keys()
+        lam_keys = lambda_grid.keys()
         gam = LinearGAM(formula, fit_intercept=False).gridsearch(
-            X, y, lam=lam, progress=False, objective="GCV"
+            X, y, lam=lam_keys, progress=False, objective="GCV"
         )
         lambdas = np.squeeze([s.get_params()["lam"] for s in gam.terms], axis=1)
 
         # Search the best lambdas according to the preliminary search, and get the fitted model
-        lam = np.squeeze([lambda_grid[lam] for lam in lambdas])
+        lam = np.squeeze([lambda_grid[value] for value in lambdas])
         gam = LinearGAM(formula, fit_intercept=False).gridsearch(
             X, y, lam=lam.transpose(), progress=False, objective="GCV"
         )

@@ -83,7 +83,7 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
 
     Return
     ------
-    pd.DataFrame
+    data : pd.DataFrame
         Pandas dataframe of samples generated according to the input DAG from an
         additive noise model.
     """
@@ -98,10 +98,11 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
         parents = np.flatnonzero(A[:, node])
         if len(parents) > 0:
             X[:, node] += np.sum(np.sin(X[:, parents]), axis=1)
-    return pd.DataFrame(X)
+    data = pd.DataFrame(X)
+    return data
 
 
-def dummy_groundtruth() -> None:
+def dummy_groundtruth() -> nx.DiGraph:
     """
     Ground truth associated to dummy_sample dataset
     """
