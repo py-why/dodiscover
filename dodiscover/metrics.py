@@ -166,8 +166,8 @@ def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
     order : List[int]
         A topological ordering on the nodes of the graph.
 
-    Return
-    ------
+    Returns
+    -------
     err : int
         Sum of the number of edges of A not admitted by the given order.
     """

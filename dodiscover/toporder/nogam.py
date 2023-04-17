@@ -84,14 +84,14 @@ class NoGAM(BaseCAMPruning, SteinMixin):
     def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """Find the topological ordering of the causal variables from X dataset.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         X : np.ndarray
             Dataset with n x d observations of the causal variables
 
-        Return
-        ------
-        A_dense : np.mdarray
+        Returns
+        -------
+        A_dense : np.ndarray
             Fully connected matrix admitted by the topological ordering
         order : List[int]
             Inferred causal order
@@ -130,8 +130,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
 
-        Return
-        ------
+        Returns
+        -------
         A : np.ndarray
             The pruned adjacency matrix output of the causal discovery algorithm.
         """
@@ -152,8 +152,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
             Matrix of the target variables Y[:, i]. Usually the n x d matrix D of the
             estimated score function
 
-        Return
-        ------
+        Returns
+        -------
         err : np.array of shape (n_nodes, )
             Vector with MSE in the prediction of score_i from residual_i
         """
@@ -187,8 +187,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
 
-        Return
-        ------
+        Returns
+        -------
         R : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the residuals estimates.
         """

@@ -23,10 +23,11 @@ class SteinMixin:
     """
 
     def hessian(self, X: NDArray, eta_G: float, eta_H: float) -> NDArray:
-        """Stein estimator of the Hessian of log p(x) :footcite:`rolland2022`.
+        """Stein estimator of the Hessian of log p(x).
 
         The Hessian matrix is efficiently estimated by exploitaiton of the Stein identity.
-
+        Implements :footcite:`rolland2022`.
+        
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_nodes)
@@ -36,8 +37,8 @@ class SteinMixin:
         eta_H: float
             regularization parameter for ridge regression in Stein hessian estimator.
 
-        Return
-        ------
+        Returns
+        -------
         H : np.ndarray
             Stein estimator of the Hessian matrix of log p(x).
 
@@ -77,8 +78,8 @@ class SteinMixin:
             <nabla, K> evaluated dot product, by default None. If `nablaK` is None, it is
             computed inside of the method.
 
-        Return
-        ------
+        Returns
+        -------
         G : np.ndarray
             Stein estimator of the score function.
 
@@ -116,8 +117,8 @@ class SteinMixin:
             Width of the Gaussian kernel, by default None. If `s` is None, it is
             computed inside of the method.
 
-        Return
-        ------
+        Returns
+        -------
         H_col : np.ndarray
             Stein estimator of the c-th column of the Hessian of log p(x)
         """
@@ -148,8 +149,8 @@ class SteinMixin:
         eta_H: float
             regularization parameter for ridge regression in Stein hessian estimator.
 
-        Return
-        ------
+        Returns
+        -------
         H_diag : np.ndarray
             Stein estimator of the diagonal of the Hessian matrix of log p(x).
         """
@@ -194,7 +195,7 @@ class SteinMixin:
             Width of the Gaussian kernel, by default None. If `s` is None, it is
             computed inside of the method.
 
-        Return:
+        Returns
         -------
         K : np.ndarray of shape (n_samples, n_samples)
             evaluated gaussian kernel.
@@ -217,8 +218,8 @@ class SteinMixin:
         X : np.ndarray of shape (n_samples, n_nodes)
             Matrix of the data.
 
-        Return
-        ------
+        Returns
+        -------
         X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
             Matrix of the difference between samples.
         """
@@ -317,8 +318,8 @@ class BaseCAMPruning(TopOrderInterface):
         current_order : List[int]
             Partial topological order.
 
-        Return
-        ------
+        Returns
+        -------
         leaf : int
             Leaf index in the list of graph nodes.
         """
@@ -373,8 +374,8 @@ class BaseCAMPruning(TopOrderInterface):
         A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
 
-        Return
-        ------
+        Returns
+        -------
         A : np.ndarray
             The pruned adjacency matrix output of the causal discovery algorithm.
         """
@@ -426,8 +427,8 @@ class BaseCAMPruning(TopOrderInterface):
         X : np.ndarray of shape (n_samples, n_nodes)
             Dataset with observations of the causal variables.
 
-        Return
-        ------
+        Returns
+        -------
         A : np.ndarray
             Pruned adjacency matrix.
 
@@ -465,8 +466,8 @@ class BaseCAMPruning(TopOrderInterface):
     def _included_edges_order_constraints(self) -> Dict[int, List[int]]:
         """For each node find the predecessors enforced by the edges included in `self.context`.
 
-        Return
-        ------
+        Returns
+        -------
         descendants : Dict[int, List[int]]
             Dictionary with index of a node of the graph as key, list of the descendants of the
             node enforced by self.context.included_edges as value.
@@ -502,8 +503,8 @@ class BaseCAMPruning(TopOrderInterface):
         child : int
             Child node with `pot_parents` potential parent nodes.
 
-        Return
-        ------
+        Returns
+        -------
         parents : List[int]
             The list of selected parents for the input child node.
         """
@@ -531,8 +532,8 @@ class BaseCAMPruning(TopOrderInterface):
         y : np.ndarray
             endogenous variables.
 
-        Return
-        ------
+        Returns
+        -------
         gam : LinearGAM
             Fitted GAM with tuned lambda.
         """
@@ -577,8 +578,8 @@ class BaseCAMPruning(TopOrderInterface):
         d : int
             Number of nodes in the graph.
 
-        Return
-        ------
+        Returns
+        -------
         n_splines : int
             Updated number of splines for GAM fitting.
         """
@@ -614,8 +615,8 @@ class BaseCAMPruning(TopOrderInterface):
             The equivalent R formula would be "s(0) + s(1) + s(2)", while the y target
             is provided directly at gam.fit() call
 
-        Return
-        ------
+        Returns
+        -------
         terms : TermList
             formula of the type requested by pyGAM Generalized Additive Models class.
         """

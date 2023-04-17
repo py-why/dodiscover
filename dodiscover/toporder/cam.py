@@ -56,13 +56,13 @@ class CAM(BaseCAMPruning):
         """
         Find the topological ordering of the causal variables from the dataset `X`.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         X : np.ndarray of shape (n_samples, n_nodes)
             Dataset of observations of the causal variables.
 
-        Return
-        ------
+        Returns
+        -------
         A_dense : np.ndarray
             Fully connexted matrix admitted by the topological ordering.
         order : List[int]
@@ -199,8 +199,8 @@ class CAM(BaseCAMPruning):
             Matrix encoding the directed paths in the graph.
             directed_paths[i,j]=1 if there is a directed path from i to j.
 
-        Return
-        ------
+        Returns
+        -------
         score_gain : np.ndarray of shape (n_nodes, n_nodes)
             Matrix of the gains.
             score_gain[i, j] is the additive contribute to the score (i.e. the gain)
