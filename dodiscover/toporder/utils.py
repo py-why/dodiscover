@@ -14,8 +14,8 @@ def full_dag(top_order: List[int]) -> NDArray:
     top_order : List[int]
         Topological order of nodes in a causal graph.
 
-    Return
-    ------
+    Returns
+    -------
     A : np.ndarray
         The fully connected adjacency matrix encoding the input topological order.
     """
@@ -34,8 +34,8 @@ def full_adj_to_order(A: NDArray) -> List[int]:
     A : np.ndarray
         The fully connected adjacency matrix encoding the input topological order.
 
-    Return
-    ------
+    Returns
+    -------
     top_order : List[int]
         Topological order encoding of the input fully connected adjacency matrix.
     """
@@ -54,8 +54,8 @@ def orders_consistency(order_full: List[int], order_noleaf: List[int]) -> bool:
     order_noleaf : List[int]
         Inferred topological order on the graph pruned by a leaf.
 
-    Return
-    ------
+    Returns
+    -------
     bool
         True if the two orders are consistent
     """
@@ -81,7 +81,7 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
     n_samples : int, optional
         Number of samples in the dataset, default is 100.
 
-    Return
+    Returns
     ------
     data : pd.DataFrame
         Pandas dataframe of samples generated according to the input DAG from an
@@ -89,7 +89,6 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
     """
     if G is None:
         G = dummy_groundtruth()
-    assert nx.is_directed_acyclic_graph(G), "Input graph must be a DAG"
     np.random.seed(seed)
     A = nx.to_numpy_array(G)
     order = list(nx.topological_sort(G))

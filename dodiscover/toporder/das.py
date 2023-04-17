@@ -78,8 +78,8 @@ class DAS(SCORE):
         A_dense : np.ndarray
             fully connected matrix corresponding to a topological ordering
 
-        Return
-        ------
+        Returns
+        -------
         np.ndarray
             Sparse adjacency matrix representing the pruned DAG.
         """

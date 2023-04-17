@@ -68,13 +68,13 @@ class SCORE(BaseCAMPruning, SteinMixin):
     def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """Find the topological ordering of the causal variables from X dataset.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         X : np.ndarray
             Dataset of observations of the causal variables
 
-        Return
-        ------
+        Returns
+        -------
         A_dense : np.mdarray
             Fully connected matrix admitted by the topological ordering
         order : List[int]
@@ -111,8 +111,8 @@ class SCORE(BaseCAMPruning, SteinMixin):
         A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
 
-        Return
-        ------
+        Returns
+        -------
         A : np.ndarray
             The pruned adjacency matrix output of the causal discovery algorithm.
         """
@@ -142,8 +142,8 @@ class SCORE(BaseCAMPruning, SteinMixin):
         order : List[int]
             List of partial order.
 
-        Return
-        ------
+        Returns
+        -------
         X : np.ndarray
             Matrix of the data without the column corresponding to the identified leaf node.
         """

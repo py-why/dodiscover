@@ -167,22 +167,25 @@ context = make_context().variables(data=data).build()
 # %%
 # Run structure learning algorithm
 # --------------------------------
-# Now we are ready to run the SCORE algorithm. The methods performs inference
+# Now we are ready to run the SCORE algorithm. The method performs inference
 # in two phases. First it estimates the topological order of the nodes in the
-# graphs. This is done iteratively according to the following procedure
-# . 1. SCORE estimates the Hessian of :math:`log p(x)`, with :math:`p(x)` joint
-# distribution of nodes in the graph
-# . 2. Let `H := Hessian(log p(x))`. SCORE selects a leaf in the graph by finding
+# graphs. This is done iteratively according to the following procedure:
+#
+# 1. SCORE estimates the Hessian of the logarithm of :math:`p(x)`,
+# with :math:`p(x)` the joint distribution of the nodes in the graph.
+#
+# 2. Let `H := Hessian(log p(x))`. SCORE selects a leaf in the graph by finding
 # the diagonal term of H with minimum variance,
 # i.e. by computing `np.argmin(np.var(np.diag(H))`.
-# . 3. SCORE remove the leaf in from the graph, and repeats steps from 1. to 3.
+#
+# 3. SCORE removes the leaf in from the graph, and repeats steps from 1. to 3.
 # iteratively up to the source nodes.
 # Given the inferred topological order, SCORE prunes the graph by with all
 # edges admitted by such ordering, by doing sparse regression to choose the
 # relevant variables. Variable selection is done by thresholding on the
 # p-values of the coefficients associated to the potential parents of a node.
-# For instance, consider a graph `G` with 3 vertices :math:`V = {1, 2, 3}`. For
-# simplicity let the topological order be trivial, i.e. :math:`{1, 2, 3}`. The unique
+# For instance, consider a graph :math:`G` with 3 vertices :math:`V = \{1, 2, 3\}`. For
+# simplicity let the topological order be trivial, i.e. :math:`\{1, 2, 3\}`. The unique
 # fully connected adjacency matrix compatible with such ordering is the upper
 # triangular matrix `np.triu(np.ones((3, 3)), k=1)` with all ones above the
 # diagonal.
