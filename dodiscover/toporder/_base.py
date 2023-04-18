@@ -23,10 +23,11 @@ class SteinMixin:
     """
 
     def hessian(self, X: NDArray, eta_G: float, eta_H: float) -> NDArray:
-        """Stein estimator of the Hessian of log p(x) :footcite:`rolland2022`.
+        """Stein estimator of the Hessian of log p(x).
 
         The Hessian matrix is efficiently estimated by exploitaiton of the Stein identity.
-
+        Implements :footcite:`rolland2022`.
+        
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_nodes)

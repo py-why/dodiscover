@@ -91,7 +91,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
 
         Returns
         -------
-        A_dense : np.mdarray
+        A_dense : np.ndarray
             Fully connected matrix admitted by the topological ordering
         order : List[int]
             Inferred causal order

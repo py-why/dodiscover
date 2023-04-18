@@ -82,7 +82,7 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
         Number of samples in the dataset, default is 100.
 
     Returns
-    ------
+    -------
     data : pd.DataFrame
         Pandas dataframe of samples generated according to the input DAG from an
         additive noise model.
