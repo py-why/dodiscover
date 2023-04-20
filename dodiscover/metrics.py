@@ -163,6 +163,9 @@ def toporder_divergence(true_graph: NetworkxGraph, order: List[int]) -> int:
     ----------
     true_graph : NetworkxGraph
         Input adjacency matrix representation of a directed acyclic graphs.
+        Elements ``A[i, j]`` with value of 1 are encoded as a directed edge from 'i' to 'j',
+        where 'i' is the row index and 'j' is the column index. Elements of 0 indicate the
+        absence of an edge.
     order : List[int]
         A topological ordering on the nodes of the graph.
 

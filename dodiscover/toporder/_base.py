@@ -27,7 +27,7 @@ class SteinMixin:
 
         The Hessian matrix is efficiently estimated by exploitaiton of the Stein identity.
         Implements :footcite:`rolland2022`.
-        
+
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_nodes)
@@ -63,7 +63,10 @@ class SteinMixin:
         K: NDArray = None,
         nablaK: NDArray = None,
     ) -> NDArray:
-        """Stein gradient estimator :footcite:`Li2017` of the score, i.e. gradient log p(x).
+        """Stein gradient estimator of the score, i.e. gradient log p(x).
+
+        The Stein gradient estimator :footcite:`Li2017` exploits the Stein identity
+        for efficient estimate of the score funciton.
 
         Parameters
         ----------
@@ -249,7 +252,7 @@ class TopOrderInterface(metaclass=ABCMeta):
 
 # -------------------- Base class for CAM pruning --------------------#
 class BaseCAMPruning(TopOrderInterface):
-    """Class for topological order based methods with CAM pruning :footcite:`Buhlmann2013`.
+    """Class for topological order based methods with CAM pruning.
 
     Implementation of `TopOrderInterface` defining `fit` method for causal discovery.
     Class inheriting from `BaseCAMPruning` need to implement the `top_order` method for inference
@@ -414,11 +417,11 @@ class BaseCAMPruning(TopOrderInterface):
                     self.context.excluded_edges.add_edge(i, j)
 
     def pns(self, A: NDArray, X: NDArray) -> NDArray:
-        """Preliminary Neighbors Selection :footcite:`Buhlmann2013` pruning on adj. matrix `A`.
+        """Preliminary Neighbors Selection (PNS) pruning on adjacency matrix `A`.
 
         Variable selection preliminary to CAM pruning.
-        It allows to scale CAM pruning to large graphs (~20 or more nodes),
-        with sensitive reduction of computational time.
+        PNS :footcite:`Buhlmann2013` allows to scale CAM pruning to large graphs
+        (~20 or more nodes), with sensitive reduction of computational time.
 
         Parameters
         ----------

@@ -10,9 +10,9 @@ from dodiscover.toporder.utils import full_dag
 
 
 class NoGAM(BaseCAMPruning, SteinMixin):
-    """The NoGAM (Not only Gaussian Additive Model) algorithm :footcite:`Montagna2023b`.
+    """The NoGAM (Not only Gaussian Additive Model) algorithm for causal discovery.
 
-    The method iteratively defines a topological ordering finding leaf nodes by
+    NoGAM :footcite:`Montagna2023b` iteratively defines a topological ordering finding leaf nodes by
     predicting the entries in the gradient of the log-likelihood via estimated residuals.
     Then it prunes the fully connected DAG with CAM pruning :footcite:`Buhlmann2013`.
     The method assumes Additive Noise Model, while it doesn't need to assume any distribution

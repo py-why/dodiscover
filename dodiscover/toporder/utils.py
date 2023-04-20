@@ -74,7 +74,7 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
     Parameters
     ----------
     G : nx.DiGraph, optional
-        Directed acyclic graph. If None (default) get the groundtruth from `dummy_groundtruth()`
+        Directed acyclic graph. If None (default) get the groundtruth from `dummy_groundtruth`
         method of dodiscover.toporder.utils module.
     seed : int, optional
         Fixed random seed, default is 42.
@@ -89,6 +89,8 @@ def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.Data
     """
     if G is None:
         G = dummy_groundtruth()
+    if not nx.is_directed_acyclic_graph(G):
+        raise RuntimeError("Input graph must be a DAG")
     np.random.seed(seed)
     A = nx.to_numpy_array(G)
     order = list(nx.topological_sort(G))

@@ -9,9 +9,9 @@ from dodiscover.toporder.utils import full_adj_to_order
 
 
 class CAM(BaseCAMPruning):
-    """The CAM algorithm :footcite:`Buhlmann2013` for causal discovery.
+    """The CAM (Causal Additive Model) algorithm for causal discovery.
 
-    The method iteratively defines a topological ordering by leaf additions.
+    CAM :footcite:`Buhlmann2013` iteratively defines a topological ordering by leaf additions.
     Then it prunes the fully connected DAG consistent with the inferred topological order.
     The method assumes Additive Noise Model and Gaussianity of the noise terms.
 

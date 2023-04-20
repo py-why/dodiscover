@@ -10,11 +10,11 @@ from dodiscover.toporder.utils import full_dag
 class SCORE(BaseCAMPruning, SteinMixin):
     """The SCORE algorithm for causal discovery.
 
-    The method iteratively defines a topological ordering finding leaf nodes by comparison of the
-    variance terms of the diagonal entries of the Hessian of the log likelihood matrix.
-    Then it prunes the fully connected DAG with CAM pruning :footcite:`Buhlmann2013`.
+    SCORE :footcite:`rolland2022` iteratively defines a topological ordering finding leaf
+    nodes by comparison of the variance terms of the diagonal entries of the Hessian of
+    the log likelihood matrix. Then it prunes the fully connected DAG representation of
+    the ordering with CAM pruning :footcite:`Buhlmann2013`.
     The method assumes Additive Noise Model and Gaussianity of the noise terms.
-    See :footcite:`rolland2022`.
 
     Parameters
     ----------

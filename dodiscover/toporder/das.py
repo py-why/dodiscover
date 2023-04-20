@@ -7,10 +7,11 @@ from dodiscover.toporder.utils import full_adj_to_order
 
 
 class DAS(SCORE):
-    """The Discovery At Scale (DAS) algorithm :footcite:`Montagna2023a` for causal discovery.
+    """The DAS (Discovery At Scale) algorithm for causal discovery.
 
-    The method infer the topological ordering using SCORE :footcite:`rolland2022`.
-    Then it prunes the fully connected DAG by inspection of the non diagonal entries of the
+    DAS :footcite:`Montagna2023a` infer the topological ordering using
+    SCORE :footcite:`rolland2022`.
+    Then it finds edges in the graph by inspection of the non diagonal entries of the
     Hessian of the log likelihood.
     A final, computationally cheap, pruning step is performed with
     CAM pruning :footcite:`Buhlmann2013`.
