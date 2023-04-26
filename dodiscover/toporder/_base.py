@@ -13,6 +13,7 @@ from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.feature_selection import SelectFromModel
 
 from dodiscover.context import Context
+from dodiscover.toporder.utils import kernel_width
 
 # -------------------- Mixin class with Stein estimators -------------------- #
 
@@ -48,7 +49,7 @@ class SteinMixin:
         """
         _, d = X.shape
         X_diff = self._X_diff(X)
-        s = self._kernel_width(X_diff)
+        s = kernel_width(X_diff)
         K, nablaK = self._evaluate_kernel(X_diff, evaluate_nabla=True, s=s)
         G = self.score(X, eta_G, K, nablaK)
 
@@ -66,7 +67,7 @@ class SteinMixin:
         """Stein gradient estimator of the score, i.e. gradient log p(x).
 
         The Stein gradient estimator :footcite:`Li2017` exploits the Stein identity
-        for efficient estimate of the score funciton.
+        for efficient estimate of the score function.
 
         Parameters
         ----------
@@ -129,7 +130,7 @@ class SteinMixin:
 
         # Kernel
         if s is None:
-            s = self._kernel_width(X_diff)
+            s = kernel_width(X_diff)
         if K is None:
             K, _ = self._evaluate_kernel(X_diff, s=s)
 
@@ -161,26 +162,13 @@ class SteinMixin:
         X_diff = self._X_diff(X)
 
         # Score function compute
-        s = self._kernel_width(X_diff)
+        s = kernel_width(X_diff)
         K, nablaK = self._evaluate_kernel(X_diff, evaluate_nabla=True, s=s)
         G = self.score(X, eta_G, K, nablaK)
 
         # Hessian compute
         nabla2K = np.einsum("kij,ik->kj", -1 / s**2 + X_diff**2 / s**4, K)
         return -(G**2) + np.matmul(np.linalg.inv(K + eta_H * np.eye(n)), nabla2K)
-
-    def _kernel_width(self, X_diff: NDArray):
-        """
-        Estimate width of the Gaussian kernel.
-
-        Parameters
-        ----------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
-            Matrix of the difference between samples.
-        """
-        D = np.linalg.norm(X_diff, axis=2)
-        s = np.median(D.flatten())
-        return s
 
     def _evaluate_kernel(
         self, X_diff: NDArray, evaluate_nabla: bool = False, s: float = None
@@ -207,7 +195,7 @@ class SteinMixin:
         """
         nablaK = None
         if s is None:
-            s = self._kernel_width(X_diff)
+            s = kernel_width(X_diff)
         K = np.exp(-np.linalg.norm(X_diff, axis=2) ** 2 / (2 * s**2)) / s
         if evaluate_nabla:
             nablaK = -np.einsum("kij,ik->kj", X_diff, K) / s**2
@@ -513,7 +501,7 @@ class BaseCAMPruning(TopOrderInterface):
         """
         _, d = X.shape
 
-        gam = self._fit_model(X, y)
+        gam = self._fit_gam_model(X, y)
         pvalues = gam.statistics_["p_values"]
 
         parents = []
@@ -524,7 +512,7 @@ class BaseCAMPruning(TopOrderInterface):
                 parents.append(pot_parents[j])
         return parents
 
-    def _fit_model(self, X: NDArray, y: NDArray) -> LinearGAM:
+    def _fit_gam_model(self, X: NDArray, y: NDArray) -> LinearGAM:
         """
         Fit GAM on `X` and `y`.
 
@@ -539,6 +527,11 @@ class BaseCAMPruning(TopOrderInterface):
         -------
         gam : LinearGAM
             Fitted GAM with tuned lambda.
+
+        Notes
+        -----
+        See https://pygam.readthedocs.io/en/latest/api/lineargam.html
+        for implementation details of `LinearGAM`.
         """
         lambda_grid = {1: [0.1, 0.5, 1], 20: [5, 10, 20], 100: [50, 80, 100]}
 
@@ -552,7 +545,7 @@ class BaseCAMPruning(TopOrderInterface):
                 )
             )
 
-        n_splines = self._n_splines(n, d)
+        n_splines = self._compute_n_splines(n, d)
 
         # Preliminary search of the best lambda between lambda_grid.keys()
         splines = [s(i, n_splines=n_splines, spline_order=self.degree) for i in range(d)]
@@ -570,8 +563,10 @@ class BaseCAMPruning(TopOrderInterface):
         )
         return gam
 
-    def _n_splines(self, n: int, d: int) -> int:
+    def _compute_n_splines(self, n: int, d: int) -> int:
         """
+        Compute the number of splines used for GAM fitting.
+
         During GAM fitting, decrease number of splines in case of small sample size.
 
         Parameters
@@ -610,18 +605,25 @@ class BaseCAMPruning(TopOrderInterface):
         """
         Make formula for PyGAM model from list of splines Term objects.
 
+        The method defines a linear combination of the spline terms.
+
         Parameters
         ----------
         splines_list : List[Term]
-            List of splines term for the GAM formula.
+            List of splines terms for the GAM formula.
             Example: [s(0), s(1), s(2)] where s is a B-spline Term from pyGAM.
             The equivalent R formula would be "s(0) + s(1) + s(2)", while the y target
-            is provided directly at gam.fit() call
+            is provided directly at gam.fit() call.
 
         Returns
         -------
         terms : TermList
-            formula of the type requested by pyGAM Generalized Additive Models class.
+            Formula of the type requested by pyGAM Generalized Additive Models class.
+
+        Notes
+        -----
+        See https://pygam.readthedocs.io/en/latest/dev-api/terms.html
+        for details on `Term` and `TermsList` implementations.
         """
         terms = TermList()
         for spline in splines_list:

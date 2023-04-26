@@ -45,7 +45,7 @@ identifies one leaf at the time: first, for each node in the graph, it estimates
 the regression problem that predicts a variable ``j`` from all the remaining nodes
 ``1, 2, .., j-1, j+1, .., |V|`` (with ``|V|`` the number of nodes). Then, NoGAM tries to estimate
 each entry ``j`` of the vector of the gradient of log-likelihood using the residual of the
-variable ``j``as covariate: a leaf is found by selection of the ``argmin`` of the mean squared
+variable ``j`` as covariate: a leaf is found by selection of the ``argmin`` of the mean squared
 error of the predictions.
 
 

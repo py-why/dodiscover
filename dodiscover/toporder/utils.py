@@ -6,6 +6,21 @@ import pandas as pd
 from numpy.typing import NDArray
 
 
+# TODO: replace with pywhy-stats implementation
+def kernel_width(X_diff: NDArray):
+    """
+    Estimate width of the Gaussian kernel.
+
+    Parameters
+    ----------
+    X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
+        Matrix of the difference between samples.
+    """
+    D = np.linalg.norm(X_diff, axis=2)
+    s = np.median(D.flatten())
+    return s
+
+
 def full_dag(top_order: List[int]) -> NDArray:
     """Find adjacency matrix of the fully connected DAG from the topological order.
 
@@ -40,7 +55,7 @@ def full_adj_to_order(A: NDArray) -> List[int]:
         Topological order encoding of the input fully connected adjacency matrix.
     """
     order = list(A.sum(axis=1).argsort())
-    order.reverse()
+    order.reverse()  # reverse to get order starting with source nodes
     return order
 
 

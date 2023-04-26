@@ -133,7 +133,7 @@ class CAM(BaseCAMPruning):
         for pot_parent in range(d):
             if valid_parent(pot_parent, current_parents):
                 predictors = np.append(current_parents, [pot_parent])
-                gam = self._fit_model(X[:, predictors], X[:, c].reshape(-1, 1))
+                gam = self._fit_gam_model(X[:, predictors], X[:, c].reshape(-1, 1))
                 residuals = X[:, c] - gam.predict(X[:, predictors])
                 gain = -np.log(np.var(residuals)) - score_c
                 score_gains[pot_parent, c] = gain
@@ -230,7 +230,7 @@ class CAM(BaseCAMPruning):
                 if G_excluded.has_edge(i, j):
                     score_gains[i, j] = self.inf
                 elif score_gains[i, j] != self.inf:
-                    gam = self._fit_model(X[:, i].reshape(-1, 1), X[:, j].reshape(-1, 1))
+                    gam = self._fit_gam_model(X[:, i].reshape(-1, 1), X[:, j].reshape(-1, 1))
                     residuals = X[:, j] - gam.predict(X[:, i].reshape(-1, 1))
                     gain = -np.log(np.var(residuals)) - init_score[j]
                     score_gains[i, j] = gain

@@ -126,6 +126,6 @@ class DAS(SCORE):
                             parents.append(remaining_nodes[node])
 
             A_das[parents, leaf] = 1
-            del remaining_nodes[l_index]
+            remaining_nodes.pop(l_index)
 
         return super().prune(X, A_das)
