@@ -171,10 +171,10 @@ context = make_context().variables(data=data).build()
 # in two phases. First it estimates the topological order of the nodes in the
 # graphs. This is done iteratively according to the following procedure:
 #
-# 1. SCORE estimates the Hessian of the logarithm of :math:`p(x)`,
-# with :math:`p(x)` the joint distribution of the nodes in the graph.
+# 1. SCORE estimates the Hessian of the logarithm of :math:`p(V)`,
+# with :math:`p(V)` the joint distribution of the nodes in the graph.
 #
-# 2. Let `H := Hessian(log p(x))`. SCORE selects a leaf in the graph by finding
+# 2. Let `H := Hessian(log p(V))`. SCORE selects a leaf in the graph by finding
 # the diagonal term of H with minimum variance,
 # i.e. by computing `np.argmin(np.var(np.diag(H))`.
 #
@@ -203,8 +203,10 @@ order = score.order_
 # the inferred topological ordering.
 # `score_dag.png` visualizes the fully connected DAG after pruning with
 # sparse regression.
-dot_graph = draw(nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph))
-dot_graph.render(outfile="score_full_dag.png", view=True)
-
-dot_graph = draw(graph)
+dot_graph = draw(graph, name="DAG after pruning")
 dot_graph.render(outfile="score_dag.png", view=True)
+
+dot_graph = draw(
+    nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph), name="Fully connected DAG"
+)
+dot_graph.render(outfile="score_full_dag.png", view=True)

@@ -1,19 +1,16 @@
 import networkx as nx
 import numpy as np
-import pytest
 
 from dodiscover import make_context
 from dodiscover.metrics import structure_hamming_dist, toporder_divergence
 from dodiscover.toporder.score import SCORE
 from dodiscover.toporder.utils import dummy_groundtruth, dummy_sample, full_dag, orders_consistency
 
-
-@pytest.fixture
-def seed():
-    return 42
+# Fix the random seed
+seed = 42
 
 
-def test_given_dataset_when_fitting_NoGAM_then_shd_larger_equal_dtop(seed):
+def test_given_dataset_when_fitting_NoGAM_then_shd_larger_equal_dtop():
     X = dummy_sample(seed=seed)
     G = dummy_groundtruth()
     model = SCORE()
@@ -30,7 +27,7 @@ def test_given_dataset_when_fitting_NoGAM_then_shd_larger_equal_dtop(seed):
     assert shd >= d_top
 
 
-def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_consistent(seed):
+def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_consistent():
     X = dummy_sample(seed=seed)
     order_gt = [2, 1, 3, 0]
     model = SCORE()
@@ -42,9 +39,7 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     assert orders_consistency(order_full, order_noleaf)
 
 
-def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return_consistent_outputs(
-    seed,
-):
+def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return_equal_outputs():
     X = dummy_sample(seed=seed)
     model = SCORE()
     context = make_context().variables(observed=X.columns).build()
@@ -73,11 +68,11 @@ def test_given_dataset_and_dataset_with_permuted_column_when_fitting_then_return
     assert np.allclose(A_permuted, A)
 
 
-def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edges(seed):
+def test_given_adjacency_when_fitting_then_returns_dag_with_context_included_edges():
     X = dummy_sample(seed=seed)
     model = SCORE()
     context = make_context().variables(observed=X.columns).build()
-    model.fit(X, context)
+    model.fit(X, context)  # fit without context included edges
     A = nx.to_numpy_array(model.graph_)
     order = model.order_
     A_dense = full_dag(order)
@@ -90,12 +85,12 @@ def test_given_adjacency_when_pruning_then_returns_dag_with_context_included_edg
     included_edges = nx.empty_graph(len(X.columns), create_using=nx.DiGraph)
     included_edges.add_edges_from(edges)
     context = make_context(context).edges(include=included_edges).build()
-    model.fit(X, context)
+    model.fit(X, context)  # fit with context included edges
     A_included = nx.to_numpy_array(model.graph_)
     assert np.allclose(A_dense, A_included)
 
 
-def test_given_adjacency_when_pruning_with_pns_then_returns_dag_with_context_included_edges(seed):
+def test_given_adjacency_when_pruning_with_pns_then_returns_dag_with_context_included_edges():
     X = dummy_sample(seed=seed)
     model = SCORE(pns=True)
     context = make_context().variables(observed=X.columns).build()

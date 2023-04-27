@@ -56,6 +56,15 @@ class NoGAM(BaseCAMPruning, SteinMixin):
     References
     ----------
     .. footbibliography::
+
+    Notes
+    -----
+    Prior knowledge about the included and excluded directed edges in the output DAG
+    is supported. It is not possible to provide explicit constraints on the relative
+    positions of nodes in the topological ordering. However, explicitly including a
+    directed edge in the DAG defines an implicit constraint on the relative position
+    of the nodes in the topological ordering (i.e. if directed edge `(i,j)` is
+    encoded in the graph, node `i` will precede node `j` in the output order).
     """
 
     def __init__(
@@ -105,7 +114,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
             R = self._estimate_residuals(X[:, remaining_nodes])
             err = self._mse(R, S)
             leaf = np.argmin(err)
-            leaf = self.get_leaf(
+            leaf = self._get_leaf(
                 leaf, remaining_nodes, top_order
             )  # get leaf consistent with order imposed by included_edges from self.context
             l_index = remaining_nodes[leaf]
@@ -117,7 +126,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         return full_dag(top_order), top_order
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
-        """NoGAM pruning of the fully connected adjacency matrix representation of the
+        """Pruning of the fully connected adjacency matrix representation of the
         inferred topological order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
@@ -137,7 +146,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         """
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):
-            A_dense = self.pns(A_dense, X=X)
+            A_dense = self._pns(A_dense, X=X)
         return super().prune(X, A_dense)
 
     def _mse(self, X: NDArray, Y: NDArray) -> List[float]:

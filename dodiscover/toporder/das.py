@@ -48,6 +48,15 @@ class DAS(SCORE):
     References
     ----------
     .. footbibliography::
+
+    Notes
+    -----
+    Prior knowledge about the included and excluded directed edges in the output DAG
+    is supported. It is not possible to provide explicit constraints on the relative
+    positions of nodes in the topological ordering. However, explicitly including a
+    directed edge in the DAG defines an implicit constraint on the relative position
+    of the nodes in the topological ordering (i.e. if directed edge `(i,j)` is
+    encoded in the graph, node `i` will precede node `j` in the output order).
     """
 
     def __init__(

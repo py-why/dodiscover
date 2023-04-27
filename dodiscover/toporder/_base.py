@@ -297,7 +297,7 @@ class BaseCAMPruning(TopOrderInterface):
         self.order_: nx.DiGraph = nx.empty_graph()
         self.graph_: List[int] = list()
 
-    def get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
+    def _get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
         """Get leaf node from the list of `remaining_nodes` without an assigned order.
 
         Parameters
@@ -388,23 +388,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         return A
 
-    def exclude_edges(self, A: NDArray) -> NDArray:
-        """Update `self.context` excluding edges not admitted in `A`.
-
-        Parameters
-        ----------
-        A : np.ndarray
-            Adjacency matrix representation of an arbitrary graph (directe or undirected).
-            If `A[i, j]`, add edge (i, j) to `self.context.excluded_edges`.
-        """
-        # self.context.excluded_edges: nx.Graph with excluded edges
-        d = A.shape[0]
-        for i in range(d):
-            for j in range(d):
-                if i != j and A[i, j] == 0 and (not self.context.included_edges.has_edge(i, j)):
-                    self.context.excluded_edges.add_edge(i, j)
-
-    def pns(self, A: NDArray, X: NDArray) -> NDArray:
+    def _pns(self, A: NDArray, X: NDArray) -> NDArray:
         """Preliminary Neighbors Selection (PNS) pruning on adjacency matrix `A`.
 
         Variable selection preliminary to CAM pruning.
@@ -445,6 +429,22 @@ class BaseCAMPruning(TopOrderInterface):
             A[:, node] *= mask_selected
 
         return A
+
+    def _exclude_edges(self, A: NDArray) -> NDArray:
+        """Update `self.context` excluding edges not admitted in `A`.
+
+        Parameters
+        ----------
+        A : np.ndarray
+            Adjacency matrix representation of an arbitrary graph (directe or undirected).
+            If `A[i, j]`, add edge (i, j) to `self.context.excluded_edges`.
+        """
+        # self.context.excluded_edges: nx.Graph with excluded edges
+        d = A.shape[0]
+        for i in range(d):
+            for j in range(d):
+                if i != j and A[i, j] == 0 and (not self.context.included_edges.has_edge(i, j)):
+                    self.context.excluded_edges.add_edge(i, j)
 
     def _dag_check_included_edges(self) -> None:
         """Check that the edges included in `self.context` does not violate DAG condition."""

@@ -19,6 +19,7 @@ exclude =
     paper
     setup.py
     doc
+    venv
 
 per-file-ignores =
     # __init__.py files are allowed to have unused imports

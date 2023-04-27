@@ -36,6 +36,15 @@ class CAM(BaseCAMPruning):
     References
     ----------
     .. footbibliography::
+
+    Notes
+    -----
+    Prior knowledge about the included and excluded directed edges in the output DAG
+    is supported. It is not possible to provide explicit constraints on the relative
+    positions of nodes in the topological ordering. However, explicitly including a
+    directed edge in the DAG defines an implicit constraint on the relative position
+    of the nodes in the topological ordering (i.e. if directed edge `(i,j)` is
+    encoded in the graph, node `i` will precede node `j` in the output order).
     """
 
     def __init__(
@@ -213,8 +222,8 @@ class CAM(BaseCAMPruning):
         _, d = X.shape
         G_excluded = self.context.excluded_edges  # nx.Graph with excluded edges
         if (self.do_pns) or (self.do_pns is None and d > 20):
-            A_pns = self.pns(A=np.ones((d, d)), X=X)
-            self.exclude_edges(A_pns)
+            A_pns = self._pns(A=np.ones((d, d)), X=X)
+            self._exclude_edges(A_pns)
 
         # Initialize matrix of score gains and vector of initial scores
         score_gains = np.zeros((d, d))
