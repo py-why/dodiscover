@@ -19,34 +19,35 @@ Note that knowing the topological ordering is already sufficient for estimating 
 Nevertheless, the pruning step is justified by the fact that operating with a sparser graph is
 statistically more efficient.
 
-The four methods differ as follow
-- In CAM algorithm the topological ordering is inferred by finding the permutation of the graph
-nodes corresponding to the fully connected graph that maximizes the log-likelihood of the data.
-After inference of the topological ordering, the pruning step is done by variable selection with
-regression. In particular, for each variable ``j`` CAM fits a generalized additive model using as
-covariates all the predecessor of ``j`` in the ordering, and performs hypothesis testing to select
-relevant parent variables.
-- SCORE provides a more efficient topological ordering than CAM, while it inherits the pruning
-procedure. In order to infer the topological ordering, SCORE estimates the Hessian matrix of the
-log-likelihood. Then, it finds a leaf (i.e. a node without children) by taking the ``argmin`` of the
-variance over the diagonal elements of the Hessian matrix. Once a leaf is found, it is removed from
-the graph and the procedure is iteratively repeated, evantually assigning a position to each node.
-- DAS provides a more efficient pruning step, while it inherits the ordering method from SCORE.
-Let ``H`` be the Hessian matrix of the log-likelihood: given a leaf node ``j``, DAS selects an edge
-``i -> j`` if the pair satisfies ``mean(abs(H[i, j])) = 0``. Vanishing mean is verified by
-hypothesis testing. Finally, CAM-pruning is applied on the resulting sparse graph, in order to
-further reduce the number of false positives in the inferred DAG. Sparsity ensures linear
-computational complexity of this final pruning step. (DAS can be seen as an efficient version of
-SCORE, with better scaling properties in the graph size.)
-- NoGAM introduces a topological ordering procedure that does not assume any distribution
-of the noise terms, whereas CAM, SCORE and DAS all require the noise to be Gaussian.
-The pruning of the graph is done via CAM procedure. In order to define the topological order, NoGAM
-identifies one leaf at the time: first, for each node in the graph, it estimates the residuals of
-the regression problem that predicts a variable ``j`` from all the remaining nodes
-``1, 2, .., j-1, j+1, .., |V|`` (with ``|V|`` the number of nodes). Then, NoGAM tries to estimate
-each entry ``j`` of the vector of the gradient of log-likelihood using the residual of the
-variable ``j`` as covariate: a leaf is found by selection of the ``argmin`` of the mean squared
-error of the predictions.
+The four methods differ as follow:
+
+* In CAM algorithm the topological ordering is inferred by finding the permutation of the graph
+  nodes corresponding to the fully connected graph that maximizes the log-likelihood of the data.
+  After inference of the topological ordering, the pruning step is done by variable selection with
+  regression. In particular, for each variable ``j`` CAM fits a generalized additive model using as
+  covariates all the predecessor of ``j`` in the ordering, and performs hypothesis testing to select
+  relevant parent variables.
+* SCORE provides a more efficient topological ordering than CAM, while it inherits the pruning
+  procedure. In order to infer the topological ordering, SCORE estimates the Hessian matrix of the
+  log-likelihood. Then, it finds a leaf (i.e. a node without children) by taking the ``argmin`` of the
+  variance over the diagonal elements of the Hessian matrix. Once a leaf is found, it is removed from
+  the graph and the procedure is iteratively repeated, evantually assigning a position to each node.
+* DAS provides a more efficient pruning step, while it inherits the ordering method from SCORE.
+  Let ``H`` be the Hessian matrix of the log-likelihood: given a leaf node ``j``, DAS selects an edge
+  ``i -> j`` if the pair satisfies ``mean(abs(H[i, j])) = 0``. Vanishing mean is verified by
+  hypothesis testing. Finally, CAM-pruning is applied on the resulting sparse graph, in order to
+  further reduce the number of false positives in the inferred DAG. Sparsity ensures linear
+  computational complexity of this final pruning step. (DAS can be seen as an efficient version of
+  SCORE, with better scaling properties in the graph size.)
+* NoGAM introduces a topological ordering procedure that does not assume any distribution
+  of the noise terms, whereas CAM, SCORE and DAS all require the noise to be Gaussian.
+  The pruning of the graph is done via CAM procedure. In order to define the topological order, NoGAM
+  identifies one leaf at the time: first, for each node in the graph, it estimates the residuals of
+  the regression problem that predicts a variable ``j`` from all the remaining nodes
+  ``1, 2, .., j-1, j+1, .., |V|`` (with ``|V|`` the number of nodes). Then, NoGAM tries to estimate
+  each entry ``j`` of the vector of the gradient of log-likelihood using the residual of the
+  variable ``j`` as covariate: a leaf is found by selection of the ``argmin`` of the mean squared
+  error of the predictions.
 
 
 .. currentmodule:: dodiscover
@@ -134,7 +135,8 @@ data = gcm.draw_samples(causal_model, num_samples=500)
 
 print(data.head())
 print(pd.Series({col: data[col].unique() for col in data}))
-draw(G)
+dot_graph = draw(G)
+dot_graph.render(outfile="oracle_dag.png", view=True)
 
 # %%
 # Define the context
@@ -152,13 +154,7 @@ draw(G)
 # that may be used in downstream structure learning algorithms.
 context = make_context().variables(data=data).build()
 
-# Alternatively, one could say specify some fixed edges.
-# Note that when specifying fixed edges, the resulting graph that is
-# learned is not necessarily a "pure CPDAG". In that, there are more
-# constraints than just the conditional independences. Therefore, one
-# should use caution when specifying fixed edges if they are interested
-# in leveraging ID or estimation algorithms that assume the learned
-# structure is a "pure CPDAG".
+# Alternatively, one could specify some fixed edges.
 
 # .. code-block::Python
 #   included_edges = nx.Graph([('x', 'y')])
@@ -172,14 +168,13 @@ context = make_context().variables(data=data).build()
 # graphs. This is done iteratively according to the following procedure:
 #
 # 1. SCORE estimates the Hessian of the logarithm of :math:`p(V)`,
-# with :math:`p(V)` the joint distribution of the nodes in the graph.
-#
+#    with :math:`p(V)` the joint distribution of the nodes in the graph.
 # 2. Let `H := Hessian(log p(V))`. SCORE selects a leaf in the graph by finding
-# the diagonal term of H with minimum variance,
-# i.e. by computing `np.argmin(np.var(np.diag(H))`.
-#
+#    the diagonal term of H with minimum variance,
+#    i.e. by computing `np.argmin(np.var(np.diag(H))`.
 # 3. SCORE removes the leaf in from the graph, and repeats steps from 1. to 3.
-# iteratively up to the source nodes.
+#    iteratively up to the source nodes.
+#
 # Given the inferred topological order, SCORE prunes the graph by with all
 # edges admitted by such ordering, by doing sparse regression to choose the
 # relevant variables. Variable selection is done by thresholding on the
@@ -210,3 +205,13 @@ dot_graph = draw(
     nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph), name="Fully connected DAG"
 )
 dot_graph.render(outfile="score_full_dag.png", view=True)
+
+# %%
+# Summary
+# -------
+# We observe two DAGs ouput of the SCORE inference procedure.
+# One is the fully connected graph associated to the inferred topological order 
+# :math:`V = \{1, 0, 2, 3\}` of the graph nodes. Interestingly, according to this ordering
+# the ground truth edges `0 -> 1` and `2 -> 1` can not be recovered, inducing two 
+# two false negatives in the prediction.
+# After the pruning procedure, the final output of SCORE is a graph with 

@@ -34,8 +34,7 @@ def test_given_dataset_when_fitting_CAM_then_shd_larger_equal_dtop():
     assert shd >= d_top
 
 
-def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_consistent(
-):
+def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_consistent():
     X = dummy_sample(seed=seed)
     order_gt = [2, 1, 3, 0]
     model = CAM()
