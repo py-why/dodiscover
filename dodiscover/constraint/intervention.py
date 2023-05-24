@@ -353,9 +353,13 @@ class PsiFCI(FCI):
         # convert the undirected skeleton graph to its PAG-class, where
         # all left-over edges have a "circle" endpoint
         if self.known_intervention_targets:
-            pag = pgraph.IPAG(incoming_circle_edges=graph, name="IPAG derived with I-FCI")
+            pag = pgraph.AugmentedPAG(
+                incoming_circle_edges=graph, name="AugmentedPAG derived with I-FCI"
+            )
         else:
-            pag = pgraph.PsiPAG(incoming_circle_edges=graph, name="PsiPAG derived with Psi-FCI")
+            pag = pgraph.AugmentedPAG(
+                incoming_circle_edges=graph, name="AugmentedPAG derived with Psi-FCI"
+            )
 
         # XXX: assign targets as well
         # assign f-nodes

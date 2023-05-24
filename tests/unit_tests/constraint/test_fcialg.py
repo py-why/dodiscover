@@ -6,6 +6,7 @@ import pytest
 import pywhy_graphs
 import pywhy_graphs.networkx as pywhy_nx
 from pywhy_graphs import ADMG, PAG
+from pywhy_graphs.testing import assert_mixed_edge_graphs_isomorphic
 
 from dodiscover import FCI, make_context
 from dodiscover.ci import Oracle
@@ -633,12 +634,7 @@ class Test_FCI:
             incoming_circle_edges=uncertain_edge_list,
         )
 
-        for edge in expected_pag.to_undirected().edges:
-            assert skel_graph.has_edge(*edge)
-        for edge in skel_graph.to_undirected().edges:
-            assert expected_pag.to_undirected().has_edge(*edge)
-        assert nx.is_isomorphic(skel_graph.to_undirected(), expected_pag.to_undirected())
-        assert set(expected_pag.edges()) == set(pag.edges())
+        assert_mixed_edge_graphs_isomorphic(pag, expected_pag)
 
     @pytest.mark.parametrize(
         "condsel_method",
@@ -714,8 +710,7 @@ class Test_FCI:
         expected_pag.add_edge("x4", "x5", expected_pag.bidirected_edge_name)
 
         assert set(pag.edges()) == set(expected_pag.edges())
-        for edge_type, subgraph in expected_pag.get_graphs().items():
-            assert nx.is_isomorphic(subgraph, pag.get_graphs(edge_type))
+        assert_mixed_edge_graphs_isomorphic(pag, expected_pag)
 
     def test_fci_fig6(self):
         """

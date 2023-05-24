@@ -23,8 +23,9 @@ class Oracle(BaseConditionalIndependenceTest):
 
     _allow_multivariate_input: bool = True
 
-    def __init__(self, graph: Graph) -> None:
+    def __init__(self, graph: Graph, included_nodes: Set[Column] = None) -> None:
         self.graph = graph
+        self.included_nodes = included_nodes
 
     def test(
         self,
@@ -67,6 +68,15 @@ class Oracle(BaseConditionalIndependenceTest):
         .. footbibliography::
         """
         self._check_test_input(df, x_vars, y_vars, z_covariates)
+
+        # generate a set of included nodes always in the Z-covariates
+        if self.included_nodes is None:
+            included_nodes = set()
+        else:
+            included_nodes = (
+                set(self.included_nodes).difference(set(x_vars)).difference(set(y_vars))
+            )
+        z_covariates = set(z_covariates).union(included_nodes)
 
         # just check for d-separation between x and y given sep_set
         if isinstance(self.graph, nx.DiGraph):

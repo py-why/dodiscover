@@ -2,7 +2,7 @@ import networkx as nx
 import pytest
 import pywhy_graphs as pgraphs
 
-from dodiscover import InterventionalContextBuilder, make_context
+from dodiscover import Context, InterventionalContextBuilder, make_context
 from dodiscover.ci import Oracle
 from dodiscover.constraint.skeleton import LearnInterventionSkeleton
 from dodiscover.constraint.utils import dummy_sample
@@ -53,7 +53,9 @@ def test_fnode_skeleton_known_targets():
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
-    obs_skel_graph = learner.context_.state_variable("obs_skel_graph")
+    obs_skel_graph = learner.context_.state_variable("obs_skel_graph").subgraph(
+        context.get_non_augmented_nodes()
+    )
 
     assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
     assert nx.is_isomorphic(expected_skeleton, skel_graph)
@@ -102,7 +104,7 @@ def test_fnode_skeleton_unknown_targets():
         ci_estimator=oracle, cd_estimator=oracle, known_intervention_targets=False
     )
     data = [dummy_sample(non_f_graph), dummy_sample(non_f_graph)]
-    context = (
+    context: Context = (
         make_context(create_using=InterventionalContextBuilder)
         .variables(data=data[0])
         .num_distributions(2)
@@ -112,8 +114,12 @@ def test_fnode_skeleton_unknown_targets():
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
-    obs_skel_graph = learner.context_.state_variable("obs_skel_graph")
+    obs_skel_graph = learner.context_.state_variable("obs_skel_graph").subgraph(
+        context.get_non_augmented_nodes()
+    )
 
+    print(obs_expected_skeleton.edges())
+    print(obs_skel_graph.edges())
     assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
     print(expected_skeleton.edges())
     print(skel_graph.edges())
@@ -151,3 +157,67 @@ def test_fnode_skeleton_errors():
 
     with pytest.raises(RuntimeError, match="The number of datasets does not match"):
         learner.fit(data, context)
+
+
+def test_basic_fnode_skeleton():
+    """Test the F-nodes are part of the separating set."""
+    directed_edges = [
+        ("x", "y"),
+        ("y", "z"),
+    ]
+    bidirected_edges = [("x", "y")]
+    graph = pgraphs.AugmentedGraph(
+        incoming_directed_edges=directed_edges, incoming_bidirected_edges=bidirected_edges
+    )
+    non_f_graph = graph.copy()
+    graph.add_f_node({"x", "z"})
+    oracle = Oracle(graph, graph.f_nodes)
+
+    # define the expected graph we will learn
+    edges = [
+        (("F", 0), "x"),
+        (("F", 0), "y"),
+        (("F", 0), "z"),
+        ("x", "y"),
+        ("y", "z"),
+    ]
+    expected_skeleton = nx.Graph(edges)
+    obs_expected_skeleton = expected_skeleton.copy()
+    obs_expected_skeleton.remove_node(("F", 0))
+
+    # define the learner and the context
+    learner = LearnInterventionSkeleton(
+        ci_estimator=oracle,
+        cd_estimator=oracle,
+        known_intervention_targets=True,
+    )
+    data = [dummy_sample(non_f_graph), dummy_sample(non_f_graph)]
+    context: Context = (
+        make_context(create_using=InterventionalContextBuilder)
+        .variables(data=data[0])
+        .num_distributions(2)
+        .intervention_targets([("x", "z")])
+        .build()
+    )
+    learner.fit(data, context)
+
+    # first check the observational skeleton
+    skel_graph = learner.adj_graph_
+    obs_skel_graph = learner.context_.state_variable("obs_skel_graph").subgraph(
+        context.get_non_augmented_nodes()
+    )
+    sep_set = learner.sep_set_
+
+    # check the separating sets
+    # XXX: CAN IMPROVE THE ASSERTION if we can get separating sets to only be checked once..
+    assert {"y", ("F", 0)} in sep_set["x"]["z"]
+
+    # check the skeleton after obs data
+    print(obs_expected_skeleton.edges())
+    print(obs_skel_graph.edges())
+    assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
+
+    # check the skeleton after intervention
+    print(skel_graph.edges())
+    print(expected_skeleton.edges())
+    assert nx.is_isomorphic(expected_skeleton, skel_graph)
