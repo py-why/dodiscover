@@ -30,7 +30,7 @@ class SFCI(PsiFCI):
         max_path_length: Optional[int] = None,
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         n_jobs: Optional[int] = None,
-        debug: bool = False
+        debug: bool = False,
     ):
         super().__init__(
             ci_estimator,
@@ -67,7 +67,9 @@ class SFCI(PsiFCI):
             max_path_length=self.max_path_length,
             n_jobs=self.n_jobs,
         )
-        self.skeleton_learner_.fit(data, context, self.domain_indices, self.intervention_targets, debug=self.debug)
+        self.skeleton_learner_.fit(
+            data, context, self.domain_indices, self.intervention_targets, debug=self.debug
+        )
 
         self.context_ = self.skeleton_learner_.context_.copy()
         skel_graph = self.skeleton_learner_.adj_graph_
@@ -215,8 +217,7 @@ class SFCI(PsiFCI):
 
         # convert the undirected skeleton graph to its PAG-class, where
         # all left-over edges have a "circle" endpoint
-        pag = pgraph.AugmentedPAG(incoming_circle_edges=graph,
-                                  name="SPAG derived with S-FCI")
+        pag = pgraph.AugmentedPAG(incoming_circle_edges=graph, name="SPAG derived with S-FCI")
 
         # get the graph attributes
         pag.graph = graph.graph
