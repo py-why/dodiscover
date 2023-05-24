@@ -1240,21 +1240,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             obs_data = data[largest_data_idx]
 
         self.context_ = context.copy()
-        # allow us to query the iteration stage of the causal discovery algorithm
-        # allowing us to run multiple iterations of the skeleton discovery
-        edge_attrs = set(
-            chain.from_iterable(d.keys() for *_, d in context.init_graph.edges(data=True))
-        )
-        if self.n_iters_ == 0 and "test_stat" in edge_attrs or "pvalue" in edge_attrs:
-            raise RuntimeError(
-                "Running skeleton discovery with adjacency graph "
-                "with 'test_stat' or 'pvalue' is not supported yet."
-            )
-
-        # store the absolute value of test-statistic values and pvalue for
-        # every single candidate parent-child edge (X -> Y)
-        nx.set_edge_attributes(context.init_graph, np.inf, "test_stat")
-        nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
 
         # first learn the skeleton using only "observational data"
         self._learn_skeleton(
