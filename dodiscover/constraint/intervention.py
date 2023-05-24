@@ -1,6 +1,6 @@
 import logging
 from itertools import permutations
-from typing import Any, Dict, FrozenSet, List, Optional, Tuple
+from typing import FrozenSet, List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
@@ -295,9 +295,7 @@ class PsiFCI(FCI):
         finished = False
 
         # apply R11, which is called R8 in I-FCI / Psi-FCI orienting all F-nodes
-        f_nodes = self.context_.f_nodes
-        symmetric_diff_map = self.context_.symmetric_diff_map
-        _ = self._apply_rule11(graph, f_nodes)
+        _ = self._apply_rule11(graph, self.context_)
 
         while idx < self.max_iter and not finished:
             change_flag = False
@@ -325,7 +323,7 @@ class PsiFCI(FCI):
                     r10_add, _, _ = self._apply_rule10(graph, a, c, u)
 
                     # apply R12, called R9 in I-FCI when we know the intervention targets
-                    r12_add = self._apply_rule12(graph, u, a, c, f_nodes, symmetric_diff_map)
+                    r12_add = self._apply_rule12(graph, u, a, c, self.context_)
 
                     # see if there was a change flag
                     all_flags = [r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add, r12_add]

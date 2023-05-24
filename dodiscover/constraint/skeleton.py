@@ -17,7 +17,6 @@ from dodiscover.typing import Column, SeparatingSet
 
 from .._protocol import EquivalenceClass
 from ..context import Context
-from ..context_builder import InterventionalContextBuilder, make_context
 from .utils import _find_neighbors_along_path
 
 logger = logging.getLogger()
@@ -213,7 +212,7 @@ def candidate_cond_sets(
         # inside the adj_graph
         possible_variables = sorted(
             possible_variables,
-            key=lambda n: context.init_graph.edges[x_var, n]["test_stat"],
+            key=lambda n: context.init_graph.edges[x_var, n]["test_stat"],  # type: ignore
             reverse=True,
         )  # type: ignore
 
@@ -279,7 +278,8 @@ class BaseSkeletonLearner:
         discovery phase multiple times.
     """
 
-    ci_estimator: Callable[[Column, Column, Set[Column]], Tuple[float, float]]
+    #: Callable[[Column, Column, Set[Column]], Tuple[float, float]]
+    ci_estimator: BaseConditionalIndependenceTest
     alpha: float
     n_jobs: Optional[int]
 
@@ -298,12 +298,14 @@ class BaseSkeletonLearner:
     # stopping condition
     _cont: bool
 
+    n_ci_tests: int = 0
+
     def _learn_skeleton(
         self,
         data: pd.DataFrame,
         context: Context,
         condsel_method: ConditioningSetSelection,
-        conditional_test_func: Callable,
+        conditional_test_func,
         possible_x_nodes=None,
         skipped_y_nodes=None,
         skipped_z_nodes=None,
@@ -613,10 +615,10 @@ class BaseSkeletonLearner:
         """
         # keep track of the smallest test statistic, meaning the highest pvalue
         # meaning the "most" independent. keep track of the maximum pvalue as well
-        if pvalue > context.init_graph.edges[x_var, y_var]["pvalue"]:
-            context.init_graph.edges[x_var, y_var]["pvalue"] = pvalue
-        if test_stat < context.init_graph.edges[x_var, y_var]["test_stat"]:
-            context.init_graph.edges[x_var, y_var]["test_stat"] = test_stat
+        if pvalue > context.init_graph.edges[x_var, y_var]["pvalue"]:  # type: ignore
+            context.init_graph.edges[x_var, y_var]["pvalue"] = pvalue  # type: ignore
+        if test_stat < context.init_graph.edges[x_var, y_var]["test_stat"]:  # type: ignore
+            context.init_graph.edges[x_var, y_var]["test_stat"] = test_stat  # type: ignore
 
     def _summarize_xy_comparison(
         self, x_var: Column, y_var: Column, removed_edge: bool, pvalue: float
@@ -789,7 +791,7 @@ class LearnSkeleton(BaseSkeletonLearner):
         self.n_ci_tests = 0
         self.n_iters_ = 0
 
-    def _initialize_params(self, context) -> None:
+    def _initialize_params(self, context) -> Context:
         """Initialize parameters for learning skeleton.
 
         Basic parameters that are used by any constraint-based causal discovery algorithms.
@@ -843,9 +845,10 @@ class LearnSkeleton(BaseSkeletonLearner):
         nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
         return context
 
-    def fit(self, data: pd.DataFrame, context: Context):
-        # initialize learning parameters
-        context = self._initialize_params(context)
+    def fit(self, data: pd.DataFrame, context: Context, check_input: bool = True):
+        if check_input:
+            # initialize learning parameters
+            context = self._initialize_params(context)
 
         # apply algorithm to learn skeleton
         self._learn_skeleton(
@@ -974,9 +977,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         max_cond_set_size: Optional[int] = None,
         max_combinations: Optional[int] = None,
         condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
-        second_stage_condsel_method: Optional[
-            ConditioningSetSelection
-        ] = ConditioningSetSelection.PDS,
+        second_stage_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         keep_sorted: bool = False,
         max_path_length: Optional[int] = None,
         n_jobs: Optional[int] = None,
@@ -1067,7 +1068,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
         return context
 
-    def _initialize_params(self, context) -> None:
+    def _initialize_params(self, context) -> Context:
         if self.max_path_length is None:
             self.max_path_length_ = np.inf
         else:
@@ -1207,7 +1208,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
 
-    def fit(self, data: List[pd.DataFrame], context: Context) -> None:
+    def fit(self, data: List[pd.DataFrame], context: Context, check_input: bool = True) -> None:
         # ensure data is a list
         if isinstance(data, pd.DataFrame):
             data = [data]
@@ -1223,8 +1224,10 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 f"while the rest are interventional."
             )
 
-        orig_context = context.copy()
-        f_nodes = context.f_nodes
+        if check_input:
+            # initialize learning parameters
+            context = self._initialize_params(context)
+        f_nodes = set(context.f_nodes)
 
         if context.obs_distribution:
             # it is fine to run the first stage of the FCI algorithm, as this will
@@ -1235,9 +1238,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             # then we should choose the experimental dataset with the most samples
             largest_data_idx = np.argmax([len(df) for df in data])
             obs_data = data[largest_data_idx]
-
-        # initialize learning parameters
-        self._initialize_params(context)
 
         self.context_ = context.copy()
         # allow us to query the iteration stage of the causal discovery algorithm
@@ -1346,7 +1346,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # R9 allows us to leverage F-nodes being not in separating sets to
         # augment all separating sets that have non-empty sets with all
         # F-nodes to keep consistency with the algorithm
-        f_nodes = set(f_nodes)
         for x_var, y_vars in self.sep_set_.items():
             for y_var in y_vars:
                 sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
