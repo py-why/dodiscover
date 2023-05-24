@@ -39,7 +39,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         if x_vars is not None and any(col not in df.columns for col in x_vars):
             raise ValueError("The x variables are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
-            raise ValueError("The y variables are not all in the DataFrame.")
+            raise ValueError(f"The y variables, {y_vars} are not all in the DataFrame: {df.columns}")
         if group_col_var not in df.columns:
             raise ValueError(f"The group column {group_col_var} is not in the DataFrame.")
 

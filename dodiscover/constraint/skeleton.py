@@ -82,7 +82,7 @@ def _test_xy_edges(
     )
 
     # TODO: figure out more elegant way of doing this
-    old_xvar = None
+    new_x_var = None
     # now iterate through the possible parents
     for comb_idx, cond_set in enumerate(conditioning_sets):
         # check the number of combinations of possible parents we have tried
@@ -106,14 +106,18 @@ def _test_xy_edges(
             data_j[x_var] = 1
             this_data = pd.concat((data_i, data_j), axis=0)
 
-            if group_with_snode is not None:
-                old_xvar = x_var
-                x_var = frozenset({x_var, group_with_snode})
         try:
-            # compute conditional independence test
-            test_stat, pvalue = parallel_fun(
-                this_data, conditional_test_func, x_var, y_var, set(cond_set)
-            )
+            if group_with_snode is not None:
+                new_x_var = set([x_var, group_with_snode])
+                # compute conditional independence test
+                test_stat, pvalue = parallel_fun(
+                    this_data, conditional_test_func, new_x_var, y_var, set(cond_set)
+                )
+            else:
+                # compute conditional independence test
+                test_stat, pvalue = parallel_fun(
+                    this_data, conditional_test_func, x_var, y_var, set(cond_set)
+                )
         except Exception as e:
             if "Not enough samples." in str(e):
                 print(e)
@@ -132,7 +136,7 @@ def _test_xy_edges(
 
     result: Dict[str, Any] = dict()
     result["x_var"] = x_var
-    result['old_xvar'] = old_xvar
+    result['old_xvar'] = new_x_var
     result["y_var"] = y_var
     result["cond_set"] = list(cond_set)
     result["test_stat"] = test_stat
