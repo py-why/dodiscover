@@ -82,13 +82,12 @@ def test_build_context_errors():
         ctx_builder.variables(observed="x", latents="z", data=df)
 
 
-def test_context_set_errors():
-    ctx_builder = make_context()
-    df = make_df()
-    ctx = ctx_builder.variables(data=df).build()
-
-    with pytest.raises(dataclasses.FrozenInstanceError, match="cannot assign to field"):
-        ctx.init_graph = nx.empty_graph(0)
+# def test_context_set_errors():
+#     ctx_builder = make_context()
+#     df = make_df()
+#     ctx = ctx_builder.variables(data=df).build()
+# with pytest.raises(dataclasses.FrozenInstanceError, match="cannot assign to field"):
+#     ctx.init_graph = nx.empty_graph(0)
 
 
 def test_context_set_edges():
@@ -137,8 +136,8 @@ def test_context_set_get():
     assert ctx == ctx2
 
     # directly setting fields should not be allowed
-    with pytest.raises(dataclasses.FrozenInstanceError, match="cannot assign to field"):
-        ctx.intervention_targets = ["new"]
+    # with pytest.raises(dataclasses.FrozenInstanceError, match="cannot assign to field"):
+    #     ctx.intervention_targets = ["new"]
 
     # however, altering via functions is fine
     ctx.add_state_variable("new", 0)

@@ -94,7 +94,14 @@ ci_estimator = GSquareCITest(data_type="discrete")
 cd_estimator = GSquareCITest(data_type="discrete")
 
 alpha = 0.05
-learner = PsiFCI(ci_estimator=ci_estimator, cd_estimator=cd_estimator, alpha=alpha, n_jobs=-1)
+learner = PsiFCI(
+    ci_estimator=ci_estimator,
+    cd_estimator=cd_estimator,
+    alpha=alpha,
+    max_combinations=10,
+    max_cond_set_size=4,
+    n_jobs=-1,
+)
 
 # create context with information about the interventions
 ctx_builder = make_context(create_using=InterventionalContextBuilder)
@@ -126,13 +133,13 @@ print(f"There are {len(est_pag.to_undirected().edges)} edges in the resulting PA
 # %%
 # Visualize the full graph including the F-node
 dot_graph = draw(est_pag, direction="LR")
-dot_graph.render(outfile="psi_pag_full.png", view=True)
+dot_graph.render(outfile="psi_pag_full.png", view=True, cleanup=True)
 
 # %%
 # Visualize the graph without the F-nodes
-est_pag_no_fnodes = est_pag.subgraph(ctx.get_non_f_nodes())
+est_pag_no_fnodes = est_pag.subgraph(ctx.get_non_augmented_nodes())
 dot_graph = draw(est_pag_no_fnodes, direction="LR")
-dot_graph.render(outfile="psi_pag.png", view=True)
+dot_graph.render(outfile="psi_pag.png", view=True, cleanup=True)
 
 # Interpretation
 # --------------

@@ -1,6 +1,6 @@
 import logging
 from itertools import permutations
-from typing import Any, Dict, FrozenSet, List, Optional, Tuple
+from typing import FrozenSet, List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
@@ -188,7 +188,7 @@ class PsiFCI(FCI):
 
         return super().fit(data, context)
 
-    def _apply_rule11(self, graph: EquivalenceClass, f_nodes: List) -> Tuple[bool, List]:
+    def _apply_rule11(self, graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
         """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.
 
         This orients all edges out of F-nodes. So patterns of the form
@@ -201,8 +201,8 @@ class PsiFCI(FCI):
         ----------
         graph : EquivalenceClass
             The causal graph to apply rules to.
-        f_nodes : list
-            The list of f-nodes within the graph.
+        context : Context
+            The causal context.
 
         Returns
         -------
@@ -215,11 +215,13 @@ class PsiFCI(FCI):
         ----------
         .. footbibliography::
         """
+        augmented_nodes = context.get_augmented_nodes()
+
         oriented_edges = []
         added_arrows = True
-        for node in f_nodes:
+        for node in augmented_nodes:
             for nbr in graph.neighbors(node):
-                if nbr in f_nodes:
+                if nbr in augmented_nodes:
                     continue
 
                 # remove all edges between node and nbr and orient this out
@@ -230,13 +232,7 @@ class PsiFCI(FCI):
         return added_arrows, oriented_edges
 
     def _apply_rule12(
-        self,
-        graph: EquivalenceClass,
-        u: Column,
-        a: Column,
-        c: Column,
-        f_nodes: List,
-        symmetric_diff_map: Dict[Any, FrozenSet],
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column, context: Context
     ) -> bool:
         """Apply "Rule 9" of the I-FCI algorithm.
 
@@ -256,11 +252,8 @@ class PsiFCI(FCI):
             Neighbors of the F-node.
         c : Column
             Neighbors of the F-node.
-        symmetric_diff_map : dict
-            A mapping from the F-nodes to the symmetric difference of the pair of
-            intervention targets each F-node represents. I.e. if F-node, F1 represents
-            the pair of intervention distributions with targets {'x'}, and {'x', 'y'},
-            then F1 maps to {'y'} in the symmetric diff map.
+        context : Context
+            The causal context.
 
         Returns
         -------
@@ -271,6 +264,9 @@ class PsiFCI(FCI):
         ----------
         .. footbibliography::
         """
+        f_nodes = context.f_nodes
+        symmetric_diff_map = context.symmetric_diff_map
+
         added_arrows = False
         if u in f_nodes and self.known_intervention_targets:
             # get sigma map to map F-node to its symmetric difference target
@@ -299,9 +295,7 @@ class PsiFCI(FCI):
         finished = False
 
         # apply R11, which is called R8 in I-FCI / Psi-FCI orienting all F-nodes
-        f_nodes = self.context_.f_nodes
-        symmetric_diff_map = self.context_.symmetric_diff_map
-        _ = self._apply_rule11(graph, f_nodes)
+        _ = self._apply_rule11(graph, self.context_)
 
         while idx < self.max_iter and not finished:
             change_flag = False
@@ -329,7 +323,7 @@ class PsiFCI(FCI):
                     r10_add, _, _ = self._apply_rule10(graph, a, c, u)
 
                     # apply R12, called R9 in I-FCI when we know the intervention targets
-                    r12_add = self._apply_rule12(graph, u, a, c, f_nodes, symmetric_diff_map)
+                    r12_add = self._apply_rule12(graph, u, a, c, self.context_)
 
                     # see if there was a change flag
                     all_flags = [r1_add, r2_add, r3_add, r4_add, r8_add, r9_add, r10_add, r12_add]
@@ -353,9 +347,13 @@ class PsiFCI(FCI):
         # convert the undirected skeleton graph to its PAG-class, where
         # all left-over edges have a "circle" endpoint
         if self.known_intervention_targets:
-            pag = pgraph.IPAG(incoming_circle_edges=graph, name="IPAG derived with I-FCI")
+            pag = pgraph.AugmentedPAG(
+                incoming_circle_edges=graph, name="AugmentedPAG derived with I-FCI"
+            )
         else:
-            pag = pgraph.PsiPAG(incoming_circle_edges=graph, name="PsiPAG derived with Psi-FCI")
+            pag = pgraph.AugmentedPAG(
+                incoming_circle_edges=graph, name="AugmentedPAG derived with Psi-FCI"
+            )
 
         # XXX: assign targets as well
         # assign f-nodes

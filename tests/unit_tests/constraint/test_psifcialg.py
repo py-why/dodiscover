@@ -7,7 +7,7 @@ import pandas as pd
 import pooch
 import pytest
 import pywhy_graphs as pgraphs
-from pywhy_graphs import IPAG, PsiPAG
+from pywhy_graphs import AugmentedPAG
 from pywhy_graphs.export import numpy_to_graph
 
 from dodiscover import InterventionalContextBuilder, PsiFCI, make_context
@@ -39,11 +39,13 @@ class Test_IFCI(Test_FCI):
         sub_dir_graph = nx.complete_graph(
             [("F", 0), ("F", 1), "a", "b", "c", "d"], create_using=nx.DiGraph
         )
-        G = IPAG(incoming_circle_edges=sub_dir_graph)
+        G = AugmentedPAG(incoming_circle_edges=sub_dir_graph)
 
         # there must only be one kind of edge from F-nodes to its nbrs
         f_nodes = [("F", 0), ("F", 1)]
-        self.alg._apply_rule11(G, f_nodes)
+        context = make_context().observed_variables(G.non_augmented_nodes).build()
+        context.f_nodes = f_nodes
+        self.alg._apply_rule11(G, context)
         for f_node in f_nodes:
             for nbr in G.neighbors(f_node):
                 if nbr in f_nodes:
@@ -64,7 +66,7 @@ class Test_IFCI(Test_FCI):
             ("w", "y"),
         ]
         circle_edges = [("y", "x"), ("x", "z"), ("y", "z"), ("y", "w")]
-        G = IPAG(incoming_directed_edges=directed_edges, incoming_circle_edges=circle_edges)
+        G = AugmentedPAG(incoming_directed_edges=directed_edges, incoming_circle_edges=circle_edges)
         G.graph["F-nodes"][("F", 0)] = ["x"]
         f_nodes = G.f_nodes
 
@@ -72,17 +74,20 @@ class Test_IFCI(Test_FCI):
         symmetric_diff_map = {
             ("F", 0): ["x"],
         }
+        context = make_context().observed_variables(G.non_augmented_nodes).build()
+        context.f_nodes = f_nodes
+        context.symmetric_diff_map = symmetric_diff_map
 
         # no arrows should be added if we are not operating over a F-node
-        for x, y, z in permutations(G.non_f_nodes, 3):
-            added_arrows = self.alg._apply_rule12(G, x, y, z, f_nodes, symmetric_diff_map)
+        for x, y, z in permutations(G.non_augmented_nodes, 3):
+            added_arrows = self.alg._apply_rule12(G, x, y, z, context)
             assert not added_arrows
 
         # no arrows should be added if the conditions of the rule are not met
-        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "z", f_nodes, symmetric_diff_map)
+        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "z", context)
         assert not added_arrows
 
-        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "y", f_nodes, symmetric_diff_map)
+        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "y", context)
         if self.alg.known_intervention_targets:
             assert added_arrows
             assert G.has_edge("x", "y", G.directed_edge_name)
@@ -134,7 +139,9 @@ class Test_IFCI(Test_FCI):
 
         # first check the observational skeleton
         skel_graph = learner.skeleton_learner_.adj_graph_
-        obs_skel_graph = learner.skeleton_learner_.context_.state_variable("obs_skel_graph")
+        obs_skel_graph = learner.skeleton_learner_.context_.state_variable(
+            "obs_skel_graph"
+        ).subgraph(context.get_non_augmented_nodes())
 
         assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
         assert nx.is_isomorphic(expected_skeleton, skel_graph)
@@ -150,7 +157,7 @@ class Test_IFCI(Test_FCI):
             ("w", "y"),
         ]
         circle_edges = [("x", "z"), ("y", "z"), ("y", "w")]
-        expected_G = IPAG(
+        expected_G = AugmentedPAG(
             incoming_directed_edges=directed_edges, incoming_circle_edges=circle_edges
         )
         expected_G.graph["F-nodes"][("F", 0)] = ["x"]
@@ -220,7 +227,9 @@ class Test_PsiFCI(Test_IFCI):
 
         # first check the observational skeleton
         skel_graph = learner.skeleton_learner_.adj_graph_
-        obs_skel_graph = learner.skeleton_learner_.context_.state_variable("obs_skel_graph")
+        obs_skel_graph = learner.skeleton_learner_.context_.state_variable(
+            "obs_skel_graph"
+        ).subgraph(context.get_non_augmented_nodes())
 
         assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
         assert nx.is_isomorphic(expected_skeleton, skel_graph)
@@ -237,7 +246,7 @@ class Test_PsiFCI(Test_IFCI):
             ("y", "w"),
         ]
         circle_edges = [("x", "z"), ("w", "x"), ("w", "z"), ("w", "y")]
-        expected_G = PsiPAG(
+        expected_G = AugmentedPAG(
             incoming_directed_edges=directed_edges, incoming_circle_edges=circle_edges
         )
         expected_G.graph["F-nodes"][("F", 0)] = ["x"]

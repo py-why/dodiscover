@@ -23,8 +23,9 @@ class Oracle(BaseConditionalIndependenceTest):
 
     _allow_multivariate_input: bool = True
 
-    def __init__(self, graph: Graph) -> None:
+    def __init__(self, graph: Graph, included_nodes: Optional[Set[Column]] = None) -> None:
         self.graph = graph
+        self.included_nodes = included_nodes
 
     def test(
         self,
@@ -68,13 +69,24 @@ class Oracle(BaseConditionalIndependenceTest):
         """
         self._check_test_input(df, x_vars, y_vars, z_covariates)
 
+        # generate a set of included nodes always in the Z-covariates
+        included_nodes = set()
+        if self.included_nodes is not None:
+            included_nodes = (
+                set(self.included_nodes).difference(set(x_vars)).difference(set(y_vars))
+            )
+        if z_covariates is None:
+            z_covariates_ = set(included_nodes)
+        else:
+            z_covariates_ = set(z_covariates).union(included_nodes)
+
         # just check for d-separation between x and y given sep_set
         if isinstance(self.graph, nx.DiGraph):
-            is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates)
+            is_sep = nx.d_separated(self.graph, x_vars, y_vars, z_covariates_)
         else:
             import pywhy_graphs.networkx as pywhy_nx
 
-            is_sep = pywhy_nx.m_separated(self.graph, x_vars, y_vars, z_covariates)
+            is_sep = pywhy_nx.m_separated(self.graph, x_vars, y_vars, z_covariates_)
 
         if is_sep:
             pvalue = 1
