@@ -1345,3 +1345,418 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         self.context_ = context.copy()
         self.adj_graph_ = deepcopy(context.init_graph.copy())
+
+
+class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
+    """Learn skeleton of a augmented selection diagram.
+
+    Parameters
+    ----------
+    ci_estimator : BaseConditionalIndependenceTest
+        The conditional independence test function.
+    cd_estimator : BaseConditionalDiscrepancyTest
+        The conditional discrepancy test function.
+    sep_set : dictionary of dictionary of list of set
+        Mapping node to other nodes to separating sets of variables.
+        If ``None``, then an empty dictionary of dictionary of list of sets
+        will be initialized.
+    alpha : float, optional
+        The significance level for the conditional independence test, by default 0.05.
+    min_cond_set_size : int
+        The minimum size of the conditioning set, by default 0. The number of variables
+        used in the conditioning set.
+    max_cond_set_size : int, optional
+        Maximum size of the conditioning set, by default None. Used to limit
+        the computation spent on the algorithm.
+    max_combinations : int, optional
+        The maximum number of conditional independence tests to run from the set
+        of possible conditioning sets. By default None, which means the algorithm will
+        check all possible conditioning sets. If ``max_combinations=n`` is set, then
+        for every conditioning set size, 'p', there will be at most 'n' CI tests run
+        before the conditioning set size 'p' is incremented. For controlling the size
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
+        in conjunction with ``keep_sorted`` parameter to only test the "strongest"
+        dependences.
+    condsel_method : ConditioningSetSelection
+        The method to use for testing conditional independence. Must be one of
+        ('pds', 'pds_path'). See Notes for more details.
+    keep_sorted : bool
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
+    max_path_length : int, optional
+        The maximum length of any discriminating path, or None if unlimited.
+    n_jobs : int, optional
+        Number of CPUs to use, by default None.
+
+    Notes
+    -----
+    With interventional data, one may either know the interventional targets from each
+    experimental distribution dataset, or one may not know the explicit targets. If the
+    interventional targets are known, then the skeleton discovery algorithm of
+    :footcite:`Kocaoglu2019characterization` is used. That is we learn the skeleton of a
+    AugmentedPAG. Otherwise, we will not know the intervention targets, and use the skeleton discovery
+    algorithm described in :footcite:`Jaber2020causal`. To define intervention targets, one
+    must use the :class:`dodiscover.InterventionalContextBuilder`.
+
+    References
+    ----------
+    .. footbibliography::
+    """
+
+    def __init__(
+        self,
+        ci_estimator: BaseConditionalIndependenceTest,
+        cd_estimator: BaseConditionalDiscrepancyTest,
+        sep_set: Optional[SeparatingSet] = None,
+        alpha: float = 0.05,
+        min_cond_set_size: int = 0,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        second_stage_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
+        keep_sorted: bool = False,
+        max_path_length: Optional[int] = None,
+        known_intervention_targets: bool = False,
+        n_jobs: Optional[int] = None,
+    ) -> None:
+        super().__init__(
+            ci_estimator=ci_estimator,
+            cd_estimator=cd_estimator,
+            sep_set=sep_set,
+            alpha=alpha,
+            min_cond_set_size=min_cond_set_size,
+            max_cond_set_size=max_cond_set_size,
+            max_combinations=max_combinations,
+            condsel_method=condsel_method,
+            second_stage_condsel_method=second_stage_condsel_method,
+            keep_sorted=keep_sorted,
+            max_path_length=max_path_length,
+            n_jobs=n_jobs,
+        )
+
+        self.known_intervention_targets = known_intervention_targets
+
+    def _create_augmented_nodes(
+        self, domain_ids: List[int], intervention_targets: List[Optional[Set]]
+    ) -> Tuple[List, Dict, Dict, Dict]:
+        """Create augmented nodes, sigma map and optionally a symmetric difference map.
+
+        Given a number of distributions attributed to interventions, one constructs
+        F-nodes to add to the causal graph by:
+
+        - For all pairs of incoming distributions, form a new F-node for every
+          pair of distributions. Update ``fnode_domain_map`` to map the F-node to
+          a specific domain.
+        - If the pairs are from two known target-interventions, then also
+          add the symmetric difference mapping to ``symmetric_diff_map``,
+          which maps the F-node to the intervention target.
+        - If the pairs are from two different domains, then also add the
+          symmetric difference mapping to ``symmetric_diff_map``, which
+          maps the F-node to the intervention target for each domain.
+
+          symmetric_diff_map = {F-node/S-node: targets, }
+          node_domain_map = {F-node/S-node: domains,}
+
+        where ``targets`` is a set of either nodes, or set of indices corresponding
+        to the input data distributions and ``domains`` is a set of domains, either
+        a single domain for F-nodes within domain, or a set of two domains for
+        F-nodes across domains.
+
+        Parameters
+        ----------
+        domain_ids : List[int]
+            A list of domain ids for each input distribution.
+        intervention_targets : List[Set]
+            A list of known intervention targets for each input distribution with ``None``
+            representing unknown targets. If the distribution is observational, then
+            the empty set is used.
+
+        Returns
+        -------
+        augmented_nodes : List
+            Set of augmented nodes (i.e. F and S nodes).
+        symmetric_diff_map : Dict[Any, FrozenSet]
+            Mapping of augmented nodes to intervention targets, or distribution indices represented by the node.
+        sigma_map : Dict[Any, FrozenSet]
+            Mapping of augmented nodes to distribution indices represented by the node.
+        node_domain_map : Dict[Any, FrozenSet]
+            Mapping of augmented nodes to domains.
+        """
+        unique_domains = np.unique(domain_ids)
+
+        # map augmented nodes to domains
+        node_domain_map = dict()
+        symmetric_diff_map = dict()
+        sigma_map = dict()
+        s_nodes = []
+        f_nodes = []
+
+        # for each domain, determine if there is observational data
+        domain_obs = dict()
+        for domain in unique_domains:
+            this_domain_idx = np.argwhere(np.array(domain_ids) == domain).squeeze()
+
+            # now check all intervention targets
+            this_targets = np.atleast_1d(np.array(intervention_targets)[this_domain_idx])
+            if set() in this_targets:
+                domain_obs[domain] = True
+            else:
+                domain_obs[domain] = False
+
+        # create S-nodes
+        for idx, (source, target) in enumerate(combinations(unique_domains, 2)):
+            s_node = ("S", idx)
+            node_domain_map[s_node] = {source, target}
+            s_nodes.append(s_node)
+
+        # create F-nodes
+        k = 0
+        seen_domain_pairs = dict()
+        seen_distr_pairs = dict()
+
+        for idx, source in enumerate(domain_ids):
+            for jdx, target in enumerate(domain_ids):
+                if jdx <= idx:
+                    continue
+                domain_memo_key = frozenset([source, target])
+                distr_memo_key = frozenset([idx, jdx])
+                if domain_memo_key in seen_domain_pairs and distr_memo_key in seen_distr_pairs:
+                    continue
+                seen_domain_pairs[distr_memo_key] = None
+                seen_distr_pairs[domain_memo_key] = None
+
+                # map each augmented-node to a tuple of distribution indices, or to a set of nodes representing
+                # the intervention targets
+                if intervention_targets[idx] is None or intervention_targets[jdx] is None:
+                    targets = frozenset([idx, jdx])
+                else:
+                    symm_diff = set(intervention_targets[idx]).symmetric_difference(
+                        set(intervention_targets[jdx])
+                    )
+                    targets = frozenset(symm_diff)
+
+                # get the S-node mapped to the obs data if there is observational data
+                if domain_obs[source] and domain_obs[target] and targets == frozenset():
+                    s_node = [
+                        key for key, val in node_domain_map.items() if val == {source, target}
+                    ][0]
+                    sigma_map[s_node] = [idx, jdx]
+                    continue
+
+                # create the F-node
+                f_node = ("F", k)
+                f_nodes.append(f_node)
+
+                # map each F-node to a set of domain(s)
+                node_domain_map[f_node] = {source, target}
+
+                sigma_map[f_node] = [idx, jdx]
+                symmetric_diff_map[f_node] = targets
+
+                k += 1
+        augmented_nodes = set(s_nodes).union(set(f_nodes))
+        return augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map
+
+    def fit(
+        self,
+        data: List[pd.DataFrame],
+        context: Context,
+        domain_indices: List[int],
+        intervention_targets: List[Optional[Set]],
+        check_input: bool = True,
+        debug: bool = False,
+    ) -> None:
+        """Fit data and context.
+
+        Each dataframe in ``data`` corresponds to a different distribution of data
+        from a domain and specific intervention target.
+
+        Parameters
+        ----------
+        data : List[pd.DataFrame]
+            List of dataframes corresponding to different distributions of data.
+        context : Context
+            Context object.
+        domain_indices : List[int]
+            The domain indices of each dataframe in ``data``.
+        intervention_targets : List[Column]
+            The intervention targets of each dataframe in ``data``. Is ``None`` if
+            ``data`` is observational, or ``unknown`` if target is unknown.
+        """
+        # ensure data is a list
+        if isinstance(data, pd.DataFrame):
+            data = [data]
+
+        # error-check the datasets passed in match the intervention contexts
+        # if len(data) != context.num_distributions:
+        #     raise RuntimeError(
+        #         f"The number of datasets does not match the number of interventions. "
+        #         f"You passed in {len(data)} different datasets, whereas "
+        #         f"there are {len(context.intervention_targets)} different interventions "
+        #         f"specified and {context.num_distributions} distributions assumed. "
+        #         f"It is assumed that the first dataset is observational, "
+        #         f"while the rest are interventional."
+        #     )
+
+        # pick a domain and distribution with the largest amount of data
+        largest_data_idx = np.argmax([len(df) for df in data])
+        obs_data = data[largest_data_idx]
+        self.context_ = context.copy()
+
+        # initialize learning parameters
+        if check_input:
+            context = self._initialize_params(context)
+
+        (
+            augmented_nodes,
+            symmetric_diff_map,
+            sigma_map,
+            node_domain_map,
+        ) = self._create_augmented_nodes(
+            domain_ids=domain_indices, intervention_targets=intervention_targets
+        )
+
+        # initialize the augmented graph
+        causal_nodes = context.observed_variables
+        for augmented_node in augmented_nodes:
+            for node in causal_nodes:
+                context.init_graph.add_edge(augmented_node, node)
+
+        # extract F and S-nodes
+        s_nodes = []
+        f_nodes = []
+        for node in augmented_nodes:
+            if node[0] == "S":
+                s_nodes.append(node)
+            elif node[0] == 'F':
+                f_nodes.append(node)
+
+        n_domains = len(np.unique(domain_indices))
+        context.augmented_nodes = augmented_nodes
+        context.symmetric_diff_map = symmetric_diff_map
+        context.sigma_map = sigma_map
+        context.node_domain_map = node_domain_map
+        context.s_nodes = s_nodes
+        context.f_nodes = f_nodes
+        skip_nodes = augmented_nodes
+
+        # first learn the skeleton using only "observational data"
+        # initially learn the skeleton without using PDS information
+        # apply algorithm to learn skeleton
+        self._fit(obs_data, context, list(causal_nodes), augmented_nodes, augmented_nodes, debug=debug)
+        context = self._prep_second_stage_skeleton(context)
+
+        # loop through each domain to learn the F-node skeleton
+        seen_domain_pairs = set()
+        for idx, source in enumerate(range(1, n_domains + 1)):
+            for jdx, target in enumerate(range(1, n_domains + 1)):
+                if idx == jdx:
+                    continue
+                if frozenset([source, target]) in seen_domain_pairs:
+                    continue
+                seen_domain_pairs.add(frozenset([source, target]))
+
+                # get augmented nodes for source and target
+                # analyze F-nodes between source and target
+                s_node = None
+                for node in s_nodes:
+                    if node_domain_map[node] == {source, target}:
+                        s_node = node
+                        break
+                if s_node is None:
+                    continue
+                    raise RuntimeError('wtf')
+                this_f_nodes = [
+                    node
+                    for node in f_nodes
+                    if node_domain_map[node] == {source, target} and node in symmetric_diff_map
+                ]
+                if debug:
+                    print(f'Trying to learn skeleton for {source} and {target} to remove F-nodes: {this_f_nodes} '
+                          f'grouped with S-node: {s_node}')
+                self._learn_skeleton(
+                    data=data,
+                    context=context,
+                    condsel_method=self.second_stage_condsel_method,
+                    conditional_test_func=self.cd_estimator,
+                    possible_x_nodes=this_f_nodes,
+                    skipped_y_nodes=skip_nodes,
+                    skipped_z_nodes=skip_nodes,
+                    cross_distribution_test=True,
+                    group_with_snode=s_node,
+                    debug=debug,
+                )
+
+                # this is only possible if there is explicitly observational data between
+                # the two domains
+                # analyze S-nodes between source and target
+                this_s_nodes = [
+                    node
+                    for node in augmented_nodes
+                    if node_domain_map[node] == {source, target}
+                    and node not in symmetric_diff_map
+                    and node in sigma_map
+                ]
+                if debug:
+                    print(this_f_nodes)
+                    print(this_s_nodes)
+                    print(symmetric_diff_map)
+                    print(sigma_map)
+                if this_s_nodes:
+                    if debug:
+                        print(f'Trying to learn skeleton for {source} and {target} to remove S-nodes: {this_s_nodes}')
+                    self._learn_skeleton(
+                        data=data,
+                        context=context,
+                        condsel_method=self.second_stage_condsel_method,
+                        conditional_test_func=self.cd_estimator,
+                        possible_x_nodes=list(this_s_nodes),
+                        skipped_y_nodes=skip_nodes,
+                        skipped_z_nodes=skip_nodes,
+                        cross_distribution_test=True,
+                    )
+
+            # analyze F-nodes only within the 'source' domain
+            source_fnodes = [node for node in augmented_nodes if node_domain_map[node] == {source}]
+            if debug:
+                print(f'Trying to learn skeleton for {source} to remove F-nodes: {source_fnodes}')
+            # apply algorithm to learn skeleton among the F-node subgraph within a single domain
+            self._learn_skeleton(
+                data=data,
+                context=context,
+                condsel_method=self.second_stage_condsel_method,
+                conditional_test_func=self.cd_estimator,
+                possible_x_nodes=source_fnodes,
+                skipped_y_nodes=skip_nodes,
+                skipped_z_nodes=skip_nodes,
+                cross_distribution_test=True,
+            )
+
+        # prepare the context object for the second stage of learning
+        # all separating sets are either:
+        # i) augmented with all F-nodes, or
+        # ii) augmented with all F-nodes except intervention index 'i'
+        # R9 allows us to leverage F-nodes being not in separating sets to
+        # augment all separating sets that have non-empty sets with all
+        # F-nodes to keep consistency with the algorithm
+        for x_var, y_vars in self.sep_set_.items():
+            for y_var in y_vars:
+                sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+                if len(sep_sets) > 0:
+                    for idx in range(len(sep_sets)):
+                        if x_var in augmented_nodes:
+                            self.sep_set_[x_var][y_var][idx].update(
+                                augmented_nodes.difference({x_var})
+                            )
+                        elif y_var in augmented_nodes:
+                            self.sep_set_[x_var][y_var][idx].update(
+                                augmented_nodes.difference({y_var})
+                            )
+                        else:
+                            self.sep_set_[x_var][y_var][idx].update(augmented_nodes)
+
+        self.context_ = context.copy()
+        self.adj_graph_ = deepcopy(context.init_graph.copy())
