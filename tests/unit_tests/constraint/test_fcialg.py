@@ -610,7 +610,6 @@ class Test_FCI:
         context = self.context_func().variables(data=sample).build()
         alg.fit(sample, context)
         pag = alg.graph_
-        skel_graph = alg.graph_
 
         # generate the expected PAG
         edge_list = [
@@ -633,7 +632,6 @@ class Test_FCI:
             incoming_bidirected_edges=latent_edge_list,
             incoming_circle_edges=uncertain_edge_list,
         )
-
         assert_mixed_edge_graphs_isomorphic(pag, expected_pag)
 
     @pytest.mark.parametrize(

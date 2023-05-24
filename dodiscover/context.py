@@ -159,10 +159,15 @@ class Context(BasePyWhy):
         """Get the set of non f-nodes."""
         non_augmented_nodes = set()
         f_nodes = set(self.f_nodes)
+        s_nodes = set(self.s_nodes)
         for node in self.init_graph.nodes:
-            if node not in f_nodes:
+            if node not in f_nodes and node not in s_nodes:
                 non_augmented_nodes.add(node)
         return non_augmented_nodes
+
+    def get_augmented_nodes(self) -> Set:
+        """Get the set of f-nodes."""
+        return set(self.f_nodes).union(set(self.s_nodes))
 
     def reverse_sigma_map(self) -> Dict:
         """Get the reverse sigma-map."""

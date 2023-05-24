@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 import pywhy_graphs
 
-from dodiscover import make_context
+from dodiscover import ContextBuilder, make_context
 from dodiscover.ci import GSquareCITest, Oracle
 from dodiscover.constraint.skeleton import LearnSemiMarkovianSkeleton, LearnSkeleton
 from dodiscover.constraint.utils import dummy_sample
@@ -261,7 +261,9 @@ def test_learn_skeleton_pds_disabled_first_stage():
     )
     ci_estimator = Oracle(graph)
     sample = dummy_sample(graph)
-    context = make_context().variables(data=sample).build()
+    context = (
+        make_context(create_using=ContextBuilder).variables(data=sample).state_variables({}).build()
+    )
 
     # generate the expected PAG
     edge_list = [

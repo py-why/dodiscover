@@ -1021,7 +1021,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
                     if graph.has_edge(v_j, u, graph.circle_edge_name):
                         graph.orient_uncertain_edge(v_j, u)
 
-    def _prep_second_stage_skeleton(self, context) -> Context:
+    def _prep_second_stage_skeleton(self, context: Context) -> Context:
         import pywhy_graphs as pgraphs
 
         # convert the undirected skeleton graph to a PAG, where
@@ -1165,9 +1165,9 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
     experimental distribution dataset, or one may not know the explicit targets. If the
     interventional targets are known, then the skeleton discovery algorithm of
     :footcite:`Kocaoglu2019characterization` is used. That is we learn the skeleton of a
-    AugmentedPAG. Otherwise, we will not know the intervention targets, and use the skeleton discovery
-    algorithm described in :footcite:`Jaber2020causal`. To define intervention targets, one
-    must use the :class:`dodiscover.InterventionalContextBuilder`.
+    AugmentedPAG. Otherwise, we will not know the intervention targets, and use the skeleton
+    discovery algorithm described in :footcite:`Jaber2020causal`. To define intervention targets,
+    one must use the :class:`dodiscover.InterventionalContextBuilder`.
 
     References
     ----------
@@ -1298,11 +1298,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 self.adj_graph_.add_edge(node, obs_node, test_stat=np.inf, pvalue=-1e-5)
 
         # reset context and add observational skeleton
-        self.context_ = (
-            make_context(orig_context, create_using=InterventionalContextBuilder)
-            .init_graph(self.adj_graph_.copy())
-            .build()
-        )
         context.add_state_variable("obs_skel_graph", obs_skel_graph)
 
         # convert the undirected skeleton graph to a PAG, where
@@ -1315,14 +1310,6 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # orient colliders
         self._orient_unshielded_triples(pag, sep_set)
 
-        # convert the adjacency graph into a PAG
-        # Note: in order to preserve PDS sets for PAG augmented with the F-node, we simply have
-        # to make it fully-connected, since at this stage, the intermediate PAG learned from FCI
-        # has not done anything with the F-node edges.
-        # for f_node in f_nodes:
-        #     for node in non_f_nodes:
-        #         if not pag.has_edge(f_node, node, pag.directed_edge_name):
-        #             pag.add_edge(f_node, node, pag.directed_edge_name)
         context.add_state_variable("PAG", pag)
         context.add_state_variable("max_path_length", self.max_path_length_)
 

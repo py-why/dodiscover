@@ -43,7 +43,9 @@ class Test_IFCI(Test_FCI):
 
         # there must only be one kind of edge from F-nodes to its nbrs
         f_nodes = [("F", 0), ("F", 1)]
-        self.alg._apply_rule11(G, f_nodes)
+        context = make_context().observed_variables(G.non_augmented_nodes).build()
+        context.f_nodes = f_nodes
+        self.alg._apply_rule11(G, context)
         for f_node in f_nodes:
             for nbr in G.neighbors(f_node):
                 if nbr in f_nodes:
@@ -72,17 +74,20 @@ class Test_IFCI(Test_FCI):
         symmetric_diff_map = {
             ("F", 0): ["x"],
         }
+        context = make_context().observed_variables(G.non_augmented_nodes).build()
+        context.f_nodes = f_nodes
+        context.symmetric_diff_map = symmetric_diff_map
 
         # no arrows should be added if we are not operating over a F-node
         for x, y, z in permutations(G.non_augmented_nodes, 3):
-            added_arrows = self.alg._apply_rule12(G, x, y, z, f_nodes, symmetric_diff_map)
+            added_arrows = self.alg._apply_rule12(G, x, y, z, context)
             assert not added_arrows
 
         # no arrows should be added if the conditions of the rule are not met
-        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "z", f_nodes, symmetric_diff_map)
+        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "z", context)
         assert not added_arrows
 
-        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "y", f_nodes, symmetric_diff_map)
+        added_arrows = self.alg._apply_rule12(G, ("F", 0), "x", "y", context)
         if self.alg.known_intervention_targets:
             assert added_arrows
             assert G.has_edge("x", "y", G.directed_edge_name)

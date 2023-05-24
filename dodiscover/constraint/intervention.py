@@ -188,7 +188,7 @@ class PsiFCI(FCI):
 
         return super().fit(data, context)
 
-    def _apply_rule11(self, graph: EquivalenceClass, f_nodes: List) -> Tuple[bool, List]:
+    def _apply_rule11(self, graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
         """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.
 
         This orients all edges out of F-nodes. So patterns of the form
@@ -201,8 +201,8 @@ class PsiFCI(FCI):
         ----------
         graph : EquivalenceClass
             The causal graph to apply rules to.
-        f_nodes : list
-            The list of f-nodes within the graph.
+        context : Context
+            The causal context.
 
         Returns
         -------
@@ -215,11 +215,13 @@ class PsiFCI(FCI):
         ----------
         .. footbibliography::
         """
+        augmented_nodes = context.get_augmented_nodes()
+
         oriented_edges = []
         added_arrows = True
-        for node in f_nodes:
+        for node in augmented_nodes:
             for nbr in graph.neighbors(node):
-                if nbr in f_nodes:
+                if nbr in augmented_nodes:
                     continue
 
                 # remove all edges between node and nbr and orient this out
@@ -230,13 +232,7 @@ class PsiFCI(FCI):
         return added_arrows, oriented_edges
 
     def _apply_rule12(
-        self,
-        graph: EquivalenceClass,
-        u: Column,
-        a: Column,
-        c: Column,
-        f_nodes: List,
-        symmetric_diff_map: Dict[Any, FrozenSet],
+        self, graph: EquivalenceClass, u: Column, a: Column, c: Column, context: Context
     ) -> bool:
         """Apply "Rule 9" of the I-FCI algorithm.
 
@@ -256,11 +252,8 @@ class PsiFCI(FCI):
             Neighbors of the F-node.
         c : Column
             Neighbors of the F-node.
-        symmetric_diff_map : dict
-            A mapping from the F-nodes to the symmetric difference of the pair of
-            intervention targets each F-node represents. I.e. if F-node, F1 represents
-            the pair of intervention distributions with targets {'x'}, and {'x', 'y'},
-            then F1 maps to {'y'} in the symmetric diff map.
+        context : Context
+            The causal context.
 
         Returns
         -------
@@ -271,6 +264,9 @@ class PsiFCI(FCI):
         ----------
         .. footbibliography::
         """
+        f_nodes = context.f_nodes
+        symmetric_diff_map = context.symmetric_diff_map
+
         added_arrows = False
         if u in f_nodes and self.known_intervention_targets:
             # get sigma map to map F-node to its symmetric difference target
