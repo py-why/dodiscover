@@ -31,12 +31,12 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         gradient of the log-likelihood via estimated residuals.
     ridge_alpha: float, optional
         Alpha value for KernelRidgeRegressor with 'rbf' kernel, default is 0.01.
-        ridge_alpha is used to fit both the regressor for the residuals estimation 
+        ridge_alpha is used to fit both the regressor for the residuals estimation
         (Equation (14) :footcite:`Montagna2023b`) and for the estimation of the score entries
         from the estimated residuals.
     ridge_gamma: float, optional
         Gamma value for KernelRidgeRegressor with 'rbf' kernel, default is 0.1.
-        ridge_gamma is used to fit both the regressor for the residuals estimation 
+        ridge_gamma is used to fit both the regressor for the residuals estimation
         (Equation (20) :footcite:`Montagna2023b`) and for the estimation of the score entries
         from the estimated residuals.
     eta_G: float, optional
@@ -87,9 +87,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(
-            alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
-        )
+        super().__init__(alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
         self.eta_G = eta_G
         self.eta_H = eta_H
         self.n_crossval = n_crossval

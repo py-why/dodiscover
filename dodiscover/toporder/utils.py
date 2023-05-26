@@ -7,15 +7,16 @@ from numpy.typing import NDArray
 
 
 # TODO: replace with pywhy-stats implementation
-def kernel_width(X_diff: NDArray):
+def kernel_width(X: NDArray):
     """
     Estimate width of the Gaussian kernel.
 
     Parameters
     ----------
-    X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
-        Matrix of the difference between samples.
+    X : np.ndarray of shape (n_samples, n_nodes)
+        Matrix of the data.
     """
+    X_diff = np.expand_dims(X, axis=1) - X  # Gram matrix of the data
     D = np.linalg.norm(X_diff, axis=2)
     s = np.median(D.flatten())
     return s

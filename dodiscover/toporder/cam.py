@@ -56,9 +56,7 @@ class CAM(BaseCAMPruning):
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(
-            alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
-        )
+        super().__init__(alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
         self.inf = np.finfo(np.float32).min
 
     def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:

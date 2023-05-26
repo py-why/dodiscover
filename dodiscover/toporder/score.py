@@ -67,9 +67,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(
-            alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
-        )
+        super().__init__(alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
         self.eta_G = eta_G
         self.eta_H = eta_H
         self.var: List[float] = list()  # data structure for estimated variance of SCM noise terms

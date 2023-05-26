@@ -11,9 +11,10 @@ from pygam import LinearGAM, s
 from pygam.terms import Term, TermList
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.feature_selection import SelectFromModel
+from sklearn.metrics.pairwise import rbf_kernel
 
 from dodiscover.context import Context
-from dodiscover.toporder.utils import kernel_width, full_dag
+from dodiscover.toporder.utils import full_dag, kernel_width
 
 # -------------------- Mixin class with Stein estimators -------------------- #
 
@@ -26,7 +27,7 @@ class SteinMixin:
     def hessian(self, X: NDArray, eta_G: float, eta_H: float) -> NDArray:
         """Stein estimator of the Hessian of log p(x).
 
-        The Hessian matrix is efficiently estimated by exploitaiton of the Stein identity.
+        The Hessian matrix is efficiently estimated by exploitation of the Stein identity.
         Implements :footcite:`rolland2022`.
 
         Parameters
@@ -48,13 +49,13 @@ class SteinMixin:
         .. footbibliography::
         """
         _, d = X.shape
-        X_diff = self._X_diff(X)
-        s = kernel_width(X_diff)
-        K, nablaK = self._evaluate_kernel(X_diff, evaluate_nabla=True, s=s)
+        s = kernel_width(X)
+        K = self._evaluate_kernel(X, s=s)
+        nablaK = self._evaluate_nablaK(K, X, s)
         G = self.score(X, eta_G, K, nablaK)
 
         # Compute the Hessian by column stacked together
-        H = np.stack([self._hessian_col(X_diff, G, col, eta_H, K, s) for col in range(d)], axis=1)
+        H = np.stack([self._hessian_col(X, G, col, eta_H, K, s) for col in range(d)], axis=1)
         return H
 
     def score(
@@ -93,46 +94,40 @@ class SteinMixin:
         """
         n, _ = X.shape
         if K is None:
-            X_diff = self._X_diff(X)
-            K, nablaK = self._evaluate_kernel(X_diff, evaluate_nabla=True)
+            s = kernel_width(X)
+            K = self._evaluate_kernel(X, s)
+            nablaK = self._evaluate_nablaK(K, X, s)
 
         G = np.matmul(np.linalg.inv(K + eta_G * np.eye(n)), nablaK)
         return G
 
     def _hessian_col(
-        self, X_diff: NDArray, G: NDArray, c: int, eta: float, K: NDArray = None, s: float = None
+        self, X: NDArray, G: NDArray, c: int, eta: float, K: NDArray, s: float
     ) -> NDArray:
         """Stein estimator of a column of the Hessian of log p(x)
 
         Parameters
         ----------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
-            I.i.d. samples from p(X) joint distribution.
+        X : np.ndarray of shape (n_samples, n_nodes)
+            Matrix of the data
         G : np.ndarray
             estimator of the score function.
         c : int
             index of the column of interest.
         eta: float
             regularization parameter for ridge regression in Stein hessian estimator
-        K : np.ndarray of shape (n_samples, n_samples), optional
-            Gaussian kernel evaluated at X, by default None. If `K` is None, it is
-            computed inside of the method.
-        s : float, optional
-            Width of the Gaussian kernel, by default None. If `s` is None, it is
-            computed inside of the method.
+        K : np.ndarray of shape (n_samples, n_samples)
+            Gaussian kernel evaluated at X.
+        s : float
+            Width of the Gaussian kernel.
 
         Returns
         -------
         H_col : np.ndarray
             Stein estimator of the c-th column of the Hessian of log p(x)
         """
+        X_diff = self._X_diff(X)
         n, _, _ = X_diff.shape
-
-        # Kernel
-        if s is None:
-            s = kernel_width(X_diff)
-        if K is None:
-            K, _ = self._evaluate_kernel(X_diff, s=s)
 
         # Stein estimate
         Gv = np.einsum("i,ij->ij", G[:, c], G)
@@ -159,47 +154,58 @@ class SteinMixin:
             Stein estimator of the diagonal of the Hessian matrix of log p(x).
         """
         n, _ = X.shape
-        X_diff = self._X_diff(X)
 
         # Score function compute
-        s = kernel_width(X_diff)
-        K, nablaK = self._evaluate_kernel(X_diff, evaluate_nabla=True, s=s)
+        s = kernel_width(X)
+        K = self._evaluate_kernel(X, s)
+        nablaK = self._evaluate_nablaK(K, X, s)
         G = self.score(X, eta_G, K, nablaK)
 
         # Hessian compute
+        X_diff = self._X_diff(X)
         nabla2K = np.einsum("kij,ik->kj", -1 / s**2 + X_diff**2 / s**4, K)
         return -(G**2) + np.matmul(np.linalg.inv(K + eta_H * np.eye(n)), nabla2K)
 
-    def _evaluate_kernel(
-        self, X_diff: NDArray, evaluate_nabla: bool = False, s: float = None
-    ) -> Tuple[NDArray, Union[NDArray, None]]:
+    def _evaluate_kernel(self, X: NDArray, s: float) -> Tuple[NDArray, Union[NDArray, None]]:
         """
         Evaluate Gaussian kernel from data.
 
         Parameters
         ----------
-        X_diff : np.ndarray of shape (n_samples, n_samples, n_nodes)
-            Matrix of the difference between samples.
-        evalaue_nabla : bool, optional
-            if True evaluate <nabla, K> dot product. Default is False.
-        s : float, optional
-            Width of the Gaussian kernel, by default None. If `s` is None, it is
-            computed inside of the method.
+        X : np.ndarray of shape (n_samples, n_nodes)
+            Matrix of the data.
+        s : float
+            Width of the Gaussian kernel.
 
         Returns
         -------
         K : np.ndarray of shape (n_samples, n_samples)
-            evaluated gaussian kernel.
-        nablaK : np.ndarray of shape (n_samples, n_nodes)
-            <nabla, K> dot product.
+            Evaluated gaussian kernel.
         """
-        nablaK = None
-        if s is None:
-            s = kernel_width(X_diff)
-        K = np.exp(-np.linalg.norm(X_diff, axis=2) ** 2 / (2 * s**2)) / s
-        if evaluate_nabla:
-            nablaK = -np.einsum("kij,ik->kj", X_diff, K) / s**2
-        return K, nablaK
+        K = rbf_kernel(X, gamma=1 / (2 * s**2)) / s
+        return K
+
+    def _evaluate_nablaK(self, K: NDArray, X: NDArray, s: float):
+        """Evaluate <nabla, K> inner product.
+
+        Parameters
+        ----------
+        K : np.ndarray of shape (n_samples, n_samples)
+            Evaluated gaussian kernel of the matrix of the data.
+        X : np.ndarray of shape (n_samples, n_nodes)
+            Matrix of the data.
+        s : float
+            Width of the Gaussian kernel.
+
+        Returns
+        -------
+        nablaK : np.ndarray of shape (n_samples, n_nodes)
+            Inner product between the Gram matrix of the data and the kernel matrix K.
+            To obtain the Gram matrix, for each sample of X, compute its difference
+            with all n_samples.
+        """
+        nablaK = -np.einsum("kij,ik->kj", self._X_diff(X), K) / s**2
+        return nablaK
 
     def _X_diff(self, X: NDArray):
         """For each sample of X, compute its difference with all n samples.
@@ -299,7 +305,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         self.graph_: nx.DiGraph = nx.empty_graph()
         self.order_: List[int] = list()
-        self.order_graph_ : nx.DiGraph = nx.empty_graph()
+        self.order_graph_: nx.DiGraph = nx.empty_graph()
 
     def _get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
         """Get leaf node from the list of `remaining_nodes` without an assigned order.
@@ -360,7 +366,6 @@ class BaseCAMPruning(TopOrderInterface):
         # Relabel the nodes according to the input data_df columns
         self.graph_ = self._postprocess_output(labels, G)
         self.order_graph_ = self._postprocess_output(labels, order_graph_)
-
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """
@@ -641,7 +646,7 @@ class BaseCAMPruning(TopOrderInterface):
             terms += spline
         return terms
 
-    def _postprocess_output(self, labels : List[str], graph):
+    def _postprocess_output(self, labels: List[str], graph):
         """Relabel the graph nodes.
 
         Parameters
@@ -656,8 +661,8 @@ class BaseCAMPruning(TopOrderInterface):
         Returns
         -------
         G : nx.DiGraph
-            Graph with the relabeled nodes. 
+            Graph with the relabeled nodes.
         """
-        map_nodes = {i : labels[i] for i in range(len(labels))}
+        map_nodes = {i: labels[i] for i in range(len(labels))}
         G = nx.relabel_nodes(graph, mapping=map_nodes)
         return G
