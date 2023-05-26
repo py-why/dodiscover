@@ -13,7 +13,7 @@ from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.feature_selection import SelectFromModel
 
 from dodiscover.context import Context
-from dodiscover.toporder.utils import kernel_width
+from dodiscover.toporder.utils import kernel_width, full_dag
 
 # -------------------- Mixin class with Stein estimators -------------------- #
 
@@ -250,7 +250,7 @@ class BaseCAMPruning(TopOrderInterface):
 
     Parameters
     ----------
-    cam_cutoff : float, optional
+    alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
         coefficients, default is 0.001.
     n_splines : int, optional
@@ -272,6 +272,9 @@ class BaseCAMPruning(TopOrderInterface):
         Adjacency matrix representation of the inferred causal graph.
     order_ : List[int]
         Topological order of the nodes from source to leaf.
+    order_graph_ : nx.DiGraph
+        Fully connected adjacency matrix representation of the
+        inferred topological order.
 
     References
     ----------
@@ -280,22 +283,23 @@ class BaseCAMPruning(TopOrderInterface):
 
     def __init__(
         self,
-        cam_cutoff: float = 0.001,
+        alpha: float = 0.05,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        self.cam_cutoff = cam_cutoff
+        self.alpha = alpha
         self.n_splines = n_splines
         self.degree = splines_degree
         self.do_pns = pns
         self.pns_num_neighbors = pns_num_neighbors
         self.pns_threshold = pns_threshold
 
-        self.order_: nx.DiGraph = nx.empty_graph()
-        self.graph_: List[int] = list()
+        self.graph_: nx.DiGraph = nx.empty_graph()
+        self.order_: List[int] = list()
+        self.order_graph_ : nx.DiGraph = nx.empty_graph()
 
     def _get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
         """Get leaf node from the list of `remaining_nodes` without an assigned order.
@@ -336,6 +340,7 @@ class BaseCAMPruning(TopOrderInterface):
         context: Context
             The context of the causal discovery problem.
         """
+        labels = data_df.columns
         X = data_df.to_numpy()
         self.context = context
 
@@ -346,10 +351,16 @@ class BaseCAMPruning(TopOrderInterface):
         # Inference of the causal order.
         A_dense, order = self.top_order(X)
         self.order_ = order
+        order_graph_ = nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph)
 
         # Inference of the causal graph via pruning
         A = self.prune(X, A_dense)
-        self.graph_ = nx.from_numpy_array(A, create_using=nx.DiGraph)
+        G = nx.from_numpy_array(A, create_using=nx.DiGraph)
+
+        # Relabel the nodes according to the input data_df columns
+        self.graph_ = self._postprocess_output(labels, G)
+        self.order_graph_ = self._postprocess_output(labels, order_graph_)
+
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """
@@ -506,7 +517,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         parents = []
         for j in range(d):
-            if pvalues[j] < self.cam_cutoff or self.context.included_edges.has_edge(
+            if pvalues[j] < self.alpha or self.context.included_edges.has_edge(
                 pot_parents[j], child
             ):
                 parents.append(pot_parents[j])
@@ -629,3 +640,24 @@ class BaseCAMPruning(TopOrderInterface):
         for spline in splines_list:
             terms += spline
         return terms
+
+    def _postprocess_output(self, labels : List[str], graph):
+        """Relabel the graph nodes.
+
+        Parameters
+        ----------
+        labels : List[str]
+            List of the labels of the nodes.
+            the `graph` nodes are relabeled according to their position,
+            i.e. `labels[i]` is assigned to node `i`.
+        graph : nx.DiGraph
+            Networkx directed graph with nodes to relabel.
+
+        Returns
+        -------
+        G : nx.DiGraph
+            Graph with the relabeled nodes. 
+        """
+        map_nodes = {i : labels[i] for i in range(len(labels))}
+        G = nx.relabel_nodes(graph, mapping=map_nodes)
+        return G

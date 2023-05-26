@@ -31,15 +31,21 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         gradient of the log-likelihood via estimated residuals.
     ridge_alpha: float, optional
         Alpha value for KernelRidgeRegressor with 'rbf' kernel, default is 0.01.
+        ridge_alpha is used to fit both the regressor for the residuals estimation 
+        (Equation (14) :footcite:`Montagna2023b`) and for the estimation of the score entries
+        from the estimated residuals.
     ridge_gamma: float, optional
         Gamma value for KernelRidgeRegressor with 'rbf' kernel, default is 0.1.
+        ridge_gamma is used to fit both the regressor for the residuals estimation 
+        (Equation (20) :footcite:`Montagna2023b`) and for the estimation of the score entries
+        from the estimated residuals.
     eta_G: float, optional
         Regularization parameter for Stein gradient estimator, default is 0.001.
     eta_H : float, optional
         Regularization parameter for Stein Hessian estimator, default is 0.001.
-    cam_cutoff : float, optional
+    alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
-        coefficients, default is 0.001.
+        coefficients, default is 0.05.
     n_splines : int, optional
         Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
@@ -74,7 +80,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         ridge_gamma: float = 0.1,
         eta_G: float = 0.001,
         eta_H: float = 0.001,
-        cam_cutoff: float = 0.001,
+        alpha: float = 0.05,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
@@ -82,7 +88,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         pns_threshold: float = 1,
     ):
         super().__init__(
-            cam_cutoff, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
+            alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
         )
         self.eta_G = eta_G
         self.eta_H = eta_H

@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import string
 
 from dodiscover import make_context
 from dodiscover.metrics import structure_hamming_dist, toporder_divergence
@@ -121,3 +122,25 @@ def test_given_adjacency_when_pruning_with_pns_then_returns_dag_with_context_inc
     A_included = nx.to_numpy_array(model.graph_)
     A_dense = nx.to_numpy_array(G_dense)
     assert np.allclose(A_dense, A_included)
+
+
+def test_given_custom_nodes_labels_when_fitting_then_input_output_labels_are_consistent():
+    X = dummy_sample(seed=seed)
+    model = CAM(pns=False)
+    
+    # Inference with default labels
+    context_builder = make_context()
+    context = context_builder.variables(observed=X.columns).build()
+    model.fit(X, context)
+    A_default = nx.to_numpy_array(model.graph_)
+
+    # Inference with custom labels
+    labels = list(string.ascii_lowercase)[:len(X.columns)]
+    X.columns = labels
+    context_builder = make_context()
+    context = context_builder.variables(observed=X.columns).build()
+    model.fit(X, context)
+    A_custom = nx.to_numpy_array(model.graph_)
+    
+    assert list(model.graph_.nodes()) == labels # check nodes have custom labels
+    assert np.allclose(A_custom, A_default) # check output not affected by relabeling

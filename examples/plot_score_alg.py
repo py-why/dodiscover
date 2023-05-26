@@ -2,7 +2,7 @@
 .. _ex-score-algorithm:
 
 ==============================================================================================
-Order based algorithms for causal discovery from observational data without latent confounders
+Order-based algorithms for causal discovery from observational data without latent confounders
 ==============================================================================================
 
 We will simulate some observational data from a Structural Causal Model (SCM) and
@@ -184,7 +184,7 @@ context = make_context().variables(data=data).build()
 # fully connected adjacency matrix compatible with such ordering is the upper
 # triangular matrix `np.triu(np.ones((3, 3)), k=1)` with all ones above the
 # diagonal.
-score = SCORE()  # or DAS() or NoGAM() or CAM()
+score = SCORE(alpha=0.1)  # or DAS() or NoGAM() or CAM()
 score.fit(data, context)
 
 # SCORE estimates a directed acyclic graph (DAG) and the topoological order
@@ -192,7 +192,7 @@ score.fit(data, context)
 # limit, meaning that it might return faulty estimates due to the finiteness
 # of the data.
 graph = score.graph_
-order = score.order_
+order_graph = score.order_graph_
 
 # `score_full_dag.png` visualizes the fully connected DAG representation of
 # the inferred topological ordering.
@@ -201,9 +201,7 @@ order = score.order_
 dot_graph = draw(graph, name="DAG after pruning")
 dot_graph.render(outfile="score_dag.png", view=True)
 
-dot_graph = draw(
-    nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph), name="Fully connected DAG"
-)
+dot_graph = draw(order_graph, name="Fully connected DAG")
 dot_graph.render(outfile="score_full_dag.png", view=True)
 
 # %%
@@ -211,7 +209,6 @@ dot_graph.render(outfile="score_full_dag.png", view=True)
 # -------
 # We observe two DAGs ouput of the SCORE inference procedure.
 # One is the fully connected graph associated to the inferred topological order 
-# :math:`V = \{1, 0, 2, 3\}` of the graph nodes. Interestingly, according to this ordering
-# the ground truth edges `0 -> 1` and `2 -> 1` can not be recovered, inducing two 
-# two false negatives in the prediction.
-# After the pruning procedure, the final output of SCORE is a graph with 
+# `[z, x, y, w]` of the graph nodes. 
+# After the pruning procedure, the final output of SCORE has a subset of the original
+# edges. The output of SCORE corresponds exactly to the groundtruth.

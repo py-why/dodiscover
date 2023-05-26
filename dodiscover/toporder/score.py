@@ -22,9 +22,9 @@ class SCORE(BaseCAMPruning, SteinMixin):
         Regularization parameter for Stein gradient estimator, default is 0.001.
     eta_H : float, optional
         Regularization parameter for Stein Hessian estimator, default is 0.001.
-    cam_cutoff : float, optional
+    alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
-        coefficients, default is 0.001.
+        coefficients, default is 0.05.
     n_splines : int, optional
         Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
@@ -59,7 +59,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         self,
         eta_G: float = 0.001,
         eta_H: float = 0.001,
-        cam_cutoff: float = 0.001,
+        alpha: float = 0.05,
         n_splines: int = 10,
         splines_degree: int = 3,
         estimate_variance=False,
@@ -68,7 +68,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         pns_threshold: float = 1,
     ):
         super().__init__(
-            cam_cutoff, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
+            alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
         )
         self.eta_G = eta_G
         self.eta_H = eta_H
