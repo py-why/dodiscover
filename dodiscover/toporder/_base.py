@@ -281,6 +281,10 @@ class BaseCAMPruning(TopOrderInterface):
     order_graph_ : nx.DiGraph
         Fully connected adjacency matrix representation of the
         inferred topological order.
+    labels_to_nodes : Dict[Union[str, int], int]
+        Map from the custom node's label  to the node's label by number.
+    nodes_to_labels : Dict[int, Union[str, int]]
+        Map from the node's label by number to the custom node's label.
 
     References
     ----------
@@ -306,6 +310,8 @@ class BaseCAMPruning(TopOrderInterface):
         self.graph_: nx.DiGraph = nx.empty_graph()
         self.order_: List[int] = list()
         self.order_graph_: nx.DiGraph = nx.empty_graph()
+        self.labels_to_nodes: Dict[Union[str, int], int] = dict()
+        self.nodes_to_labels: Dict[int, Union[str, int]] = dict()
 
     def _get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
         """Get leaf node from the list of `remaining_nodes` without an assigned order.
@@ -346,9 +352,16 @@ class BaseCAMPruning(TopOrderInterface):
         context: Context
             The context of the causal discovery problem.
         """
-        labels = data_df.columns
         X = data_df.to_numpy()
         self.context = context
+        
+        # Data structure to exchange labels with nodes number
+        self.nodes_to_labels = {
+            i : data_df.columns[i] for i in range(len(data_df.columns))
+        }
+        self.labels_to_nodes = {
+            data_df.columns[i] : i for i in range(len(data_df.columns))
+        }
 
         # Check acyclicity condition on included_edges
         self._dag_check_included_edges()
@@ -364,8 +377,8 @@ class BaseCAMPruning(TopOrderInterface):
         G = nx.from_numpy_array(A, create_using=nx.DiGraph)
 
         # Relabel the nodes according to the input data_df columns
-        self.graph_ = self._postprocess_output(labels, G)
-        self.order_graph_ = self._postprocess_output(labels, order_graph_)
+        self.graph_ = self._postprocess_output(G)
+        self.order_graph_ = self._postprocess_output(order_graph_)
 
     def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """
@@ -387,8 +400,8 @@ class BaseCAMPruning(TopOrderInterface):
             The pruned adjacency matrix output of the causal discovery algorithm.
         """
         _, d = X.shape
-        G_excluded = self.context.excluded_edges
-        G_included = self.context.included_edges
+        G_excluded = self._get_excluded_edges_graph()
+        G_included = self._get_included_edges_graph()
         A = np.zeros((d, d))
         for c in range(d):
             pot_parents = []
@@ -459,13 +472,13 @@ class BaseCAMPruning(TopOrderInterface):
         d = A.shape[0]
         for i in range(d):
             for j in range(d):
-                if i != j and A[i, j] == 0 and (not self.context.included_edges.has_edge(i, j)):
-                    self.context.excluded_edges.add_edge(i, j)
+                if i != j and A[i, j] == 0 and (not self._get_included_edges_graph().has_edge(i, j)):
+                    self._get_excluded_edges_graph().add_edge(i, j)
 
     def _dag_check_included_edges(self) -> None:
         """Check that the edges included in `self.context` does not violate DAG condition."""
-        is_dag = nx.is_directed_acyclic_graph(self.context.included_edges)
-        if nx.is_empty(self.context.included_edges):
+        is_dag = nx.is_directed_acyclic_graph(self._get_included_edges_graph())
+        if nx.is_empty(self._get_included_edges_graph()):
             is_dag = True
         if not is_dag:
             raise ValueError("Edges included in the graph violate the acyclicity condition!")
@@ -479,7 +492,7 @@ class BaseCAMPruning(TopOrderInterface):
             Dictionary with index of a node of the graph as key, list of the descendants of the
             node enforced by self.context.included_edges as value.
         """
-        adj = nx.to_numpy_array(self.context.included_edges)
+        adj = nx.to_numpy_array(self._get_included_edges_graph())
         d, _ = adj.shape
         descendants: Dict = {i: list() for i in range(d)}
         for row in range(d):
@@ -522,7 +535,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         parents = []
         for j in range(d):
-            if pvalues[j] < self.alpha or self.context.included_edges.has_edge(
+            if pvalues[j] < self.alpha or self._get_included_edges_graph().has_edge(
                 pot_parents[j], child
             ):
                 parents.append(pot_parents[j])
@@ -646,15 +659,11 @@ class BaseCAMPruning(TopOrderInterface):
             terms += spline
         return terms
 
-    def _postprocess_output(self, labels: List[str], graph):
-        """Relabel the graph nodes.
+    def _postprocess_output(self, graph):
+        """Relabel the graph nodes with the custom labels of the input dataframe.
 
         Parameters
         ----------
-        labels : List[str]
-            List of the labels of the nodes.
-            the `graph` nodes are relabeled according to their position,
-            i.e. `labels[i]` is assigned to node `i`.
         graph : nx.DiGraph
             Networkx directed graph with nodes to relabel.
 
@@ -663,6 +672,43 @@ class BaseCAMPruning(TopOrderInterface):
         G : nx.DiGraph
             Graph with the relabeled nodes.
         """
-        map_nodes = {i: labels[i] for i in range(len(labels))}
-        G = nx.relabel_nodes(graph, mapping=map_nodes)
+        G = nx.relabel_nodes(graph, mapping=self.nodes_to_labels)
+        return G
+
+
+    def _get_included_edges_graph(self):
+        """Get the `self.context.included_edges` graph with numerical label of the nodes.
+
+        The returned directed graph of the included edges, with one node for each column
+        in the dataframe input of the `fit` method, and numerical label of the nodes.
+
+        Returns
+        -------
+        G : nx.DiGraph
+            networkx directed graph of the edges included in `self.context`.
+        """
+        num_nodes = len(self.labels_to_nodes)
+        G = nx.empty_graph(n=num_nodes, create_using=nx.DiGraph)
+        for edge in self.context.included_edges.edges():
+            u, v = self.labels_to_nodes[edge[0]], self.labels_to_nodes[edge[1]]
+            G.add_edge(u, v)
+        return G
+    
+
+    def _get_excluded_edges_graph(self):
+        """Get the `self.context.excluded_edges` graph with numerical label of the nodes.
+
+        The returned directed graph of the excluded edges, with one node for each column
+        in the dataframe input of the `fit` method, and numerical label of the nodes.
+
+        Returns
+        -------
+        G : nx.DiGraph
+            networkx directed graph of the edges excluded in `self.context`.
+        """
+        num_nodes = len(self.labels_to_nodes)
+        G = nx.empty_graph(n=num_nodes, create_using=nx.DiGraph)
+        for edge in self.context.excluded_edges.edges():
+            u, v = self.labels_to_nodes[edge[0]], self.labels_to_nodes[edge[1]]
+            G.add_edge(u, v)
         return G

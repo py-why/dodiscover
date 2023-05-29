@@ -44,42 +44,70 @@ def test_given_order_and_alternative_order_when_pruning_then_return_equal_output
 def test_given_adjacency_when_pruning_then_excluded_edges_are_removed():
     G_dense = dummy_dense()
     X = dummy_sample(seed=seed)
-    model = SCORE()
-    model.context = make_context().variables(observed=X.columns).build()
+    model = SCORE(alpha=1.) # do not remove edges with pruning
+
+    # Get dense prediction without excluded edges
+    context = make_context().variables(observed=X.columns).build()
+    model.fit(X, context)
+    order = model.order_
+    G_dense = model.graph_
     A_dense = nx.to_numpy_array(G_dense)
-    order = full_adj_to_order(A_dense)
-    model.order_ = order
-    data = X.to_numpy()
-    A = model.prune(data, A_dense)  # find prediction without excluded edges
 
     # Exclude leaf node incoming edge
     leaf = order[-1]
-    l_parents = np.argwhere(A[:, leaf] == 1).squeeze(axis=1)
-    excluded_edges = nx.empty_graph(len(X.columns), create_using=nx.DiGraph)
-    excluded_edges.add_edges_from([(l_parents[0], leaf)])
-    model.context = make_context(model.context).edges(exclude=excluded_edges).build()
-    A_excluded = model.prune(data, A_dense)
+    l_parents = np.argwhere(A_dense[:, leaf] == 1).squeeze(axis=1)
+    excluded_edges = nx.DiGraph([(l_parents[0], leaf)])
+    context = make_context().variables(data=X).edges(exclude=excluded_edges).build()
+    model.fit(X, context)
+    G_excluded = model.graph_
+    A_excluded = nx.to_numpy_array(G_excluded)
     assert A_excluded[l_parents[0], leaf] == 0
+
+def test_given_adjacency_when_pruning_then_excluded_edges_are_removed():
+    G_dense = dummy_dense()
+    X = dummy_sample(seed=seed)
+    model = SCORE(alpha=1.) # do not remove edges with pruning
+
+    # Get dense prediction without excluded edges
+    context = make_context().variables(observed=X.columns).build()
+    model.fit(X, context)
+    order = model.order_
+    G_dense = model.graph_
+    A_dense = nx.to_numpy_array(G_dense)
+
+    # Exclude leaf node incoming edge
+    leaf = order[-1]
+    l_parents = np.argwhere(A_dense[:, leaf] == 1).squeeze(axis=1)
+    excluded_edges = nx.DiGraph([(l_parents[0], leaf)])
+    context = make_context().variables(data=X).edges(exclude=excluded_edges).build()
+    model.fit(X, context)
+    G_excluded = model.graph_
+    A_excluded = nx.to_numpy_array(G_excluded)
+    A_excluded[l_parents[0], leaf] = 1
+
+    assert np.allclose(A_dense, A_excluded)
 
 
 def test_given_adjacency_when_pruning_with_pns_then_excluded_edges_are_removed():
     G_dense = dummy_dense()
     X = dummy_sample(seed=seed)
-    model = SCORE(pns=True)
-    model.context = make_context().variables(observed=X.columns).build()
+    model = SCORE(alpha=1., pns=True) # do not remove edges with pruning
+
+    # Get dense prediction without excluded edges
+    context = make_context().variables(observed=X.columns).build()
+    model.fit(X, context)
+    order = model.order_
+    G_dense = model.graph_
     A_dense = nx.to_numpy_array(G_dense)
-    order = full_adj_to_order(A_dense)
-    model.order_ = order
-    data = X.to_numpy()
-    A = model.prune(data, A_dense.astype(np.float_))  # find prediction without excluded edges
 
     # Exclude leaf node incoming edge
     leaf = order[-1]
-    l_parents = np.argwhere(A[:, leaf] == 1).squeeze(axis=1)
-    excluded_edges = nx.empty_graph(len(X.columns), create_using=nx.DiGraph)
-    excluded_edges.add_edges_from([(l_parents[0], leaf)])
-    model.context = make_context(model.context).edges(exclude=excluded_edges).build()
-    A_excluded = model.prune(data, A_dense.astype(np.float_))
+    l_parents = np.argwhere(A_dense[:, leaf] == 1).squeeze(axis=1)
+    excluded_edges = nx.DiGraph([(l_parents[0], leaf)])
+    context = make_context().variables(data=X).edges(exclude=excluded_edges).build()
+    model.fit(X, context)
+    G_excluded = model.graph_
+    A_excluded = nx.to_numpy_array(G_excluded)
     assert A_excluded[l_parents[0], leaf] == 0
 
 

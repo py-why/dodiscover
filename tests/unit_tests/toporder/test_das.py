@@ -42,22 +42,6 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     assert orders_consistency(order_full, order_noleaf)
 
 
-def test_given_order_and_alternative_order_when_pruning_then_return_equal_outputs():
-    X = dummy_sample(seed=seed)
-    order_gt = [2, 1, 3, 0]
-    order_equivalent = [2, 3, 1, 0]
-    model = DAS(min_parents=0)
-    model.context = make_context().variables(observed=X.columns).build()
-    model.var = [1 for _ in range(len(order_gt))]
-
-    model.order_ = order_gt
-    A_gt = model.prune(X.to_numpy(), full_dag(order_gt))
-
-    model.order_ = order_equivalent
-    A_equivalent = model.prune(X.to_numpy(), full_dag(order_equivalent))
-    assert np.allclose(A_gt, A_equivalent)
-
-
 def test_given_dataset_when_fitting_das_with_unit_pvalue_and_score_then_returns_equal_outputs():
     X = dummy_sample(seed=seed)
     context = make_context().variables(observed=X.columns).build()

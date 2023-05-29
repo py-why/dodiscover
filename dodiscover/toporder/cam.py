@@ -77,7 +77,7 @@ class CAM(BaseCAMPruning):
         """
 
         def initialize_directed_paths(d):
-            G_included = self.context.included_edges  # nx.Graph with included edges
+            G_included = self._get_included_edges_graph()  # nx.Graph with included edges
             directed_paths = np.zeros((d, d))
             np.fill_diagonal(directed_paths, 1)
             for i in range(d):
@@ -87,7 +87,7 @@ class CAM(BaseCAMPruning):
             return directed_paths
 
         _, d = X.shape
-        A = nx.to_numpy_array(self.context.included_edges)
+        A = nx.to_numpy_array(self._get_included_edges_graph())
         directed_paths = initialize_directed_paths(
             d
         )  # directed_paths[i,j]=1 if there is a directed path from i to j
@@ -218,7 +218,7 @@ class CAM(BaseCAMPruning):
             all nodes are initially treated as source.
         """
         _, d = X.shape
-        G_excluded = self.context.excluded_edges  # nx.Graph with excluded edges
+        G_excluded = self._get_excluded_edges_graph()  # nx.Graph with excluded edges
         if (self.do_pns) or (self.do_pns is None and d > 20):
             A_pns = self._pns(A=np.ones((d, d)), X=X)
             self._exclude_edges(A_pns)

@@ -96,9 +96,8 @@ dot_graph.render(outfile="oracle_dag.png", view=True)
 # Define the context specifying the fixed directed edge (`z`, `y`) in the output graph.
 # This encodes prior domain information from the user, which specifies that there is
 # a directed connection between `z` and `y`.
-context = make_context().variables(data=data).build()
 included_edges = nx.DiGraph([('z', 'y')])
-context = make_context(context).edges(include=included_edges).build()
+context = make_context().variables(data=data).edges(include=included_edges).build()
 
 # %%
 # Run structure learning algorithm with fixed edges
@@ -119,8 +118,8 @@ dot_graph.render(outfile="score_prior_include.png", view=True)
 # The context can be used to encode prior information about directed edges that must
 # not appear in the output graph. In this example, we define the context that excludes
 # the edge (`z`, `w`) from the outout DAG.
-excluded_edges = nx.DiGraph([('z', 'y')])
-context = make_context().edges(exclude=excluded_edges).build()
+excluded_edges = nx.DiGraph([('z', 'w')])
+context = make_context().variables(data=data).edges(exclude=excluded_edges).build()
 
 # Run structure learning algorithm with excluded edges
 # ----------------------------------------------------
