@@ -4,6 +4,8 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.feature_selection import SelectFromModel
 
 
 # TODO: replace with pywhy-stats implementation
@@ -133,3 +135,51 @@ def dummy_dense() -> None:
     """
     A = np.array([[0, 0, 0, 0], [1, 0, 0, 1], [1, 1, 0, 1], [1, 0, 0, 0]])
     return nx.from_numpy_array(A, create_using=nx.DiGraph)
+
+
+# Preliminary Neighbours Search
+def pns(A: NDArray, X: NDArray, pns_threshold, pns_num_neighbors) -> NDArray:
+    """Preliminary Neighbors Selection (PNS) pruning on adjacency matrix `A`.
+
+    Variable selection preliminary to CAM pruning.
+    PNS :footcite:`Buhlmann2013` allows to scale CAM pruning to large graphs
+    (~20 or more nodes), with sensitive reduction of computational time.
+
+    Parameters
+    ----------
+    A : np.ndarray
+        Adjacency matrix representation of a dense graph.
+    X : np.ndarray of shape (n_samples, n_nodes)
+        Dataset with observations of the causal variables.
+    pns_num_neighbors: int, optional
+        Number of neighbors to use for PNS. If None (default) use all variables.
+    pns_threshold: float, optional
+        Threshold to use for PNS, default is 1.
+
+    Returns
+    -------
+    A : np.ndarray
+        Pruned adjacency matrix.
+
+    References
+    ----------
+    .. footbibliography::
+    """
+    num_nodes = X.shape[1]
+    for node in range(num_nodes):
+        X_copy = np.copy(X)
+        X_copy[:, node] = 0
+        reg = ExtraTreesRegressor(n_estimators=500)
+        reg = reg.fit(X_copy, X[:, node])
+        selected_reg = SelectFromModel(
+            reg,
+            threshold="{}*mean".format(pns_threshold),
+            prefit=True,
+            max_features=pns_num_neighbors,
+        )
+        mask_selected = selected_reg.get_support(indices=False)
+
+        mask_selected = mask_selected.astype(A.dtype)
+        A[:, node] *= mask_selected
+
+    return A

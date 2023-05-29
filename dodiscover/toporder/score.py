@@ -3,11 +3,11 @@ from typing import List, Optional, Tuple
 import numpy as np
 from numpy.typing import NDArray
 
-from dodiscover.toporder._base import BaseCAMPruning, SteinMixin
-from dodiscover.toporder.utils import full_dag
+from dodiscover.toporder._base import BaseTopOrder, SteinMixin
+from dodiscover.toporder.utils import full_dag, pns
 
 
-class SCORE(BaseCAMPruning, SteinMixin):
+class SCORE(BaseTopOrder, SteinMixin):
     """The SCORE algorithm for causal discovery.
 
     SCORE :footcite:`rolland2022` iteratively defines a topological ordering finding leaf
@@ -25,6 +25,8 @@ class SCORE(BaseCAMPruning, SteinMixin):
     alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
         coefficients, default is 0.05.
+    prune : bool, optional
+        If True (default), apply CAM-pruning after finding the topological order.
     n_splines : int, optional
         Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
@@ -60,6 +62,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         eta_G: float = 0.001,
         eta_H: float = 0.001,
         alpha: float = 0.05,
+        prune : bool = True,
         n_splines: int = 10,
         splines_degree: int = 3,
         estimate_variance=False,
@@ -67,13 +70,13 @@ class SCORE(BaseCAMPruning, SteinMixin):
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
+        super().__init__(alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
         self.eta_G = eta_G
         self.eta_H = eta_H
         self.var: List[float] = list()  # data structure for estimated variance of SCM noise terms
         self.estimate_variance = estimate_variance
 
-    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
+    def _top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """Find the topological ordering of the causal variables from X dataset.
 
         Parameters
@@ -106,7 +109,7 @@ class SCORE(BaseCAMPruning, SteinMixin):
         order.reverse()
         return full_dag(order), order
 
-    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
+    def _prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """Pruning of the fully connected adj. matrix representation of the inferred order.
 
         If self.do_pns = True or self.do_pns is None and number of nodes >= 20, then
@@ -126,8 +129,13 @@ class SCORE(BaseCAMPruning, SteinMixin):
         """
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):
-            A_dense = self._pns(A_dense, X=X)
-        return super().prune(X, A_dense)
+            A_dense = pns(
+                A=np.ones((d, d)),
+                X=X,
+                pns_threshold=self.pns_threshold,
+                pns_num_neighbors=self.pns_num_neighbors
+            )
+        return super()._prune(X, A_dense)
 
     def _find_leaf_iteration(
         self, stein_instance: SteinMixin, X: NDArray, active_nodes: List[int], order: List[int]

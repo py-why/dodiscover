@@ -4,11 +4,11 @@ import networkx as nx
 import numpy as np
 from numpy.typing import NDArray
 
-from dodiscover.toporder._base import BaseCAMPruning
-from dodiscover.toporder.utils import full_adj_to_order
+from dodiscover.toporder._base import BaseTopOrder
+from dodiscover.toporder.utils import full_adj_to_order, pns
 
 
-class CAM(BaseCAMPruning):
+class CAM(BaseTopOrder):
     """The CAM (Causal Additive Model) algorithm for causal discovery.
 
     CAM :footcite:`Buhlmann2013` iteratively defines a topological ordering by leaf additions.
@@ -20,6 +20,8 @@ class CAM(BaseCAMPruning):
     alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
         coefficients, default is 0.05.
+    prune : bool, optional
+        If True (default), apply CAM-pruning after finding the topological order.
     n_splines : int, optional
         Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
@@ -50,16 +52,17 @@ class CAM(BaseCAMPruning):
     def __init__(
         self,
         alpha: float = 0.05,
+        prune : bool = True,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
+        super().__init__(alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
         self.inf = np.finfo(np.float32).min
 
-    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
+    def _top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """
         Find the topological ordering of the causal variables from the dataset `X`.
 
@@ -220,7 +223,12 @@ class CAM(BaseCAMPruning):
         _, d = X.shape
         G_excluded = self._get_excluded_edges_graph()  # nx.Graph with excluded edges
         if (self.do_pns) or (self.do_pns is None and d > 20):
-            A_pns = self._pns(A=np.ones((d, d)), X=X)
+            A_pns = pns(
+                A=np.ones((d, d)),
+                X=X,
+                pns_threshold=self.pns_threshold,
+                pns_num_neighbors=self.pns_num_neighbors
+            )
             self._exclude_edges(A_pns)
 
         # Initialize matrix of score gains and vector of initial scores

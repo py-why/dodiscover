@@ -2,7 +2,7 @@ import networkx as nx
 import numpy as np
 
 from dodiscover import make_context
-from dodiscover.toporder._base import SteinMixin
+from dodiscover.toporder._base import SteinMixin, CAMPruning
 from dodiscover.toporder.score import SCORE
 from dodiscover.toporder.utils import dummy_dense, dummy_sample, full_adj_to_order, full_dag
 
@@ -30,14 +30,15 @@ def test_given_order_and_alternative_order_when_pruning_then_return_equal_output
     X = dummy_sample(seed=seed)
     order_gt = [2, 1, 3, 0]
     order_equivalent = [2, 3, 1, 0]
-    model = SCORE()
-    model.context = make_context().variables(observed=X.columns).build()
+    cam_pruning = CAMPruning()
 
-    model.order_ = order_gt
-    A_gt = model.prune(X.to_numpy(), full_dag(order_gt))
+    # Context information
+    G_included = nx.empty_graph(create_using=nx.DiGraph)
+    G_excluded = nx.empty_graph(create_using=nx.DiGraph)
 
-    model.order_ = order_equivalent
-    A_equivalent = model.prune(X.to_numpy(), full_dag(order_equivalent))
+    # Inference
+    A_gt = cam_pruning.prune(X.to_numpy(), full_dag(order_gt), G_included, G_excluded)
+    A_equivalent = cam_pruning.prune(X.to_numpy(), full_dag(order_equivalent), G_included, G_excluded)
     assert np.allclose(A_gt, A_equivalent)
 
 

@@ -5,11 +5,11 @@ from numpy.typing import NDArray
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.model_selection import cross_val_predict
 
-from dodiscover.toporder._base import BaseCAMPruning, SteinMixin
-from dodiscover.toporder.utils import full_dag
+from dodiscover.toporder._base import BaseTopOrder, SteinMixin
+from dodiscover.toporder.utils import full_dag, pns
 
 
-class NoGAM(BaseCAMPruning, SteinMixin):
+class NoGAM(BaseTopOrder, SteinMixin):
     """The NoGAM (Not only Gaussian Additive Model) algorithm for causal discovery.
 
     NoGAM :footcite:`Montagna2023b` iteratively defines a topological ordering finding leaf nodes by
@@ -46,6 +46,8 @@ class NoGAM(BaseCAMPruning, SteinMixin):
     alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
         coefficients, default is 0.05.
+    prune : bool, optional
+        If True (default), apply CAM-pruning after finding the topological order.
     n_splines : int, optional
         Number of splines to use for the feature function, default is 10.
         Automatically decreased in case of insufficient samples
@@ -81,20 +83,21 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         eta_G: float = 0.001,
         eta_H: float = 0.001,
         alpha: float = 0.05,
+        prune : bool = True,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(alpha, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
+        super().__init__(alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
         self.eta_G = eta_G
         self.eta_H = eta_H
         self.n_crossval = n_crossval
         self.ridge_alpha = ridge_alpha
         self.ridge_gamma = ridge_gamma
 
-    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
+    def _top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
         """Find the topological ordering of the causal variables from X dataset.
 
         Parameters
@@ -129,7 +132,7 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         top_order = top_order[::-1]
         return full_dag(top_order), top_order
 
-    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
+    def _prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """Pruning of the fully connected adjacency matrix representation of the
         inferred topological order.
 
@@ -150,8 +153,13 @@ class NoGAM(BaseCAMPruning, SteinMixin):
         """
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):
-            A_dense = self._pns(A_dense, X=X)
-        return super().prune(X, A_dense)
+            A_dense = pns(
+                A=np.ones((d, d)),
+                X=X,
+                pns_threshold=self.pns_threshold,
+                pns_num_neighbors=self.pns_num_neighbors
+            )
+        return super()._prune(X, A_dense)
 
     def _mse(self, X: NDArray, Y: NDArray) -> List[float]:
         """Predict each column of Y from X and compute the Mean Squared Error (MSE).

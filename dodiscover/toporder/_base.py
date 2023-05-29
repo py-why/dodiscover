@@ -9,12 +9,10 @@ import pandas as pd
 from numpy.typing import NDArray
 from pygam import LinearGAM, s
 from pygam.terms import Term, TermList
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.feature_selection import SelectFromModel
 from sklearn.metrics.pairwise import rbf_kernel
 
 from dodiscover.context import Context
-from dodiscover.toporder.utils import full_dag, kernel_width
+from dodiscover.toporder.utils import full_dag, kernel_width, full_adj_to_order
 
 # -------------------- Mixin class with Stein estimators -------------------- #
 
@@ -223,36 +221,14 @@ class SteinMixin:
         return np.expand_dims(X, axis=1) - X
 
 
-# -------------------- Topological ordering interface -------------------- #
+# -------------------- Class with CAM-pruning implementation --------------------#
 
+class CAMPruning:
+    """Class implementing regression based selection of edges of a DAG.
 
-class TopOrderInterface(metaclass=ABCMeta):
-    """
-    Interface for causal discovery based on estimate of topologial ordering and DAG pruning.
-    """
-
-    @abstractmethod
-    def fit(self, data: pd.DataFrame, context: Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
-        raise NotImplementedError()
-
-
-# -------------------- Base class for CAM pruning --------------------#
-class BaseCAMPruning(TopOrderInterface):
-    """Class for topological order based methods with CAM pruning.
-
-    Implementation of `TopOrderInterface` defining `fit` method for causal discovery.
-    Class inheriting from `BaseCAMPruning` need to implement the `top_order` method for inference
-    of the topological ordering of the nodes in the causal graph.
-    The resulting fully connected matrix is pruned by `prune` method implementation of
-    CAM pruning :footcite:`Buhlmann2013`.
+    Implementation of the CAM-pruning method :footcite:`Buhlmann2013`.
+    The algorithm performs selection of edges of an input DAG via hypothesis
+    testing on the coefficients of a regression model.
 
     Parameters
     ----------
@@ -264,27 +240,6 @@ class BaseCAMPruning(TopOrderInterface):
         in case of insufficient samples.
     splines_degree: int, optional
         Order of spline to use for the feature function, default is 3.
-    pns : bool, optional
-        If True, perform Preliminary Neighbour Search (PNS). Default is False.
-        Allows scaling CAM pruning and ordering to large graphs.
-    pns_num_neighbors: int, optional
-        Number of neighbors to use for PNS. If None (default) use all variables.
-    pns_threshold: float, optional
-        Threshold to use for PNS, default is 1.
-
-    Attributes
-    ----------
-    graph_ : nx.DiGraph
-        Adjacency matrix representation of the inferred causal graph.
-    order_ : List[int]
-        Topological order of the nodes from source to leaf.
-    order_graph_ : nx.DiGraph
-        Fully connected adjacency matrix representation of the
-        inferred topological order.
-    labels_to_nodes : Dict[Union[str, int], int]
-        Map from the custom node's label  to the node's label by number.
-    nodes_to_labels : Dict[int, Union[str, int]]
-        Map from the node's label by number to the custom node's label.
 
     References
     ----------
@@ -295,92 +250,19 @@ class BaseCAMPruning(TopOrderInterface):
         self,
         alpha: float = 0.05,
         n_splines: int = 10,
-        splines_degree: int = 3,
-        pns: bool = False,
-        pns_num_neighbors: Optional[int] = None,
-        pns_threshold: float = 1,
+        splines_degree: int = 3
     ):
         self.alpha = alpha
         self.n_splines = n_splines
         self.degree = splines_degree
-        self.do_pns = pns
-        self.pns_num_neighbors = pns_num_neighbors
-        self.pns_threshold = pns_threshold
 
-        self.graph_: nx.DiGraph = nx.empty_graph()
-        self.order_: List[int] = list()
-        self.order_graph_: nx.DiGraph = nx.empty_graph()
-        self.labels_to_nodes: Dict[Union[str, int], int] = dict()
-        self.nodes_to_labels: Dict[int, Union[str, int]] = dict()
 
-    def _get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
-        """Get leaf node from the list of `remaining_nodes` without an assigned order.
-
-        Parameters
-        ----------
-        leaf : int
-            Leaf position in the list of `remaining_nodes`.
-        remaining_nodes : List[int]
-            List of nodes without a position in the order.
-        current_order : List[int]
-            Partial topological order.
-
-        Returns
-        -------
-        leaf : int
-            Leaf index in the list of graph nodes.
-        """
-        # descendants enforced by edges in self.context and not in the order are used as leaf
-        leaf_descendants = self.order_constraints[remaining_nodes[leaf]]
-        if not set(leaf_descendants).issubset(set(current_order)):
-            k = 0
-            while True:
-                if leaf_descendants[k] not in current_order:
-                    leaf = remaining_nodes.index(leaf_descendants[k])
-                    break  # exit when leaf is found
-                k += 1
-        return leaf
-
-    def fit(self, data_df: pd.DataFrame, context: Context) -> None:
-        """
-        Fit topological order based causal discovery algorithm on input data.
-
-        Parameters
-        ----------
-        data_df : pd.DataFrame
-            Datafame of the input data.
-        context: Context
-            The context of the causal discovery problem.
-        """
-        X = data_df.to_numpy()
-        self.context = context
-        
-        # Data structure to exchange labels with nodes number
-        self.nodes_to_labels = {
-            i : data_df.columns[i] for i in range(len(data_df.columns))
-        }
-        self.labels_to_nodes = {
-            data_df.columns[i] : i for i in range(len(data_df.columns))
-        }
-
-        # Check acyclicity condition on included_edges
-        self._dag_check_included_edges()
-        self.order_constraints = self._included_edges_order_constraints()
-
-        # Inference of the causal order.
-        A_dense, order = self.top_order(X)
-        self.order_ = order
-        order_graph_ = nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph)
-
-        # Inference of the causal graph via pruning
-        A = self.prune(X, A_dense)
-        G = nx.from_numpy_array(A, create_using=nx.DiGraph)
-
-        # Relabel the nodes according to the input data_df columns
-        self.graph_ = self._postprocess_output(G)
-        self.order_graph_ = self._postprocess_output(order_graph_)
-
-    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
+    def prune(
+            self,
+            X: NDArray,
+            A_dense: NDArray,
+            G_included : nx.DiGraph,
+            G_excluded : nx.DiGraph) -> NDArray:
         """
         Prune the dense adjacency matrix `A_dense` from spurious edges.
 
@@ -393,6 +275,12 @@ class BaseCAMPruning(TopOrderInterface):
             Matrix of the data.
         A_dense : np.ndarray of shape (n_nodes, n_nodes)
             Dense adjacency matrix to be pruned.
+        G_included : nx.DiGraph
+            Graph with edges that are required to be included in the output.
+            It encodes assumptions and prior knowledge about the causal graph.
+        G_excluded : nx.DiGraph
+            Graph with edges that are required to be excluded from the output.
+            It encodes assumptions and prior knowledge about the causal graph.
 
         Returns
         -------
@@ -400,111 +288,30 @@ class BaseCAMPruning(TopOrderInterface):
             The pruned adjacency matrix output of the causal discovery algorithm.
         """
         _, d = X.shape
-        G_excluded = self._get_excluded_edges_graph()
-        G_included = self._get_included_edges_graph()
         A = np.zeros((d, d))
+        order = full_adj_to_order(A_dense)
         for c in range(d):
             pot_parents = []
-            for p in self.order_[: self.order_.index(c)]:
+            for p in order[: order.index(c)]:
                 if ((not G_excluded.has_edge(p, c)) and A_dense[p, c] == 1) or G_included.has_edge(
                     p, c
                 ):
                     pot_parents.append(p)
             if len(pot_parents) > 0:
-                parents = self._variable_selection(X[:, pot_parents], X[:, c], pot_parents, c)
+                parents = self._variable_selection(X[:, pot_parents], X[:, c], pot_parents, c, G_included)
                 for parent in parents:
                     A[parent, c] = 1
 
         return A
 
-    def _pns(self, A: NDArray, X: NDArray) -> NDArray:
-        """Preliminary Neighbors Selection (PNS) pruning on adjacency matrix `A`.
-
-        Variable selection preliminary to CAM pruning.
-        PNS :footcite:`Buhlmann2013` allows to scale CAM pruning to large graphs
-        (~20 or more nodes), with sensitive reduction of computational time.
-
-        Parameters
-        ----------
-        A : np.ndarray
-            Adjacency matrix representation of a dense graph.
-        X : np.ndarray of shape (n_samples, n_nodes)
-            Dataset with observations of the causal variables.
-
-        Returns
-        -------
-        A : np.ndarray
-            Pruned adjacency matrix.
-
-        References
-        ----------
-        .. footbibliography::
-        """
-        num_nodes = X.shape[1]
-        for node in range(num_nodes):
-            X_copy = np.copy(X)
-            X_copy[:, node] = 0
-            reg = ExtraTreesRegressor(n_estimators=500)
-            reg = reg.fit(X_copy, X[:, node])
-            selected_reg = SelectFromModel(
-                reg,
-                threshold="{}*mean".format(self.pns_threshold),
-                prefit=True,
-                max_features=self.pns_num_neighbors,
-            )
-            mask_selected = selected_reg.get_support(indices=False)
-
-            mask_selected = mask_selected.astype(A.dtype)
-            A[:, node] *= mask_selected
-
-        return A
-
-    def _exclude_edges(self, A: NDArray) -> NDArray:
-        """Update `self.context` excluding edges not admitted in `A`.
-
-        Parameters
-        ----------
-        A : np.ndarray
-            Adjacency matrix representation of an arbitrary graph (directe or undirected).
-            If `A[i, j]`, add edge (i, j) to `self.context.excluded_edges`.
-        """
-        # self.context.excluded_edges: nx.Graph with excluded edges
-        d = A.shape[0]
-        for i in range(d):
-            for j in range(d):
-                if i != j and A[i, j] == 0 and (not self._get_included_edges_graph().has_edge(i, j)):
-                    self._get_excluded_edges_graph().add_edge(i, j)
-
-    def _dag_check_included_edges(self) -> None:
-        """Check that the edges included in `self.context` does not violate DAG condition."""
-        is_dag = nx.is_directed_acyclic_graph(self._get_included_edges_graph())
-        if nx.is_empty(self._get_included_edges_graph()):
-            is_dag = True
-        if not is_dag:
-            raise ValueError("Edges included in the graph violate the acyclicity condition!")
-
-    def _included_edges_order_constraints(self) -> Dict[int, List[int]]:
-        """For each node find the predecessors enforced by the edges included in `self.context`.
-
-        Returns
-        -------
-        descendants : Dict[int, List[int]]
-            Dictionary with index of a node of the graph as key, list of the descendants of the
-            node enforced by self.context.included_edges as value.
-        """
-        adj = nx.to_numpy_array(self._get_included_edges_graph())
-        d, _ = adj.shape
-        descendants: Dict = {i: list() for i in range(d)}
-        for row in range(d):
-            for col in range(d):
-                if adj[row, col] == 1:
-                    row_descendants = descendants[row]
-                    row_descendants.append(col)
-                    descendants[row] = row_descendants
-        return descendants
 
     def _variable_selection(
-        self, X: NDArray, y: NDArray, pot_parents: List[int], child: int
+        self,
+        X: NDArray,
+        y: NDArray,
+        pot_parents: List[int],
+        child: int,
+        G_included : nx.DiGraph,
     ) -> List[int]:
         """
         Regression for parents variables selection.
@@ -515,13 +322,16 @@ class BaseCAMPruning(TopOrderInterface):
         Parameters
         ----------
         X : np.ndarray
-            exogenous variables.
+            Exogenous variables.
         y : np.ndarray
-            endogenous variables.
+            Endogenous variables.
         pot_parents: List[int]
             List of potential parents admitted by the topological ordering.
         child : int
             Child node with `pot_parents` potential parent nodes.
+        G_included : nx.DiGraph
+            Graph with edges that are required to be included in the output.
+            It encodes assumptions and prior knowledge about the causal graph.
 
         Returns
         -------
@@ -535,7 +345,7 @@ class BaseCAMPruning(TopOrderInterface):
 
         parents = []
         for j in range(d):
-            if pvalues[j] < self.alpha or self._get_included_edges_graph().has_edge(
+            if pvalues[j] < self.alpha or G_included.has_edge(
                 pot_parents[j], child
             ):
                 parents.append(pot_parents[j])
@@ -658,6 +468,251 @@ class BaseCAMPruning(TopOrderInterface):
         for spline in splines_list:
             terms += spline
         return terms
+    
+
+
+# -------------------- Topological ordering interface -------------------- #
+
+class TopOrderInterface(metaclass=ABCMeta):
+    """
+    Interface for causal discovery based on estimate of topologial ordering and DAG pruning.
+    """
+
+    @abstractmethod
+    def fit(self, data: pd.DataFrame, context: Context) -> None:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
+        raise NotImplementedError()
+
+
+# -------------------- Base class for order-based inference --------------------#
+class BaseTopOrder(CAMPruning, TopOrderInterface):
+    """Base class for order-based causal discovery.
+
+    Implementation of `TopOrderInterface` defining `fit` method for causal discovery.
+    Class inheriting from `BaseTopOrder` need to implement the `top_order` method for inference
+    of the topological ordering of the nodes in the causal graph.
+    The resulting fully connected matrix is pruned by `prune` method implementation of
+    CAM pruning :footcite:`Buhlmann2013`.
+
+    Parameters
+    ----------
+    alpha : float, optional
+        Alpha cutoff value for variable selection with hypothesis testing over regression
+        coefficients, default is 0.001.
+    prune : bool, optional
+        If True (default), apply CAM-pruning after finding the topological order.
+    n_splines : int, optional
+        Number of splines to use for the feature function, default is 10. Automatically decreased
+        in case of insufficient samples.
+    splines_degree: int, optional
+        Order of spline to use for the feature function, default is 3.
+    pns : bool, optional
+        If True, perform Preliminary Neighbour Search (PNS). Default is False.
+        Allows scaling CAM pruning and ordering to large graphs.
+    pns_num_neighbors: int, optional
+        Number of neighbors to use for PNS. If None (default) use all variables.
+    pns_threshold: float, optional
+        Threshold to use for PNS, default is 1.
+
+    Attributes
+    ----------
+    graph_ : nx.DiGraph
+        Adjacency matrix representation of the inferred causal graph.
+    order_ : List[int]
+        Topological order of the nodes from source to leaf.
+    order_graph_ : nx.DiGraph
+        Fully connected adjacency matrix representation of the
+        inferred topological order.
+    labels_to_nodes : Dict[Union[str, int], int]
+        Map from the custom node's label  to the node's label by number.
+    nodes_to_labels : Dict[int, Union[str, int]]
+        Map from the node's label by number to the custom node's label.
+
+    References
+    ----------
+    .. footbibliography::
+    """
+
+    def __init__(
+        self,
+        alpha: float = 0.05,
+        prune : bool = True,
+        n_splines: int = 10,
+        splines_degree: int = 3,
+        pns: bool = False,
+        pns_num_neighbors: Optional[int] = None,
+        pns_threshold: float = 1,
+    ):
+        # Initialize CAMPruning
+        super().__init__(
+            alpha,
+            n_splines,
+            splines_degree
+        )
+
+        # Parameters
+        self.apply_pruning = prune
+        self.do_pns = pns
+        self.pns_num_neighbors = pns_num_neighbors
+        self.pns_threshold = pns_threshold
+
+        # Attributes
+        self.graph_: nx.DiGraph = nx.empty_graph()
+        self.order_: List[int] = list()
+        self.order_graph_: nx.DiGraph = nx.empty_graph()
+        self.labels_to_nodes: Dict[Union[str, int], int] = dict()
+        self.nodes_to_labels: Dict[int, Union[str, int]] = dict()
+
+    def _get_leaf(self, leaf: int, remaining_nodes: List[int], current_order: List[int]) -> int:
+        """Get leaf node from the list of `remaining_nodes` without an assigned order.
+
+        Parameters
+        ----------
+        leaf : int
+            Leaf position in the list of `remaining_nodes`.
+        remaining_nodes : List[int]
+            List of nodes without a position in the order.
+        current_order : List[int]
+            Partial topological order.
+
+        Returns
+        -------
+        leaf : int
+            Leaf index in the list of graph nodes.
+        """
+        # descendants enforced by edges in self.context and not in the order are used as leaf
+        leaf_descendants = self.order_constraints[remaining_nodes[leaf]]
+        if not set(leaf_descendants).issubset(set(current_order)):
+            k = 0
+            while True:
+                if leaf_descendants[k] not in current_order:
+                    leaf = remaining_nodes.index(leaf_descendants[k])
+                    break  # exit when leaf is found
+                k += 1
+        return leaf
+
+
+    def fit(self, data_df: pd.DataFrame, context: Context) -> None:
+        """
+        Fit topological order based causal discovery algorithm on input data.
+
+        Parameters
+        ----------
+        data_df : pd.DataFrame
+            Datafame of the input data.
+        context: Context
+            The context of the causal discovery problem.
+        """
+        X = data_df.to_numpy()
+        self.context = context
+        
+        # Data structure to exchange labels with nodes number
+        self.nodes_to_labels = {
+            i : data_df.columns[i] for i in range(len(data_df.columns))
+        }
+        self.labels_to_nodes = {
+            data_df.columns[i] : i for i in range(len(data_df.columns))
+        }
+
+        # Check acyclicity condition on included_edges
+        self._dag_check_included_edges()
+        self.order_constraints = self._included_edges_order_constraints()
+
+        # Inference of the causal order.
+        A_dense, order = self._top_order(X)
+        self.order_ = order
+        order_graph_ = nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph)
+
+        # Inference of the causal graph via pruning
+        if self.apply_pruning:
+            A = self._prune(X, A_dense)
+            G = nx.from_numpy_array(A, create_using=nx.DiGraph)
+        else:
+            G = nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph) # order_graph
+
+        # Relabel the nodes according to the input data_df columns
+        self.graph_ = self._postprocess_output(G)
+        self.order_graph_ = self._postprocess_output(order_graph_)
+
+
+    def _prune(self,
+              X: NDArray,
+              A_dense: NDArray) -> NDArray:
+        """
+        Prune the dense adjacency matrix `A_dense` from spurious edges.
+
+        Use sparse regression over the matrix of the data `X` for variable selection over the
+        edges in the dense (potentially fully connected) adjacency matrix `A_dense`
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_nodes)
+            Matrix of the data.
+        A_dense : np.ndarray of shape (n_nodes, n_nodes)
+            Dense adjacency matrix to be pruned.
+        Returns
+        -------
+        A : np.ndarray
+            The pruned adjacency matrix output of the causal discovery algorithm.
+        """
+        G_included = self._get_included_edges_graph()
+        G_excluded = self._get_excluded_edges_graph()
+        return super().prune(X, A_dense, G_included, G_excluded)
+    
+
+    def _exclude_edges(self, A: NDArray) -> NDArray:
+        """Update `self.context` excluding edges not admitted in `A`.
+
+        Parameters
+        ----------
+        A : np.ndarray
+            Adjacency matrix representation of an arbitrary graph (directe or undirected).
+            If `A[i, j]`, add edge (i, j) to `self.context.excluded_edges`.
+        """
+        # self.context.excluded_edges: nx.Graph with excluded edges
+        d = A.shape[0]
+        for i in range(d):
+            for j in range(d):
+                if i != j and A[i, j] == 0 and (not self._get_included_edges_graph().has_edge(i, j)):
+                    self._get_excluded_edges_graph().add_edge(i, j)
+
+
+    def _dag_check_included_edges(self) -> None:
+        """Check that the edges included in `self.context` does not violate DAG condition."""
+        is_dag = nx.is_directed_acyclic_graph(self._get_included_edges_graph())
+        if nx.is_empty(self._get_included_edges_graph()):
+            is_dag = True
+        if not is_dag:
+            raise ValueError("Edges included in the graph violate the acyclicity condition!")
+
+
+    def _included_edges_order_constraints(self) -> Dict[int, List[int]]:
+        """For each node find the predecessors enforced by the edges included in `self.context`.
+
+        Returns
+        -------
+        descendants : Dict[int, List[int]]
+            Dictionary with index of a node of the graph as key, list of the descendants of the
+            node enforced by self.context.included_edges as value.
+        """
+        adj = nx.to_numpy_array(self._get_included_edges_graph())
+        d, _ = adj.shape
+        descendants: Dict = {i: list() for i in range(d)}
+        for row in range(d):
+            for col in range(d):
+                if adj[row, col] == 1:
+                    row_descendants = descendants[row]
+                    row_descendants.append(col)
+                    descendants[row] = row_descendants
+        return descendants
+
 
     def _postprocess_output(self, graph):
         """Relabel the graph nodes with the custom labels of the input dataframe.
@@ -712,3 +767,4 @@ class BaseCAMPruning(TopOrderInterface):
             u, v = self.labels_to_nodes[edge[0]], self.labels_to_nodes[edge[1]]
             G.add_edge(u, v)
         return G
+    

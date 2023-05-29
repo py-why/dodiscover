@@ -29,6 +29,9 @@ class DAS(SCORE):
     alpha : float, optional
         Alpha cutoff value for variable selection with hypothesis testing over regression
         coefficients, default is 0.05.
+    prune : bool, optional
+        If True (default), apply CAM-pruning after finding the topological order.
+        If False, DAS is equivalent to SCORE.
     das_cutoff : float, optional
         Alpha value for hypothesis testing in preliminary DAS pruning.
         If None (default), it is set equal to `alpha`.
@@ -65,6 +68,7 @@ class DAS(SCORE):
         eta_G: float = 0.001,
         eta_H: float = 0.001,
         alpha: float = 0.05,
+        prune : bool = True,
         das_cutoff: float = None,
         n_splines: int = 10,
         splines_degree: int = 3,
@@ -72,13 +76,13 @@ class DAS(SCORE):
         max_parents: int = 20,
     ):
         super().__init__(
-            eta_G, eta_H, alpha, n_splines, splines_degree, estimate_variance=True, pns=False
+            eta_G, eta_H, alpha, prune, n_splines, splines_degree, estimate_variance=True, pns=False
         )
         self.min_parents = min_parents
         self.max_parents = max_parents
         self.das_cutoff = alpha if das_cutoff is None else das_cutoff
 
-    def prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
+    def _prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """
         DAS preliminary pruning of A_dense matrix representation of a fully connected graph.
 
@@ -138,4 +142,4 @@ class DAS(SCORE):
             A_das[parents, leaf] = 1
             remaining_nodes.pop(l_index)
 
-        return super().prune(X, A_das)
+        return super()._prune(X, A_das)
