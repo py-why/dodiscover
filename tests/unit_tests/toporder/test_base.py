@@ -2,7 +2,7 @@ import networkx as nx
 import numpy as np
 
 from dodiscover import make_context
-from dodiscover.toporder._base import SteinMixin, CAMPruning
+from dodiscover.toporder._base import CAMPruning, SteinMixin
 from dodiscover.toporder.score import SCORE
 from dodiscover.toporder.utils import dummy_dense, dummy_sample, full_adj_to_order, full_dag
 
@@ -32,20 +32,22 @@ def test_given_order_and_alternative_order_when_pruning_then_return_equal_output
     order_equivalent = [2, 3, 1, 0]
     cam_pruning = CAMPruning()
 
-    # Context information
+    # Context information (nothing to encode)
     G_included = nx.empty_graph(create_using=nx.DiGraph)
     G_excluded = nx.empty_graph(create_using=nx.DiGraph)
 
     # Inference
     A_gt = cam_pruning.prune(X.to_numpy(), full_dag(order_gt), G_included, G_excluded)
-    A_equivalent = cam_pruning.prune(X.to_numpy(), full_dag(order_equivalent), G_included, G_excluded)
+    A_equivalent = cam_pruning.prune(
+        X.to_numpy(), full_dag(order_equivalent), G_included, G_excluded
+    )
     assert np.allclose(A_gt, A_equivalent)
 
 
 def test_given_adjacency_when_pruning_then_excluded_edges_are_removed():
     G_dense = dummy_dense()
     X = dummy_sample(seed=seed)
-    model = SCORE(alpha=1.) # do not remove edges with pruning
+    model = SCORE(alpha=1.0)  # do not remove edges with pruning
 
     # Get dense prediction without excluded edges
     context = make_context().variables(observed=X.columns).build()
@@ -64,10 +66,11 @@ def test_given_adjacency_when_pruning_then_excluded_edges_are_removed():
     A_excluded = nx.to_numpy_array(G_excluded)
     assert A_excluded[l_parents[0], leaf] == 0
 
-def test_given_adjacency_when_pruning_then_excluded_edges_are_removed():
+
+def test_given_adjacency_when_pruning_then_only_excluded_edges_are_removed():
     G_dense = dummy_dense()
     X = dummy_sample(seed=seed)
-    model = SCORE(alpha=1.) # do not remove edges with pruning
+    model = SCORE(alpha=1.0)  # do not remove edges with pruning
 
     # Get dense prediction without excluded edges
     context = make_context().variables(observed=X.columns).build()
@@ -92,7 +95,7 @@ def test_given_adjacency_when_pruning_then_excluded_edges_are_removed():
 def test_given_adjacency_when_pruning_with_pns_then_excluded_edges_are_removed():
     G_dense = dummy_dense()
     X = dummy_sample(seed=seed)
-    model = SCORE(alpha=1., pns=True) # do not remove edges with pruning
+    model = SCORE(alpha=1.0, pns=True)  # do not remove edges with pruning
 
     # Get dense prediction without excluded edges
     context = make_context().variables(observed=X.columns).build()

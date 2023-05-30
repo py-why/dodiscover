@@ -83,14 +83,16 @@ class NoGAM(BaseTopOrder, SteinMixin):
         eta_G: float = 0.001,
         eta_H: float = 0.001,
         alpha: float = 0.05,
-        prune : bool = True,
+        prune: bool = True,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
+        super().__init__(
+            alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
+        )
         self.eta_G = eta_G
         self.eta_H = eta_H
         self.n_crossval = n_crossval
@@ -154,10 +156,10 @@ class NoGAM(BaseTopOrder, SteinMixin):
         d = A_dense.shape[0]
         if (self.do_pns) or (self.do_pns is None and d > 20):
             A_dense = pns(
-                A=np.ones((d, d)),
+                A=A_dense,
                 X=X,
                 pns_threshold=self.pns_threshold,
-                pns_num_neighbors=self.pns_num_neighbors
+                pns_num_neighbors=self.pns_num_neighbors,
             )
         return super()._prune(X, A_dense)
 

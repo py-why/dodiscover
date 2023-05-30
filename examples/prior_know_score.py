@@ -5,8 +5,8 @@
 Using prior knowledge in order-based algorithms for causal discovery
 ====================================================================
 
-We illustrate how to exploit prior knowledge and assumptions
-about the causal structure generating the data in the context of causal discovery with
+We illustrate how to exploit prior knowledge and assumptions about the
+causal structure that generates the data in the context of causal discovery with
 order-based algorithms.
 """
 
@@ -25,9 +25,7 @@ from dowhy.gcm.util.general import set_random_seed
 # Simulate some data
 # ------------------
 # First we will simulate data, starting from an Additive Noise Model (ANM).
-# This will then induce a causal graph, which we can visualize. Due to the
-# Markov assumption, then we can use d-separation to examine which variables
-# are conditionally independent.
+# This will then induce a causal graph, which we can visualize.
 
 # set a random seed to make example reproducible
 seed = 12345
@@ -91,19 +89,19 @@ dot_graph = draw(G)
 dot_graph.render(outfile="oracle_dag.png", view=True)
 
 # %%
-# Define the context with fixed egdes
+# Define the context with fixed edges
 # -----------------------------------
 # Define the context specifying the fixed directed edge (`z`, `y`) in the output graph.
 # This encodes prior domain information from the user, which specifies that there is
 # a directed connection between `z` and `y`.
-included_edges = nx.DiGraph([('z', 'y')])
+included_edges = nx.DiGraph([("z", "y")])
 context = make_context().variables(data=data).edges(include=included_edges).build()
 
 # %%
 # Run structure learning algorithm with fixed edges
 # -------------------------------------------------
 # Now we run inference with the SCORE algorithm. The output of the inference
-# procedure must be a graph including (`z`, `y`) in the set of edges.
+# must be a graph including (`z`, `y`) in the set of edges.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
 score.fit(data, context)
 
@@ -113,12 +111,12 @@ dot_graph = draw(graph, name="DAG with (z, y) directed edge")
 dot_graph.render(outfile="score_prior_include.png", view=True)
 
 # %%
-# Define the context with excluded egdes
+# Define the context with excluded edges
 # --------------------------------------
-# The context can be used to encode prior information about directed edges that must
-# not appear in the output graph. In this example, we define the context that excludes
-# the edge (`z`, `w`) from the outout DAG.
-excluded_edges = nx.DiGraph([('z', 'w')])
+# The context can also be used to encode prior information about directed edges that
+# must be excluded from the the output graph. In this example, we define the context
+# that excludes the edge (`z`, `w`) from the output DAG.
+excluded_edges = nx.DiGraph([("z", "w")])
 context = make_context().variables(data=data).edges(exclude=excluded_edges).build()
 
 # Run structure learning algorithm with excluded edges
@@ -128,7 +126,7 @@ context = make_context().variables(data=data).edges(exclude=excluded_edges).buil
 score = SCORE()  # or DAS() or NoGAM() or CAM()
 score.fit(data, context)
 
-# Verify that the output does not include (`z`, `w`) in the set of edges. 
+# Verify that the output does not include (`z`, `w`) in the set of edges.
 graph = score.graph_
 dot_graph = draw(graph, name="DAG without (z, w) directed edge")
 dot_graph.render(outfile="score_prior_exclude.png", view=True)
@@ -139,5 +137,5 @@ dot_graph.render(outfile="score_prior_exclude.png", view=True)
 # In this tutorial we show how to encode prior knowledge about the solution with
 # the context object, in the setting of causal discovery with order-based algorithms.
 # This example can be generalized to the case of `NoGAM`, `DAS`, and `CAM` methods.
-# For a detailed example on order-based discovery apprpaches, see
-# :ref:`example <ex-score-algorithm>`
+# For a detailed example on order-based discovery approaches, see this
+# :ref:`tutorial <ex-score-algorithm>`.

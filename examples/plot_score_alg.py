@@ -73,9 +73,7 @@ from dowhy.gcm.util.general import set_random_seed
 # Simulate some data
 # ------------------
 # First we will simulate data, starting from an Additive Noise Model (ANM).
-# This will then induce a causal graph, which we can visualize. Due to the
-# Markov assumption, then we can use d-separation to examine which variables
-# are conditionally independent.
+# This will then induce a causal graph, which we can visualize.
 
 # set a random seed to make example reproducible
 seed = 12345
@@ -172,10 +170,10 @@ context = make_context().variables(data=data).build()
 # 2. Let `H := Hessian(log p(V))`. SCORE selects a leaf in the graph by finding
 #    the diagonal term of H with minimum variance,
 #    i.e. by computing `np.argmin(np.var(np.diag(H))`.
-# 3. SCORE removes the leaf in from the graph, and repeats steps from 1. to 3.
+# 3. SCORE removes the leaf from the graph, and repeats steps from 1. to 3.
 #    iteratively up to the source nodes.
 #
-# Given the inferred topological order, SCORE prunes the graph by with all
+# Given the inferred topological order, SCORE prunes the graph with all the
 # edges admitted by such ordering, by doing sparse regression to choose the
 # relevant variables. Variable selection is done by thresholding on the
 # p-values of the coefficients associated to the potential parents of a node.
@@ -209,6 +207,5 @@ dot_graph.render(outfile="score_full_dag.png", view=True)
 # -------
 # We observe two DAGs output of the SCORE inference procedure.
 # One is the fully connected graph associated to the inferred topological order
-# `[z, x, y, w]` of the graph nodes.
-# After the pruning procedure, the final output of SCORE has a subset of the original
-# edges. The output of SCORE corresponds exactly to the groundtruth.
+# `[z, x, y, w]` of the graph nodes. The other is the sparser graph after the pruning
+# step, corresponding to the causal graph inferred by SCORE.

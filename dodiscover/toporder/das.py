@@ -68,7 +68,7 @@ class DAS(SCORE):
         eta_G: float = 0.001,
         eta_H: float = 0.001,
         alpha: float = 0.05,
-        prune : bool = True,
+        prune: bool = True,
         das_cutoff: float = None,
         n_splines: int = 10,
         splines_degree: int = 3,

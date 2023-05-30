@@ -12,7 +12,7 @@ from pygam.terms import Term, TermList
 from sklearn.metrics.pairwise import rbf_kernel
 
 from dodiscover.context import Context
-from dodiscover.toporder.utils import full_dag, kernel_width, full_adj_to_order
+from dodiscover.toporder.utils import full_adj_to_order, full_dag, kernel_width
 
 # -------------------- Mixin class with Stein estimators -------------------- #
 
@@ -223,6 +223,7 @@ class SteinMixin:
 
 # -------------------- Class with CAM-pruning implementation --------------------#
 
+
 class CAMPruning:
     """Class implementing regression based selection of edges of a DAG.
 
@@ -246,23 +247,14 @@ class CAMPruning:
     .. footbibliography::
     """
 
-    def __init__(
-        self,
-        alpha: float = 0.05,
-        n_splines: int = 10,
-        splines_degree: int = 3
-    ):
+    def __init__(self, alpha: float = 0.05, n_splines: int = 10, splines_degree: int = 3):
         self.alpha = alpha
         self.n_splines = n_splines
         self.degree = splines_degree
 
-
     def prune(
-            self,
-            X: NDArray,
-            A_dense: NDArray,
-            G_included : nx.DiGraph,
-            G_excluded : nx.DiGraph) -> NDArray:
+        self, X: NDArray, A_dense: NDArray, G_included: nx.DiGraph, G_excluded: nx.DiGraph
+    ) -> NDArray:
         """
         Prune the dense adjacency matrix `A_dense` from spurious edges.
 
@@ -298,12 +290,13 @@ class CAMPruning:
                 ):
                     pot_parents.append(p)
             if len(pot_parents) > 0:
-                parents = self._variable_selection(X[:, pot_parents], X[:, c], pot_parents, c, G_included)
+                parents = self._variable_selection(
+                    X[:, pot_parents], X[:, c], pot_parents, c, G_included
+                )
                 for parent in parents:
                     A[parent, c] = 1
 
         return A
-
 
     def _variable_selection(
         self,
@@ -311,7 +304,7 @@ class CAMPruning:
         y: NDArray,
         pot_parents: List[int],
         child: int,
-        G_included : nx.DiGraph,
+        G_included: nx.DiGraph,
     ) -> List[int]:
         """
         Regression for parents variables selection.
@@ -345,9 +338,7 @@ class CAMPruning:
 
         parents = []
         for j in range(d):
-            if pvalues[j] < self.alpha or G_included.has_edge(
-                pot_parents[j], child
-            ):
+            if pvalues[j] < self.alpha or G_included.has_edge(pot_parents[j], child):
                 parents.append(pot_parents[j])
         return parents
 
@@ -468,10 +459,10 @@ class CAMPruning:
         for spline in splines_list:
             terms += spline
         return terms
-    
 
 
 # -------------------- Topological ordering interface -------------------- #
+
 
 class TopOrderInterface(metaclass=ABCMeta):
     """
@@ -543,7 +534,7 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
     def __init__(
         self,
         alpha: float = 0.05,
-        prune : bool = True,
+        prune: bool = True,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
@@ -551,11 +542,7 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
         pns_threshold: float = 1,
     ):
         # Initialize CAMPruning
-        super().__init__(
-            alpha,
-            n_splines,
-            splines_degree
-        )
+        super().__init__(alpha, n_splines, splines_degree)
 
         # Parameters
         self.apply_pruning = prune
@@ -598,7 +585,6 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
                 k += 1
         return leaf
 
-
     def fit(self, data_df: pd.DataFrame, context: Context) -> None:
         """
         Fit topological order based causal discovery algorithm on input data.
@@ -612,14 +598,10 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
         """
         X = data_df.to_numpy()
         self.context = context
-        
+
         # Data structure to exchange labels with nodes number
-        self.nodes_to_labels = {
-            i : data_df.columns[i] for i in range(len(data_df.columns))
-        }
-        self.labels_to_nodes = {
-            data_df.columns[i] : i for i in range(len(data_df.columns))
-        }
+        self.nodes_to_labels = {i: data_df.columns[i] for i in range(len(data_df.columns))}
+        self.labels_to_nodes = {data_df.columns[i]: i for i in range(len(data_df.columns))}
 
         # Check acyclicity condition on included_edges
         self._dag_check_included_edges()
@@ -635,16 +617,13 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
             A = self._prune(X, A_dense)
             G = nx.from_numpy_array(A, create_using=nx.DiGraph)
         else:
-            G = nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph) # order_graph
+            G = nx.from_numpy_array(full_dag(order), create_using=nx.DiGraph)  # order_graph
 
         # Relabel the nodes according to the input data_df columns
         self.graph_ = self._postprocess_output(G)
         self.order_graph_ = self._postprocess_output(order_graph_)
 
-
-    def _prune(self,
-              X: NDArray,
-              A_dense: NDArray) -> NDArray:
+    def _prune(self, X: NDArray, A_dense: NDArray) -> NDArray:
         """
         Prune the dense adjacency matrix `A_dense` from spurious edges.
 
@@ -665,24 +644,6 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
         G_included = self._get_included_edges_graph()
         G_excluded = self._get_excluded_edges_graph()
         return super().prune(X, A_dense, G_included, G_excluded)
-    
-
-    def _exclude_edges(self, A: NDArray) -> NDArray:
-        """Update `self.context` excluding edges not admitted in `A`.
-
-        Parameters
-        ----------
-        A : np.ndarray
-            Adjacency matrix representation of an arbitrary graph (directe or undirected).
-            If `A[i, j]`, add edge (i, j) to `self.context.excluded_edges`.
-        """
-        # self.context.excluded_edges: nx.Graph with excluded edges
-        d = A.shape[0]
-        for i in range(d):
-            for j in range(d):
-                if i != j and A[i, j] == 0 and (not self._get_included_edges_graph().has_edge(i, j)):
-                    self._get_excluded_edges_graph().add_edge(i, j)
-
 
     def _dag_check_included_edges(self) -> None:
         """Check that the edges included in `self.context` does not violate DAG condition."""
@@ -691,7 +652,6 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
             is_dag = True
         if not is_dag:
             raise ValueError("Edges included in the graph violate the acyclicity condition!")
-
 
     def _included_edges_order_constraints(self) -> Dict[int, List[int]]:
         """For each node find the predecessors enforced by the edges included in `self.context`.
@@ -713,7 +673,6 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
                     descendants[row] = row_descendants
         return descendants
 
-
     def _postprocess_output(self, graph):
         """Relabel the graph nodes with the custom labels of the input dataframe.
 
@@ -729,7 +688,6 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
         """
         G = nx.relabel_nodes(graph, mapping=self.nodes_to_labels)
         return G
-
 
     def _get_included_edges_graph(self):
         """Get the `self.context.included_edges` graph with numerical label of the nodes.
@@ -748,7 +706,6 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
             u, v = self.labels_to_nodes[edge[0]], self.labels_to_nodes[edge[1]]
             G.add_edge(u, v)
         return G
-    
 
     def _get_excluded_edges_graph(self):
         """Get the `self.context.excluded_edges` graph with numerical label of the nodes.
@@ -767,4 +724,3 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
             u, v = self.labels_to_nodes[edge[0]], self.labels_to_nodes[edge[1]]
             G.add_edge(u, v)
         return G
-    

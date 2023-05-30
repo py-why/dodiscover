@@ -52,14 +52,16 @@ class CAM(BaseTopOrder):
     def __init__(
         self,
         alpha: float = 0.05,
-        prune : bool = True,
+        prune: bool = True,
         n_splines: int = 10,
         splines_degree: int = 3,
         pns: bool = False,
         pns_num_neighbors: Optional[int] = None,
         pns_threshold: float = 1,
     ):
-        super().__init__(alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold)
+        super().__init__(
+            alpha, prune, n_splines, splines_degree, pns, pns_num_neighbors, pns_threshold
+        )
         self.inf = np.finfo(np.float32).min
 
     def _top_order(self, X: NDArray) -> Tuple[NDArray, List[int]]:
@@ -222,14 +224,19 @@ class CAM(BaseTopOrder):
         """
         _, d = X.shape
         G_excluded = self._get_excluded_edges_graph()  # nx.Graph with excluded edges
+        G_included = self._get_included_edges_graph()  # nx.Graph with included edges
         if (self.do_pns) or (self.do_pns is None and d > 20):
             A_pns = pns(
                 A=np.ones((d, d)),
                 X=X,
                 pns_threshold=self.pns_threshold,
-                pns_num_neighbors=self.pns_num_neighbors
+                pns_num_neighbors=self.pns_num_neighbors,
             )
-            self._exclude_edges(A_pns)
+            # Exclude edges removed by PNS
+            for i in range(d):
+                for j in range(d):
+                    if i != j and A_pns[i, j] == 0 and (not G_included.has_edge(i, j)):
+                        G_excluded.add_edge(i, j)
 
         # Initialize matrix of score gains and vector of initial scores
         score_gains = np.zeros((d, d))
