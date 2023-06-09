@@ -63,8 +63,8 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
     def test(
         self,
         df: pd.DataFrame,
-        y_vars: Set[Column],
         group_col: Set[Column],
+        y_vars: Set[Column],
         x_vars: Set[Column],
     ) -> Tuple[float, float]:
         """Abstract method for all conditional discrepancy tests.
@@ -99,6 +99,11 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
     def _compute_propensity_scores(self, group_ind, **kwargs):
         if self.propensity_model is None:
             K = kwargs.get("K")
+            if K is None:
+                # use the empirical propensities
+                empirical_propensity = group_ind.sum() / len(group_ind)
+                self.propensity_est_ = np.ones(len(group_ind)) * empirical_propensity
+                return self.propensity_est_
 
             # compute a default penalty term if using a kernel matrix
             if K.shape[0] == K.shape[1]:
@@ -131,12 +136,12 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         return self.propensity_est_
 
     @abstractmethod
-    def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:
+    def _statistic(self, Y: ArrayLike, group_ind: ArrayLike, X: ArrayLike=None) -> float:
         """Abstract method for computing the test statistic."""
         pass
 
     def compute_null(
-        self, e_hat: ArrayLike, X: ArrayLike, Y: ArrayLike, null_reps: int = 1000, random_state=None
+        self, e_hat: ArrayLike,Y: ArrayLike, X: ArrayLike=None, null_reps: int = 1000, random_state=None
     ) -> ArrayLike:
         """Estimate null distribution using propensity weights.
 
@@ -144,10 +149,10 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         ----------
         e_hat : Array-like of shape (n_samples,)
             The predicted propensity score for ``group_ind == 1``.
-        X : Array-Like of shape (n_samples, n_features_x)
-            The X (covariates) array.
         Y : Array-Like of shape (n_samples, n_features_y)
             The Y (outcomes) array.
+        X : Array-Like of shape (n_samples, n_features_x)
+            The X (covariates) array.
         null_reps : int, optional
             Number of times to sample null, by default 1000.
         random_state : int, optional
@@ -160,14 +165,14 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         """
         rng = np.random.default_rng(random_state)
 
-        n_samps = X.shape[0]
+        n_samps = Y.shape[0]
 
         # compute the test statistic on the conditionally permuted
         # dataset, where each group label is resampled for each sample
         # according to its propensity score
         null_dist = Parallel(n_jobs=self.n_jobs)(
             [
-                delayed(self._statistic)(X, Y, rng.binomial(1, e_hat, size=n_samps))
+                delayed(self._statistic)(Y, rng.binomial(1, e_hat, size=n_samps), X)
                 for _ in range(null_reps)
             ]
         )

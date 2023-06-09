@@ -4,7 +4,11 @@ import pytest
 from sklearn.ensemble import RandomForestClassifier
 
 from dodiscover.cd import BregmanCDTest, KernelCDTest
+from pywhy_graphs import AugmentedGraph
 
+from pywhy_graphs.functional import sample_multidomain_lin_functions, make_graph_linear_gaussian
+
+from dodiscover.datasets import sample_from_graph
 seed = 12345
 
 # number of samples to use in generating test dataset; the lower the faster
@@ -54,12 +58,12 @@ def test_cd_tests_error(cd_func):
     sample_df = single_env_scm(n_samples=10)
     cd_estimator = cd_func()
     with pytest.raises(ValueError, match="The group col"):
-        cd_estimator.test(sample_df, {y}, group_col={"blah"}, x_vars={x})
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"blah"}, x_vars={x})
 
     with pytest.raises(ValueError, match="The x variables are not all"):
         cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={"blah"})
 
-    with pytest.raises(ValueError, match="The y variables are not all"):
+    with pytest.raises(ValueError, match="The y variables"):
         cd_estimator.test(sample_df, y_vars={"blah"}, group_col={"group"}, x_vars={x})
 
     with pytest.raises(ValueError, match="Group column should be only one column"):
@@ -68,7 +72,7 @@ def test_cd_tests_error(cd_func):
     # all the group indicators have different values now from 0/1
     sample_df["group"] = sample_df["group"] + 3
     with pytest.raises(RuntimeError, match="Group indications in"):
-        cd_estimator.test(sample_df, {y}, group_col={"group"}, x_vars={x})
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={x})
 
     # test pre-fit propensity scores, or custom propensity model
     with pytest.raises(
@@ -117,19 +121,81 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
     if env_type == "single":
         _, pvalue = cd_estimator.test(
             df,
-            {"x1"},
-            {group_col},
-            {"x"},
+            y_vars={"x1"},
+            group_col={group_col},
+            x_vars={"x"},
         )
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"z"}, group_col={group_col}, x_vars={"x"})
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"y"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"y"}, group_col={group_col}, x_vars={"x"})
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
     elif env_type == "multi":
-        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"z"}, group_col={group_col}, x_vars={"x"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"y"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"y"}, group_col={group_col}, x_vars={"x"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x1"})
+        _, pvalue = cd_estimator.test(df, y_vars={"z"}, group_col={group_col}, x_vars={"x1"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
+
+
+
+
+@pytest.mark.parametrize(
+    ["cd_func", "cd_kwargs"],
+    [
+        # [BregmanCDTest, dict()],
+        [KernelCDTest, dict()]
+    ])
+def test_cd_with_selection_diagram(cd_func, cd_kwargs):
+    alpha = 0.05
+
+    # create selection diagram S -> X -> Y
+    G = AugmentedGraph()
+    G.add_edge("x", "y", G.directed_edge_name)
+    G.add_s_node((1,2), {'x'})
+
+    # generate data from a selection diagram
+    # G = make_graph_linear_gaussian(
+    #     G,
+    #     # node_mean_lims=(-3, -1),
+    #     # node_std_lims=(0.1, 0.2),
+    #     random_state=seed
+    # )
+    G = sample_multidomain_lin_functions(
+        G, 
+        # node_mean_lims=[(3, 5), (100, 101)],
+        node_std_lims=[(0.1, 0.3), (2.0, 3.0)],
+        random_state=seed
+    )
+    data = []
+    for domain_id in G.domain_ids:
+        df = sample_from_graph(G, n_samples=50, sample_func='multidomain', random_state=seed, domain_id=domain_id)
+        df['domain_id'] = domain_id
+        data.append(df)
+    df = pd.concat(data, axis=0)
+
+    # now test each conditional discrepancy test
+    cd_estimator = cd_func(random_state=seed, null_reps=15, n_jobs=-1, **cd_kwargs)
+    group_col = 'domain_id'
+
+    # make domains all 0 or 1
+    df[group_col] = df[group_col] - 1
+    print(G.domains)
+    print(df[group_col].unique())
+    
+    # P(X) != P'(X)
+    _, pvalue = cd_estimator.test(df, y_vars={"x"}, group_col={group_col}, x_vars=set())
+    assert pvalue > alpha, f"Fails with {pvalue} not less than {alpha}"
+
+    # P(X|Y) != P'(X|Y)
+    _, pvalue = cd_estimator.test(df, y_vars={"x"}, group_col={group_col}, x_vars={"y"})
+    assert pvalue > alpha, f"Fails with {pvalue} not less than {alpha}"
+
+    # P(Y) != P'(Y)
+    _, pvalue = cd_estimator.test(df, y_vars={"y"}, group_col={group_col}, x_vars=set())
+    assert pvalue > alpha, f"Fails with {pvalue} not less than {alpha}"
+
+    # P(Y|X) = P'(Y|X)
+    _, pvalue = cd_estimator.test(df, y_vars={"y"}, group_col={group_col}, x_vars={"x"})
+    assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"

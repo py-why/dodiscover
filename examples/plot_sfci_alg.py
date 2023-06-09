@@ -74,7 +74,7 @@ unique_ints = df["INT"].unique()
 intervention_targets = [df.columns[idx] for idx in unique_ints]
 data_cols = [col for col in df.columns if col != "INT"]
 data = []
-domain_ids = np.array([0, 0, 0, 0, 0, 1])
+domain_ids = np.array([1,1,1,1,1,1])
 for interv_idx in unique_ints:
     _data = df[df["INT"] == interv_idx][data_cols]
     data.append(_data)

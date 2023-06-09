@@ -10,7 +10,7 @@ import pandas as pd
 from joblib import Parallel, delayed
 
 from dodiscover.cd import BaseConditionalDiscrepancyTest
-from dodiscover.ci import BaseConditionalIndependenceTest
+from dodiscover.ci import BaseConditionalIndependenceTest, Oracle
 from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.context import Context
@@ -38,7 +38,7 @@ def _test_xy_edges(
     data: pd.DataFrame,
     context: Context,
     cross_distribution_test: bool = False,
-    group_with_snode =None,
+    s_node =None,
 ) -> Dict[str, Any]:
     """Private function used to test edge between X and Y in parallel for candidate separating sets.
 
@@ -81,8 +81,6 @@ def _test_xy_edges(
         size_cond_set=size_cond_set,
     )
 
-    # TODO: figure out more elegant way of doing this
-    new_x_var = None
     # now iterate through the possible parents
     for comb_idx, cond_set in enumerate(conditioning_sets):
         # check the number of combinations of possible parents we have tried
@@ -97,6 +95,8 @@ def _test_xy_edges(
             # get the sigma-map for this F-node
             distribution_idx = context.sigma_map[x_var]
 
+            # print(f'Got distribution indices for {x_var} as {distribution_idx}')
+
             # get the distributions across the two distributions
             data_i = data[distribution_idx[0]].copy()
             data_j = data[distribution_idx[1]].copy()
@@ -107,23 +107,21 @@ def _test_xy_edges(
             this_data = pd.concat((data_i, data_j), axis=0)
 
         try:
-            if group_with_snode is not None:
-                new_x_var = set([x_var, group_with_snode])
-                # compute conditional independence test
-                test_stat, pvalue = parallel_fun(
-                    this_data, conditional_test_func, new_x_var, y_var, set(cond_set)
-                )
-            else:
-                # compute conditional independence test
-                test_stat, pvalue = parallel_fun(
-                    this_data, conditional_test_func, x_var, y_var, set(cond_set)
-                )
+            # compute conditional independence test
+            # print(s_node, x_var, y_var, conditional_test_func, parallel_fun)
+            test_stat, pvalue = parallel_fun(
+                this_data, conditional_test_func, x_var, y_var, set(cond_set), s_node=s_node
+            )
         except Exception as e:
             if "Not enough samples." in str(e):
                 print(e)
                 test_stat = np.inf
                 pvalue = 0.0
             else:
+                print(x_var, y_var, cond_set)
+                print(this_data.columns)
+                print(this_data.head())
+                print(this_data[x_var])
                 raise Exception(e)
 
         # if any "independence" is found through inability to reject
@@ -136,7 +134,6 @@ def _test_xy_edges(
 
     result: Dict[str, Any] = dict()
     result["x_var"] = x_var
-    result['old_xvar'] = new_x_var
     result["y_var"] = y_var
     result["cond_set"] = list(cond_set)
     result["test_stat"] = test_stat
@@ -321,7 +318,7 @@ class BaseSkeletonLearner:
         skipped_y_nodes=None,
         skipped_z_nodes=None,
         cross_distribution_test: bool = False,
-        group_with_snode=None,
+        s_node=None,
     ):
         """Core function for learning the skeleton of a causal graph.
 
@@ -445,7 +442,7 @@ class BaseSkeletonLearner:
                         data,
                         context,
                         cross_distribution_test,
-                        group_with_snode=group_with_snode
+                        s_node=s_node
                     )
                     out.append(result)
             else:
@@ -463,7 +460,7 @@ class BaseSkeletonLearner:
                         data,
                         context,
                         cross_distribution_test,
-                        group_with_snode=group_with_snode
+                        s_node=s_node
                     )
                     for x_var, y_var, possible_variables in self._generate_pairs_with_sepset(
                         possible_x_nodes,
@@ -481,21 +478,21 @@ class BaseSkeletonLearner:
                 x_var = result["x_var"]
                 y_var = result["y_var"]
                 cond_set = result["cond_set"]
-                old_xvar = result["old_xvar"]
 
-                if group_with_snode is not None:
-                    self._postprocess_ci_test(context, group_with_snode, y_var, test_stat, pvalue)
-                    self._postprocess_ci_test(context, old_xvar, y_var, test_stat, pvalue)
-                else:
-                    self._postprocess_ci_test(context, x_var, y_var, test_stat, pvalue)
                 # post-process the CI test results
-                # self._postprocess_ci_test(context, x_var, y_var, test_stat, pvalue)
+                self._postprocess_ci_test(context, x_var, y_var, test_stat, pvalue)
 
                 # two variables found to be independent given a separating set
                 if pvalue > self.alpha:
                     self.sep_set_[x_var][y_var].append(set(cond_set))
                     self.sep_set_[y_var][x_var].append(set(cond_set))
                     remove_edges.add((x_var, y_var, pvalue))
+
+                    if s_node is not None:
+                        self.sep_set_[s_node][y_var].append(set(cond_set))
+                        self.sep_set_[s_node][y_var].append(set(cond_set))
+                        if context.init_graph.has_edge(s_node, y_var):
+                            remove_edges.add((s_node, y_var, pvalue))
 
                 # summarize the comparison of XY
                 self._summarize_xy_comparison(x_var, y_var, pvalue > self.alpha, pvalue)
@@ -663,6 +660,7 @@ class BaseSkeletonLearner:
         X: Column,
         Y: Column,
         Z: Optional[Set[Column]] = None,
+        **kwargs
     ) -> Tuple[float, float]:
         """Test any specific edge for X || Y | Z.
 
@@ -676,6 +674,9 @@ class BaseSkeletonLearner:
             A column in ``data``.
         Z : set, optional
             A list of columns in ``data``, by default None.
+        **kwargs
+            Keyword arguments to be passed to the conditional independence test.
+            Allows S-nodes for example to be passed in.
 
         Returns
         -------
@@ -686,7 +687,9 @@ class BaseSkeletonLearner:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = conditional_test_func.test(data, set({X}), set({Y}), Z)
+        if not isinstance(conditional_test_func, Oracle):
+            kwargs = dict()
+        test_stat, pvalue = conditional_test_func.test(data, set({X}), set({Y}), Z, **kwargs)
         self.n_ci_tests += 1
         return test_stat, pvalue
 
@@ -1096,10 +1099,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return super()._initialize_params(context)
 
-    def fit(self, data: pd.DataFrame, context: Context, check_input: bool = True):
-        if check_input:
-            context = self._initialize_params(context)
-
+    def _fit_single_distribution(self, data, context: Context, possible_x_nodes, skipped_y_nodes, skipped_z_nodes, cross_distribution_test):
         # initially learn the skeleton without using PDS information
         # apply algorithm to learn skeleton
         self._learn_skeleton(
@@ -1107,14 +1107,21 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             context=context,
             condsel_method=self.condsel_method,
             conditional_test_func=self.ci_estimator,
+            possible_x_nodes=possible_x_nodes,
+            skipped_y_nodes=skipped_y_nodes,
+            skipped_z_nodes=skipped_z_nodes,
+            cross_distribution_test=cross_distribution_test,
         )
+
+        # reset context and add observational skeleton
+        context.add_state_variable("obs_skel_graph", context.init_graph.copy())
 
         # if there is no second stage skeleton method to be run, then we
         # will stop with the skeleton here
         if self.second_stage_condsel_method is None:
             self.context_ = deepcopy(context.copy())
             self.adj_graph_ = deepcopy(context.init_graph.copy())
-            return self
+            return context
 
         # setup context for the second round-of learning
         context = self._prep_second_stage_skeleton(context)
@@ -1126,7 +1133,19 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             context=context,
             condsel_method=self.second_stage_condsel_method,
             conditional_test_func=self.ci_estimator,
+            possible_x_nodes=possible_x_nodes,
+            skipped_y_nodes=skipped_y_nodes,
+            skipped_z_nodes=skipped_z_nodes,
+            cross_distribution_test=cross_distribution_test,
         )
+        return context
+
+    def fit(self, data: pd.DataFrame, context: Context, check_input: bool = True):
+        if check_input:
+            context = self._initialize_params(context)
+
+        # fit the distribution
+        context = self._fit_single_distribution(data, context, possible_x_nodes=None, skipped_y_nodes=None, skipped_z_nodes=None, cross_distribution_test=False)
 
         self.context_ = deepcopy(context.copy())
         self.adj_graph_ = deepcopy(context.init_graph.copy())
@@ -1275,17 +1294,14 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         self.context_ = context.copy()
 
-        # first learn the skeleton using only "observational data"
-        self._learn_skeleton(
+        # learn skeleton
+        context = self._fit_single_distribution(
             data=obs_data,
             context=context,
-            condsel_method=self.condsel_method,
-            conditional_test_func=self.ci_estimator,
             possible_x_nodes=list(context.get_non_augmented_nodes()),
             skipped_y_nodes=context.f_nodes,
             skipped_z_nodes=context.f_nodes,
-            cross_distribution_test=False,
-        )
+            cross_distribution_test=False)
 
         context = self._prep_second_stage_skeleton(context)
 
@@ -1503,36 +1519,43 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         # for each domain, determine if there is observational data
         domain_obs = dict()
         for domain in unique_domains:
-            this_domain_idx = np.argwhere(np.array(domain_ids) == domain).squeeze()
+            this_domain_idx = np.atleast_1d(np.argwhere(np.array(domain_ids) == domain).squeeze())
 
             # now check all intervention targets
-            this_targets = np.atleast_1d(np.array(intervention_targets)[this_domain_idx])
-            if set() in this_targets:
+            this_targets = [intervention_targets[idx] for idx in this_domain_idx]
+            if {} in this_targets or set() in this_targets:
                 domain_obs[domain] = True
             else:
                 domain_obs[domain] = False
 
-        # create S-nodes
+        # create S-nodes as N-domains choose 2
         for idx, (source, target) in enumerate(combinations(unique_domains, 2)):
             s_node = ("S", idx)
-            node_domain_map[s_node] = {source, target}
+            node_domain_map[s_node] = [source, target]
             s_nodes.append(s_node)
 
-        # create F-nodes
+        # create F-nodes, which is now all combinations of distributions choose 2
         k = 0
         seen_domain_pairs = dict()
         seen_distr_pairs = dict()
 
         for idx, source in enumerate(domain_ids):
             for jdx, target in enumerate(domain_ids):
-                if jdx <= idx:
-                    continue
                 domain_memo_key = frozenset([source, target])
                 distr_memo_key = frozenset([idx, jdx])
+
+                if jdx <= idx:
+                    continue
                 if domain_memo_key in seen_domain_pairs and distr_memo_key in seen_distr_pairs:
                     continue
+
                 seen_domain_pairs[distr_memo_key] = None
                 seen_distr_pairs[domain_memo_key] = None
+
+                # check if we are dealing with two observational distributions, since those
+                # are assigned to S-nodes
+                if intervention_targets[idx] == set() and intervention_targets[jdx] == set():
+                    continue
 
                 # map each augmented-node to a tuple of distribution indices, or to a set of nodes
                 # representing the intervention targets
@@ -1547,9 +1570,12 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                 # get the S-node mapped to the obs data if there is observational data
                 if domain_obs[source] and domain_obs[target] and targets == frozenset():
                     s_node = [
-                        key for key, val in node_domain_map.items() if val == {source, target}
+                        key for key, val in node_domain_map.items() if set(val) == {source, target}
                     ][0]
                     sigma_map[s_node] = [idx, jdx]
+                    continue
+                elif targets == frozenset():
+                    # there is not interventions to compare
                     continue
 
                 # create the F-node
@@ -1557,8 +1583,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                 f_nodes.append(f_node)
 
                 # map each F-node to a set of domain(s)
-                node_domain_map[f_node] = {source, target}
-
+                node_domain_map[f_node] = [source, target]
                 sigma_map[f_node] = [idx, jdx]
                 symmetric_diff_map[f_node] = targets
 
@@ -1596,26 +1621,17 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         if isinstance(data, pd.DataFrame):
             data = [data]
 
-        # error-check the datasets passed in match the intervention contexts
-        # if len(data) != context.num_distributions:
-        #     raise RuntimeError(
-        #         f"The number of datasets does not match the number of interventions. "
-        #         f"You passed in {len(data)} different datasets, whereas "
-        #         f"there are {len(context.intervention_targets)} different interventions "
-        #         f"specified and {context.num_distributions} distributions assumed. "
-        #         f"It is assumed that the first dataset is observational, "
-        #         f"while the rest are interventional."
-        #     )
-
         # pick a domain and distribution with the largest amount of data
         largest_data_idx = np.argmax([len(df) for df in data])
         obs_data = data[largest_data_idx]
+        print('Using data from distribution ', largest_data_idx, ' for learning the skeleton.')
         self.context_ = context.copy()
 
         # initialize learning parameters
         if check_input:
             context = self._initialize_params(context)
 
+        # create augmented nodes
         (
             augmented_nodes,
             symmetric_diff_map,
@@ -1625,8 +1641,13 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
             domain_ids=domain_indices, intervention_targets=intervention_targets
         )
 
-        # initialize the augmented graph
-        causal_nodes = context.observed_variables
+        # initialize the augmented graph to be fully connected to observed casual variables
+        causal_nodes = set(context.observed_variables)
+        
+        # XXX: contextbuilder creates an augmented graph, whereas we want to control that.
+        for node in set(context.init_graph.nodes):
+            if node not in causal_nodes:
+                context.init_graph.remove_node(node)
         for augmented_node in augmented_nodes:
             for node in causal_nodes:
                 context.init_graph.add_edge(augmented_node, node)
@@ -1640,6 +1661,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
             elif node[0] == "F":
                 f_nodes.append(node)
 
+        # provide multi-domain context
         n_domains = len(np.unique(domain_indices))
         context.augmented_nodes = augmented_nodes
         context.symmetric_diff_map = symmetric_diff_map
@@ -1647,35 +1669,21 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         context.node_domain_map = node_domain_map
         context.s_nodes = s_nodes
         context.f_nodes = f_nodes
+
+        # skeleton discovery should not condition on augmented nodes
         skip_nodes = augmented_nodes
 
         # first learn the skeleton using only "observational data"
         # initially learn the skeleton without using PDS information
         # apply algorithm to learn skeleton
         # first learn the skeleton using only "observational data"
-        self._learn_skeleton(
+        self._fit_single_distribution(
             data=obs_data,
             context=context,
-            condsel_method=self.condsel_method,
-            conditional_test_func=self.ci_estimator,
-            possible_x_nodes=list(context.get_non_augmented_nodes()),
-            skipped_y_nodes=context.get_augmented_nodes(),
-            skipped_z_nodes=context.get_augmented_nodes(),
-            cross_distribution_test=False,
-        )
-
-        context = self._prep_second_stage_skeleton(context)
-
-        # secibd learn the skeleton using only "PDS data"
-        self._learn_skeleton(
-            data=obs_data,
-            context=context,
-            condsel_method=self.second_stage_condsel_method,
-            conditional_test_func=self.ci_estimator,
-            possible_x_nodes=list(context.get_non_augmented_nodes()),
-            skipped_y_nodes=context.get_augmented_nodes(),
-            skipped_z_nodes=context.get_augmented_nodes(),
-            cross_distribution_test=False,
+            possible_x_nodes=causal_nodes,
+            skipped_y_nodes=skip_nodes,
+            skipped_z_nodes=skip_nodes,
+            cross_distribution_test=False
         )
 
         # prepare the context object for the second stage of learning
@@ -1692,12 +1700,31 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                     for idx in range(len(sep_sets)):
                         self.sep_set_[x_var][y_var][idx].update(context.get_augmented_nodes())
 
-        # loop through each domain to learn the F-node skeleton
+        # loop through each domain pair to learn the F-node skeleton
         seen_domain_pairs = set()
         for idx, source in enumerate(range(1, n_domains + 1)):
+            # analyze F-nodes only within the 'source' domain
+            source_fnodes = [node for node in augmented_nodes if set(node_domain_map[node]) == {source}]
+            if debug:
+                print(f"Trying to learn skeleton for {source} to remove F-nodes: {source_fnodes}")
+            if source_fnodes:
+                # apply algorithm to learn skeleton among the F-node subgraph within a single domain
+                self._learn_skeleton(
+                    data=data,
+                    context=context,
+                    condsel_method=self.second_stage_condsel_method,
+                    conditional_test_func=self.cd_estimator,
+                    possible_x_nodes=source_fnodes,
+                    skipped_y_nodes=skip_nodes,
+                    skipped_z_nodes=skip_nodes,
+                    cross_distribution_test=True,
+                )
+
             for jdx, target in enumerate(range(1, n_domains + 1)):
+                # skip if source and target are the same domain
                 if idx == jdx:
                     continue
+                # skip if we have already seen this domain pair
                 if frozenset([source, target]) in seen_domain_pairs:
                     continue
                 seen_domain_pairs.add(frozenset([source, target]))
@@ -1706,16 +1733,51 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                 # analyze F-nodes between source and target
                 s_node = None
                 for node in s_nodes:
-                    if node_domain_map[node] == {source, target}:
+                    if set(node_domain_map[node]) == {source, target}:
                         s_node = node
                         break
                 if s_node is None:
-                    continue
                     raise RuntimeError("wtf")
+                
+                # this is only possible if there is explicitly observational data between
+                # the two domains
+                # analyze S-nodes between source and target
+                this_s_nodes = [
+                    node
+                    for node in augmented_nodes
+                    if set(node_domain_map[node]) == {source, target}
+                    and node not in symmetric_diff_map
+                    and node in sigma_map
+                ]
+                if debug:
+                    print(this_s_nodes)
+                    print(symmetric_diff_map)
+                    print(sigma_map)
+                if this_s_nodes:
+                    if debug:
+                        print(
+                            f"Trying to learn skeleton for {source} and {target} to remove "
+                            f"S-nodes: {this_s_nodes}"
+                        )
+                    # print(this_s_nodes)
+                    # print(symmetric_diff_map)
+                    # print(sigma_map)
+                    self._learn_skeleton(
+                        data=data,
+                        context=context,
+                        condsel_method=self.second_stage_condsel_method,
+                        conditional_test_func=self.cd_estimator,
+                        possible_x_nodes=list(this_s_nodes),
+                        skipped_y_nodes=skip_nodes,
+                        skipped_z_nodes=skip_nodes,
+                        cross_distribution_test=True,
+                    )
+
+                # now learn across interventions
                 this_f_nodes = [
                     node
                     for node in f_nodes
-                    if node_domain_map[node] == {source, target} and node in symmetric_diff_map
+                    if set(node_domain_map[node]) == {source, target} and node in symmetric_diff_map
                 ]
                 if debug:
                     print(
@@ -1731,57 +1793,9 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                     skipped_y_nodes=skip_nodes,
                     skipped_z_nodes=skip_nodes,
                     cross_distribution_test=True,
-                    group_with_snode=s_node,
+                    s_node=s_node
                     # debug=debug,
                 )
-
-                # this is only possible if there is explicitly observational data between
-                # the two domains
-                # analyze S-nodes between source and target
-                this_s_nodes = [
-                    node
-                    for node in augmented_nodes
-                    if node_domain_map[node] == {source, target}
-                    and node not in symmetric_diff_map
-                    and node in sigma_map
-                ]
-                if debug:
-                    print(this_f_nodes)
-                    print(this_s_nodes)
-                    print(symmetric_diff_map)
-                    print(sigma_map)
-                if this_s_nodes:
-                    if debug:
-                        print(
-                            f"Trying to learn skeleton for {source} and {target} to remove "
-                            f"S-nodes: {this_s_nodes}"
-                        )
-                    self._learn_skeleton(
-                        data=data,
-                        context=context,
-                        condsel_method=self.second_stage_condsel_method,
-                        conditional_test_func=self.cd_estimator,
-                        possible_x_nodes=list(this_s_nodes),
-                        skipped_y_nodes=skip_nodes,
-                        skipped_z_nodes=skip_nodes,
-                        cross_distribution_test=True,
-                    )
-
-            # analyze F-nodes only within the 'source' domain
-            source_fnodes = [node for node in augmented_nodes if node_domain_map[node] == {source}]
-            if debug:
-                print(f"Trying to learn skeleton for {source} to remove F-nodes: {source_fnodes}")
-            # apply algorithm to learn skeleton among the F-node subgraph within a single domain
-            self._learn_skeleton(
-                data=data,
-                context=context,
-                condsel_method=self.second_stage_condsel_method,
-                conditional_test_func=self.cd_estimator,
-                possible_x_nodes=source_fnodes,
-                skipped_y_nodes=skip_nodes,
-                skipped_z_nodes=skip_nodes,
-                cross_distribution_test=True,
-            )
 
         # prepare the context object for the second stage of learning
         # all separating sets are either:
