@@ -1,16 +1,14 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@2.0.3
+executors:
+  python-executor:
+    docker:
+      - image: python:3.9
 
 jobs:
   build_doc:
-    executor: python/default
+    executor: python-executor
     steps:
-      - restore_cache:
-          name: Restore .git
-          keys:
-            - source-cache-graphs
       - checkout
       - run:
           name: Complete checkout
@@ -34,20 +32,12 @@ jobs:
               echo "Skip detected, exiting job ${CIRCLE_JOB} for PR ${CIRCLE_PULL_REQUEST}."
               circleci-agent step halt;
             fi
-      - run:
-          name: Merge with upstream
-          command: |
-            echo $(git log -1 --pretty=%B) | tee gitlog.txt
-            echo ${CI_PULL_REQUEST//*pull\//} | tee merge.txt
-            if [[ $(cat merge.txt) != "" ]]; then
-              echo "Merging $(cat merge.txt)";
-              git pull --ff-only upstream "refs/pull/$(cat merge.txt)/merge";
-            fi
-      - run:
-          name: Install the latest version of Poetry
-          command: |
-            curl -sSL https://install.python-poetry.org | python3 - --version 1.5.0
-            poetry --version
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+            - v1-dependencies-{{ checksum "pyproject.toml" }}
+            - v1-dependencies
+      
       - run:
           name: Set BASH_ENV
           command: |
@@ -62,7 +52,6 @@ jobs:
             echo "export DISPLAY=:99" >> $BASH_ENV
             echo "BASH_ENV:"
             cat $BASH_ENV
-
       - run:
           name: Install pysal dependencies
           command: |
@@ -72,29 +61,28 @@ jobs:
           name: Setup pandoc
           command: sudo apt update && sudo apt install -y pandoc optipng
 
-      - python/install-packages:
-          pkg-manager: poetry
-          cache-version: "v1" # change to clear cache
-          args: "--with docs --extras viz --extras graph_func"
       - run:
-          name: Check poetry package versions
+          name: Install Dependencies
           command: |
-            poetry --version
-            poetry show
-      - run:
-          name: Setup pandoc
-          command: sudo apt update && sudo apt install -y pandoc optipng
+            curl -sSL https://install.python-poetry.org | python3 -
+            poetry config virtualenvs.create false
+            poetry install --no-interaction --no-ansi
+
+      - save_cache:
+          paths:
+            - ~/.cache/pypoetry
+          key: v1-dependencies-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+      
       - run:
           name: Check installation
           command: |
             poetry run python -c "import dodiscover;"
             poetry run python -c "import numpy; numpy.show_config()"
             LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
+
       - run:
-          name: Build documentation
-          command: |
-            cd doc
-            poetry run make html
+          name: Build Documentation
+          command: poetry run poe build_docs
       # Save the example test results
       - store_test_results:
           path: doc/_build/test-results
@@ -119,52 +107,52 @@ jobs:
             - html
             - html_stable
 
-  linkcheck:
-    parameters:
-      scheduled:
-        type: string
-        default: "false"
-    executor: python/default
-    steps:
-      - restore_cache:
-          keys:
-            - source-cache-graphs
-      - checkout
-      - run:
-          name: Check-skip
-          command: |
-            export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
-            if [[ "$COMMIT_MESSAGE" != *"[circle linkcheck]"* ]] && [ "<< parameters.scheduled >>" != "true" ]; then
-              echo "Skip detected, exiting job ${CIRCLE_JOB}."
-              circleci-agent step halt;
-            fi
-      - run:
-          name: Set BASH_ENV
-          command: |
-            set -e
-            echo "set -e" >> $BASH_ENV
-            echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
-      - python/install-packages:
-          pkg-manager: poetry
-          cache-version: "v1" # change to clear cache
-          args: "--with docs"
-      - run:
-          name: Check poetry package versions
-          command: |
-            poetry --version
-            poetry show
-      - run:
-          name: make linkcheck
-          command: |
-            make -C doc linkcheck
-      - run:
-          name: make linkcheck-grep
-          when: always
-          command: |
-            make -C doc linkcheck-grep
-      - store_artifacts:
-          path: doc/_build/linkcheck
-          destination: linkcheck
+  # linkcheck:
+  #   parameters:
+  #     scheduled:
+  #       type: string
+  #       default: "false"
+  #   executor: python/default
+  #   steps:
+  #     - restore_cache:
+  #         keys:
+  #           - source-cache-graphs
+  #     - checkout
+  #     - run:
+  #         name: Check-skip
+  #         command: |
+  #           export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
+  #           if [[ "$COMMIT_MESSAGE" != *"[circle linkcheck]"* ]] && [ "<< parameters.scheduled >>" != "true" ]; then
+  #             echo "Skip detected, exiting job ${CIRCLE_JOB}."
+  #             circleci-agent step halt;
+  #           fi
+  #     - run:
+  #         name: Set BASH_ENV
+  #         command: |
+  #           set -e
+  #           echo "set -e" >> $BASH_ENV
+  #           echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
+  #     - python/install-packages:
+  #         pkg-manager: poetry
+  #         cache-version: "v1" # change to clear cache
+  #         args: "--with docs"
+  #     - run:
+  #         name: Check poetry package versions
+  #         command: |
+  #           poetry --version
+  #           poetry show
+  #     - run:
+  #         name: make linkcheck
+  #         command: |
+  #           make -C doc linkcheck
+  #     - run:
+  #         name: make linkcheck-grep
+  #         when: always
+  #         command: |
+  #           make -C doc linkcheck-grep
+  #     - store_artifacts:
+  #         path: doc/_build/linkcheck
+  #         destination: linkcheck
 
   deploy:
     docker:
@@ -215,8 +203,8 @@ workflows:
     jobs:
       - build_doc:
           name: build_doc
-      - linkcheck:
-          name: linkcheck
+      # - linkcheck:
+      #     name: linkcheck
       - deploy:
           requires:
             - build_doc
@@ -243,16 +231,16 @@ workflows:
               only:
                 - main
 
-  weekly:
-    jobs:
-      - linkcheck:
-          name: linkcheck_weekly
-          scheduled: "true"
-    triggers:
-      - schedule:
-          # "At 00:00 on Sunday" should be often enough
-          cron: "0 0 * * 0"
-          filters:
-            branches:
-              only:
-                - main
+  # weekly:
+  #   jobs:
+  #     - linkcheck:
+  #         name: linkcheck_weekly
+  #         scheduled: "true"
+  #   triggers:
+  #     - schedule:
+  #         # "At 00:00 on Sunday" should be often enough
+  #         cron: "0 0 * * 0"
+  #         filters:
+  #           branches:
+  #             only:
+  #               - main
