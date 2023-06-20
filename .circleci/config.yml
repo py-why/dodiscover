@@ -74,7 +74,7 @@ jobs:
 
       - python/install-packages:
           pkg-manager: poetry
-          cache-version: "v2" # change to clear cache
+          cache-version: "v1" # change to clear cache
           args: "--with docs --extras viz --extras graph_func"
       - run:
           name: Check poetry package versions
