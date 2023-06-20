@@ -46,7 +46,7 @@ jobs:
       - run:
           name: Install the latest version of Poetry
           command: |
-            curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+            curl -sSL https://install.python-poetry.org | python3 - --version 1.5.0
             poetry --version
       - run:
           name: Set BASH_ENV
@@ -74,8 +74,8 @@ jobs:
 
       - python/install-packages:
           pkg-manager: poetry
-          args: "--with docs --extras viz --extras graph_func"
           cache-version: "v2" # change to clear cache
+          args: "--with docs --extras viz --extras graph_func"
       - run:
           name: Check poetry package versions
           command: |
