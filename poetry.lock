@@ -2480,7 +2480,7 @@ plugins = ["importlib-metadata"]
 name = "pygraphviz"
 version = "1.11"
 description = "Python interface to Graphviz"
-optional = true
+optional = false
 python-versions = ">=3.8"
 files = [
     {file = "pygraphviz-1.11.zip", hash = "sha256:a97eb5ced266f45053ebb1f2c6c6d29091690503e3a5c14be7f908b37b06f2d4"},
@@ -3673,4 +3673,4 @@ viz = ["pygraphviz"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "22cf3f082e61bf945a9513a13093591b9e46a4ab550c5a87f7da2a18820a48a7"
+content-hash = "621e9863d06e06ad7886e1325fb94ab81fdb775a1d7431ec2ad299796c9a21a7"
