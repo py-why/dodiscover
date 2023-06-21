@@ -40,7 +40,7 @@ exclude = ['*tests', '*testdata']
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-numpy = "^1.23.0"
+numpy = "^1.23.0,<1.25.0"
 scipy = "^1.9.0"
 scikit-learn = "^1.1.0"
 pandas = "^1.5.0"

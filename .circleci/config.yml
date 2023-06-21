@@ -69,6 +69,11 @@ jobs:
           command: |
             poetry install --no-interaction --no-ansi  --with docs --extras viz --extras graph_func
 
+      - run:
+          name: Show installed versions
+          command: |
+            poetry show
+
       - save_cache:
           paths:
             - $HOME/.poetry
