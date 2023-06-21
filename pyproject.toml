@@ -45,6 +45,7 @@ scipy = "^1.9.0"
 scikit-learn = "^1.1.0"
 pandas = "^1.5.0"
 networkx = "^3.1"
+importlib-resources = { version = "*", python = "<3.9" }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
 pygraphviz = { version = "^1.11", optional = true }
 
