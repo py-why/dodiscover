@@ -121,7 +121,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu, macos, windows]
-        python-version: [3.9, "3.11"]  # oldest and newest supported versions
+        python-version: [3.9, "3.11"] # oldest and newest supported versions
         poetry-version: [1.5.1]
         networkx: [stable, main]
     name: Unit-test ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
@@ -165,7 +165,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        python-version: ["3.10"]  # oldest and newest supported versions
+        python-version: ["3.10"] # oldest and newest supported versions
         poetry-version: [1.5.1]
         networkx: [main]
     name: Integration test ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
@@ -180,17 +180,23 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: 'x64'
+          architecture: "x64"
       - name: Install Poetry ${{ matrix.poetry-version }}
         uses: abatilo/actions-poetry@v2.3.0
         with:
           poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Install packages for Ubuntu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz optipng libxft2 graphviz-dev
+
       - name: Install Poetry Dynamic Versioning Plugin
         run: pip install poetry-dynamic-versioning
       - name: Install packages via poetry
         run: |
           poetry install --with test,docs --extras graph_func
-      - name: Run pytest  # headless via Xvfb on linux
+      - name: Run pytest # headless via Xvfb on linux
         run: poetry run poe integration_test
 
   # release is ran when a release is made on Github
@@ -220,7 +226,7 @@ jobs:
       - name: Build the release artifact
         run: |
           poetry-dynamic-versioning
-          poetry build      
+          poetry build
       - name: Download package distribution files
         uses: actions/download-artifact@v3
         with:
