@@ -1,15 +1,13 @@
 version: 2.1
 
-executors:
-  python-executor:
-    docker:
-      - image: cimg/python:3.9
-
 jobs:
   build_doc:
-    executor: python-executor
+    docker:
+      - image: circleci/python:<<PYTHON_VERSION>>
+
     steps:
       - checkout
+
       - run:
           name: Complete checkout
           command: |
@@ -34,10 +32,9 @@ jobs:
             fi
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
-            - v1-dependencies-{{ checksum "pyproject.toml" }}
-            - v1-dependencies
-      
+            - poetry-v1-{{ checksum "poetry.lock" }}
+            - poetry-v1-
+
       - run:
           name: Set BASH_ENV
           command: |
@@ -62,35 +59,25 @@ jobs:
           command: sudo apt update && sudo apt install -y pandoc optipng
 
       - run:
+          name: Install Poetry
+          command: |
+            curl -sSL https://install.python-poetry.org | python -
+            export PATH="$HOME/.poetry/bin:$PATH"
+
+      - run:
           name: Install Dependencies
           command: |
-            export POETRY_HOME=/opt/poetry
-            python3 -m venv $POETRY_HOME
-            $POETRY_HOME/bin/pip install poetry==1.5.1
-            $POETRY_HOME/bin/poetry --version
-            # curl https://pyenv.run | bash   # Install Pyenv
-            # export PATH="$HOME/.pyenv/bin:$PATH"
-            # eval "$(pyenv init -)"
-            # eval "$(pyenv virtualenv-init -)"
-            # pyenv install 3.9.7           # Install the required Python version
-            # pyenv global 3.9.7             # Set the global Python version
-            $POETRY_HOME/bin/poetry install --no-interaction --no-ansi --with docs --extras viz --extras graph_func
+            poetry install --no-interaction --no-ansi  --with docs --extras viz --extras graph_func
 
       - save_cache:
           paths:
-            - ~/.cache/pypoetry
-          key: v1-dependencies-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
-      
-      - run:
-          name: Check installation
-          command: |
-            poetry run python -c "import dodiscover;"
-            poetry run python -c "import numpy; numpy.show_config()"
-            LIBGL_DEBUG=verbose poetry run python -c "import matplotlib.pyplot as plt; plt.figure()"
+            - $HOME/.poetry
+          key: poetry-v1-{{ checksum "poetry.lock" }}
 
       - run:
           name: Build Documentation
-          command: poetry run poe build_docs
+          command: |
+            poetry run poe build_docs
       # Save the example test results
       - store_test_results:
           path: doc/_build/test-results
@@ -114,53 +101,6 @@ jobs:
           paths:
             - html
             - html_stable
-
-  # linkcheck:
-  #   parameters:
-  #     scheduled:
-  #       type: string
-  #       default: "false"
-  #   executor: python/default
-  #   steps:
-  #     - restore_cache:
-  #         keys:
-  #           - source-cache-graphs
-  #     - checkout
-  #     - run:
-  #         name: Check-skip
-  #         command: |
-  #           export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
-  #           if [[ "$COMMIT_MESSAGE" != *"[circle linkcheck]"* ]] && [ "<< parameters.scheduled >>" != "true" ]; then
-  #             echo "Skip detected, exiting job ${CIRCLE_JOB}."
-  #             circleci-agent step halt;
-  #           fi
-  #     - run:
-  #         name: Set BASH_ENV
-  #         command: |
-  #           set -e
-  #           echo "set -e" >> $BASH_ENV
-  #           echo "export PATH=~/.local/bin/:$PATH" >> $BASH_ENV
-  #     - python/install-packages:
-  #         pkg-manager: poetry
-  #         cache-version: "v1" # change to clear cache
-  #         args: "--with docs"
-  #     - run:
-  #         name: Check poetry package versions
-  #         command: |
-  #           poetry --version
-  #           poetry show
-  #     - run:
-  #         name: make linkcheck
-  #         command: |
-  #           make -C doc linkcheck
-  #     - run:
-  #         name: make linkcheck-grep
-  #         when: always
-  #         command: |
-  #           make -C doc linkcheck-grep
-  #     - store_artifacts:
-  #         path: doc/_build/linkcheck
-  #         destination: linkcheck
 
   deploy:
     docker:
@@ -211,8 +151,6 @@ workflows:
     jobs:
       - build_doc:
           name: build_doc
-      # - linkcheck:
-      #     name: linkcheck
       - deploy:
           requires:
             - build_doc
@@ -238,17 +176,3 @@ workflows:
             branches:
               only:
                 - main
-
-  # weekly:
-  #   jobs:
-  #     - linkcheck:
-  #         name: linkcheck_weekly
-  #         scheduled: "true"
-  #   triggers:
-  #     - schedule:
-  #         # "At 00:00 on Sunday" should be often enough
-  #         cron: "0 0 * * 0"
-  #         filters:
-  #           branches:
-  #             only:
-  #               - main
