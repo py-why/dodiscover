@@ -64,15 +64,18 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            curl -sSL https://install.python-poetry.org | python3 -
+            export POETRY_HOME=/opt/poetry
+            python3 -m venv $POETRY_HOME
+            $POETRY_HOME/bin/pip install poetry==1.5.1
+            $POETRY_HOME/bin/poetry --version
             # curl https://pyenv.run | bash   # Install Pyenv
             # export PATH="$HOME/.pyenv/bin:$PATH"
             # eval "$(pyenv init -)"
             # eval "$(pyenv virtualenv-init -)"
             # pyenv install 3.9.7           # Install the required Python version
             # pyenv global 3.9.7             # Set the global Python version
-            python poetry config virtualenvs.create false
-            python poetry install --no-interaction --no-ansi
+            poetry config virtualenvs.create false
+            poetry install --no-interaction --no-ansi --with docs --extras viz --extras graph_func
 
       - save_cache:
           paths:
