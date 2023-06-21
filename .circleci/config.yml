@@ -74,8 +74,7 @@ jobs:
             # eval "$(pyenv virtualenv-init -)"
             # pyenv install 3.9.7           # Install the required Python version
             # pyenv global 3.9.7             # Set the global Python version
-            poetry config virtualenvs.create false
-            poetry install --no-interaction --no-ansi --with docs --extras viz --extras graph_func
+            $POETRY_HOME/bin/poetry install --no-interaction --no-ansi --with docs --extras viz --extras graph_func
 
       - save_cache:
           paths:
