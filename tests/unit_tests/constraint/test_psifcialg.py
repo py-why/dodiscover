@@ -1,6 +1,5 @@
 from itertools import permutations
 
-import bnlearn
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -258,6 +257,7 @@ class Test_PsiFCI(Test_IFCI):
 
 @pytest.mark.skip()
 def test_psifci_withsachs():
+    import bnlearn
 
     bnlearn.import_DAG()
 
