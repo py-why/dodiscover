@@ -2312,6 +2312,24 @@ pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
 
 [[package]]
+name = "progressbar2"
+version = "4.2.0"
+description = "A Python Progressbar library to provide visual (yet text based) progress to long running operations."
+optional = false
+python-versions = ">=3.7.0"
+files = [
+    {file = "progressbar2-4.2.0-py2.py3-none-any.whl", hash = "sha256:1a8e201211f99a85df55f720b3b6da7fb5c8cdef56792c4547205be2de5ea606"},
+    {file = "progressbar2-4.2.0.tar.gz", hash = "sha256:1393922fcb64598944ad457569fbeb4b3ac189ef50b5adb9cef3284e87e394ce"},
+]
+
+[package.dependencies]
+python-utils = ">=3.0.0"
+
+[package.extras]
+docs = ["sphinx (>=1.8.5)"]
+tests = ["flake8 (>=3.7.7)", "freezegun (>=0.3.11)", "pytest (>=4.6.9)", "pytest-cov (>=2.6.1)", "pytest-mypy", "sphinx (>=1.8.5)"]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.38"
 description = "Library for building powerful interactive command lines in Python"
@@ -2484,6 +2502,22 @@ files = [
 ]
 
 [[package]]
+name = "pygam"
+version = "0.9.0"
+description = ""
+optional = false
+python-versions = ">=3.8.1,<3.12"
+files = [
+    {file = "pygam-0.9.0-py3-none-any.whl", hash = "sha256:3537bbcdbc49d93010c12fb3fdb2f53e1dd062d21eb721a328817aefd91945f4"},
+    {file = "pygam-0.9.0.tar.gz", hash = "sha256:dba62285a275cdd15a6adf764f6717b3cd077502f01cf1bcee5ce7cbda221956"},
+]
+
+[package.dependencies]
+numpy = ">=1.24.2,<2.0.0"
+progressbar2 = ">=4.2.0,<5.0.0"
+scipy = ">=1.10.1,<2.0.0"
+
+[[package]]
 name = "pygments"
 version = "2.15.1"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -2650,6 +2684,25 @@ files = [
 [package.dependencies]
 networkx = "*"
 numpy = "*"
+
+[[package]]
+name = "python-utils"
+version = "3.6.1"
+description = "Python Utils is a module with some convenient utilities not included with the standard Python install"
+optional = false
+python-versions = ">3.8.0"
+files = [
+    {file = "python-utils-3.6.1.tar.gz", hash = "sha256:200fd596534446bb0969b051c5d573ec3df66b02f5bc0879ec27729a94132915"},
+    {file = "python_utils-3.6.1-py2.py3-none-any.whl", hash = "sha256:d7dbc0dc3ca4450fc2c119b6076bab0a3dbddf3ad1709c5babb2e3a90c9f6456"},
+]
+
+[package.dependencies]
+typing-extensions = ">3.10.0.2"
+
+[package.extras]
+docs = ["mock", "python-utils", "sphinx"]
+loguru = ["loguru"]
+tests = ["flake8", "loguru", "pytest", "pytest-asyncio", "pytest-cov", "pytest-mypy", "sphinx", "types-setuptools"]
 
 [[package]]
 name = "pytz"
@@ -3694,4 +3747,4 @@ viz = ["pygraphviz"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "bcbab869f038bcf21f1cf0a9ca54e31dfb482c5c004325d57c4041473fc37830"
+content-hash = "efe2a262a95751d6390d04f3fbe4433a8c7cfee37b72bc34084beab548ede8f1"
