@@ -53,6 +53,19 @@ Constraint-based structure learning
    FCI
    PsiFCI
 
+
+Order-based structure learning
+===================================
+
+.. currentmodule:: dodiscover.toporder
+.. autosummary::
+   :toctree: generated/
+
+   CAM
+   SCORE
+   DAS
+   NoGAM
+
 Comparing causal discovery algorithms
 =====================================
 
@@ -62,6 +75,7 @@ Comparing causal discovery algorithms
 
    confusion_matrix_networks
    structure_hamming_dist
+   toporder_divergence
 
 
 Typing
