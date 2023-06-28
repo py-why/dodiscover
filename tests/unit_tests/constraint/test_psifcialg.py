@@ -258,7 +258,7 @@ class Test_PsiFCI(Test_IFCI):
 @pytest.mark.skip()
 def test_psifci_withsachs():
     import bnlearn
-    
+
     bnlearn.import_DAG()
 
     # use pooch to download robustly from a url
