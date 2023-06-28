@@ -66,6 +66,10 @@ jobs:
           command: sudo apt update && sudo apt install -y pandoc optipng
 
       - run:
+          name: Setup torch
+          command: sudo apt-get install nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
+
+      - run:
           name: Install Poetry
           command: |
             curl -sSL https://install.python-poetry.org | python -
