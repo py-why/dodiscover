@@ -1,14 +1,13 @@
 import numpy as np
 import pandas as pd
 import pytest
+from pywhy_graphs import AugmentedGraph
+from pywhy_graphs.functional import make_graph_linear_gaussian, sample_multidomain_lin_functions
 from sklearn.ensemble import RandomForestClassifier
 
 from dodiscover.cd import BregmanCDTest, KernelCDTest
-from pywhy_graphs import AugmentedGraph
-
-from pywhy_graphs.functional import sample_multidomain_lin_functions, make_graph_linear_gaussian
-
 from dodiscover.datasets import sample_from_graph
+
 seed = 12345
 
 # number of samples to use in generating test dataset; the lower the faster
@@ -139,21 +138,20 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
 
 
-
-
 @pytest.mark.parametrize(
     ["cd_func", "cd_kwargs"],
     [
         # [BregmanCDTest, dict()],
         [KernelCDTest, dict()]
-    ])
+    ],
+)
 def test_cd_with_selection_diagram(cd_func, cd_kwargs):
     alpha = 0.05
 
     # create selection diagram S -> X -> Y
     G = AugmentedGraph()
     G.add_edge("x", "y", G.directed_edge_name)
-    G.add_s_node((1,2), {'x'})
+    G.add_s_node((1, 2), {"x"})
 
     # generate data from a selection diagram
     # G = make_graph_linear_gaussian(
@@ -163,27 +161,29 @@ def test_cd_with_selection_diagram(cd_func, cd_kwargs):
     #     random_state=seed
     # )
     G = sample_multidomain_lin_functions(
-        G, 
+        G,
         # node_mean_lims=[(3, 5), (100, 101)],
         node_std_lims=[(0.1, 0.3), (2.0, 3.0)],
-        random_state=seed
+        random_state=seed,
     )
     data = []
     for domain_id in G.domain_ids:
-        df = sample_from_graph(G, n_samples=50, sample_func='multidomain', random_state=seed, domain_id=domain_id)
-        df['domain_id'] = domain_id
+        df = sample_from_graph(
+            G, n_samples=50, sample_func="multidomain", random_state=seed, domain_id=domain_id
+        )
+        df["domain_id"] = domain_id
         data.append(df)
     df = pd.concat(data, axis=0)
 
     # now test each conditional discrepancy test
     cd_estimator = cd_func(random_state=seed, null_reps=15, n_jobs=-1, **cd_kwargs)
-    group_col = 'domain_id'
+    group_col = "domain_id"
 
     # make domains all 0 or 1
     df[group_col] = df[group_col] - 1
     print(G.domains)
     print(df[group_col].unique())
-    
+
     # P(X) != P'(X)
     _, pvalue = cd_estimator.test(df, y_vars={"x"}, group_col={group_col}, x_vars=set())
     assert pvalue > alpha, f"Fails with {pvalue} not less than {alpha}"

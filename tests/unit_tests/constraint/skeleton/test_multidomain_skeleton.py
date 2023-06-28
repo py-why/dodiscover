@@ -1,9 +1,10 @@
 import math
-import numpy as np
+
 import networkx as nx
+import numpy as np
 import pywhy_graphs as pgraphs
 
-from dodiscover import ContextBuilder, make_context, InterventionalContextBuilder
+from dodiscover import ContextBuilder, InterventionalContextBuilder, make_context
 from dodiscover.cd import KernelCDTest
 from dodiscover.ci import FisherZCITest, Oracle
 from dodiscover.constraint.skeleton import LearnMultiDomainSkeleton
@@ -29,7 +30,6 @@ def basic_multidomain_augmented_graph():
     graph.add_s_node((1, 2), {"y"})
 
     return graph
-
 
 
 def test_fnode_multidomain_skeleton_known_targets():
@@ -68,13 +68,13 @@ def test_fnode_multidomain_skeleton_known_targets():
     )
     data = [dummy_sample(non_f_graph), dummy_sample(non_f_graph)]
     context = (
-        make_context(create_using=InterventionalContextBuilder)
-        .variables(data=data[0])
-        .build()
+        make_context(create_using=InterventionalContextBuilder).variables(data=data[0]).build()
     )
     domain_indices = [1, 1]
-    intervention_targets = [{}, {'x'}]
-    learner.fit(data, context, domain_indices=domain_indices, intervention_targets=intervention_targets)
+    intervention_targets = [{}, {"x"}]
+    learner.fit(
+        data, context, domain_indices=domain_indices, intervention_targets=intervention_targets
+    )
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
@@ -83,17 +83,17 @@ def test_fnode_multidomain_skeleton_known_targets():
     )
     for edge in skel_graph.edges():
         if not expected_skeleton.has_edge(*edge):
-            print('extra edge: ', edge)
+            print("extra edge: ", edge)
     for edge in expected_skeleton.edges():
         if not skel_graph.has_edge(*edge):
-            print('missing edge: ', edge)
+            print("missing edge: ", edge)
     assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
     assert nx.is_isomorphic(expected_skeleton, skel_graph)
 
 
 def test_number_augmented_nodes_created():
     """Test learning the skeleton for Figure 3 in :footcite:`Kocaoglu2019characterization`.
-    
+
     However, this time, we have an S-node pointing to y.
     """
     # first create the oracle
@@ -115,8 +115,8 @@ def test_number_augmented_nodes_created():
     edges = [
         (("F", 0), "x"),
         (("F", 0), "y"),
-        (('S', 0), "y"),
-        (('S', 0), "x"),
+        (("S", 0), "y"),
+        (("S", 0), "x"),
         ("x", "w"),
         ("x", "z"),
         ("x", "y"),
@@ -133,32 +133,39 @@ def test_number_augmented_nodes_created():
     )
     data = [dummy_sample(non_f_graph), dummy_sample(non_f_graph), dummy_sample(non_f_graph)]
     context = (
-        make_context(create_using=InterventionalContextBuilder)
-        .variables(data=data[0])
-        .build()
+        make_context(create_using=InterventionalContextBuilder).variables(data=data[0]).build()
     )
     domain_indices = [1, 2, 2]
-    intervention_targets = [{}, {}, {'x'}]
+    intervention_targets = [{}, {}, {"x"}]
 
     # test augmented nodes
-    augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map = learner._create_augmented_nodes(domain_indices, intervention_targets)
+    (
+        augmented_nodes,
+        symmetric_diff_map,
+        sigma_map,
+        node_domain_map,
+    ) = learner._create_augmented_nodes(domain_indices, intervention_targets)
     assert len(augmented_nodes) == math.comb(len(domain_indices), 2)
-    assert symmetric_diff_map == {('F', 0): frozenset({'x'}), ('F', 1): frozenset({'x'})}
-    assert sigma_map == {('F', 0): [0, 2], ('F', 1): [1, 2], ('S', 0): [0, 1]}
-    assert node_domain_map == {('F', 0): [1, 2], ('F', 1): [2, 2], ('S', 0): [1, 2]}
+    assert symmetric_diff_map == {("F", 0): frozenset({"x"}), ("F", 1): frozenset({"x"})}
+    assert sigma_map == {("F", 0): [0, 2], ("F", 1): [1, 2], ("S", 0): [0, 1]}
+    assert node_domain_map == {("F", 0): [1, 2], ("F", 1): [2, 2], ("S", 0): [1, 2]}
 
-
-    domain_indices =  [1, 2, 2, 2, 2]
+    domain_indices = [1, 2, 2, 2, 2]
     intervention_targets = [{}, {}, {3}, {2}, {3}]
 
     # test augmented nodes
-    augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map = learner._create_augmented_nodes(domain_indices, intervention_targets)
+    (
+        augmented_nodes,
+        symmetric_diff_map,
+        sigma_map,
+        node_domain_map,
+    ) = learner._create_augmented_nodes(domain_indices, intervention_targets)
     assert len(augmented_nodes) == math.comb(len(domain_indices), 2) - 1
 
 
 def test_fnode_multidomain_skeleton_known_targets_with_snode():
     """Test learning the skeleton for Figure 3 in :footcite:`Kocaoglu2019characterization`.
-    
+
     However, this time, we have an S-node pointing to y.
     """
     # first create the oracle
@@ -183,7 +190,7 @@ def test_fnode_multidomain_skeleton_known_targets_with_snode():
         (("F", 0), "y"),
         (("F", 1), "x"),
         (("F", 1), "y"),
-        (('S', 0), "y"),
+        (("S", 0), "y"),
         ("x", "w"),
         ("x", "z"),
         ("x", "y"),
@@ -200,18 +207,23 @@ def test_fnode_multidomain_skeleton_known_targets_with_snode():
     )
     data = [dummy_sample(non_f_graph), dummy_sample(non_f_graph), dummy_sample(non_f_graph)]
     context = (
-        make_context(create_using=InterventionalContextBuilder)
-        .variables(data=data[0])
-        .build()
+        make_context(create_using=InterventionalContextBuilder).variables(data=data[0]).build()
     )
     domain_indices = [1, 2, 2]
-    intervention_targets = [{}, {}, {'x'}]
+    intervention_targets = [{}, {}, {"x"}]
 
     # test augmented nodes
-    augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map = learner._create_augmented_nodes(domain_indices, intervention_targets)
+    (
+        augmented_nodes,
+        symmetric_diff_map,
+        sigma_map,
+        node_domain_map,
+    ) = learner._create_augmented_nodes(domain_indices, intervention_targets)
     assert len(augmented_nodes) == math.comb(len(domain_indices), 2)
 
-    learner.fit(data, context, domain_indices=domain_indices, intervention_targets=intervention_targets)
+    learner.fit(
+        data, context, domain_indices=domain_indices, intervention_targets=intervention_targets
+    )
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
@@ -220,13 +232,12 @@ def test_fnode_multidomain_skeleton_known_targets_with_snode():
     )
     for edge in skel_graph.edges():
         if not expected_skeleton.has_edge(*edge):
-            print('extra edge: ', edge)
+            print("extra edge: ", edge)
     for edge in expected_skeleton.edges():
         if not skel_graph.has_edge(*edge):
-            print('missing edge: ', edge)
+            print("missing edge: ", edge)
     assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
     assert nx.is_isomorphic(expected_skeleton, skel_graph)
-
 
 
 def test_basic_multidomain_fsnode_skeleton():
@@ -326,7 +337,7 @@ def test_basic_multidomain_fsnode_skeleton_with_lindata():
         intervention_sets.append(targets)
         domain_ids.append(1)
 
-    print('Targets are: ', targets)
+    print("Targets are: ", targets)
 
     # now for each S-node, apply a linear additive intervention
     # for s_node, domains in aug_graph.graph["S-nodes"].items():

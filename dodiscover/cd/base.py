@@ -39,7 +39,9 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         if x_vars is not None and any(col not in df.columns for col in x_vars):
             raise ValueError("The x variables are not all in the DataFrame.")
         if any(col not in df.columns for col in y_vars):
-            raise ValueError(f"The y variables, {y_vars} are not all in the DataFrame: {df.columns}")
+            raise ValueError(
+                f"The y variables, {y_vars} are not all in the DataFrame: {df.columns}"
+            )
         if group_col_var not in df.columns:
             raise ValueError(f"The group column {group_col_var} is not in the DataFrame.")
 
@@ -136,12 +138,17 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         return self.propensity_est_
 
     @abstractmethod
-    def _statistic(self, Y: ArrayLike, group_ind: ArrayLike, X: ArrayLike=None) -> float:
+    def _statistic(self, Y: ArrayLike, group_ind: ArrayLike, X: ArrayLike = None) -> float:
         """Abstract method for computing the test statistic."""
         pass
 
     def compute_null(
-        self, e_hat: ArrayLike,Y: ArrayLike, X: ArrayLike=None, null_reps: int = 1000, random_state=None
+        self,
+        e_hat: ArrayLike,
+        Y: ArrayLike,
+        X: ArrayLike = None,
+        null_reps: int = 1000,
+        random_state=None,
     ) -> ArrayLike:
         """Estimate null distribution using propensity weights.
 

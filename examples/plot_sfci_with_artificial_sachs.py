@@ -25,6 +25,7 @@ from dodiscover.datasets import sample_from_graph
 
 from dodiscover import PsiFCI, SFCI, Context, make_context, InterventionalContextBuilder
 
+
 def resample_dataset(
     G,
     df,
@@ -62,18 +63,15 @@ def resample_dataset(
                 child_idx = np.argwhere(df.columns == child).squeeze()
 
                 # sample which index from 1, 2, or 3 it hit for children
-                child_sample_idx = rng.multinomial(
-                    1, pvals=child_prior, size=1
-                ).squeeze()
-                child_sample = outcome_values[
-                    np.argwhere(child_sample_idx == 1).squeeze()
-                ]
+                child_sample_idx = rng.multinomial(1, pvals=child_prior, size=1).squeeze()
+                child_sample = outcome_values[np.argwhere(child_sample_idx == 1).squeeze()]
                 new_df[idx, child_idx] = child_sample
                 # print("New sample for ", child, child_sample)
 
     new_df = pd.DataFrame(new_df)
     new_df.columns = df.columns
     return new_df
+
 
 seed = 1234
 n_jobs = -1
@@ -100,9 +98,7 @@ ground_truth_G = ground_truth_dag["model"].to_directed()
 G = draw(ground_truth_G, direction="TD", shape="circle")
 
 # generate now bernoulli probability exogenous per protein
-prior_protein_exp = rng.dirichlet(
-    rng.standard_gamma(rng.integers(1, 4), size=3), 1
-).squeeze()
+prior_protein_exp = rng.dirichlet(rng.standard_gamma(rng.integers(1, 4), size=3), 1).squeeze()
 
 outcome_values = np.array([1, 2, 3])
 nodes_to_resample = np.array(["Erk", "PKC", "PIP2"])

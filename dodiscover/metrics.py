@@ -146,5 +146,3 @@ def structure_hamming_dist(
         diff = diff + diff.T
         diff[diff > 1] = 1  # Ignoring the double edges.
         return np.sum(diff) / 2
-
-

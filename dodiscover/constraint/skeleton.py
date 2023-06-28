@@ -38,7 +38,7 @@ def _test_xy_edges(
     data: pd.DataFrame,
     context: Context,
     cross_distribution_test: bool = False,
-    s_node =None,
+    s_node=None,
 ) -> Dict[str, Any]:
     """Private function used to test edge between X and Y in parallel for candidate separating sets.
 
@@ -442,7 +442,7 @@ class BaseSkeletonLearner:
                         data,
                         context,
                         cross_distribution_test,
-                        s_node=s_node
+                        s_node=s_node,
                     )
                     out.append(result)
             else:
@@ -460,7 +460,7 @@ class BaseSkeletonLearner:
                         data,
                         context,
                         cross_distribution_test,
-                        s_node=s_node
+                        s_node=s_node,
                     )
                     for x_var, y_var, possible_variables in self._generate_pairs_with_sepset(
                         possible_x_nodes,
@@ -660,7 +660,7 @@ class BaseSkeletonLearner:
         X: Column,
         Y: Column,
         Z: Optional[Set[Column]] = None,
-        **kwargs
+        **kwargs,
     ) -> Tuple[float, float]:
         """Test any specific edge for X || Y | Z.
 
@@ -1099,7 +1099,15 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return super()._initialize_params(context)
 
-    def _fit_single_distribution(self, data, context: Context, possible_x_nodes, skipped_y_nodes, skipped_z_nodes, cross_distribution_test):
+    def _fit_single_distribution(
+        self,
+        data,
+        context: Context,
+        possible_x_nodes,
+        skipped_y_nodes,
+        skipped_z_nodes,
+        cross_distribution_test,
+    ):
         # initially learn the skeleton without using PDS information
         # apply algorithm to learn skeleton
         self._learn_skeleton(
@@ -1145,7 +1153,14 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
             context = self._initialize_params(context)
 
         # fit the distribution
-        context = self._fit_single_distribution(data, context, possible_x_nodes=None, skipped_y_nodes=None, skipped_z_nodes=None, cross_distribution_test=False)
+        context = self._fit_single_distribution(
+            data,
+            context,
+            possible_x_nodes=None,
+            skipped_y_nodes=None,
+            skipped_z_nodes=None,
+            cross_distribution_test=False,
+        )
 
         self.context_ = deepcopy(context.copy())
         self.adj_graph_ = deepcopy(context.init_graph.copy())
@@ -1301,7 +1316,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             possible_x_nodes=list(context.get_non_augmented_nodes()),
             skipped_y_nodes=context.f_nodes,
             skipped_z_nodes=context.f_nodes,
-            cross_distribution_test=False)
+            cross_distribution_test=False,
+        )
 
         context = self._prep_second_stage_skeleton(context)
 
@@ -1624,7 +1640,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         # pick a domain and distribution with the largest amount of data
         largest_data_idx = np.argmax([len(df) for df in data])
         obs_data = data[largest_data_idx]
-        print('Using data from distribution ', largest_data_idx, ' for learning the skeleton.')
+        print("Using data from distribution ", largest_data_idx, " for learning the skeleton.")
         self.context_ = context.copy()
 
         # initialize learning parameters
@@ -1643,7 +1659,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
 
         # initialize the augmented graph to be fully connected to observed casual variables
         causal_nodes = set(context.observed_variables)
-        
+
         # XXX: contextbuilder creates an augmented graph, whereas we want to control that.
         for node in set(context.init_graph.nodes):
             if node not in causal_nodes:
@@ -1683,7 +1699,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
             possible_x_nodes=causal_nodes,
             skipped_y_nodes=skip_nodes,
             skipped_z_nodes=skip_nodes,
-            cross_distribution_test=False
+            cross_distribution_test=False,
         )
 
         # prepare the context object for the second stage of learning
@@ -1704,7 +1720,9 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         seen_domain_pairs = set()
         for idx, source in enumerate(range(1, n_domains + 1)):
             # analyze F-nodes only within the 'source' domain
-            source_fnodes = [node for node in augmented_nodes if set(node_domain_map[node]) == {source}]
+            source_fnodes = [
+                node for node in augmented_nodes if set(node_domain_map[node]) == {source}
+            ]
             if debug:
                 print(f"Trying to learn skeleton for {source} to remove F-nodes: {source_fnodes}")
             if source_fnodes:
@@ -1738,7 +1756,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                         break
                 if s_node is None:
                     raise RuntimeError("wtf")
-                
+
                 # this is only possible if there is explicitly observational data between
                 # the two domains
                 # analyze S-nodes between source and target

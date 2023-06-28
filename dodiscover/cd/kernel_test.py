@@ -151,7 +151,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1 + np.sum(null_dist >= stat)) / (1 + self.null_reps)
         return stat, pvalue
 
-    def _statistic(self, L: ArrayLike, group_ind: ArrayLike, K: ArrayLike=None) -> float:
+    def _statistic(self, L: ArrayLike, group_ind: ArrayLike, K: ArrayLike = None) -> float:
         n_samples = len(L)
 
         # compute L kernels
@@ -170,7 +170,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             K1 = K[:, second_mask]
             KW0 = K0 @ W0
             KW1 = K1 @ W1
-            
+
             # compute the three terms in Lemma 4.4
             first_term = np.trace(KW0.T @ KW0 @ L0)
             second_term = np.trace(KW1.T @ KW0 @ L01)
@@ -180,7 +180,7 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             first_term = np.trace(L0)
             second_term = np.trace(L01)
             third_term = np.trace(L1)
-        
+
         # compute final statistic
         stat = (first_term - 2 * second_term + third_term) / n_samples
         return stat

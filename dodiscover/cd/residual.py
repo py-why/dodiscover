@@ -1,7 +1,8 @@
 from typing import Set, Tuple
+
 import numpy as np
-from numpy.typing import ArrayLike
 import pandas as pd
+from numpy.typing import ArrayLike
 from sklearn.metrics import r2_score
 
 from dodiscover.typing import Column
@@ -58,9 +59,9 @@ def invariant_residual_test(
         predictor = RandomForestRegressor(max_features="sqrt", **method_kwargs)
     elif method == "gam":
         from sklearn.linear_model import LinearRegression
-        from sklearn.preprocessing import SplineTransformer
-        from sklearn.pipeline import Pipeline
         from sklearn.model_selection import GridSearchCV
+        from sklearn.pipeline import Pipeline
+        from sklearn.preprocessing import SplineTransformer
 
         pipe = Pipeline(
             steps=[
@@ -72,8 +73,7 @@ def invariant_residual_test(
             "spline__n_knots": [3, 5, 7, 9],
         }
         predictor = GridSearchCV(
-            pipe, param_grid, n_jobs=-2, refit=True,
-            scoring="neg_mean_squared_error"
+            pipe, param_grid, n_jobs=-2, refit=True, scoring="neg_mean_squared_error"
         )
     elif method == "linear":
         from sklearn.linear_model import LinearRegression
@@ -88,8 +88,7 @@ def invariant_residual_test(
     r2 = r2_score(Y, Y_pred)
 
     if test == "whitney_levene":
-        from scipy.stats import mannwhitneyu
-        from scipy.stats import levene
+        from scipy.stats import levene, mannwhitneyu
 
         _, mean_pval = mannwhitneyu(
             residuals[np.asarray(z, dtype=bool)],
@@ -118,19 +117,20 @@ def invariant_residual_test(
         return pval, r2, predictor
     else:
         return pval, r2
-    
+
 
 class ResidualCDTest(BaseConditionalDiscrepancyTest):
-
-    def __init__(self, method='gam', test_method='ks'):
+    def __init__(self, method="gam", test_method="ks"):
         super().__init__()
         self.method = method
         self.test_method = test_method
 
-    def _statistic(self, Y, group_ind, X = None) -> float:
+    def _statistic(self, Y, group_ind, X=None) -> float:
         return super()._statistic(Y, group_ind, X)
 
-    def test(self, df, group_col: Set[Column], y_vars: Set[Column], x_vars: Set[Column]) -> Tuple[float, float]:
+    def test(
+        self, df, group_col: Set[Column], y_vars: Set[Column], x_vars: Set[Column]
+    ) -> Tuple[float, float]:
         X = df[list(x_vars)].values
         Y = df[list(y_vars)].values
         z = df[list(group_col)].values
@@ -138,7 +138,7 @@ class ResidualCDTest(BaseConditionalDiscrepancyTest):
         if x_vars == set():
             from scipy.stats import kstest
 
-            stat, pval = kstest(Y[z==1], Y[z==0])
+            stat, pval = kstest(Y[z == 1], Y[z == 0])
         else:
             pval, r2 = invariant_residual_test(
                 X,

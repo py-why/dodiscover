@@ -200,10 +200,12 @@ def compute_kernel(
     med : float
         The estimated kernel width.
     """
+
     def check_2d(X):
         if X is not None and X.ndim == 1:
             X = X.reshape(-1, 1)
         return X
+
     X = check_2d(X)
 
     # if the width of the kernel is not set, then use the median trick to set the

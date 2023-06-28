@@ -119,6 +119,10 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         Y1 = Y[first_group, :]
         Y2 = Y[second_group, :]
 
+        print('dodiscover')
+        print(X1.shape, X2.shape, Y1.shape, Y2.shape)
+        print(X1[:2], X2[:2], Y1[:2], Y2[:2])
+
         # first compute the centered correntropy matrices, C_xy^1
         Cx1y1 = corrent_matrix(np.hstack((X1, Y1)), kwidth=self.kwidth)
         Cx2y2 = corrent_matrix(np.hstack((X2, Y2)), kwidth=self.kwidth)
