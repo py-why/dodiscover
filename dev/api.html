@@ -237,6 +237,28 @@
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.toporder.CAM.html">
+   dodiscover.toporder.CAM
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.toporder.SCORE.html">
+   dodiscover.toporder.SCORE
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.toporder.DAS.html">
+   dodiscover.toporder.DAS
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.toporder.NoGAM.html">
+   dodiscover.toporder.NoGAM
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.metrics.confusion_matrix_networks.html">
    dodiscover.metrics.confusion_matrix_networks
   </a>
@@ -244,6 +266,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.metrics.structure_hamming_dist.html">
    dodiscover.metrics.structure_hamming_dist
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.metrics.toporder_divergence.html">
+   dodiscover.metrics.toporder_divergence
   </a>
  </li>
 </ul>
@@ -413,6 +440,11 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#order-based-structure-learning">
+   Order-based structure learning
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#comparing-causal-discovery-algorithms">
    Comparing causal discovery algorithms
   </a>
@@ -522,6 +554,25 @@ API for construction of the Context class.</p>
 </tbody>
 </table>
 </section>
+<section id="order-based-structure-learning">
+<h2>Order-based structure learning<a class="headerlink" href="#order-based-structure-learning" title="Permalink to this heading">#</a></h2>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.toporder.CAM.html#dodiscover.toporder.CAM" title="dodiscover.toporder.CAM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CAM</span></code></a>([alpha, prune, n_splines, ...])</p></td>
+<td><p>The CAM (Causal Additive Model) algorithm for causal discovery.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.toporder.SCORE.html#dodiscover.toporder.SCORE" title="dodiscover.toporder.SCORE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCORE</span></code></a>([eta_G, eta_H, alpha, prune, ...])</p></td>
+<td><p>The SCORE algorithm for causal discovery.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.toporder.DAS.html#dodiscover.toporder.DAS" title="dodiscover.toporder.DAS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DAS</span></code></a>([eta_G, eta_H, alpha, prune, ...])</p></td>
+<td><p>The DAS (Discovery At Scale) algorithm for causal discovery.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.toporder.NoGAM.html#dodiscover.toporder.NoGAM" title="dodiscover.toporder.NoGAM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoGAM</span></code></a>([n_crossval, ridge_alpha, ...])</p></td>
+<td><p>The NoGAM (Not only Gaussian Additive Model) algorithm for causal discovery.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="comparing-causal-discovery-algorithms">
 <h2>Comparing causal discovery algorithms<a class="headerlink" href="#comparing-causal-discovery-algorithms" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
@@ -531,6 +582,9 @@ API for construction of the Context class.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.metrics.structure_hamming_dist.html#dodiscover.metrics.structure_hamming_dist" title="dodiscover.metrics.structure_hamming_dist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">structure_hamming_dist</span></code></a>(true_graph, pred_graph)</p></td>
 <td><p>Compute structural hamming distance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.metrics.toporder_divergence.html#dodiscover.metrics.toporder_divergence" title="dodiscover.metrics.toporder_divergence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toporder_divergence</span></code></a>(true_graph, order)</p></td>
+<td><p>Compute topological ordering divergence.</p></td>
 </tr>
 </tbody>
 </table>

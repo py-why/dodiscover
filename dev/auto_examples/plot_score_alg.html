@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Order-based algorithms for causal discovery from observational data without latent confounders &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PC algorithm for causal discovery from observational data without latent confounders" href="plot_pc_alg.html" />
+    <link rel="prev" title="Examples and Tutorials using DoDiscover" href="../use.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Order-based algorithms for causal discovery from observational data without latent confounders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="plot_pc_alg.html">
+   PC algorithm for causal discovery from observational data without latent confounders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="prior_know_score.html">
+   Using prior knowledge in order-based algorithms for causal discovery
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-some-data">
+   Simulate some data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#define-the-context">
+   Define the context
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#run-structure-learning-algorithm">
+   Run structure learning algorithm
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summary">
+   Summary
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-score-alg-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="order-based-algorithms-for-causal-discovery-from-observational-data-without-latent-confounders">
+<span id="ex-score-algorithm"></span><span id="sphx-glr-auto-examples-plot-score-alg-py"></span><h1>Order-based algorithms for causal discovery from observational data without latent confounders<a class="headerlink" href="#order-based-algorithms-for-causal-discovery-from-observational-data-without-latent-confounders" title="Permalink to this heading">#</a></h1>
+<p>We will simulate some observational data from a Structural Causal Model (SCM) and
+demonstrate how we will use the SCORE algorithm. The example can be easily adapted
+to CAM, DAS and  NoGAM methods.</p>
+<p>CAM, SCORE, DAS, NoGAM algorithms perform causal discovery in a two steps procedure.
+Given observational i.i.d. data from an Additive Noise Model without
+latent confounders, first the method estimates a topological ordering of the causal variables.
+This partial ordering can be represented as a fully connected graph, where every node has an
+incoming edge from all its predecessors in the ordering. Second, the resulting fully connected
+DAG is pruned by some variable selection procedure.
+Note that knowing the topological ordering is already sufficient for estimating causal effects.
+Nevertheless, the pruning step is justified by the fact that operating with a sparser graph is
+statistically more efficient.</p>
+<p>The four methods differ as follow:</p>
+<ul class="simple">
+<li><p>In CAM algorithm the topological ordering is inferred by finding the permutation of the graph
+nodes corresponding to the fully connected graph that maximizes the log-likelihood of the data.
+After inference of the topological ordering, the pruning step is done by variable selection with
+regression. In particular, for each variable <code class="docutils literal notranslate"><span class="pre">j</span></code> CAM fits a generalized additive model using as
+covariates all the predecessor of <code class="docutils literal notranslate"><span class="pre">j</span></code> in the ordering, and performs hypothesis testing to select
+relevant parent variables.</p></li>
+<li><p>SCORE provides a more efficient topological ordering than CAM, while it inherits the pruning
+procedure. In order to infer the topological ordering, SCORE estimates the Hessian matrix of the
+log-likelihood. Then, it finds a leaf (i.e. a node without children) by taking the <code class="docutils literal notranslate"><span class="pre">argmin</span></code> of
+the variance over the diagonal elements of the Hessian matrix. Once a leaf is found, it is
+removed from the graph and the procedure is iteratively repeated, evantually assigning a position
+to each node.</p></li>
+<li><p>DAS provides a more efficient pruning step, while it inherits the ordering method from SCORE.
+Let <code class="docutils literal notranslate"><span class="pre">H</span></code> be the Hessian matrix of the log-likelihood: given a leaf node <code class="docutils literal notranslate"><span class="pre">j</span></code>, DAS selects an
+edge <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">-&gt;</span> <span class="pre">j</span></code> if the pair satisfies <code class="docutils literal notranslate"><span class="pre">mean(abs(H[i,</span> <span class="pre">j]))</span> <span class="pre">=</span> <span class="pre">0</span></code>. Vanishing mean is verified by
+hypothesis testing. Finally, CAM-pruning is applied on the resulting sparse graph, in order to
+further reduce the number of false positives in the inferred DAG. Sparsity ensures linear
+computational complexity of this final pruning step. (DAS can be seen as an efficient version of
+SCORE, with better scaling properties in the graph size.)</p></li>
+<li><p>NoGAM introduces a topological ordering procedure that does not assume any distribution
+of the noise terms, whereas CAM, SCORE and DAS all require the noise to be Gaussian.
+The pruning of the graph is done via CAM procedure. In order to define the topological order,
+NoGAM identifies one leaf at the time: first, for each node in the graph, it estimates the
+residuals of the regression problem that predicts a variable <code class="docutils literal notranslate"><span class="pre">j</span></code> from all the remaining nodes
+<code class="docutils literal notranslate"><span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">..,</span> <span class="pre">j-1,</span> <span class="pre">j+1,</span> <span class="pre">..,</span> <span class="pre">|V|</span></code> (with <code class="docutils literal notranslate"><span class="pre">|V|</span></code> the number of nodes). Then, NoGAM tries to estimate
+each entry <code class="docutils literal notranslate"><span class="pre">j</span></code> of the vector of the gradient of log-likelihood using the residual of the
+variable <code class="docutils literal notranslate"><span class="pre">j</span></code> as covariate: a leaf is found by selection of the <code class="docutils literal notranslate"><span class="pre">argmin</span></code> of the mean squared
+error of the predictions.</p></li>
+</ul>
+<p>Authors: Francesco Montagna &lt;<a class="reference external" href="mailto:francesco&#46;montagna997&#37;&#52;&#48;gmail&#46;com">francesco<span>&#46;</span>montagna997<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+<p>License: BSD (3-clause)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pywhy_graphs.viz</span> <span class="kn">import</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a>
+<span class="kn">from</span> <span class="nn">dodiscover</span> <span class="kn">import</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a>
+<span class="kn">from</span> <span class="nn">dodiscover.toporder.score</span> <span class="kn">import</span> <a href="../generated/dodiscover.toporder.SCORE.html#dodiscover.toporder.SCORE" title="dodiscover.toporder.SCORE" class="sphx-glr-backref-module-dodiscover-toporder sphx-glr-backref-type-py-class"><span class="n">SCORE</span></a>
+<span class="kn">from</span> <span class="nn">dowhy</span> <span class="kn">import</span> <span class="n">gcm</span>
+<span class="kn">from</span> <span class="nn">dowhy.gcm.util.general</span> <span class="kn">import</span> <span class="n">set_random_seed</span>
+</pre></div>
+</div>
+<section id="simulate-some-data">
+<h2>Simulate some data<a class="headerlink" href="#simulate-some-data" title="Permalink to this heading">#</a></h2>
+<p>First we will simulate data, starting from an Additive Noise Model (ANM).
+This will then induce a causal graph, which we can visualize.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># set a random seed to make example reproducible</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seed</span></a> <span class="o">=</span> <span class="mi">12345</span>
+<a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rng</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seed</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seed</span></a><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MyCustomModel</span><span class="p">(</span><span class="n">gcm</span><span class="o">.</span><span class="n">PredictionModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coefficient</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coefficient</span> <span class="o">=</span> <span class="n">coefficient</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+        <span class="c1"># Nothing to fit here, since we know the ground truth.</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefficient</span> <span class="o">*</span> <span class="n">X</span>
+
+    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># We don&#39;t really need this actually.</span>
+        <span class="k">return</span> <span class="n">MyCustomModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coefficient</span><span class="p">)</span>
+
+
+<span class="c1"># set a random seed to make example reproducible</span>
+<span class="n">set_random_seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="c1"># construct a causal graph that will result in</span>
+<span class="c1"># x -&gt; y &lt;- z -&gt; w</span>
+<a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">G</span></a> <span class="o">=</span> <a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class"><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span></a><span class="p">([(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)])</span>
+
+<span class="n">causal_model</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">ProbabilisticCausalModel</span><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">G</span></a><span class="p">)</span>
+<span class="n">causal_model</span><span class="o">.</span><span class="n">set_causal_mechanism</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">gcm</span><span class="o">.</span><span class="n">ScipyDistribution</span></a><span class="p">(</span><a href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.binom.html#scipy.stats.binom" title="scipy.stats.binom" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">stats</span><span class="o">.</span><span class="n">binom</span></a><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">causal_model</span><span class="o">.</span><span class="n">set_causal_mechanism</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">gcm</span><span class="o">.</span><span class="n">ScipyDistribution</span></a><span class="p">(</span><a href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.binom.html#scipy.stats.binom" title="scipy.stats.binom" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">stats</span><span class="o">.</span><span class="n">binom</span></a><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">causal_model</span><span class="o">.</span><span class="n">set_causal_mechanism</span><span class="p">(</span>
+    <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">gcm</span><span class="o">.</span><span class="n">AdditiveNoiseModel</span></a><span class="p">(</span>
+        <span class="n">prediction_model</span><span class="o">=</span><span class="n">MyCustomModel</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">noise_model</span><span class="o">=</span><a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">gcm</span><span class="o">.</span><span class="n">ScipyDistribution</span></a><span class="p">(</span><a href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.binom.html#scipy.stats.binom" title="scipy.stats.binom" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">stats</span><span class="o">.</span><span class="n">binom</span></a><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="n">causal_model</span><span class="o">.</span><span class="n">set_causal_mechanism</span><span class="p">(</span>
+    <span class="s2">&quot;w&quot;</span><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">gcm</span><span class="o">.</span><span class="n">AdditiveNoiseModel</span></a><span class="p">(</span>
+        <span class="n">prediction_model</span><span class="o">=</span><span class="n">MyCustomModel</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">noise_model</span><span class="o">=</span><a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">gcm</span><span class="o">.</span><span class="n">ScipyDistribution</span></a><span class="p">(</span><a href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.binom.html#scipy.stats.binom" title="scipy.stats.binom" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">stats</span><span class="o">.</span><span class="n">binom</span></a><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Fit here would not really fit parameters, since we don&#39;t do anything in the fit method.</span>
+<span class="c1"># Here, we only need this to ensure that each FCM has the correct local hash (i.e., we</span>
+<span class="c1"># get an inconsistency error if we would modify the graph afterwards without updating</span>
+<span class="c1"># the FCMs). Having an empty data set is a small workaround, since all models are</span>
+<span class="c1"># pre-defined.</span>
+<span class="n">gcm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">causal_model</span><span class="p">,</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">]))</span>
+
+<span class="c1"># sample the observational data</span>
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">draw_samples</span><span class="p">(</span><span class="n">causal_model</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.head.html#pandas.DataFrame.head" title="pandas.DataFrame.head" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">data</span><span class="o">.</span><span class="n">head</span></a><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.core.series.Series" class="sphx-glr-backref-module-pandas-core-series sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">({</span><span class="n">col</span><span class="p">:</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">}))</span>
+<span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">G</span></a><span class="p">)</span>
+<span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;oracle_dag.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_score_alg_001.png" srcset="../_images/sphx_glr_plot_score_alg_001.png" alt="plot score alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fitting causal models:   0%|          | 0/4 [00:00&lt;?, ?it/s]
+Fitting causal mechanism of node x:   0%|          | 0/4 [00:00&lt;?, ?it/s]
+Fitting causal mechanism of node y:   0%|          | 0/4 [00:00&lt;?, ?it/s]
+Fitting causal mechanism of node z:   0%|          | 0/4 [00:00&lt;?, ?it/s]
+Fitting causal mechanism of node w:   0%|          | 0/4 [00:00&lt;?, ?it/s]
+Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1572.81it/s]
+   x  ...  w
+0  0  ...  1
+1  1  ...  2
+2  0  ...  1
+3  1  ...  1
+4  1  ...  1
+
+[5 rows x 4 columns]
+x       [0, 1]
+z       [1, 0]
+y    [1, 2, 0]
+w    [1, 2, 0]
+dtype: object
+
+&#39;oracle_dag.png&#39;
+</pre></div>
+</div>
+</section>
+<section id="define-the-context">
+<h2>Define the context<a class="headerlink" href="#define-the-context" title="Permalink to this heading">#</a></h2>
+<p>In PyWhy, we introduce the <a class="reference internal" href="../generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">context.Context</span></code></a> class, which should be a departure from
+“data-first causal discovery,” where users provide data as the primary input to a
+discovery algorithm. This problem with this approach is that it encourages novice
+users to see the algorithm as a philosopher’s stone that converts data to causal
+relationships. With this mindset, users tend to surrender the task of providing
+domain-specific assumptions that enable identifiability to the algorithm. In
+contrast, PyWhy’s key strength is how it guides users to specifying domain
+assumptions up front (in the form of a DAG) before the data is added, and
+then addresses identifiability given those assumptions and data. In this sense,
+the Context class houses both data, apriori assumptions and other relevant data
+that may be used in downstream structure learning algorithms.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">context</span> <span class="o">=</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a><span class="p">()</span><span class="o">.</span><span class="n">variables</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="c1"># Alternatively, one could specify some fixed edges.</span>
+
+<span class="c1"># .. code-block::Python</span>
+<span class="c1">#   included_edges = nx.Graph([(&#39;x&#39;, &#39;y&#39;)])</span>
+<span class="c1">#   context = make_context().edges(include=included_edges).build()</span>
+</pre></div>
+</div>
+</section>
+<section id="run-structure-learning-algorithm">
+<h2>Run structure learning algorithm<a class="headerlink" href="#run-structure-learning-algorithm" title="Permalink to this heading">#</a></h2>
+<p>Now we are ready to run the SCORE algorithm. The method performs inference
+in two phases. First it estimates the topological order of the nodes in the
+graphs. This is done iteratively according to the following procedure:</p>
+<ol class="arabic simple">
+<li><p>SCORE estimates the Hessian of the logarithm of <span class="math notranslate nohighlight">\(p(V)\)</span>,
+with <span class="math notranslate nohighlight">\(p(V)\)</span> the joint distribution of the nodes in the graph.</p></li>
+<li><p>Let <code class="docutils literal notranslate"><span class="pre">H</span> <span class="pre">:=</span> <span class="pre">Hessian(log</span> <span class="pre">p(V))</span></code>. SCORE selects a leaf in the graph by finding
+the diagonal term of H with minimum variance,
+i.e. by computing <code class="docutils literal notranslate"><span class="pre">np.argmin(np.var(np.diag(H))</span></code>.</p></li>
+<li><p>SCORE removes the leaf from the graph, and repeats steps from 1. to 3.
+iteratively up to the source nodes.</p></li>
+</ol>
+<p>Given the inferred topological order, SCORE prunes the graph with all the
+edges admitted by such ordering, by doing sparse regression to choose the
+relevant variables. Variable selection is done by thresholding on the
+p-values of the coefficients associated to the potential parents of a node.
+For instance, consider a graph <span class="math notranslate nohighlight">\(G\)</span> with 3 vertices <span class="math notranslate nohighlight">\(V = \{1, 2, 3\}\)</span>. For
+simplicity let the topological order be trivial, i.e. <span class="math notranslate nohighlight">\(\{1, 2, 3\}\)</span>. The unique
+fully connected adjacency matrix compatible with such ordering is the upper
+triangular matrix <code class="docutils literal notranslate"><span class="pre">np.triu(np.ones((3,</span> <span class="pre">3)),</span> <span class="pre">k=1)</span></code> with all ones above the
+diagonal.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../generated/dodiscover.toporder.SCORE.html#dodiscover.toporder.SCORE" title="dodiscover.toporder.SCORE" class="sphx-glr-backref-module-dodiscover-toporder sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">score</span></a> <span class="o">=</span> <a href="../generated/dodiscover.toporder.SCORE.html#dodiscover.toporder.SCORE" title="dodiscover.toporder.SCORE" class="sphx-glr-backref-module-dodiscover-toporder sphx-glr-backref-type-py-class"><span class="n">SCORE</span></a><span class="p">()</span>  <span class="c1"># or DAS() or NoGAM() or CAM()</span>
+<a href="../generated/dodiscover.toporder.SCORE.html#dodiscover.toporder.SCORE.fit" title="dodiscover.toporder.SCORE.fit" class="sphx-glr-backref-module-dodiscover-toporder sphx-glr-backref-type-py-method"><span class="n">score</span><span class="o">.</span><span class="n">fit</span></a><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+<span class="c1"># SCORE estimates a directed acyclic graph (DAG) and the topoological order</span>
+<span class="c1"># of the nodes in the graph. SCORE is consistent in the infinite samples</span>
+<span class="c1"># limit, meaning that it might return faulty estimates due to the finiteness</span>
+<span class="c1"># of the data.</span>
+<a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">score</span><span class="o">.</span><span class="n">graph_</span></a>
+<a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">order_graph</span></a> <span class="o">=</span> <a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">score</span><span class="o">.</span><span class="n">order_graph_</span></a>
+
+<span class="c1"># `score_full_dag.png` visualizes the fully connected DAG representation of</span>
+<span class="c1"># the inferred topological ordering.</span>
+<span class="c1"># `score_dag.png` visualizes the fully connected DAG after pruning with</span>
+<span class="c1"># sparse regression.</span>
+<span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DAG after pruning&quot;</span><span class="p">)</span>
+<span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;score_dag.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="networkx.DiGraph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">order_graph</span></a><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Fully connected DAG&quot;</span><span class="p">)</span>
+<span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;score_full_dag.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../_images/sphx_glr_plot_score_alg_002.png" srcset="../_images/sphx_glr_plot_score_alg_002.png" alt="plot score alg" class = "sphx-glr-multi-img"/></li>
+<li><img src="../_images/sphx_glr_plot_score_alg_003.png" srcset="../_images/sphx_glr_plot_score_alg_003.png" alt="plot score alg" class = "sphx-glr-multi-img"/></li>
+</ul>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;score_full_dag.png&#39;
+</pre></div>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h2>
+<p>We observe two DAGs output of the SCORE inference procedure.
+One is the fully connected graph associated to the inferred topological order
+<code class="docutils literal notranslate"><span class="pre">[z,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">w]</span></code> of the graph nodes. The other is the sparser graph after the pruning
+step, corresponding to the causal graph inferred by SCORE.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.666 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-score-alg-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/7a0af3d327be5615defba776eff15f30/plot_score_alg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_score_alg.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/c54d2d694b2a500c9ed7b9f0887f85ae/plot_score_alg.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_score_alg.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="../use.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Examples and Tutorials using DoDiscover</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="plot_pc_alg.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">PC algorithm for causal discovery from observational data without latent confounders</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

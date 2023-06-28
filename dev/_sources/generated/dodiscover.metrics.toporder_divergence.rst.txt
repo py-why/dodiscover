@@ -1,0 +1,12 @@
+﻿dodiscover.metrics.toporder_divergence
+======================================
+
+.. currentmodule:: dodiscover.metrics
+
+.. autofunction:: toporder_divergence
+
+.. include:: dodiscover.metrics.toporder_divergence.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>dodiscover.toporder.NoGAM &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dodiscover.metrics.confusion_matrix_networks" href="dodiscover.metrics.confusion_matrix_networks.html" />
+    <link rel="prev" title="dodiscover.toporder.DAS" href="dodiscover.toporder.DAS.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.make_context.html">
+   dodiscover.make_context
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ContextBuilder.html">
+   dodiscover.ContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.context.Context.html">
+   dodiscover.context.Context
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSkeleton.html">
+   dodiscover.constraint.LearnSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html">
+   dodiscover.constraint.LearnSemiMarkovianSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+   1.5.1. dodiscover.constraint.ConditioningSetSelection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PC.html">
+   dodiscover.constraint.PC
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.FCI.html">
+   dodiscover.constraint.FCI
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.CAM.html">
+   dodiscover.toporder.CAM
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.SCORE.html">
+   dodiscover.toporder.SCORE
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.DAS.html">
+   dodiscover.toporder.DAS
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   dodiscover.toporder.NoGAM
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.confusion_matrix_networks.html">
+   dodiscover.metrics.confusion_matrix_networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.structure_hamming_dist.html">
+   dodiscover.metrics.structure_hamming_dist
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.toporder_divergence.html">
+   dodiscover.metrics.toporder_divergence
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.Column.html">
+   dodiscover.typing.Column
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.SeparatingSet.html">
+   dodiscover.typing.SeparatingSet
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.NetworkxGraph.html">
+   dodiscover.typing.NetworkxGraph
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.Graph.html">
+   dodiscover.Graph
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.EquivalenceClass.html">
+   dodiscover.EquivalenceClass
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
+   dodiscover.ci.BaseConditionalIndependenceTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.Oracle.html">
+   dodiscover.ci.Oracle
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
+   2.4.1. dodiscover.ci.KernelCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.GSquareCITest.html">
+   2.3.1. dodiscover.ci.GSquareCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
+   2.2.1. dodiscover.ci.FisherZCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.ClassifierCITest.html">
+   2.5.1. dodiscover.ci.ClassifierCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.CMITest.html">
+   2.1.1. dodiscover.ci.CMITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.ClassifierCMITest.html">
+   2.1.2. dodiscover.ci.ClassifierCMITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.CategoricalCITest.html">
+   dodiscover.ci.CategoricalCITest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html">
+   dodiscover.cd.BaseConditionalDiscrepancyTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.KernelCDTest.html">
+   3.2.1. dodiscover.cd.KernelCDTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.BregmanCDTest.html">
+   3.3.1. dodiscover.cd.BregmanCDTest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.compute_kernel.html">
+   dodiscover.ci.kernel_utils.compute_kernel
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.corrent_matrix.html">
+   dodiscover.ci.kernel_utils.corrent_matrix
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.von_neumann_divergence.html">
+   dodiscover.ci.kernel_utils.von_neumann_divergence
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.f_divergence_score.html">
+   dodiscover.ci.kernel_utils.f_divergence_score
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.kl_divergence_score.html">
+   dodiscover.ci.kernel_utils.kl_divergence_score
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.monte_carlo.generate_knn_in_subspace.html">
+   dodiscover.ci.monte_carlo.generate_knn_in_subspace
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.monte_carlo.restricted_nbr_permutation.html">
+   dodiscover.ci.monte_carlo.restricted_nbr_permutation
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dodiscover.toporder.NoGAM">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     NoGAM
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.NoGAM.fit">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       NoGAM.fit()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.NoGAM.hessian">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       NoGAM.hessian()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.NoGAM.hessian_diagonal">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       NoGAM.hessian_diagonal()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.NoGAM.prune">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       NoGAM.prune()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.NoGAM.score">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       NoGAM.score()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="dodiscover-toporder-nogam">
+<h1>dodiscover.toporder.NoGAM<a class="headerlink" href="#dodiscover-toporder-nogam" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dodiscover.toporder.NoGAM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.toporder.</span></span><span class="sig-name descname"><span class="pre">NoGAM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_crossval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge_gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_splines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splines_degree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pns_num_neighbors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pns_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/toporder/nogam.html#NoGAM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.toporder.NoGAM" title="Permalink to this definition">#</a></dt>
+<dd><p>The NoGAM (Not only Gaussian Additive Model) algorithm for causal discovery.</p>
+<p>NoGAM <a class="footnote-reference brackets" href="#footcite-montagna2023b" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> iteratively defines a topological ordering finding leaf nodes by
+predicting the entries in the gradient of the log-likelihood via estimated residuals.
+Then it prunes the fully connected DAG with CAM pruning <a class="footnote-reference brackets" href="#footcite-buhlmann2013" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.
+The method assumes Additive Noise Model, while it doesn’t need to assume any distribution
+of the noise terms.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>n_crossval</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Residuals of each variable in the graph are estimated via KernelRidgeRegressor of
+the sklearn library.
+To avoid overfitting in the prediction of the residuals, the method uses leave out
+cross validation, training a number of models equals <code class="docutils literal notranslate"><span class="pre">n_crossval</span></code>, which is used
+to predict the residuals on the portion of validation data unseen during the fitting
+of the regressor. Default value is 5.
+Similarly, KernelRidgeRegressor with ‘rbf’ kernel is used to predict entries in the
+gradient of the log-likelihood via estimated residuals.</p>
+</dd>
+<dt><strong>ridge_alpha: float, optional</strong></dt><dd><p>Alpha value for KernelRidgeRegressor with ‘rbf’ kernel, default is 0.01.
+ridge_alpha is used to fit both the regressor for the residuals estimation
+(Equation (14) <a class="footnote-reference brackets" href="#footcite-montagna2023b" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) and for the estimation of the score entries
+from the estimated residuals.</p>
+</dd>
+<dt><strong>ridge_gamma: float, optional</strong></dt><dd><p>Gamma value for KernelRidgeRegressor with ‘rbf’ kernel, default is 0.1.
+ridge_gamma is used to fit both the regressor for the residuals estimation
+(Equation (20) <a class="footnote-reference brackets" href="#footcite-montagna2023b" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) and for the estimation of the score entries
+from the estimated residuals.</p>
+</dd>
+<dt><strong>eta_G: float, optional</strong></dt><dd><p>Regularization parameter for Stein gradient estimator, default is 0.001.</p>
+</dd>
+<dt><strong>eta_H</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Regularization parameter for Stein Hessian estimator, default is 0.001.</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Alpha cutoff value for variable selection with hypothesis testing over regression
+coefficients, default is 0.05.</p>
+</dd>
+<dt><strong>prune</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True (default), apply CAM-pruning after finding the topological order.</p>
+</dd>
+<dt><strong>n_splines</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Number of splines to use for the feature function, default is 10.
+Automatically decreased in case of insufficient samples</p>
+</dd>
+<dt><strong>splines_degree: int, optional</strong></dt><dd><p>Order of spline to use for the feature function, default is 3.</p>
+</dd>
+<dt><strong>pns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, perform Preliminary Neighbour Search (PNS) before CAM pruning step,
+default is False. Allows scaling CAM pruning and ordering to large graphs.</p>
+</dd>
+<dt><strong>pns_num_neighbors: int, optional</strong></dt><dd><p>Number of neighbors to use for PNS. If None (default) use all variables.</p>
+</dd>
+<dt><strong>pns_threshold: float, optional</strong></dt><dd><p>Threshold to use for PNS, default is 1.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Prior knowledge about the included and excluded directed edges in the output DAG
+is supported. It is not possible to provide explicit constraints on the relative
+positions of nodes in the topological ordering. However, explicitly including a
+directed edge in the DAG defines an implicit constraint on the relative position
+of the nodes in the topological ordering (i.e. if directed edge <code class="docutils literal notranslate"><span class="pre">(i,j)</span></code> is
+encoded in the graph, node <code class="docutils literal notranslate"><span class="pre">i</span></code> will precede node <code class="docutils literal notranslate"><span class="pre">j</span></code> in the output order).</p>
+<p class="rubric">References</p>
+<div class="docutils container" id="id5">
+<aside class="footnote brackets" id="footcite-montagna2023b" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id4">3</a>)</span>
+<p>Francesco Montagna, Nicoletta Noceti, Lorenzo Rosasco, Kun Zhang, and Francesco Locatello. Causal discovery with score matching on additive models with arbitrary noise. In <em>2nd Conference on Causal Learning and Reasoning</em>. 2023. URL: <a class="reference external" href="https://openreview.net/forum?id=rVO0Bx90deu">https://openreview.net/forum?id=rVO0Bx90deu</a>.</p>
+</aside>
+<aside class="footnote brackets" id="footcite-buhlmann2013" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Peter Bühlmann, Jonas Peters, and Jan Ernest. Cam: causal additive models, high-dimensional order search and penalized regression. <em>The Annals of Statistics</em>, 42:, 10 2013. <a class="reference external" href="https://doi.org/10.1214/14-AOS1260">doi:10.1214/14-AOS1260</a>.</p>
+</aside>
+</aside>
+</div>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.NoGAM.fit" title="dodiscover.toporder.NoGAM.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(data_df, context)</p></td>
+<td><p>Fit topological order based causal discovery algorithm on input data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.toporder.NoGAM.hessian" title="dodiscover.toporder.NoGAM.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>(X, eta_G, eta_H)</p></td>
+<td><p>Stein estimator of the Hessian of log p(x).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.NoGAM.hessian_diagonal" title="dodiscover.toporder.NoGAM.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(X, eta_G, eta_H)</p></td>
+<td><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.toporder.NoGAM.prune" title="dodiscover.toporder.NoGAM.prune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prune</span></code></a>(X, A_dense, G_included, G_excluded)</p></td>
+<td><p>Prune the dense adjacency matrix <code class="docutils literal notranslate"><span class="pre">A_dense</span></code> from spurious edges.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.NoGAM.score" title="dodiscover.toporder.NoGAM.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, eta_G[, K, nablaK])</p></td>
+<td><p>Stein gradient estimator of the score, i.e. gradient log p(x).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.toporder.NoGAM.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1087.g6b7225a874)"><span class="pre">DataFrame</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><span class="pre">Context</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.toporder.NoGAM.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fit topological order based causal discovery algorithm on input data.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1087.g6b7225a874)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
+</dd>
+<dt><strong>context: Context</strong></dt><dd><p>The context of the causal discovery problem.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.toporder.NoGAM.hessian">
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dodiscover.toporder.NoGAM.hessian" title="Permalink to this definition">#</a></dt>
+<dd><p>Stein estimator of the Hessian of log p(x).</p>
+<p>The Hessian matrix is efficiently estimated by exploitation of the Stein identity.
+Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
+</dd>
+<dt><strong>eta_G: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein gradient estimator.</p>
+</dd>
+<dt><strong>eta_H: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein hessian estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>H</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the Hessian matrix of log p(x).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div class="docutils container" id="id7">
+<aside class="footnote brackets" id="footcite-rolland2022" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p>Paul Rolland, Volkan Cevher, Matthäus Kleindessner, Chris Russell, Dominik Janzing, Bernhard Schölkopf, and Francesco Locatello. Score matching enables causal discovery of nonlinear additive noise models. In Kamalika Chaudhuri, Stefanie Jegelka, Le Song, Csaba Szepesvari, Gang Niu, and Sivan Sabato, editors, <em>Proceedings of the 39th International Conference on Machine Learning</em>, volume 162 of Proceedings of Machine Learning Research, 18741–18753. PMLR, 17–23 Jul 2022.</p>
+</aside>
+</aside>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.toporder.NoGAM.hessian_diagonal">
+<span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dodiscover.toporder.NoGAM.hessian_diagonal" title="Permalink to this definition">#</a></dt>
+<dd><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
+</dd>
+<dt><strong>eta_G: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein gradient estimator.</p>
+</dd>
+<dt><strong>eta_H: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein hessian estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>H_diag</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.toporder.NoGAM.prune">
+<span class="sig-name descname"><span class="pre">prune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_dense</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_included</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_excluded</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dodiscover.toporder.NoGAM.prune" title="Permalink to this definition">#</a></dt>
+<dd><p>Prune the dense adjacency matrix <code class="docutils literal notranslate"><span class="pre">A_dense</span></code> from spurious edges.</p>
+<p>Use sparse regression over the matrix of the data <code class="docutils literal notranslate"><span class="pre">X</span></code> for variable selection over the
+edges in the dense (potentially fully connected) adjacency matrix <code class="docutils literal notranslate"><span class="pre">A_dense</span></code></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>Matrix of the data.</p>
+</dd>
+<dt><strong>A_dense</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_nodes, n_nodes)</span></dt><dd><p>Dense adjacency matrix to be pruned.</p>
+</dd>
+<dt><strong>G_included</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.DiGraph</span></code></a></span></dt><dd><p>Graph with edges that are required to be included in the output.
+It encodes assumptions and prior knowledge about the causal graph.</p>
+</dd>
+<dt><strong>G_excluded</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.DiGraph</span></code></a></span></dt><dd><p>Graph with edges that are required to be excluded from the output.
+It encodes assumptions and prior knowledge about the causal graph.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>A</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>The pruned adjacency matrix output of the causal discovery algorithm.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.toporder.NoGAM.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nablaK</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><span class="pre">dtype</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ScalarType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dodiscover.toporder.NoGAM.score" title="Permalink to this definition">#</a></dt>
+<dd><p>Stein gradient estimator of the score, i.e. gradient log p(x).</p>
+<p>The Stein gradient estimator <a class="footnote-reference brackets" href="#footcite-li2017" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> exploits the Stein identity
+for efficient estimate of the score function.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
+</dd>
+<dt><strong>eta_G: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein gradient estimator.</p>
+</dd>
+<dt><strong>K</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_samples)</span></dt><dd><p>Gaussian kernel evaluated at X, by default None. If <code class="docutils literal notranslate"><span class="pre">K</span></code> is None, it is
+computed inside of the method.</p>
+</dd>
+<dt><strong>nablaK</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, )</span></dt><dd><p>&lt;nabla, K&gt; evaluated dot product, by default None. If <code class="docutils literal notranslate"><span class="pre">nablaK</span></code> is None, it is
+computed inside of the method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>G</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the score function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div class="docutils container" id="id9">
+<aside class="footnote brackets" id="footcite-li2017" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">4</a><span class="fn-bracket">]</span></span>
+<p>Yingzhen Li and Richard Turner. Gradient estimators for implicit models. <em>International Conference on Learning Representations (ICLR)</em>, pages, 05 2017.</p>
+</aside>
+</aside>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="dodiscover.toporder.DAS.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">dodiscover.toporder.DAS</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="dodiscover.metrics.confusion_matrix_networks.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">dodiscover.metrics.confusion_matrix_networks</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

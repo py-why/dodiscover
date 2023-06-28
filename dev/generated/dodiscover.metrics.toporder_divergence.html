@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>dodiscover.metrics.toporder_divergence &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dodiscover.typing.Column" href="dodiscover.typing.Column.html" />
+    <link rel="prev" title="dodiscover.metrics.structure_hamming_dist" href="dodiscover.metrics.structure_hamming_dist.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.make_context.html">
+   dodiscover.make_context
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ContextBuilder.html">
+   dodiscover.ContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.context.Context.html">
+   dodiscover.context.Context
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSkeleton.html">
+   dodiscover.constraint.LearnSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html">
+   dodiscover.constraint.LearnSemiMarkovianSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+   1.5.1. dodiscover.constraint.ConditioningSetSelection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PC.html">
+   dodiscover.constraint.PC
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.FCI.html">
+   dodiscover.constraint.FCI
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.CAM.html">
+   dodiscover.toporder.CAM
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.SCORE.html">
+   dodiscover.toporder.SCORE
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.DAS.html">
+   dodiscover.toporder.DAS
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.NoGAM.html">
+   dodiscover.toporder.NoGAM
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.confusion_matrix_networks.html">
+   dodiscover.metrics.confusion_matrix_networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.structure_hamming_dist.html">
+   dodiscover.metrics.structure_hamming_dist
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   dodiscover.metrics.toporder_divergence
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.Column.html">
+   dodiscover.typing.Column
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.SeparatingSet.html">
+   dodiscover.typing.SeparatingSet
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.NetworkxGraph.html">
+   dodiscover.typing.NetworkxGraph
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.Graph.html">
+   dodiscover.Graph
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.EquivalenceClass.html">
+   dodiscover.EquivalenceClass
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
+   dodiscover.ci.BaseConditionalIndependenceTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.Oracle.html">
+   dodiscover.ci.Oracle
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
+   2.4.1. dodiscover.ci.KernelCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.GSquareCITest.html">
+   2.3.1. dodiscover.ci.GSquareCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
+   2.2.1. dodiscover.ci.FisherZCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.ClassifierCITest.html">
+   2.5.1. dodiscover.ci.ClassifierCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.CMITest.html">
+   2.1.1. dodiscover.ci.CMITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.ClassifierCMITest.html">
+   2.1.2. dodiscover.ci.ClassifierCMITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.CategoricalCITest.html">
+   dodiscover.ci.CategoricalCITest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html">
+   dodiscover.cd.BaseConditionalDiscrepancyTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.KernelCDTest.html">
+   3.2.1. dodiscover.cd.KernelCDTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.BregmanCDTest.html">
+   3.3.1. dodiscover.cd.BregmanCDTest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.compute_kernel.html">
+   dodiscover.ci.kernel_utils.compute_kernel
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.corrent_matrix.html">
+   dodiscover.ci.kernel_utils.corrent_matrix
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.von_neumann_divergence.html">
+   dodiscover.ci.kernel_utils.von_neumann_divergence
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.f_divergence_score.html">
+   dodiscover.ci.kernel_utils.f_divergence_score
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.kl_divergence_score.html">
+   dodiscover.ci.kernel_utils.kl_divergence_score
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.monte_carlo.generate_knn_in_subspace.html">
+   dodiscover.ci.monte_carlo.generate_knn_in_subspace
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.monte_carlo.restricted_nbr_permutation.html">
+   dodiscover.ci.monte_carlo.restricted_nbr_permutation
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dodiscover.metrics.toporder_divergence">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     toporder_divergence()
+    </span>
+   </code>
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="dodiscover-metrics-toporder-divergence">
+<h1>dodiscover.metrics.toporder_divergence<a class="headerlink" href="#dodiscover-metrics-toporder-divergence" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="dodiscover.metrics.toporder_divergence">
+<span class="sig-prename descclassname"><span class="pre">dodiscover.metrics.</span></span><span class="sig-name descname"><span class="pre">toporder_divergence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">Graph</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">DiGraph</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/metrics.html#toporder_divergence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.metrics.toporder_divergence" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute topological ordering divergence.</p>
+<p>Topological order divergence is used to compute the number of false negatives,
+i.e. missing edges, associated to a topological order of the nodes of a
+graph with respect to the ground truth structure.
+If the topological ordering is compatible with the graph ground truth,
+the divergence is equal to 0. In the worst case of completely reversed
+ordering, toporder_divergence is equals to P, the number of edges (positives)
+in the ground truth graph.
+Note that the divergence defines a lower bound for the Structural Hamming Distance.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>true_graph</strong><span class="classifier"><a class="reference internal" href="dodiscover.typing.NetworkxGraph.html#dodiscover.typing.NetworkxGraph" title="dodiscover.typing.NetworkxGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkxGraph</span></code></a></span></dt><dd><p>Input groundtruth directed acyclic graph.</p>
+</dd>
+<dt><strong>order</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>]</span></dt><dd><p>A topological ordering on the nodes of the graph.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>err</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></span></dt><dd><p>Sum of the number of edges of A not admitted by the given order.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<div style='clear:both'></div></section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="dodiscover.metrics.structure_hamming_dist.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">dodiscover.metrics.structure_hamming_dist</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="dodiscover.typing.Column.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">dodiscover.typing.Column</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
