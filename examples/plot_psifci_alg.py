@@ -8,7 +8,16 @@ Causal discovery with interventional data - Sachs dataset
 We will analyze the Sachs dataset :footcite:`sachsdataset2005` and reproduce analyses
 from the Supplemental Figure 8 in :footcite:`Jaber2020causal` demonstrating the
 usage of the :class:`dodiscover.constraint.PsiFCI` algorithm for learning causal graphs
-from observational and interventional data.
+from observational and/or interventional data.
+
+The Sachs dataset is a famous dataset in causal discovery because of its real-life
+applicability and access to experimental data that analyzed the causal network of
+protein signaling pathways. We will analyze the preprocessed interventional dataset,
+which we download using the package `pooch <https://www.fatiando.org/pooch/latest/>`_.
+The preprocessed dataset consists of categorical features, so we will use the
+:class:`dodiscover.ci.GSquareCITest` for testing conditional independence and
+invariances of the conditional distributions across experimental conditions.
+There are a total of 6 experimental conditions represented by the ``INT`` column.
 
 .. currentmodule:: dodiscover
 """
