@@ -48,7 +48,8 @@ Changelog
 - |Feature| Add pre-commit hooks for linting, type-checking, and code formatting, by `Jaron Lee`_ (:pr:`117`)
 - |Feature| Adds parallelization via joblib to the skeleton learners, by `Adam Li`_ (:pr:`127`)
 - |Feature| Add a suite of general categorical data CI tests, by `Adam Li`_ (:pr:`128`)
-- |Feature| Add Psi-FCI and I-FCI algorithm for handling soft-interventional data, :class:`dodiscover.constraint.PsiFCI` by `Adam Li`_ (:pr:`111`)
+- |Feature| Implement CAM, SCORE, DAS, NoGAM algorithms in ``dodiscover.toporder`` submodule (:pr:`129`)
+- |Feature| Add S-FCI algorithm for handling observational and interventional data from different environments, :class:`dodiscover.constraint.PsiFCI` by `Adam Li`_ (:pr:`140`)
 
 Code and Documentation Contributors
 -----------------------------------

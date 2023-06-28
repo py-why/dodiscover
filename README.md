@@ -82,13 +82,13 @@ Installation is best done via `pip` or `conda`. For developers, they can also in
 
 Minimally, dodiscover requires:
 
-    * Python (>=3.8)
+    * Python (>=3.9)
     * numpy
     * scipy
     * networkx
     * pandas
 
-For explicit graph functionality for representing various causal graphs, such as ADMG, or CPDAGs, you will also need:
+We have removed support for Python 3.8 as we depend explicitly on networkx, which has deprecated Python 3.8 support. For explicit graph functionality for representing various causal graphs, such as ADMG, or CPDAGs, you will also need:
 
     * pywhy-graphs
 
