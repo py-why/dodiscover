@@ -178,7 +178,7 @@ class PsiFCI(FCI):
             The fitted learner.
         """
         if not isinstance(data, list):
-            raise RuntimeError("The input datasets must be in a Python list.")
+            raise TypeError("The input datasets must be in a Python list.")
 
         n_datasets = len(data)
         n_distributions = context.num_distributions

@@ -1119,6 +1119,11 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
     """Learn skeleton using observational and interventional data.
 
+    An interventional skeleton is a skeleton that is learned from observational
+    and/or interventional data. The interventional skeleton is just the
+    normal skeleton among the observed variables augmented with F-nodes representing
+    interventions and the edges from the F-nodes.
+
     Parameters
     ----------
     ci_estimator : BaseConditionalIndependenceTest
