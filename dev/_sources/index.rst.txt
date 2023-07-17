@@ -25,7 +25,7 @@ Contents
 
    installation
    Reference API<api>
-   Usage<use>
+   Simple Examples<use>
    User Guide<user_guide>
    tutorials/index
    whats_new

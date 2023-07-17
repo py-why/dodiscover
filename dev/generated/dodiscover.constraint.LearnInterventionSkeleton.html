@@ -1,0 +1,674 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>dodiscover.constraint.LearnInterventionSkeleton &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.5.1. dodiscover.constraint.ConditioningSetSelection" href="dodiscover.constraint.ConditioningSetSelection.html" />
+    <link rel="prev" title="dodiscover.constraint.LearnSemiMarkovianSkeleton" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Simple Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.make_context.html">
+   dodiscover.make_context
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ContextBuilder.html">
+   dodiscover.ContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.InterventionalContextBuilder.html">
+   dodiscover.InterventionalContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.context.Context.html">
+   dodiscover.context.Context
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSkeleton.html">
+   dodiscover.constraint.LearnSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html">
+   dodiscover.constraint.LearnSemiMarkovianSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   dodiscover.constraint.LearnInterventionSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+   1.5.1. dodiscover.constraint.ConditioningSetSelection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PC.html">
+   dodiscover.constraint.PC
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.FCI.html">
+   dodiscover.constraint.FCI
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PsiFCI.html">
+   1.4.1. dodiscover.constraint.PsiFCI
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.CAM.html">
+   dodiscover.toporder.CAM
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.SCORE.html">
+   dodiscover.toporder.SCORE
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.DAS.html">
+   dodiscover.toporder.DAS
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.toporder.NoGAM.html">
+   dodiscover.toporder.NoGAM
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.confusion_matrix_networks.html">
+   dodiscover.metrics.confusion_matrix_networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.structure_hamming_dist.html">
+   dodiscover.metrics.structure_hamming_dist
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.metrics.toporder_divergence.html">
+   dodiscover.metrics.toporder_divergence
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.Column.html">
+   dodiscover.typing.Column
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.SeparatingSet.html">
+   dodiscover.typing.SeparatingSet
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.typing.NetworkxGraph.html">
+   dodiscover.typing.NetworkxGraph
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.Graph.html">
+   dodiscover.Graph
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.EquivalenceClass.html">
+   dodiscover.EquivalenceClass
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html">
+   dodiscover.ci.BaseConditionalIndependenceTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.Oracle.html">
+   dodiscover.ci.Oracle
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
+   2.4.1. dodiscover.ci.KernelCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.GSquareCITest.html">
+   2.3.1. dodiscover.ci.GSquareCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
+   2.2.1. dodiscover.ci.FisherZCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.ClassifierCITest.html">
+   2.5.1. dodiscover.ci.ClassifierCITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.CMITest.html">
+   2.1.1. dodiscover.ci.CMITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.ClassifierCMITest.html">
+   2.1.2. dodiscover.ci.ClassifierCMITest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.CategoricalCITest.html">
+   dodiscover.ci.CategoricalCITest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html">
+   dodiscover.cd.BaseConditionalDiscrepancyTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.KernelCDTest.html">
+   3.2.1. dodiscover.cd.KernelCDTest
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.cd.BregmanCDTest.html">
+   3.3.1. dodiscover.cd.BregmanCDTest
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.compute_kernel.html">
+   dodiscover.ci.kernel_utils.compute_kernel
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.corrent_matrix.html">
+   dodiscover.ci.kernel_utils.corrent_matrix
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.von_neumann_divergence.html">
+   dodiscover.ci.kernel_utils.von_neumann_divergence
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.f_divergence_score.html">
+   dodiscover.ci.kernel_utils.f_divergence_score
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.kernel_utils.kl_divergence_score.html">
+   dodiscover.ci.kernel_utils.kl_divergence_score
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.monte_carlo.generate_knn_in_subspace.html">
+   dodiscover.ci.monte_carlo.generate_knn_in_subspace
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.ci.monte_carlo.restricted_nbr_permutation.html">
+   dodiscover.ci.monte_carlo.restricted_nbr_permutation
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dodiscover.constraint.LearnInterventionSkeleton">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     LearnInterventionSkeleton
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.LearnInterventionSkeleton.ci_estimator">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       LearnInterventionSkeleton.ci_estimator
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.LearnInterventionSkeleton.evaluate_edge">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       LearnInterventionSkeleton.evaluate_edge()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="dodiscover-constraint-learninterventionskeleton">
+<h1>dodiscover.constraint.LearnInterventionSkeleton<a class="headerlink" href="#dodiscover-constraint-learninterventionskeleton" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dodiscover.constraint.LearnInterventionSkeleton">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">LearnInterventionSkeleton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ci_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cond_set_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cond_set_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_combinations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condsel_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ConditioningSetSelection.NBRS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_stage_condsel_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ConditioningSetSelection.PDS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_sorted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_path_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_intervention_targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/skeleton.html#LearnInterventionSkeleton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.LearnInterventionSkeleton" title="Permalink to this definition">#</a></dt>
+<dd><p>Learn skeleton using observational and interventional data.</p>
+<p>An interventional skeleton is a skeleton that is learned from observational
+and/or interventional data. The interventional skeleton is just the
+normal skeleton among the observed variables augmented with F-nodes representing
+interventions and the edges from the F-nodes.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>ci_estimator</strong><span class="classifier"><a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a></span></dt><dd><p>The conditional independence test function.</p>
+</dd>
+<dt><strong>cd_estimator</strong><span class="classifier"><a class="reference internal" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html#dodiscover.cd.BaseConditionalDiscrepancyTest" title="dodiscover.cd.BaseConditionalDiscrepancyTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalDiscrepancyTest</span></code></a></span></dt><dd><p>The conditional discrepancy test function.</p>
+</dd>
+<dt><strong>sep_set</strong><span class="classifier">dictionary of dictionary of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>Mapping node to other nodes to separating sets of variables.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then an empty dictionary of dictionary of list of sets
+will be initialized.</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The significance level for the conditional independence test, by default 0.05.</p>
+</dd>
+<dt><strong>min_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></span></dt><dd><p>The minimum size of the conditioning set, by default 0. The number of variables
+used in the conditioning set.</p>
+</dd>
+<dt><strong>max_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum size of the conditioning set, by default None. Used to limit
+the computation spent on the algorithm.</p>
+</dd>
+<dt><strong>max_combinations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum number of conditional independence tests to run from the set
+of possible conditioning sets. By default None, which means the algorithm will
+check all possible conditioning sets. If <code class="docutils literal notranslate"><span class="pre">max_combinations=n</span></code> is set, then
+for every conditioning set size, ‘p’, there will be at most ‘n’ CI tests run
+before the conditioning set size ‘p’ is incremented. For controlling the size
+of ‘p’, see <code class="docutils literal notranslate"><span class="pre">min_cond_set_size</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cond_set_size</span></code>. This can be used
+in conjunction with <code class="docutils literal notranslate"><span class="pre">keep_sorted</span></code> parameter to only test the “strongest”
+dependences.</p>
+</dd>
+<dt><strong>condsel_method</strong><span class="classifier"><a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a></span></dt><dd><p>The method to use for testing conditional independence. Must be one of
+(‘pds’, ‘pds_path’). See Notes for more details.</p>
+</dd>
+<dt><strong>keep_sorted</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to keep the considered conditioning set variables in sorted
+dependency order. If True (default) will sort the existing dependencies of each variable
+by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+to lowest). This can be used in conjunction with <code class="docutils literal notranslate"><span class="pre">max_combinations</span></code> parameter
+to only test the “strongest” dependences.</p>
+</dd>
+<dt><strong>max_path_length</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum length of any discriminating path, or None if unlimited.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Number of CPUs to use, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>With interventional data, one may either know the interventional targets from each
+experimental distribution dataset, or one may not know the explicit targets. If the
+interventional targets are known, then the skeleton discovery algorithm of
+<a class="footnote-reference brackets" href="#footcite-kocaoglu2019characterization" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is used. That is we learn the skeleton of a
+AugmentedPAG. Otherwise, we will not know the intervention targets, and use the skeleton
+discovery algorithm described in <a class="footnote-reference brackets" href="#footcite-jaber2020causal" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. To define intervention targets,
+one must use the <a class="reference internal" href="dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder" title="dodiscover.InterventionalContextBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">dodiscover.InterventionalContextBuilder</span></code></a>.</p>
+<p class="rubric">References</p>
+<div class="docutils container" id="id3">
+<aside class="footnote brackets" id="footcite-kocaoglu2019characterization" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Murat Kocaoglu, Amin Jaber, Karthikeyan Shanmugam, and Elias Bareinboim. Characterization and learning of causal graphs with latent variables from soft interventions. <em>Advances in Neural Information Processing Systems</em>, 2019.</p>
+</aside>
+<aside class="footnote brackets" id="footcite-jaber2020causal" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Amin Jaber, Murat Kocaoglu, Karthikeyan Shanmugam, and Elias Bareinboim. Causal discovery from soft interventions with unknown targets: characterization and learning. <em>Advances in neural information processing systems</em>, 33:9551–9561, 2020.</p>
+</aside>
+</aside>
+</div>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.constraint.LearnInterventionSkeleton.evaluate_edge" title="dodiscover.constraint.LearnInterventionSkeleton.evaluate_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_edge</span></code></a>(data, conditional_test_func, X, Y)</p></td>
+<td><p>Test any specific edge for X || Y | Z.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dodiscover.constraint.LearnInterventionSkeleton.ci_estimator">
+<span class="sig-name descname"><span class="pre">ci_estimator</span></span><a class="headerlink" href="#dodiscover.constraint.LearnInterventionSkeleton.ci_estimator" title="Permalink to this definition">#</a></dt>
+<dd><p>Callable[[Column, Column, Set[Column]], Tuple[float, float]]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.LearnInterventionSkeleton.evaluate_edge">
+<span class="sig-name descname"><span class="pre">evaluate_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditional_test_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.constraint.LearnInterventionSkeleton.evaluate_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>Test any specific edge for X || Y | Z.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset</p>
+</dd>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+</dd>
+<dt><strong>Z</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>, optional</span></dt><dd><p>A list of columns in <code class="docutils literal notranslate"><span class="pre">data</span></code>, by default None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>test_stat</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Test statistic.</p>
+</dd>
+<dt><strong>pvalue</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The pvalue.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="dodiscover.constraint.LearnSemiMarkovianSkeleton.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">dodiscover.constraint.LearnSemiMarkovianSkeleton</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="dodiscover.constraint.ConditioningSetSelection.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title"><span class="section-number">1.5.1. </span>dodiscover.constraint.ConditioningSetSelection</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

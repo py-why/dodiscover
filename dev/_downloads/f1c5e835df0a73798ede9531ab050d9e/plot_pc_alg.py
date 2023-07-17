@@ -1,9 +1,9 @@
 """
 .. _ex-pc-algorithm:
 
-====================================================================================
-PC algorithm for causal discovery from observational data without latent confounders
-====================================================================================
+=============================================================
+Basic causal discovery with DoDiscover using the PC algorithm
+=============================================================
 
 We will simulate some observational data from a Structural Causal Model (SCM) and
 demonstrate how we will use the PC algorithm.
@@ -12,6 +12,12 @@ The PC algorithm works on observational data when there are no unobserved latent
 confounders. That means for any observed set of variables, there is no common causes
 that are unobserved. In other words, all exogenous variables then are assumed to be
 independent.
+
+In this example, we will introduce the main abstractions and concepts used in
+dodiscover for causal discovery:
+
+- learner: Any causal discovery algorithm that has a similar scikit-learn API.
+- context: Causal assumptions.
 
 .. currentmodule:: dodiscover
 """

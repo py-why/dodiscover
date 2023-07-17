@@ -108,7 +108,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -428,7 +428,7 @@
         <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">xz_cols</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">yz_cols</span><span class="p">)))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
 
-        <span class="n">tree_xyz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+        <span class="n">tree_xyz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
         <span class="n">epsarray</span> <span class="o">=</span> <span class="n">tree_xyz</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">data</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">k</span><span class="o">=</span><span class="p">[</span><span class="n">knn</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
         <span class="p">)[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -437,23 +437,23 @@
         <span class="n">epsarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">epsarray</span><span class="p">,</span> <span class="mf">0.99999</span><span class="p">)</span>
 
         <span class="c1"># Find nearest neighbors in subspaces of X and Z</span>
-        <span class="n">xz</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">xz_cols</span><span class="p">]</span>
-        <span class="n">tree_xz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">xz</span><span class="p">)</span>
+        <span class="n">xz</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">xz_cols</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">tree_xz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">xz</span><span class="p">)</span>
         <span class="n">k_xz</span> <span class="o">=</span> <span class="n">tree_xz</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
             <span class="n">xz</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">epsarray</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_length</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
         <span class="c1"># Find nearest neighbors in subspaces of Y and Z</span>
-        <span class="n">yz</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">yz_cols</span><span class="p">]</span>
-        <span class="n">tree_yz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">yz</span><span class="p">)</span>
+        <span class="n">yz</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">yz_cols</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">tree_yz</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">yz</span><span class="p">)</span>
         <span class="n">k_yz</span> <span class="o">=</span> <span class="n">tree_yz</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
             <span class="n">yz</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">epsarray</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_length</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
         <span class="c1"># Find nearest neighbors in subspaces of just the Z covariates</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">z_columns</span><span class="p">]</span>
-            <span class="n">tree_z</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">z_columns</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="n">tree_z</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
             <span class="n">k_z</span> <span class="o">=</span> <span class="n">tree_z</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
                 <span class="n">z</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">epsarray</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_length</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>

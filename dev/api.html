@@ -111,7 +111,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -203,6 +203,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.InterventionalContextBuilder.html">
+   dodiscover.InterventionalContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.context.Context.html">
    dodiscover.context.Context
   </a>
@@ -220,6 +225,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.constraint.LearnInterventionSkeleton.html">
+   dodiscover.constraint.LearnInterventionSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html">
    1.5.1. dodiscover.constraint.ConditioningSetSelection
   </a>
@@ -232,6 +242,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="generated/dodiscover.constraint.FCI.html">
    dodiscover.constraint.FCI
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="generated/dodiscover.constraint.PsiFCI.html">
+   1.4.1. dodiscover.constraint.PsiFCI
   </a>
  </li>
 </ul>
@@ -526,7 +541,10 @@ API for construction of the Context class.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a>()</p></td>
 <td><p>A builder class for creating observational data Context objects ergonomically.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context.Context</span></code></a>(observed_variables, int, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder" title="dodiscover.InterventionalContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterventionalContextBuilder</span></code></a>()</p></td>
+<td><p>A builder class for creating observational+interventional data Context objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context.Context</span></code></a>(observed_variables, ...[, ...])</p></td>
 <td><p>Context of assumptions, domain knowledge and data.</p></td>
 </tr>
 </tbody>
@@ -542,14 +560,20 @@ API for construction of the Context class.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.LearnSemiMarkovianSkeleton.html#dodiscover.constraint.LearnSemiMarkovianSkeleton" title="dodiscover.constraint.LearnSemiMarkovianSkeleton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LearnSemiMarkovianSkeleton</span></code></a>(ci_estimator[, ...])</p></td>
 <td><p>Learning a skeleton from a semi-markovian causal model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a>(value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.LearnInterventionSkeleton.html#dodiscover.constraint.LearnInterventionSkeleton" title="dodiscover.constraint.LearnInterventionSkeleton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LearnInterventionSkeleton</span></code></a>(ci_estimator, ...)</p></td>
+<td><p>Learn skeleton using observational and interventional data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a>(value)</p></td>
 <td><p>Available methods for selecting the conditioning sets when learning a skeleton.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC" title="dodiscover.constraint.PC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PC</span></code></a>(ci_estimator[, alpha, min_cond_set_size, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.PC.html#dodiscover.constraint.PC" title="dodiscover.constraint.PC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PC</span></code></a>(ci_estimator[, alpha, min_cond_set_size, ...])</p></td>
 <td><p>Peter and Clarke (PC) algorithm for causal discovery.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.FCI.html#dodiscover.constraint.FCI" title="dodiscover.constraint.FCI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FCI</span></code></a>(ci_estimator[, alpha, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.constraint.FCI.html#dodiscover.constraint.FCI" title="dodiscover.constraint.FCI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FCI</span></code></a>(ci_estimator[, alpha, ...])</p></td>
 <td><p>The Fast Causal Inference (FCI) algorithm for causal discovery.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.constraint.PsiFCI.html#dodiscover.constraint.PsiFCI" title="dodiscover.constraint.PsiFCI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PsiFCI</span></code></a>(ci_estimator, cd_estimator[, alpha, ...])</p></td>
+<td><p>Interventional (Psi) FCI algorithm.</p></td>
 </tr>
 </tbody>
 </table>
@@ -636,7 +660,7 @@ learning.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a>()</p></td>
 <td><p>Abstract class for any conditional independence test.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle" title="dodiscover.ci.Oracle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Oracle</span></code></a>(graph)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle" title="dodiscover.ci.Oracle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Oracle</span></code></a>(graph[, included_nodes])</p></td>
 <td><p>Oracle conditional independence testing.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.KernelCITest.html#dodiscover.ci.KernelCITest" title="dodiscover.ci.KernelCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KernelCITest</span></code></a>([kernel_x, kernel_y, kernel_z, ...])</p></td>
@@ -651,14 +675,14 @@ learning.</p>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html#dodiscover.ci.ClassifierCITest" title="dodiscover.ci.ClassifierCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCITest</span></code></a>(clf, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html#dodiscover.ci.ClassifierCITest" title="dodiscover.ci.ClassifierCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCITest</span></code></a>(clf[, metric, bootstrap, ...])</p></td>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.CMITest.html#dodiscover.ci.CMITest" title="dodiscover.ci.CMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CMITest</span></code></a>([k, transform, n_jobs, ...])</p></td>
 <td><p>Conditional mutual information independence test.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest" title="dodiscover.ci.ClassifierCMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCMITest</span></code></a>(clf, metric, bootstrap, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest" title="dodiscover.ci.ClassifierCMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCMITest</span></code></a>(clf[, metric, bootstrap, ...])</p></td>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>

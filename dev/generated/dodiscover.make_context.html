@@ -111,7 +111,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -203,6 +203,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.InterventionalContextBuilder.html">
+   dodiscover.InterventionalContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.context.Context.html">
    dodiscover.context.Context
   </a>
@@ -220,6 +225,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnInterventionSkeleton.html">
+   dodiscover.constraint.LearnInterventionSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
    1.5.1. dodiscover.constraint.ConditioningSetSelection
   </a>
@@ -232,6 +242,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.constraint.FCI.html">
    dodiscover.constraint.FCI
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PsiFCI.html">
+   1.4.1. dodiscover.constraint.PsiFCI
   </a>
  </li>
 </ul>
@@ -471,12 +486,12 @@
 <h1>dodiscover.make_context<a class="headerlink" href="#dodiscover-make-context" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="dodiscover.make_context">
-<span class="sig-prename descclassname"><span class="pre">dodiscover.</span></span><span class="sig-name descname"><span class="pre">make_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context:</span> <span class="pre">~typing.Optional[~dodiscover.context.Context]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_using=&lt;class</span> <span class="pre">'dodiscover.context_builder.ContextBuilder'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><span class="pre">ContextBuilder</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#make_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.make_context" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dodiscover.</span></span><span class="sig-name descname"><span class="pre">make_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_using=&lt;class</span> <span class="pre">'dodiscover.context_builder.ContextBuilder'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/context_builder.html#make_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.make_context" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a new ContextBuilder instance.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>result</strong><span class="classifier"><a class="reference internal" href="dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a></span></dt><dd><p>The new ContextBuilder instance</p>
+<dt><strong>result</strong><span class="classifier"><a class="reference internal" href="dodiscover.ContextBuilder.html#dodiscover.ContextBuilder" title="dodiscover.context_builder.ContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContextBuilder</span></code></a>, <a class="reference internal" href="dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder" title="dodiscover.InterventionalContextBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterventionalContextBuilder</span></code></a></span></dt><dd><p>The new ContextBuilder instance</p>
 </dd>
 </dl>
 </dd>
@@ -497,12 +512,15 @@ variables, <code class="docutils literal notranslate"><span class="pre">(1,</spa
 
 <section id="examples-using-dodiscover-make-context">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">dodiscover.make_context</span></code><a class="headerlink" href="#examples-using-dodiscover-make-context" title="Permalink to this heading">#</a></h2>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="Order-based algorithms for causal discovery from observational data without latent confounders" src="../_images/sphx_glr_plot_score_alg_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="Basic causal discovery with DoDiscover using the PC algorithm" src="../_images/sphx_glr_plot_pc_alg_thumb.png" />
+<p><a class="reference internal" href="../auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">Basic causal discovery with DoDiscover using the PC algorithm</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Basic causal discovery with DoDiscover using the PC algorithm</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We will analyze the Sachs dataset sachsdataset2005 and reproduce analyses from the Supplemental..."><img alt="Causal discovery with interventional data - Sachs dataset" src="../_images/sphx_glr_plot_psifci_alg_thumb.png" />
+<p><a class="reference internal" href="../auto_examples/plot_psifci_alg.html#sphx-glr-auto-examples-plot-psifci-alg-py"><span class="std std-ref">Causal discovery with interventional data - Sachs dataset</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Causal discovery with interventional data - Sachs dataset</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="Order-based algorithms for causal discovery from observational data without latent confounders" src="../_images/sphx_glr_plot_score_alg_thumb.png" />
 <p><a class="reference internal" href="../auto_examples/plot_score_alg.html#sphx-glr-auto-examples-plot-score-alg-py"><span class="std std-ref">Order-based algorithms for causal discovery from observational data without latent confounders</span></a></p>
   <div class="sphx-glr-thumbnail-title">Order-based algorithms for causal discovery from observational data without latent confounders</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="PC algorithm for causal discovery from observational data without latent confounders" src="../_images/sphx_glr_plot_pc_alg_thumb.png" />
-<p><a class="reference internal" href="../auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">PC algorithm for causal discovery from observational data without latent confounders</span></a></p>
-  <div class="sphx-glr-thumbnail-title">PC algorithm for causal discovery from observational data without latent confounders</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="We illustrate how to exploit prior knowledge and assumptions about the causal structure that ge..."><img alt="Using prior knowledge in order-based algorithms for causal discovery" src="../_images/sphx_glr_prior_know_score_thumb.png" />
 <p><a class="reference internal" href="../auto_examples/prior_know_score.html#sphx-glr-auto-examples-prior-know-score-py"><span class="std std-ref">Using prior knowledge in order-based algorithms for causal discovery</span></a></p>
   <div class="sphx-glr-thumbnail-title">Using prior knowledge in order-based algorithms for causal discovery</div>

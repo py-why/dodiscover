@@ -108,7 +108,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -313,6 +313,7 @@
         <span class="n">apply_orientations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">keep_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">ci_estimator</span><span class="p">,</span>
@@ -323,6 +324,7 @@
             <span class="n">condsel_method</span><span class="o">=</span><span class="n">condsel_method</span><span class="p">,</span>
             <span class="n">apply_orientations</span><span class="o">=</span><span class="n">apply_orientations</span><span class="p">,</span>
             <span class="n">keep_sorted</span><span class="o">=</span><span class="n">keep_sorted</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
 
@@ -383,6 +385,7 @@
             <span class="n">max_combinations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_combinations</span><span class="p">,</span>
             <span class="n">condsel_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">condsel_method</span><span class="p">,</span>
             <span class="n">keep_sorted</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">keep_sorted</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">skel_alg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 

@@ -20,9 +20,9 @@
 
 .. _ex-pc-algorithm:
 
-====================================================================================
-PC algorithm for causal discovery from observational data without latent confounders
-====================================================================================
+=============================================================
+Basic causal discovery with DoDiscover using the PC algorithm
+=============================================================
 
 We will simulate some observational data from a Structural Causal Model (SCM) and
 demonstrate how we will use the PC algorithm.
@@ -32,15 +32,21 @@ confounders. That means for any observed set of variables, there is no common ca
 that are unobserved. In other words, all exogenous variables then are assumed to be
 independent.
 
+In this example, we will introduce the main abstractions and concepts used in
+dodiscover for causal discovery:
+
+- learner: Any causal discovery algorithm that has a similar scikit-learn API.
+- context: Causal assumptions.
+
 .. currentmodule:: dodiscover
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-22
+.. GENERATED FROM PYTHON SOURCE LINES 25-28
 
 Authors: Adam Li <adam2392@gmail.com>
 
 License: BSD (3-clause)
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-34
+.. GENERATED FROM PYTHON SOURCE LINES 28-40
 
 .. code-block:: default
 
@@ -63,7 +69,7 @@ License: BSD (3-clause)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-47
 
 Simulate some data
 ------------------
@@ -72,7 +78,7 @@ This will then induce a causal graph, which we can visualize. Due to the
 Markov assumption, then we can use d-separation to examine which variables
 are conditionally independent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-101
+.. GENERATED FROM PYTHON SOURCE LINES 47-107
 
 .. code-block:: default
 
@@ -144,7 +150,7 @@ are conditionally independent.
 
  .. code-block:: none
 
-    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1912.81it/s]
+    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1559.95it/s]
        x  ...  w
     0  0  ...  1
     1  1  ...  2
@@ -159,11 +165,11 @@ are conditionally independent.
     w    [1, 2, 0]
     dtype: object
 
-    <graphviz.graphs.Digraph object at 0x7fc97b1fd700>
+    <graphviz.graphs.Digraph object at 0x7f9a5fb1a580>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-119
+.. GENERATED FROM PYTHON SOURCE LINES 108-125
 
 Instantiate some conditional independence tests
 -----------------------------------------------
@@ -183,7 +189,7 @@ ground-truth graph, which can query all the d-separation statements needed.
 This can help one determine in a simulation setting, what is the best case
 graph the PC algorithm can learn.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-122
+.. GENERATED FROM PYTHON SOURCE LINES 125-128
 
 .. code-block:: default
 
@@ -197,7 +203,7 @@ graph the PC algorithm can learn.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-136
+.. GENERATED FROM PYTHON SOURCE LINES 129-142
 
 Define the context
 ------------------
@@ -213,7 +219,7 @@ then addresses identifiability given those assumptions and data. In this sense,
 the Context class houses both data, apriori assumptions and other relevant data
 that may be used in downstream structure learning algorithms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-150
+.. GENERATED FROM PYTHON SOURCE LINES 142-156
 
 .. code-block:: default
 
@@ -238,7 +244,7 @@ that may be used in downstream structure learning algorithms.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-156
+.. GENERATED FROM PYTHON SOURCE LINES 157-162
 
 Run structure learning algorithm
 --------------------------------
@@ -246,7 +252,7 @@ Now we are ready to run the PC algorithm. First, we will show the output of
 the oracle, which is the best case scenario the PC algorithm can learn given
 an infinite amount of data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-168
+.. GENERATED FROM PYTHON SOURCE LINES 162-174
 
 .. code-block:: default
 
@@ -280,13 +286,13 @@ an infinite amount of data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-172
+.. GENERATED FROM PYTHON SOURCE LINES 175-178
 
 Now, we will show the output given a real CI test, which performs CI hypothesis testing
 to determine CI in the data. Due to finite data and the presence of noise, there is
 always a possibility that the CI test makes a mistake.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-185
+.. GENERATED FROM PYTHON SOURCE LINES 178-191
 
 .. code-block:: default
 
@@ -324,7 +330,7 @@ always a possibility that the CI test makes a mistake.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.135 seconds)
+   **Total running time of the script:** ( 0 minutes  2.395 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_pc_alg.py:

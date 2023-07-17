@@ -108,7 +108,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -213,9 +213,13 @@
                 
   <h1>Source code for dodiscover.context_builder</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">._protocol</span> <span class="kn">import</span> <span class="n">Graph</span>
@@ -521,12 +525,206 @@
         <span class="k">return</span> <span class="n">empty_graph</span></div>
 
 
-<div class="viewcode-block" id="make_context"><a class="viewcode-back" href="../../generated/dodiscover.make_context.html#dodiscover.make_context">[docs]</a><span class="k">def</span> <span class="nf">make_context</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Context</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">ContextBuilder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextBuilder</span><span class="p">:</span>
+<div class="viewcode-block" id="InterventionalContextBuilder"><a class="viewcode-back" href="../../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder">[docs]</a><span class="k">class</span> <span class="nc">InterventionalContextBuilder</span><span class="p">(</span><span class="n">ContextBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A builder class for creating observational+interventional data Context objects.</span>
+
+<span class="sd">    The InterventionalContextBuilder is meant solely to build Context objects that work</span>
+<span class="sd">    with observational + interventional datasets.</span>
+
+<span class="sd">    The context builder provides a way to capture assumptions, domain knowledge,</span>
+<span class="sd">    and data. This should NOT be instantiated directly. One should instead use</span>
+<span class="sd">    :func:`dodiscover.make_context` to build a Context data structure.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The number of distributions and/or interventional targets must be set in order</span>
+<span class="sd">    to build the :class:`~.context.Context` object here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_intervention_targets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Column</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_num_distributions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_obs_distribution</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="InterventionalContextBuilder.obs_distribution"><a class="viewcode-back" href="../../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder.obs_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">obs_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_obs_distrib</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether or not we have access to the observational distribution.</span>
+
+<span class="sd">        By default, this is True and assumed to be the first distribution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span> <span class="o">=</span> <span class="n">has_obs_distrib</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="InterventionalContextBuilder.num_distributions"><a class="viewcode-back" href="../../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder.num_distributions">[docs]</a>    <span class="k">def</span> <span class="nf">num_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_distribs</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the number of data distributions we are expected to have access to.</span>
+
+<span class="sd">        Note this must include observational too if observational is assumed present.</span>
+<span class="sd">        To assume that we do not have access to observational data, use the</span>
+<span class="sd">        :meth:`InterventionalContextBuilder.obs_distribution` to turn off that assumption.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        num_distribs : int</span>
+<span class="sd">            Number of distributions we will have access to. Will set the number of</span>
+<span class="sd">            distributions to be ``num_distribs + 1`` if ``_obs_distribution is True`` (default).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_distributions</span> <span class="o">=</span> <span class="n">num_distribs</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="InterventionalContextBuilder.intervention_targets"><a class="viewcode-back" href="../../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder.intervention_targets">[docs]</a>    <span class="k">def</span> <span class="nf">intervention_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Column</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set known intervention targets of the data.</span>
+
+<span class="sd">        Will also automatically infer the F-nodes that will be present</span>
+<span class="sd">        in the graph. For more information on F-nodes see ``pywhy-graphs``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        interventions : List of tuple</span>
+<span class="sd">            A list of tuples of nodes that are known intervention targets.</span>
+<span class="sd">            Assumes that the order of the interventions marked are those of the</span>
+<span class="sd">            passed in the data.</span>
+
+<span class="sd">            If intervention targets are unknown, then this is not necessary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_intervention_targets</span> <span class="o">=</span> <span class="n">targets</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="InterventionalContextBuilder.build"><a class="viewcode-back" href="../../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Context</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the Context object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        context : Context</span>
+<span class="sd">            The populated Context object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not infer variables from data or given arguments.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_distributions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;There is no intervention context set. Are you sure you are using &quot;</span>
+                <span class="s2">&quot;the right contextbuilder? If you only have observational data &quot;</span>
+                <span class="s2">&quot;use `ContextBuilder` instead of `InterventionContextBuilder`.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># infer intervention targets and number of distributions</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intervention_targets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intervention_targets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">intervention_targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intervention_targets</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_distributions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_distributions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_distributions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_distributions</span>
+
+        <span class="c1"># error-check if intervention targets was set that it matches the distributions</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_distributions</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Setting the number of distributions </span><span class="si">{</span><span class="n">num_distributions</span><span class="si">}</span><span class="s2"> does not match the &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;number of intervention targets </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># get F-nodes and sigma-map</span>
+        <span class="n">f_nodes</span><span class="p">,</span> <span class="n">sigma_map</span><span class="p">,</span> <span class="n">symmetric_diff_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_augmented_nodes</span><span class="p">(</span>
+            <span class="n">intervention_targets</span><span class="p">,</span> <span class="n">num_distributions</span>
+        <span class="p">)</span>
+        <span class="n">graph_variables</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">f_nodes</span><span class="p">))</span>
+
+        <span class="n">empty_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_graph_func</span><span class="p">(</span><span class="n">graph_variables</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Context</span><span class="p">(</span>
+            <span class="n">init_graph</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_interpolate_graph</span><span class="p">(</span><span class="n">graph_variables</span><span class="p">),</span>
+            <span class="n">included_edges</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_included_edges</span> <span class="ow">or</span> <span class="n">empty_graph</span><span class="p">(),</span>
+            <span class="n">excluded_edges</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_excluded_edges</span> <span class="ow">or</span> <span class="n">empty_graph</span><span class="p">(),</span>
+            <span class="n">observed_variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_variables</span><span class="p">,</span>
+            <span class="n">latent_variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_latent_variables</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(),</span>
+            <span class="n">state_variables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_variables</span><span class="p">,</span>
+            <span class="n">intervention_targets</span><span class="o">=</span><span class="n">intervention_targets</span><span class="p">,</span>
+            <span class="n">f_nodes</span><span class="o">=</span><span class="n">f_nodes</span><span class="p">,</span>
+            <span class="n">sigma_map</span><span class="o">=</span><span class="n">sigma_map</span><span class="p">,</span>
+            <span class="n">symmetric_diff_map</span><span class="o">=</span><span class="n">symmetric_diff_map</span><span class="p">,</span>
+            <span class="n">obs_distribution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span><span class="p">,</span>
+            <span class="n">num_distributions</span><span class="o">=</span><span class="n">num_distributions</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_augmented_nodes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">intervention_targets</span><span class="p">,</span> <span class="n">num_distributions</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create augmented nodes, sigma map and optionally a symmetric difference map.</span>
+
+<span class="sd">        Given a number of distributions attributed to interventions, one constructs</span>
+<span class="sd">        F-nodes to add to the causal graph via one of two procedures:</span>
+
+<span class="sd">        - (known targets): For all pairs of intervention targets, form the</span>
+<span class="sd">          symmetric difference and then assign this to a new F-node.</span>
+<span class="sd">          This is ``n_targets choose 2``</span>
+<span class="sd">        - (unknown targets): For all pairs of incoming distributions, form</span>
+<span class="sd">          a new F-node. This is ``n_distributions choose 2``</span>
+
+<span class="sd">        The difference is the additional information is encoded in the known</span>
+<span class="sd">        targets case. That is we know the symmetric difference mapping for each</span>
+<span class="sd">        F-node.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[List, Dict[Any, Tuple], Dict[Any, FrozenSet]]</span>
+<span class="sd">            _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">augmented_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sigma_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">symmetric_diff_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># add the empty intervention if there is assumed observational data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span><span class="p">:</span>
+            <span class="n">distribution_targets_idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">distribution_targets_idx</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># now map all distribution targets to their indexed distribution</span>
+        <span class="n">int_dist_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span><span class="p">),</span> <span class="n">num_distributions</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">distribution_targets_idx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">int_dist_idx</span><span class="p">)</span>
+
+        <span class="c1"># store known-targets, which are sets of nodes</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs_distribution</span><span class="p">:</span>
+                <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(())</span>
+            <span class="n">targets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
+
+        <span class="c1"># create F-nodes, their symmetric difference mapping and sigma-mapping to</span>
+        <span class="c1"># intervention targets</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">jdx</span><span class="p">,</span> <span class="n">kdx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">distribution_targets_idx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)):</span>
+            <span class="n">f_node</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="n">augmented_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_node</span><span class="p">)</span>
+            <span class="n">sigma_map</span><span class="p">[</span><span class="n">f_node</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">jdx</span><span class="p">,</span> <span class="n">kdx</span><span class="p">)</span>
+
+            <span class="c1"># if we additionally know the intervention targets</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intervention_targets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">i_target</span><span class="p">:</span> <span class="n">Set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="n">jdx</span><span class="p">])</span>
+                <span class="n">j_target</span><span class="p">:</span> <span class="n">Set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="n">kdx</span><span class="p">])</span>
+
+                <span class="c1"># form symmetric difference and store its frozenset</span>
+                <span class="c1"># (so that way order is not important)</span>
+                <span class="n">f_node_targets</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">i_target</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">j_target</span><span class="p">))</span>
+                <span class="n">symmetric_diff_map</span><span class="p">[</span><span class="n">f_node</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_node_targets</span>
+        <span class="k">return</span> <span class="n">augmented_nodes</span><span class="p">,</span> <span class="n">sigma_map</span><span class="p">,</span> <span class="n">symmetric_diff_map</span>
+
+    <span class="k">def</span> <span class="nf">_interpolate_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_variables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+        <span class="n">init_graph</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_interpolate_graph</span><span class="p">(</span><span class="n">graph_variables</span><span class="p">)</span>
+
+        <span class="c1"># do error-check</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">node</span> <span class="ow">in</span> <span class="n">init_graph</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph_variables</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Not all nodes (observational and f-nodes) are part of the init graph.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">init_graph</span></div>
+
+
+<div class="viewcode-block" id="make_context"><a class="viewcode-back" href="../../generated/dodiscover.make_context.html#dodiscover.make_context">[docs]</a><span class="k">def</span> <span class="nf">make_context</span><span class="p">(</span>
+    <span class="n">context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Context</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">ContextBuilder</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ContextBuilder</span><span class="p">,</span> <span class="n">InterventionalContextBuilder</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new ContextBuilder instance.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    result : ContextBuilder</span>
+<span class="sd">    result : ContextBuilder, InterventionalContextBuilder</span>
 <span class="sd">        The new ContextBuilder instance</span>
 
 <span class="sd">    Examples</span>

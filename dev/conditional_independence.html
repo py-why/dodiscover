@@ -113,7 +113,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -204,6 +204,11 @@
    </i>
   </label>
   <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/dodiscover.constraint.PsiFCI.html">
+     1.4.1. dodiscover.constraint.PsiFCI
+    </a>
+   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="generated/dodiscover.constraint.ConditioningSetSelection.html">
      1.5.1. dodiscover.constraint.ConditioningSetSelection
@@ -421,7 +426,7 @@ or on manifolds, such that the KSG estimator is still powerful.</p>
 </ul>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest" title="dodiscover.ci.ClassifierCMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCMITest</span></code></a>(clf, metric, bootstrap, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCMITest.html#dodiscover.ci.ClassifierCMITest" title="dodiscover.ci.ClassifierCMITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCMITest</span></code></a>(clf[, metric, bootstrap, ...])</p></td>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>
@@ -481,8 +486,8 @@ estimate a pvalue.</p>
 </section>
 <section id="classifier-based-approaches">
 <h2><span class="section-number">2.5. </span>Classifier-based Approaches<a class="headerlink" href="#classifier-based-approaches" title="Permalink to this heading">#</a></h2>
-<p>Another suite of approaches that rely on permutation testing is the classifier-based approach.
-By shuffling the data, one can setup a hypothesis test for CI based on the
+<p>Another suite of approaches that rely on permutation testing is the classifier-based approach.</p>
+<p>By shuffling the data, one can setup a hypothesis test for CI based on the
 predicted probabilities from a classification-model. Intuitively, if the shuffled data is similar
 to the unshuffled data, such that the classification-model achieves non-trivial performance
 (e.g. &gt;50% accuracy on a balanced dataset), then one fails to reject the null hypothesis and would
@@ -496,7 +501,7 @@ helps maintain dependence between (X, Z) and (Y, Z) (if it exists), but generate
 conditionally independent dataset.</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html#dodiscover.ci.ClassifierCITest" title="dodiscover.ci.ClassifierCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCITest</span></code></a>(clf, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/dodiscover.ci.ClassifierCITest.html#dodiscover.ci.ClassifierCITest" title="dodiscover.ci.ClassifierCITest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassifierCITest</span></code></a>(clf[, metric, bootstrap, ...])</p></td>
 <td><p><p class="rubric">Methods</p>
 </p></td>
 </tr>

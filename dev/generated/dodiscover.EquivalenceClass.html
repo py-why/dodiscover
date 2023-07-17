@@ -111,7 +111,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -203,6 +203,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.InterventionalContextBuilder.html">
+   dodiscover.InterventionalContextBuilder
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.context.Context.html">
    dodiscover.context.Context
   </a>
@@ -220,6 +225,11 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.LearnInterventionSkeleton.html">
+   dodiscover.constraint.LearnInterventionSkeleton
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
    1.5.1. dodiscover.constraint.ConditioningSetSelection
   </a>
@@ -232,6 +242,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="dodiscover.constraint.FCI.html">
    dodiscover.constraint.FCI
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dodiscover.constraint.PsiFCI.html">
+   1.4.1. dodiscover.constraint.PsiFCI
   </a>
  </li>
 </ul>
@@ -724,25 +739,25 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.add_edge">
-<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_edge" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Add an edge to the graph.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.add_node">
-<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_node" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.add_node" title="Permalink to this definition">#</a></dt>
 <dd><p>Add a node to the graph.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.bidirected_edge_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bidirected_edge_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.bidirected_edge_name" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bidirected_edge_name</span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.bidirected_edge_name" title="Permalink to this definition">#</a></dt>
 <dd><p>Name of the bidirected edges.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.circle_edge_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">circle_edge_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.circle_edge_name" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">circle_edge_name</span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.circle_edge_name" title="Permalink to this definition">#</a></dt>
 <dd><p>Name of the circle edge endpoints.</p>
 </dd></dl>
 
@@ -754,73 +769,73 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.directed_edge_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">directed_edge_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.directed_edge_name" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">directed_edge_name</span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.directed_edge_name" title="Permalink to this definition">#</a></dt>
 <dd><p>Name of the directed edges.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.edges">
-<span class="sig-name descname"><span class="pre">edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.edges" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.edges" title="Permalink to this definition">#</a></dt>
 <dd><p>Return an iterable over edge tuples in graph.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.excluded_triples">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">excluded_triples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.FrozenSet" title="(in Python v3.11)"><span class="pre">FrozenSet</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#dodiscover.EquivalenceClass.excluded_triples" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">excluded_triples</span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.excluded_triples" title="Permalink to this definition">#</a></dt>
 <dd><p>A set of triples that are excluded from orientation.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.has_edge">
-<span class="sig-name descname"><span class="pre">has_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'any'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.has_edge" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">has_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'any'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.has_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Check if graph has an edge for a specific edge type.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.mark_unfaithful_triple">
-<span class="sig-name descname"><span class="pre">mark_unfaithful_triple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_j</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.mark_unfaithful_triple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">mark_unfaithful_triple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.mark_unfaithful_triple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.mark_unfaithful_triple" title="Permalink to this definition">#</a></dt>
 <dd><p>Mark a triple as unfaithful, and put it in the excluded triple set.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.neighbors">
-<span class="sig-name descname"><span class="pre">neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.neighbors" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.neighbors" title="Permalink to this definition">#</a></dt>
 <dd><p>Iterate over all nodes that have any edge connection with ‘node’.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.nodes" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.nodes" title="Permalink to this definition">#</a></dt>
 <dd><p>Return an iterable over nodes in graph.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.orient_uncertain_edge">
-<span class="sig-name descname"><span class="pre">orient_uncertain_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.orient_uncertain_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.orient_uncertain_edge" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">orient_uncertain_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.orient_uncertain_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.orient_uncertain_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Orients an uncertain edge in the equivalence class to directed <code class="docutils literal notranslate"><span class="pre">'u'*-&gt;'v'</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.predecessors">
-<span class="sig-name descname"><span class="pre">predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.predecessors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.predecessors" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">predecessors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.predecessors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.predecessors" title="Permalink to this definition">#</a></dt>
 <dd><p>Nodes with directed edges pointing to ‘node’.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.remove_edge">
-<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_edge" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove an edge from the graph.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.remove_edges_from">
-<span class="sig-name descname"><span class="pre">remove_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_edges_from" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">remove_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_edges_from" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove a set of edges from the graph.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.remove_node">
-<span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_node" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.remove_node" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove a node from the graph.</p>
 </dd></dl>
 
@@ -832,13 +847,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.successors">
-<span class="sig-name descname"><span class="pre">successors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a></span></span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.successors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.successors" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">successors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/_protocol.html#EquivalenceClass.successors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.EquivalenceClass.successors" title="Permalink to this definition">#</a></dt>
 <dd><p>Nodes with directed edges pointing from ‘node’.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.to_undirected">
-<span class="sig-name descname"><span class="pre">to_undirected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><span class="pre">Graph</span></a></span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.to_undirected" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">to_undirected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.EquivalenceClass.to_undirected" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert a graph to a fully undirected networkx graph.</p>
 <p>All nodes are connected by an undirected edge if there are any
 edges between the two.</p>
@@ -846,7 +861,7 @@ edges between the two.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="dodiscover.EquivalenceClass.undirected_edge_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">undirected_edge_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#dodiscover.EquivalenceClass.undirected_edge_name" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">undirected_edge_name</span></span><a class="headerlink" href="#dodiscover.EquivalenceClass.undirected_edge_name" title="Permalink to this definition">#</a></dt>
 <dd><p>Name of the undirected edges.</p>
 </dd></dl>
 

@@ -48,7 +48,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Order-based algorithms for causal discovery from observational data without latent confounders" href="auto_examples/plot_score_alg.html" />
+    <link rel="next" title="Basic causal discovery with DoDiscover using the PC algorithm" href="auto_examples/plot_pc_alg.html" />
     <link rel="prev" title="dodiscover.ci.monte_carlo.restricted_nbr_permutation" href="generated/dodiscover.ci.monte_carlo.restricted_nbr_permutation.html" />
     <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="_static/copybutton.js"></script>
@@ -111,7 +111,7 @@
 
 <li class="toctree-l1 current active nav-item">
  <a class="current reference internal nav-link" href="#">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -193,13 +193,18 @@
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="auto_examples/plot_score_alg.html">
-   Order-based algorithms for causal discovery from observational data without latent confounders
+  <a class="reference internal" href="auto_examples/plot_pc_alg.html">
+   Basic causal discovery with DoDiscover using the PC algorithm
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="auto_examples/plot_pc_alg.html">
-   PC algorithm for causal discovery from observational data without latent confounders
+  <a class="reference internal" href="auto_examples/plot_psifci_alg.html">
+   Causal discovery with interventional data - Sachs dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="auto_examples/plot_score_alg.html">
+   Order-based algorithms for causal discovery from observational data without latent confounders
   </a>
  </li>
  <li class="toctree-l1">
@@ -260,14 +265,17 @@
 <p>To be able to effectively use dodiscover, you can look at some of the basic examples here
 to learn everything you need from concepts to explicit code examples.</p>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
+<span id="general-examples"></span><h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
 <p>Examples demonstrating how to use causal discovery algorithms.</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="Order-based algorithms for causal discovery from observational data without latent confounders" src="_images/sphx_glr_plot_score_alg_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="Basic causal discovery with DoDiscover using the PC algorithm" src="_images/sphx_glr_plot_pc_alg_thumb.png" />
+<p><a class="reference internal" href="auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">Basic causal discovery with DoDiscover using the PC algorithm</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Basic causal discovery with DoDiscover using the PC algorithm</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We will analyze the Sachs dataset sachsdataset2005 and reproduce analyses from the Supplemental..."><img alt="Causal discovery with interventional data - Sachs dataset" src="_images/sphx_glr_plot_psifci_alg_thumb.png" />
+<p><a class="reference internal" href="auto_examples/plot_psifci_alg.html#sphx-glr-auto-examples-plot-psifci-alg-py"><span class="std std-ref">Causal discovery with interventional data - Sachs dataset</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Causal discovery with interventional data - Sachs dataset</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="Order-based algorithms for causal discovery from observational data without latent confounders" src="_images/sphx_glr_plot_score_alg_thumb.png" />
 <p><a class="reference internal" href="auto_examples/plot_score_alg.html#sphx-glr-auto-examples-plot-score-alg-py"><span class="std std-ref">Order-based algorithms for causal discovery from observational data without latent confounders</span></a></p>
   <div class="sphx-glr-thumbnail-title">Order-based algorithms for causal discovery from observational data without latent confounders</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="We will simulate some observational data from a Structural Causal Model (SCM) and demonstrate h..."><img alt="PC algorithm for causal discovery from observational data without latent confounders" src="_images/sphx_glr_plot_pc_alg_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_pc_alg.html#sphx-glr-auto-examples-plot-pc-alg-py"><span class="std std-ref">PC algorithm for causal discovery from observational data without latent confounders</span></a></p>
-  <div class="sphx-glr-thumbnail-title">PC algorithm for causal discovery from observational data without latent confounders</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="We illustrate how to exploit prior knowledge and assumptions about the causal structure that ge..."><img alt="Using prior knowledge in order-based algorithms for causal discovery" src="_images/sphx_glr_prior_know_score_thumb.png" />
 <p><a class="reference internal" href="auto_examples/prior_know_score.html#sphx-glr-auto-examples-prior-know-score-py"><span class="std std-ref">Using prior knowledge in order-based algorithms for causal discovery</span></a></p>
   <div class="sphx-glr-thumbnail-title">Using prior knowledge in order-based algorithms for causal discovery</div>
@@ -300,10 +308,10 @@ to learn everything you need from concepts to explicit code examples.</p>
           <p class="prev-next-title">dodiscover.ci.monte_carlo.restricted_nbr_permutation</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="auto_examples/plot_score_alg.html" title="next page">
+  <a class='right-next' id="next-link" href="auto_examples/plot_pc_alg.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Order-based algorithms for causal discovery from observational data without latent confounders</p>
+      <p class="prev-next-title">Basic causal discovery with DoDiscover using the PC algorithm</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

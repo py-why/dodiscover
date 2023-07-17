@@ -108,7 +108,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -237,8 +237,9 @@
 
     <span class="n">_allow_multivariate_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">included_nodes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Column</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">included_nodes</span> <span class="o">=</span> <span class="n">included_nodes</span>
 
 <div class="viewcode-block" id="Oracle.test"><a class="viewcode-back" href="../../../generated/dodiscover.ci.Oracle.html#dodiscover.ci.Oracle.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -282,13 +283,24 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_test_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
 
+        <span class="c1"># generate a set of included nodes always in the Z-covariates</span>
+        <span class="n">included_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">included_nodes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">included_nodes</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">included_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x_vars</span><span class="p">))</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">y_vars</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">z_covariates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">z_covariates_</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">included_nodes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z_covariates_</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">z_covariates</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">included_nodes</span><span class="p">)</span>
+
         <span class="c1"># just check for d-separation between x and y given sep_set</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">):</span>
-            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">d_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">d_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates_</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">pywhy_graphs.networkx</span> <span class="k">as</span> <span class="nn">pywhy_nx</span>
 
-            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">pywhy_nx</span><span class="o">.</span><span class="n">m_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates</span><span class="p">)</span>
+            <span class="n">is_sep</span> <span class="o">=</span> <span class="n">pywhy_nx</span><span class="o">.</span><span class="n">m_separated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">x_vars</span><span class="p">,</span> <span class="n">y_vars</span><span class="p">,</span> <span class="n">z_covariates_</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">is_sep</span><span class="p">:</span>
             <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span>

@@ -108,7 +108,7 @@
 
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -223,7 +223,15 @@
 <span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">Column</span>
 
 
-<div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># TODO: we should try to make the thing frozen</span>
+<span class="c1"># - this would require easy copying of the Context into a new context</span>
+<span class="c1"># - but resetting e.g. only say one variable like the init_graph</span>
+<span class="c1"># - IDEAS: perhaps add a function `new_context = copy_context(context, **kwargs)`</span>
+<span class="c1"># - where kwargs are the things to change.</span>
+<div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span>
+    <span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="c1"># frozen=True</span>
+<span class="p">)</span>
 <span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">BasePyWhy</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Context of assumptions, domain knowledge and data.</span>
 
@@ -302,6 +310,16 @@
     <span class="n">sigma_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">f_nodes</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
+    <span class="c1">########################################################</span>
+    <span class="c1"># for general multi-domain data</span>
+    <span class="c1">########################################################</span>
+    <span class="c1"># the number of domains we expect to have access to</span>
+    <span class="n">num_domains</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># map each augmented node to a tuple of domains (e.g. (0, 1), or (1,))</span>
+    <span class="n">domain_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">s_nodes</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Context.add_state_variable"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.add_state_variable">[docs]</a>    <span class="k">def</span> <span class="nf">add_state_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Context&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a state variable.</span>
 
@@ -351,14 +369,19 @@
     <span class="c1">###############################################################</span>
     <span class="c1"># Methods for interventional data.</span>
     <span class="c1">###############################################################</span>
-<div class="viewcode-block" id="Context.get_non_f_nodes"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.get_non_f_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">get_non_f_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
+<div class="viewcode-block" id="Context.get_non_augmented_nodes"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.get_non_augmented_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">get_non_augmented_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of non f-nodes.&quot;&quot;&quot;</span>
-        <span class="n">non_f_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">non_augmented_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">f_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f_nodes</span><span class="p">)</span>
+        <span class="n">s_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s_nodes</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f_nodes</span><span class="p">:</span>
-                <span class="n">non_f_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">non_f_nodes</span></div>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f_nodes</span> <span class="ow">and</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s_nodes</span><span class="p">:</span>
+                <span class="n">non_augmented_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">non_augmented_nodes</span></div>
+
+<div class="viewcode-block" id="Context.get_augmented_nodes"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.get_augmented_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">get_augmented_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of f-nodes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s_nodes</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Context.reverse_sigma_map"><a class="viewcode-back" href="../../generated/dodiscover.context.Context.html#dodiscover.context.Context.reverse_sigma_map">[docs]</a>    <span class="k">def</span> <span class="nf">reverse_sigma_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the reverse sigma-map.&quot;&quot;&quot;</span>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>PC algorithm for causal discovery from observational data without latent confounders &#8212; dodiscover v0.0.0</title>
+    <title>Basic causal discovery with DoDiscover using the PC algorithm &#8212; dodiscover v0.0.0</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -48,8 +48,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Using prior knowledge in order-based algorithms for causal discovery" href="prior_know_score.html" />
-    <link rel="prev" title="Order-based algorithms for causal discovery from observational data without latent confounders" href="plot_score_alg.html" />
+    <link rel="next" title="Causal discovery with interventional data - Sachs dataset" href="plot_psifci_alg.html" />
+    <link rel="prev" title="Examples and Tutorials using DoDiscover" href="../use.html" />
     <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
@@ -111,7 +111,7 @@
 
 <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -192,14 +192,19 @@
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Basic causal discovery with DoDiscover using the PC algorithm
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="plot_psifci_alg.html">
+   Causal discovery with interventional data - Sachs dataset
+  </a>
+ </li>
  <li class="toctree-l1">
   <a class="reference internal" href="plot_score_alg.html">
    Order-based algorithms for causal discovery from observational data without latent confounders
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   PC algorithm for causal discovery from observational data without latent confounders
   </a>
  </li>
  <li class="toctree-l1">
@@ -275,14 +280,20 @@
 <p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-pc-alg-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<section class="sphx-glr-example-title" id="pc-algorithm-for-causal-discovery-from-observational-data-without-latent-confounders">
-<span id="ex-pc-algorithm"></span><span id="sphx-glr-auto-examples-plot-pc-alg-py"></span><h1>PC algorithm for causal discovery from observational data without latent confounders<a class="headerlink" href="#pc-algorithm-for-causal-discovery-from-observational-data-without-latent-confounders" title="Permalink to this heading">#</a></h1>
+<section class="sphx-glr-example-title" id="basic-causal-discovery-with-dodiscover-using-the-pc-algorithm">
+<span id="ex-pc-algorithm"></span><span id="sphx-glr-auto-examples-plot-pc-alg-py"></span><h1>Basic causal discovery with DoDiscover using the PC algorithm<a class="headerlink" href="#basic-causal-discovery-with-dodiscover-using-the-pc-algorithm" title="Permalink to this heading">#</a></h1>
 <p>We will simulate some observational data from a Structural Causal Model (SCM) and
 demonstrate how we will use the PC algorithm.</p>
 <p>The PC algorithm works on observational data when there are no unobserved latent
 confounders. That means for any observed set of variables, there is no common causes
 that are unobserved. In other words, all exogenous variables then are assumed to be
 independent.</p>
+<p>In this example, we will introduce the main abstractions and concepts used in
+dodiscover for causal discovery:</p>
+<ul class="simple">
+<li><p>learner: Any causal discovery algorithm that has a similar scikit-learn API.</p></li>
+<li><p>context: Causal assumptions.</p></li>
+</ul>
 <p>Authors: Adam Li &lt;<a class="reference external" href="mailto:adam2392&#37;&#52;&#48;gmail&#46;com">adam2392<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
 <p>License: BSD (3-clause)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -368,7 +379,7 @@ Fitting causal mechanism of node x:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node y:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node z:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node w:   0%|          | 0/4 [00:00&lt;?, ?it/s]
-Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1912.81it/s]
+Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1559.95it/s]
    x  ...  w
 0  0  ...  1
 1  1  ...  2
@@ -383,7 +394,7 @@ y    [1, 2, 0]
 w    [1, 2, 0]
 dtype: object
 
-&lt;graphviz.graphs.Digraph object at 0x7fc97b1fd700&gt;
+&lt;graphviz.graphs.Digraph object at 0x7f9a5fb1a580&gt;
 </pre></div>
 </div>
 </section>
@@ -477,7 +488,7 @@ always a possibility that the CI test makes a mistake.</p>
 <img src="../_images/sphx_glr_plot_pc_alg_002.png" srcset="../_images/sphx_glr_plot_pc_alg_002.png" alt="plot pc alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;ci_cpdag.png&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.135 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.395 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-pc-alg-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/f1c5e835df0a73798ede9531ab050d9e/plot_pc_alg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_pc_alg.py</span></code></a></p>
@@ -498,17 +509,17 @@ always a possibility that the CI test makes a mistake.</p>
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="plot_score_alg.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="../use.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Order-based algorithms for causal discovery from observational data without latent confounders</p>
+          <p class="prev-next-title">Examples and Tutorials using DoDiscover</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="prior_know_score.html" title="next page">
+  <a class='right-next' id="next-link" href="plot_psifci_alg.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Using prior knowledge in order-based algorithms for causal discovery</p>
+      <p class="prev-next-title">Causal discovery with interventional data - Sachs dataset</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

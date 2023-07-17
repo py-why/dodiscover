@@ -126,6 +126,7 @@ estimate a pvalue.
 Classifier-based Approaches
 ---------------------------
 Another suite of approaches that rely on permutation testing is the classifier-based approach.
+
 By shuffling the data, one can setup a hypothesis test for CI based on the
 predicted probabilities from a classification-model. Intuitively, if the shuffled data is similar 
 to the unshuffled data, such that the classification-model achieves non-trivial performance
@@ -139,6 +140,7 @@ as conditional shuffling. One computes the nearest-neighbors in the ``Z`` subspa
 permutes rows based on samples that are close in ``Z`` subspace, which
 helps maintain dependence between (X, Z) and (Y, Z) (if it exists), but generates a
 conditionally independent dataset.
+
 
 .. autosummary::
    :toctree: generated/

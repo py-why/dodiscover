@@ -1,0 +1,641 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>1.4.1. dodiscover.constraint.PsiFCI &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dodiscover.toporder.CAM" href="dodiscover.toporder.CAM.html" />
+    <link rel="prev" title="dodiscover.constraint.FCI" href="dodiscover.constraint.FCI.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Simple Examples
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../constraint_causal_discovery.html">
+   1. Constraint-based causal discovery
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     1.4.1. dodiscover.constraint.PsiFCI
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html">
+     1.5.1. dodiscover.constraint.ConditioningSetSelection
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../conditional_independence.html">
+   2. Independence
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.CMITest.html">
+     2.1.1. dodiscover.ci.CMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.ClassifierCMITest.html">
+     2.1.2. dodiscover.ci.ClassifierCMITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.FisherZCITest.html">
+     2.2.1. dodiscover.ci.FisherZCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.GSquareCITest.html">
+     2.3.1. dodiscover.ci.GSquareCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.KernelCITest.html">
+     2.4.1. dodiscover.ci.KernelCITest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dodiscover.ci.ClassifierCITest.html">
+     2.5.1. dodiscover.ci.ClassifierCITest
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dodiscover.constraint.PsiFCI">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     PsiFCI
+    </span>
+   </code>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.PsiFCI.evaluate_edge">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       PsiFCI.evaluate_edge()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.PsiFCI.fit">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       PsiFCI.fit()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.PsiFCI.learn_skeleton">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       PsiFCI.learn_skeleton()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.PsiFCI.orient_edges">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       PsiFCI.orient_edges()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.constraint.PsiFCI.orient_unshielded_triples">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       PsiFCI.orient_unshielded_triples()
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="dodiscover-constraint-psifci">
+<h1><span class="section-number">1.4.1. </span>dodiscover.constraint.PsiFCI<a class="headerlink" href="#dodiscover-constraint-psifci" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dodiscover.constraint.PsiFCI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dodiscover.constraint.</span></span><span class="sig-name descname"><span class="pre">PsiFCI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ci_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cd_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cond_set_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cond_set_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_combinations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condsel_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ConditioningSetSelection.NBRS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_orientations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_sorted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_path_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pds_condsel_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ConditioningSetSelection.PDS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_intervention_targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/intervention.html#PsiFCI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.PsiFCI" title="Permalink to this definition">#</a></dt>
+<dd><p>Interventional (Psi) FCI algorithm.</p>
+<p>The I-FCI (or Psi-FCI) algorithm is an algorithm that accepts
+multiple sets of data that may pertain to observational and/or
+multiple interventional datasets under a known (I-FCI), or unknown (Psi-FCI)
+intervention target setting. Our API consolidates them here under
+one class, but you can control the setting using our hyperparameter.
+See <a class="footnote-reference brackets" href="#footcite-kocaoglu2019characterization" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> for more information on
+I-FCI and <a class="footnote-reference brackets" href="#footcite-jaber2020causal" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> for more information on Psi-FCI.</p>
+<p>The Psi-FCI algorithm is complete for the Psi-PAG equivalence class.
+However, the I-FCI has not been shown to be complete for the I-PAG
+equivalence class. Note that the I-FCI algorithm may change without
+notice.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>ci_estimator</strong><span class="classifier"><a class="reference internal" href="dodiscover.ci.BaseConditionalIndependenceTest.html#dodiscover.ci.BaseConditionalIndependenceTest" title="dodiscover.ci.BaseConditionalIndependenceTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalIndependenceTest</span></code></a></span></dt><dd><p>The conditional independence test function. The arguments of the estimator should
+be data, node, node to compare, conditioning set of nodes, and any additional
+keyword arguments.</p>
+</dd>
+<dt><strong>cd_estimator</strong><span class="classifier"><a class="reference internal" href="dodiscover.cd.BaseConditionalDiscrepancyTest.html#dodiscover.cd.BaseConditionalDiscrepancyTest" title="dodiscover.cd.BaseConditionalDiscrepancyTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConditionalDiscrepancyTest</span></code></a></span></dt><dd><p>The conditional discrepancy test function.</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The significance level for the conditional independence test, by default 0.05.</p>
+</dd>
+<dt><strong>min_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Minimum size of the conditioning set, by default None, which will be set to ‘0’.
+Used to constrain the computation spent on the algorithm.</p>
+</dd>
+<dt><strong>max_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum size of the conditioning set, by default None. Used to limit
+the computation spent on the algorithm.</p>
+</dd>
+<dt><strong>max_combinations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum number of conditional independence tests to run from the set
+of possible conditioning sets. By default None, which means the algorithm will
+check all possible conditioning sets. If <code class="docutils literal notranslate"><span class="pre">max_combinations=n</span></code> is set, then
+for every conditioning set size, ‘p’, there will be at most ‘n’ CI tests run
+before the conditioning set size ‘p’ is incremented. For controlling the size
+of ‘p’, see <code class="docutils literal notranslate"><span class="pre">min_cond_set_size</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cond_set_size</span></code>. This can be used
+in conjunction with <code class="docutils literal notranslate"><span class="pre">keep_sorted</span></code> parameter to only test the “strongest”
+dependences.</p>
+</dd>
+<dt><strong>condsel_method</strong><span class="classifier"><a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a></span></dt><dd><p>The method to use for selecting the conditioning sets. Must be one of
+(‘neighbors’, ‘complete’, ‘neighbors_path’). See Notes for more details.</p>
+</dd>
+<dt><strong>apply_orientations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to apply orientation rules given the learned skeleton graph
+and separating set per pair of variables. If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), will
+apply Zhang’s orientation rules R0-10, orienting colliders and certain
+arrowheads and tails <a class="footnote-reference brackets" href="#footcite-zhang2008" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+</dd>
+<dt><strong>keep_sorted</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to keep the considered conditioning set variables in sorted
+dependency order. If True (default) will sort the existing dependencies of each variable
+by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+to lowest). The conditioning set is chosen lexographically
+based on the sorted test statistic values of ‘ith Pa(X) -&gt; X’, for each possible
+parent node of ‘X’. This can be used in conjunction with <code class="docutils literal notranslate"><span class="pre">max_combinations</span></code> parameter
+to only test the “strongest” dependences.</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></span></dt><dd><p>The maximum number of iterations through the graph to apply
+orientation rules.</p>
+</dd>
+<dt><strong>max_path_length</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum length of any discriminating path, or None if unlimited.</p>
+</dd>
+<dt><strong>pds_condsel_method</strong><span class="classifier"><a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a></span></dt><dd><p>The method to use for selecting the conditioning sets using PDS. Must be one of
+(‘pds’, ‘pds_path’). See Notes for more details.</p>
+</dd>
+<dt><strong>known_intervention_targets</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then will run the I-FCI algorithm. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, will run the
+Psi-FCI algorithm. By default False.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The number of parallel jobs to run. If -1, then the number of jobs is set to
+the number of cores. If 1 is given, no parallel computing code is used at all,
+By default None, which means 1.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Selection bias is unsupported because it is still an active research area.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.constraint.PsiFCI.evaluate_edge" title="dodiscover.constraint.PsiFCI.evaluate_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_edge</span></code></a>(data, X, Y[, Z])</p></td>
+<td><p>Test any specific edge for X || Y | Z.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.constraint.PsiFCI.fit" title="dodiscover.constraint.PsiFCI.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(data, context)</p></td>
+<td><p>Learn the relevant causal graph equivalence class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.constraint.PsiFCI.learn_skeleton" title="dodiscover.constraint.PsiFCI.learn_skeleton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">learn_skeleton</span></code></a>(data, context[, sep_set])</p></td>
+<td><p>Learns the skeleton of a causal DAG using pairwise (conditional) independence testing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.constraint.PsiFCI.orient_edges" title="dodiscover.constraint.PsiFCI.orient_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orient_edges</span></code></a>(graph)</p></td>
+<td><p>Apply orientations to edges using logical rules.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.constraint.PsiFCI.orient_unshielded_triples" title="dodiscover.constraint.PsiFCI.orient_unshielded_triples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orient_unshielded_triples</span></code></a>(graph, sep_set)</p></td>
+<td><p>Orient colliders given a graph and separation set.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>convert_skeleton_graph</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.PsiFCI.evaluate_edge">
+<span class="sig-name descname"><span class="pre">evaluate_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.constraint.PsiFCI.evaluate_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>Test any specific edge for X || Y | Z.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset</p>
+</dd>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+</dd>
+<dt><strong>Z</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>, optional</span></dt><dd><p>A list of columns in <code class="docutils literal notranslate"><span class="pre">data</span></code>, by default None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>test_stat</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Test statistic.</p>
+</dd>
+<dt><strong>pvalue</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The pvalue.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.PsiFCI.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/intervention.html#PsiFCI.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.PsiFCI.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Learn the relevant causal graph equivalence class.</p>
+<p>From the pairs of datasets, we take all combinations and
+construct F-nodes corresponding to those.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a>]</span></dt><dd><p>The list of different datasets assigned to different
+environments. We assume the first dataset is always
+observational.</p>
+</dd>
+<dt><strong>context</strong><span class="classifier"><a class="reference internal" href="dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Context</span></code></a></span></dt><dd><p>The context with interventional assumptions.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">PsiFCI</span></dt><dd><p>The fitted learner.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.PsiFCI.learn_skeleton">
+<span class="sig-name descname"><span class="pre">learn_skeleton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dodiscover/constraint/intervention.html#PsiFCI.learn_skeleton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dodiscover.constraint.PsiFCI.learn_skeleton" title="Permalink to this definition">#</a></dt>
+<dd><p>Learns the skeleton of a causal DAG using pairwise (conditional) independence testing.</p>
+<p>Encodes the skeleton via an undirected graph, <code class="docutils literal notranslate"><span class="pre">networkx.Graph</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1217.g0946a56a45)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset.</p>
+</dd>
+<dt><strong>context</strong><span class="classifier"><a class="reference internal" href="dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Context</span></code></a></span></dt><dd><p>A context object.</p>
+</dd>
+<dt><strong>sep_set</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The separating set.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>skel_graph</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></span></dt><dd><p>The undirected graph of the causal graph’s skeleton.</p>
+</dd>
+<dt><strong>sep_set</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The separating set per pairs of variables.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Learning the skeleton of a causal DAG uses (conditional) independence testing
+to determine which variables are (in)dependent. This specific algorithm
+compares exhaustively pairs of adjacent variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.PsiFCI.orient_edges">
+<span class="sig-name descname"><span class="pre">orient_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.constraint.PsiFCI.orient_edges" title="Permalink to this definition">#</a></dt>
+<dd><p>Apply orientations to edges using logical rules.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>graph</strong><span class="classifier"><a class="reference internal" href="dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass" title="dodiscover.EquivalenceClass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EquivalenceClass</span></code></a></span></dt><dd><p>Causal graph.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotImplementedError</span></code></a></dt><dd><p>All constraint-based discovery algorithms must implement this.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.constraint.PsiFCI.orient_unshielded_triples">
+<span class="sig-name descname"><span class="pre">orient_unshielded_triples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.constraint.PsiFCI.orient_unshielded_triples" title="Permalink to this definition">#</a></dt>
+<dd><p>Orient colliders given a graph and separation set.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>graph</strong><span class="classifier"><a class="reference internal" href="dodiscover.EquivalenceClass.html#dodiscover.EquivalenceClass" title="dodiscover.EquivalenceClass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EquivalenceClass</span></code></a></span></dt><dd><p>The partial ancestral graph (PAG).</p>
+</dd>
+<dt><strong>sep_set</strong><span class="classifier"><a class="reference internal" href="dodiscover.typing.SeparatingSet.html#dodiscover.typing.SeparatingSet" title="dodiscover.typing.SeparatingSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeparatingSet</span></code></a></span></dt><dd><p>The separating set between any two nodes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="dodiscover.constraint.FCI.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">dodiscover.constraint.FCI</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="dodiscover.toporder.CAM.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">dodiscover.toporder.CAM</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Causal discovery with interventional data - Sachs dataset &#8212; dodiscover v0.0.0</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Order-based algorithms for causal discovery from observational data without latent confounders" href="plot_score_alg.html" />
+    <link rel="prev" title="Basic causal discovery with DoDiscover using the PC algorithm" href="plot_pc_alg.html" />
+    <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/scrollfix.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dodiscover v0.0.0</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../installation.html">
+  Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api.html">
+  Reference API
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../use.html">
+  Simple Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../user_guide.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorials/index.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../whats_new.html">
+  Release History
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://raw.githubusercontent.com/py-why/dodiscover/main/LICENSE">
+  License
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/py-why/dodiscover/main/CONTRIBUTING.md">
+  Contributing
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <div class="dropdown">
+    <button type="button" class="btn btn-primary btn-sm navbar-btn dropdown-toggle" id="dLabelMore" data-toggle="dropdown">
+        v
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action py-1" href="https://www.pywhy.org/dodiscover/dev/index.html">v0.1 (devel)</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/pywhy/dodiscover" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="plot_pc_alg.html">
+   Basic causal discovery with DoDiscover using the PC algorithm
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Causal discovery with interventional data - Sachs dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="plot_score_alg.html">
+   Order-based algorithms for causal discovery from observational data without latent confounders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="prior_know_score.html">
+   Using prior knowledge in order-based algorithms for causal discovery
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pull-in-the-sachs-dataset">
+   Pull in the Sachs Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preprocess-the-dataset">
+   Preprocess the dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup-constraint-based-learner">
+   Setup constraint-based learner
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#run-the-learning-process">
+   Run the learning process
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#analyze-the-results">
+     Analyze the results
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-psifci-alg-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="causal-discovery-with-interventional-data-sachs-dataset">
+<span id="ex-psifci-algorithm"></span><span id="sphx-glr-auto-examples-plot-psifci-alg-py"></span><h1>Causal discovery with interventional data - Sachs dataset<a class="headerlink" href="#causal-discovery-with-interventional-data-sachs-dataset" title="Permalink to this heading">#</a></h1>
+<p>We will analyze the Sachs dataset <a class="footnote-reference brackets" href="#footcite-sachsdataset2005" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and reproduce analyses
+from the Supplemental Figure 8 in <a class="footnote-reference brackets" href="#footcite-jaber2020causal" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> demonstrating the
+usage of the <a class="reference internal" href="../generated/dodiscover.constraint.PsiFCI.html#dodiscover.constraint.PsiFCI" title="dodiscover.constraint.PsiFCI"><code class="xref py py-class docutils literal notranslate"><span class="pre">dodiscover.constraint.PsiFCI</span></code></a> algorithm for learning causal graphs
+from observational and/or interventional data.</p>
+<p>The Sachs dataset is a famous dataset in causal discovery because of its real-life
+applicability and access to experimental data that analyzed the causal network of
+protein signaling pathways. We will analyze the preprocessed interventional dataset,
+which we download using the package <a class="reference external" href="https://www.fatiando.org/pooch/latest/">pooch</a>.
+The preprocessed dataset consists of categorical features, so we will use the
+<a class="reference internal" href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest"><code class="xref py py-class docutils literal notranslate"><span class="pre">dodiscover.ci.GSquareCITest</span></code></a> for testing conditional independence and
+invariances of the conditional distributions across experimental conditions.
+There are a total of 6 experimental conditions represented by the <code class="docutils literal notranslate"><span class="pre">INT</span></code> column.</p>
+<p>Authors: Adam Li &lt;<a class="reference external" href="mailto:adam2392&#37;&#52;&#48;gmail&#46;com">adam2392<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+<p>License: BSD (3-clause)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pywhy_graphs.viz</span> <span class="kn">import</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a>
+<span class="kn">from</span> <span class="nn">dodiscover.ci</span> <span class="kn">import</span> <a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class"><span class="n">GSquareCITest</span></a>
+<span class="kn">from</span> <span class="nn">dodiscover</span> <span class="kn">import</span> <span class="n">PsiFCI</span><span class="p">,</span> <span class="n">Context</span><span class="p">,</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a><span class="p">,</span> <a href="../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder" title="dodiscover.InterventionalContextBuilder" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-class"><span class="n">InterventionalContextBuilder</span></a>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span>
+
+<span class="kn">import</span> <span class="nn">pooch</span>
+</pre></div>
+</div>
+<section id="pull-in-the-sachs-dataset">
+<h2>Pull in the Sachs Dataset<a class="headerlink" href="#pull-in-the-sachs-dataset" title="Permalink to this heading">#</a></h2>
+<p>The Sachs dataset is a famous dataset in causal discovery because of its real-life
+applicability and access to experimental data that analyzed the causal network of
+11 proteins using knockouts and spikings <a class="footnote-reference brackets" href="#footcite-sachsdataset2005" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The pathways
+for those proteins are already known, so it is an ideal dataset for benchmarking
+causal discovery algorithms.</p>
+<p>We will download a preprocessed version of the dataset from the following
+url: <a class="reference external" href="https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz">https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz</a></p>
+<p>Ref: <a class="reference external" href="https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example">https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example</a>  # noqa</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># use pooch to download robustly from a url</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">url</span></a> <span class="o">=</span> <span class="s2">&quot;https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">file_path</span></a> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">url</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">url</span></a><span class="p">,</span>
+    <span class="n">known_hash</span><span class="o">=</span><span class="s2">&quot;md5:39ee257f7eeb94cb60e6177cf80c9544&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.read_csv.html#pandas.read_csv" title="pandas.read_csv" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">file_path</span></a><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+
+<span class="c1"># the ground-truth dag is shown here: XXX: comment in when errors are fixed</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ground_truth_dag</span></a> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s2">&quot;sachs&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ground_truth_dag</span></a><span class="p">)</span>
+
+<span class="c1"># .. note::</span>
+<span class="c1">#    The Sachs dataset has previously been preprocessed, and the steps are described</span>
+<span class="c1">#    in bnlearn, at the web-page https://www.bnlearn.com/research/sachs05/.</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.head.html#pandas.DataFrame.head" title="pandas.DataFrame.head" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">df</span><span class="o">.</span><span class="n">head</span></a><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">df</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_psifci_alg_001.png" srcset="../_images/sphx_glr_plot_psifci_alg_001.png" alt="plot psifci alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from &#39;https://www.bnlearn.com/book-crc/code/sachs.interventional.txt.gz&#39; to file &#39;/home/circleci/.cache/pooch/08b7ab6b909b20c5ff42bc7d7721556c-sachs.interventional.txt.gz&#39;.
+[bnlearn] &gt;Downloading example [sachs] dataset..
+[bnlearn] &gt;Set node properties.
+[bnlearn] &gt;Set edge properties.
+[bnlearn] &gt;Plot based on Bayesian model
+   Raf  ...  INT
+0    1  ...    8
+1    1  ...    8
+2    1  ...    8
+3    1  ...    8
+4    1  ...    8
+
+[5 rows x 12 columns]
+(5400, 12)
+</pre></div>
+</div>
+</section>
+<section id="preprocess-the-dataset">
+<h2>Preprocess the dataset<a class="headerlink" href="#preprocess-the-dataset" title="Permalink to this heading">#</a></h2>
+<p>Since the data is one dataframe, we need to process it into a form
+that is acceptable by dodiscover’s <a class="reference internal" href="../generated/dodiscover.constraint.PsiFCI.html#dodiscover.constraint.PsiFCI" title="dodiscover.constraint.PsiFCI"><code class="xref py py-class docutils literal notranslate"><span class="pre">constraint.PsiFCI</span></code></a> algorithm. We
+will form a list of separate dataframes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">unique_ints</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span></a><span class="p">[</span><span class="s2">&quot;INT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+<span class="c1"># get the list of intervention targets and list of dataframe associated with each intervention</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">intervention_targets</span></a> <span class="o">=</span> <span class="p">[</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.core.indexes.base.Index" class="sphx-glr-backref-module-pandas-core-indexes-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span><span class="o">.</span><span class="n">columns</span></a><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">unique_ints</span></a><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_cols</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.core.indexes.base.Index" class="sphx-glr-backref-module-pandas-core-indexes-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span><span class="o">.</span><span class="n">columns</span></a> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s2">&quot;INT&quot;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">interv_idx</span></a> <span class="ow">in</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">unique_ints</span></a><span class="p">:</span>
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_data</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span></a><span class="p">[</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span></a><span class="p">[</span><span class="s2">&quot;INT&quot;</span><span class="p">]</span> <span class="o">==</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">interv_idx</span></a><span class="p">][</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_cols</span></a><span class="p">]</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.core.frame.DataFrame" class="sphx-glr-backref-module-pandas-core-frame sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_data</span></a><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">intervention_targets</span></a><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>6 6
+</pre></div>
+</div>
+</section>
+<section id="setup-constraint-based-learner">
+<h2>Setup constraint-based learner<a class="headerlink" href="#setup-constraint-based-learner" title="Permalink to this heading">#</a></h2>
+<p>Since we have access to interventional data, the causal discovery algorithm
+we will use that leverages CI and CD tests to estimate causal constraints
+is the Psi-FCI algorithm <a class="footnote-reference brackets" href="#footcite-jaber2020causal" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Our dataset is comprised of discrete valued data, so we will utilize the</span>
+<span class="c1"># G^2 (Chi-square) CI test.</span>
+<a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ci_estimator</span></a> <span class="o">=</span> <a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class"><span class="n">GSquareCITest</span></a><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;discrete&quot;</span><span class="p">)</span>
+
+<span class="c1"># Since our data is entirely discrete, we can also use the G^2 test as our</span>
+<span class="c1"># CD test.</span>
+<a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cd_estimator</span></a> <span class="o">=</span> <a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class"><span class="n">GSquareCITest</span></a><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;discrete&quot;</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">learner</span> <span class="o">=</span> <span class="n">PsiFCI</span><span class="p">(</span>
+    <a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ci_estimator</span></a><span class="o">=</span><a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ci_estimator</span></a><span class="p">,</span>
+    <a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cd_estimator</span></a><span class="o">=</span><a href="../generated/dodiscover.ci.GSquareCITest.html#dodiscover.ci.GSquareCITest" title="dodiscover.ci.GSquareCITest" class="sphx-glr-backref-module-dodiscover-ci sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cd_estimator</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="p">,</span>
+    <span class="n">max_combinations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">max_cond_set_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># create context with information about the interventions</span>
+<a href="../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder" title="dodiscover.InterventionalContextBuilder" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ctx_builder</span></a> <span class="o">=</span> <a href="../generated/dodiscover.make_context.html#dodiscover.make_context" title="dodiscover.make_context" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-function"><span class="n">make_context</span></a><span class="p">(</span><span class="n">create_using</span><span class="o">=</span><a href="../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder" title="dodiscover.InterventionalContextBuilder" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-class"><span class="n">InterventionalContextBuilder</span></a><span class="p">)</span>
+<span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span> <span class="o">=</span> <span class="p">(</span>
+    <a href="../generated/dodiscover.InterventionalContextBuilder.html#dodiscover.InterventionalContextBuilder.variables" title="dodiscover.InterventionalContextBuilder.variables" class="sphx-glr-backref-module-dodiscover sphx-glr-backref-type-py-method"><span class="n">ctx_builder</span><span class="o">.</span><span class="n">variables</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">num_distributions</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">obs_distribution</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><a href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="networkx.Graph" class="sphx-glr-backref-module-networkx sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ctx</span><span class="o">.</span><span class="n">init_graph</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ctx</span><span class="o">.</span><span class="n">f_nodes</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Graph with 26 nodes and 325 edges
+[(&#39;F&#39;, 0), (&#39;F&#39;, 1), (&#39;F&#39;, 2), (&#39;F&#39;, 3), (&#39;F&#39;, 4), (&#39;F&#39;, 5), (&#39;F&#39;, 6), (&#39;F&#39;, 7), (&#39;F&#39;, 8), (&#39;F&#39;, 9), (&#39;F&#39;, 10), (&#39;F&#39;, 11), (&#39;F&#39;, 12), (&#39;F&#39;, 13), (&#39;F&#39;, 14)]
+</pre></div>
+</div>
+</section>
+<section id="run-the-learning-process">
+<h2>Run the learning process<a class="headerlink" href="#run-the-learning-process" title="Permalink to this heading">#</a></h2>
+<p>We have setup our causal context and causal discovery learner, so we will now
+run the algorithm using the <a class="reference internal" href="../generated/dodiscover.constraint.PsiFCI.html#dodiscover.constraint.PsiFCI.fit" title="dodiscover.constraint.PsiFCI.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">constraint.PsiFCI.fit()</span></code></a> API, which is similar to scikit-learn’s
+<code class="docutils literal notranslate"><span class="pre">fit</span></code> design. All fitted attributes contain an underscore at the end.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="analyze-the-results">
+<h3>Analyze the results<a class="headerlink" href="#analyze-the-results" title="Permalink to this heading">#</a></h3>
+<p>Now that we have learned the graph, we will show it here. Note differences and similarities
+to the ground-truth DAG that is “assumed”. Moreover, note that this reproduces Supplementary
+Figure 8 in <a class="footnote-reference brackets" href="#footcite-jaber2020causal" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.AugmentedPAG.html#pywhy_graphs.AugmentedPAG" title="pywhy_graphs.AugmentedPAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">est_pag</span></a> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.AugmentedPAG.html#pywhy_graphs.AugmentedPAG" title="pywhy_graphs.AugmentedPAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">learner</span><span class="o">.</span><span class="n">graph_</span></a>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.networkx.MixedEdgeGraph.html#pywhy_graphs.networkx.MixedEdgeGraph.to_undirected" title="pywhy_graphs.networkx.MixedEdgeGraph.to_undirected" class="sphx-glr-backref-module-pywhy_graphs-networkx sphx-glr-backref-type-py-method"><span class="n">est_pag</span><span class="o">.</span><span class="n">to_undirected</span></a><span class="p">()</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges in the resulting PAG&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>There are 162 edges in the resulting PAG
+</pre></div>
+</div>
+<p>Visualize the full graph including the F-node</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.AugmentedPAG.html#pywhy_graphs.AugmentedPAG" title="pywhy_graphs.AugmentedPAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">est_pag</span></a><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">)</span>
+<span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;psi_pag_full.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_psifci_alg_002.png" srcset="../_images/sphx_glr_plot_psifci_alg_002.png" alt="plot psifci alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;psi_pag_full.png&#39;
+</pre></div>
+</div>
+<p>Visualize the graph without the F-nodes</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.AugmentedPAG.html#pywhy_graphs.AugmentedPAG" title="pywhy_graphs.AugmentedPAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">est_pag_no_fnodes</span></a> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.networkx.MixedEdgeGraph.html#pywhy_graphs.networkx.MixedEdgeGraph.subgraph" title="pywhy_graphs.networkx.MixedEdgeGraph.subgraph" class="sphx-glr-backref-module-pywhy_graphs-networkx sphx-glr-backref-type-py-method"><span class="n">est_pag</span><span class="o">.</span><span class="n">subgraph</span></a><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">get_non_augmented_nodes</span><span class="p">())</span>
+<span class="n">dot_graph</span> <span class="o">=</span> <a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.viz.draw.html#pywhy_graphs.viz.draw" title="pywhy_graphs.viz.draw" class="sphx-glr-backref-module-pywhy_graphs-viz sphx-glr-backref-type-py-function"><span class="n">draw</span></a><span class="p">(</span><a href="https://www.pywhy.org/pywhy-graphs/dev/generated/pywhy_graphs.AugmentedPAG.html#pywhy_graphs.AugmentedPAG" title="pywhy_graphs.AugmentedPAG" class="sphx-glr-backref-module-pywhy_graphs sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">est_pag_no_fnodes</span></a><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">)</span>
+<span class="n">dot_graph</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;psi_pag.png&quot;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Interpretation</span>
+<span class="c1"># --------------</span>
+<span class="c1"># Looking at the supplemental figure 8b in :footcite:`Jaber2020causal`, we see that the</span>
+<span class="c1"># learned PAG matches quite well.</span>
+
+<span class="c1"># References</span>
+<span class="c1"># ----------</span>
+<span class="c1"># .. footbibliography::</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_psifci_alg_003.png" srcset="../_images/sphx_glr_plot_psifci_alg_003.png" alt="plot psifci alg" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;psi_pag.png&#39;
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  38.114 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-psifci-alg-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/75f223a7812556342f0f4b79148d944b/plot_psifci_alg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_psifci_alg.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/47550f590365072904df11bccd36a6ca/plot_psifci_alg.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_psifci_alg.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="plot_pc_alg.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Basic causal discovery with DoDiscover using the PC algorithm</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="plot_score_alg.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Order-based algorithms for causal discovery from observational data without latent confounders</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Adam Li.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

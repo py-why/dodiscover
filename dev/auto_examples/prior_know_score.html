@@ -49,7 +49,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="User Guide" href="../user_guide.html" />
-    <link rel="prev" title="PC algorithm for causal discovery from observational data without latent confounders" href="plot_pc_alg.html" />
+    <link rel="prev" title="Order-based algorithms for causal discovery from observational data without latent confounders" href="plot_score_alg.html" />
     <link rel="canonical" href="https://www.pywhy.org/dodiscover/stable/index.html" />
     <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/scrollfix.js"></script>
@@ -111,7 +111,7 @@
 
 <li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="../use.html">
-  Usage
+  Simple Examples
  </a>
 </li>
 
@@ -193,13 +193,18 @@
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="plot_score_alg.html">
-   Order-based algorithms for causal discovery from observational data without latent confounders
+  <a class="reference internal" href="plot_pc_alg.html">
+   Basic causal discovery with DoDiscover using the PC algorithm
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="plot_pc_alg.html">
-   PC algorithm for causal discovery from observational data without latent confounders
+  <a class="reference internal" href="plot_psifci_alg.html">
+   Causal discovery with interventional data - Sachs dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="plot_score_alg.html">
+   Order-based algorithms for causal discovery from observational data without latent confounders
   </a>
  </li>
  <li class="toctree-l1 current active">
@@ -367,7 +372,7 @@ Fitting causal mechanism of node x:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node y:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node z:   0%|          | 0/4 [00:00&lt;?, ?it/s]
 Fitting causal mechanism of node w:   0%|          | 0/4 [00:00&lt;?, ?it/s]
-Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1950.84it/s]
+Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00&lt;00:00, 1842.03it/s]
    x  ...  w
 0  0  ...  1
 1  1  ...  2
@@ -445,7 +450,7 @@ the context object, in the setting of causal discovery with order-based algorith
 This example can be generalized to the case of <code class="docutils literal notranslate"><span class="pre">NoGAM</span></code>, <code class="docutils literal notranslate"><span class="pre">DAS</span></code>, and <code class="docutils literal notranslate"><span class="pre">CAM</span></code> methods.
 For a detailed example on order-based discovery approaches, see this
 <a class="reference internal" href="plot_score_alg.html#ex-score-algorithm"><span class="std std-ref">tutorial</span></a>.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.811 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.054 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-prior-know-score-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/54fa84cb158e29731e39a59414e303a3/prior_know_score.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">prior_know_score.py</span></code></a></p>
@@ -466,11 +471,11 @@ For a detailed example on order-based discovery approaches, see this
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="plot_pc_alg.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="plot_score_alg.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">PC algorithm for causal discovery from observational data without latent confounders</p>
+          <p class="prev-next-title">Order-based algorithms for causal discovery from observational data without latent confounders</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="../user_guide.html" title="next page">
