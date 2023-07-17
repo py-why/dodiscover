@@ -48,7 +48,7 @@ networkx = "^3.1"
 importlib-resources = { version = "*", python = "<3.10" }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
 pygraphviz = { version = "^1.11", optional = true }
-pygam = "^0.9.0"
+pygam = { version = "^0.9.0", optional = true }
 
 [tool.poetry.group.style]
 optional = true
@@ -79,6 +79,7 @@ joblib = { version = "^1.1.0" }               # needed in dowhy's package
 tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 pre-commit = "^3.0.4"
 pooch = "^1.7.0"
+pygam = "^0.9.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -110,6 +111,7 @@ kiwisolver = "^1.4.4"
 
 [tool.poetry.extras]
 graph_func = ['pywhy-graphs']
+topological = ['pygam']
 viz = ['pygraphviz']
 
 [tool.portray]

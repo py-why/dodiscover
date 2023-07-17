@@ -108,6 +108,7 @@ class PsiFCI(FCI):
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         known_intervention_targets: bool = False,
         n_jobs: Optional[int] = None,
+        debug: bool = False,
     ):
         super().__init__(
             ci_estimator,
@@ -123,6 +124,7 @@ class PsiFCI(FCI):
             selection_bias=False,
             pds_condsel_method=pds_condsel_method,
             n_jobs=n_jobs,
+            debug=debug
         )
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
@@ -229,6 +231,10 @@ class PsiFCI(FCI):
                 graph.remove_edge(nbr, node)
                 graph.add_edge(node, nbr, graph.directed_edge_name)
                 oriented_edges.append((node, nbr))
+
+        if added_arrows and self.debug:
+            self.debug_map[(node, nbr)] = "Rule 11"
+
         return added_arrows, oriented_edges
 
     def _apply_rule12(
@@ -288,6 +294,9 @@ class PsiFCI(FCI):
                 graph.add_edge(a, c, graph.directed_edge_name)
 
                 added_arrows = True
+        
+        if added_arrows and self.debug:
+            self.debug_map[(a, c)] = "Rule 12"
         return added_arrows
 
     def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):

@@ -46,8 +46,8 @@ class SFCI(PsiFCI):
             max_path_length,
             pds_condsel_method,
             n_jobs=n_jobs,
+            debug=debug
         )
-        self.debug = debug
 
     def learn_skeleton(
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
@@ -113,23 +113,6 @@ class SFCI(PsiFCI):
         self.intervention_targets = intervention_targets
 
         return super().fit(data, context)
-
-    def _apply_rule11(self, graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
-        augmented_nodes = context.f_nodes + context.s_nodes
-
-        oriented_edges = []
-        added_arrows = True
-        for node in augmented_nodes:
-            for nbr in graph.neighbors(node):
-                if nbr in augmented_nodes:
-                    continue
-
-                # remove all edges between node and nbr and orient this out
-                graph.remove_edge(node, nbr)
-                graph.remove_edge(nbr, node)
-                graph.add_edge(node, nbr, graph.directed_edge_name)
-                oriented_edges.append((node, nbr))
-        return added_arrows, oriented_edges
 
     def _apply_rule12(
         self,
@@ -210,6 +193,9 @@ class SFCI(PsiFCI):
                 graph.add_edge(a, c, graph.directed_edge_name)
 
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(a, c)] = 'rule 12'
         return added_arrows
 
     def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:

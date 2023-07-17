@@ -105,6 +105,7 @@ class FCI(BaseConstraintDiscovery):
         selection_bias: bool = True,
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         n_jobs: Optional[int] = None,
+        debug: bool = False,
     ):
         super().__init__(
             ci_estimator,
@@ -116,6 +117,7 @@ class FCI(BaseConstraintDiscovery):
             keep_sorted=keep_sorted,
             apply_orientations=apply_orientations,
             n_jobs=n_jobs,
+            debug=debug,
         )
         self.max_iter = max_iter
         self.max_path_length = max_path_length
@@ -144,6 +146,7 @@ class FCI(BaseConstraintDiscovery):
                 ):
                     self._orient_collider(graph, v_i, u, v_j)
 
+
     def _orient_collider(
         self, graph: EquivalenceClass, v_i: Column, u: Column, v_j: Column
     ) -> None:
@@ -152,8 +155,12 @@ class FCI(BaseConstraintDiscovery):
         )
         if graph.has_edge(v_i, u, graph.circle_edge_name):
             graph.orient_uncertain_edge(v_i, u)
+            if self.debug:
+                self.debug_map[(v_i, u)] = "collider"
         if graph.has_edge(v_j, u, graph.circle_edge_name):
             graph.orient_uncertain_edge(v_j, u)
+            if self.debug:
+                self.debug_map[(v_j, u)] = "collider"
 
     def _apply_rule1(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 1 of the FCI algorithm.
@@ -196,6 +203,10 @@ class FCI(BaseConstraintDiscovery):
                 if graph.has_edge(c, u, graph.circle_edge_name):
                     graph.remove_edge(c, u, graph.circle_edge_name)
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = f"rule 1: {a} *-> {u} o-* {c}"
+            self.debug_map[(c, u)] = f"rule 1: {a} *-> {u} o-* {c}"
 
         return added_arrows
 
@@ -257,6 +268,10 @@ class FCI(BaseConstraintDiscovery):
                 # orient a *-> c
                 graph.orient_uncertain_edge(a, c)
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(a, c)] = "rule2"
+
         return added_arrows
 
     def _apply_rule3(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -316,6 +331,9 @@ class FCI(BaseConstraintDiscovery):
                     logger.info(f"Rule 3: Orienting {v} -> {u}.")
                     graph.orient_uncertain_edge(v, u)
                     added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(v, u)] = "rule3"
         return added_arrows
 
     def _apply_rule4(
@@ -404,6 +422,12 @@ class FCI(BaseConstraintDiscovery):
                 logger.info(disc_path_str)
             added_arrows = True
 
+        if added_arrows and self.debug:
+            if last_node not in sep_set:
+                self.debug_map[(u, c)] = "rule4"
+                self.debug_map[(c, u)] = "rule4"
+            else:
+                self.debug_map[(u, c)] = "rule4"
         return added_arrows, explored_nodes
 
     def _apply_rule5(self, graph: EquivalenceClass, u: Column, a: Column) -> bool:
@@ -451,6 +475,9 @@ class FCI(BaseConstraintDiscovery):
                     graph.remove_edge(y, x, graph.circle_edge_name)
                     graph.add_edge(x, y, graph.undirected_edge_name)
 
+        if added_tails and self.debug:
+            self.debug_map[(a, u)] = "rule5"
+            self.debug_map[(u, a)] = "rule5"
         return added_tails
 
     def _apply_rule6(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -489,6 +516,8 @@ class FCI(BaseConstraintDiscovery):
                 ):
                     graph.add_edge(c, u, graph.undirected_edge_name)
 
+        if added_tails and self.debug:
+            self.debug_map[(u, c)] = "rule6"
         return added_tails
 
     def _apply_rule7(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -528,6 +557,8 @@ class FCI(BaseConstraintDiscovery):
                 ):
                     graph.add_edge(c, u, graph.undirected_edge_name)
 
+        if added_tails and self.debug:
+            self.debug_map[(u, c)] = "rule7"
         return added_tails
 
     def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -589,6 +620,10 @@ class FCI(BaseConstraintDiscovery):
                 if graph.has_edge(c, a, graph.circle_edge_name):
                     graph.remove_edge(c, a, graph.circle_edge_name)
                     added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = "rule8"
+
         return added_arrows
 
     def _apply_rule9(
@@ -640,6 +675,8 @@ class FCI(BaseConstraintDiscovery):
                     graph.remove_edge(c, a, graph.circle_edge_name)
                     added_arrows = True
 
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = "rule9"
         return added_arrows, uncov_path
 
     def _apply_rule10(
@@ -752,6 +789,9 @@ class FCI(BaseConstraintDiscovery):
                         if graph.has_edge(c, a, graph.circle_edge_name):
                             graph.remove_edge(c, a, graph.circle_edge_name)
                             added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = "rule10"
 
         return added_arrows, a_to_u_path, a_to_v_path
 

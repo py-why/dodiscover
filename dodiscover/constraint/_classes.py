@@ -100,6 +100,7 @@ class BaseConstraintDiscovery:
         apply_orientations: bool = True,
         keep_sorted: bool = False,
         n_jobs: Optional[int] = None,
+        debug: bool = False,
     ):
         self.alpha = alpha
         self.ci_estimator = ci_estimator
@@ -126,6 +127,8 @@ class BaseConstraintDiscovery:
 
         # debugging mode
         self.n_ci_tests = 0
+        self.debug = debug
+        self.debug_map = dict()
 
     def _initialize_sep_sets(self, init_graph: nx.Graph) -> SeparatingSet:
         # keep track of separating sets

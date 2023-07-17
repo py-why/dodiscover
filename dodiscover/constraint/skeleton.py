@@ -1347,6 +1347,14 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                     for idx in range(len(sep_sets)):
                         self.sep_set_[x_var][y_var][idx].update(context.get_augmented_nodes())
 
+        # remove all edges between F-nodes
+        for x_var in context.get_augmented_nodes():
+            for y_var in context.get_augmented_nodes():
+                if x_var == y_var:
+                    continue
+                if context.init_graph.has_edge(x_var, y_var):
+                    context.init_graph.remove_edge(x_var, y_var)
+
         # now, we'll fit the data using interventional data by looping over all
         # combinations of F-nodes and their neighbors
         # apply algorithm to learn skeleton
@@ -1527,6 +1535,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
 
         # map augmented nodes to domains
         node_domain_map = dict()
+        reverse_domain_node_map = dict()
         symmetric_diff_map = dict()
         sigma_map = dict()
         s_nodes = []
@@ -1547,7 +1556,8 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         # create S-nodes as N-domains choose 2
         for idx, (source, target) in enumerate(combinations(unique_domains, 2)):
             s_node = ("S", idx)
-            node_domain_map[s_node] = [source, target]
+            node_domain_map[s_node] = frozenset([source, target])
+            reverse_domain_node_map[frozenset([source, target])] = s_node
             s_nodes.append(s_node)
 
         # create F-nodes, which is now all combinations of distributions choose 2
@@ -1555,43 +1565,41 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         seen_domain_pairs = dict()
         seen_distr_pairs = dict()
 
-        for idx, source in enumerate(domain_ids):
-            for jdx, target in enumerate(domain_ids):
+        # compare every pair of distributions to now add interventions if necessary
+        for dataset_idx, source in enumerate(domain_ids):
+            for dataset_jdx, target in enumerate(domain_ids):
+                # perform memoization to avoid duplicate augmented nodes
                 domain_memo_key = frozenset([source, target])
-                distr_memo_key = frozenset([idx, jdx])
-
-                if jdx <= idx:
+                distr_memo_key = frozenset([dataset_idx, dataset_jdx])
+                if dataset_jdx <= dataset_idx:
                     continue
                 if domain_memo_key in seen_domain_pairs and distr_memo_key in seen_distr_pairs:
                     continue
+                seen_domain_pairs[domain_memo_key] = None
+                seen_distr_pairs[distr_memo_key] = None
 
-                seen_domain_pairs[distr_memo_key] = None
-                seen_distr_pairs[domain_memo_key] = None
-
-                # check if we are dealing with two observational distributions, since those
-                # are assigned to S-nodes
-                if intervention_targets[idx] == set() and intervention_targets[jdx] == set():
+                # check if we are dealing with two observational distributions
+                # if so, compute the sigma mapping to map the S-node to the two distribution indices
+                if (intervention_targets[dataset_idx] == set()) and (intervention_targets[dataset_jdx] == set()):
+                    s_node = reverse_domain_node_map[frozenset([source, target])]
+                    sigma_map[s_node] = [dataset_idx, dataset_jdx]
                     continue
 
                 # map each augmented-node to a tuple of distribution indices, or to a set of nodes
                 # representing the intervention targets
-                if intervention_targets[idx] is None or intervention_targets[jdx] is None:
-                    targets = frozenset([idx, jdx])
+                if intervention_targets[dataset_idx] is None or intervention_targets[dataset_jdx] is None:
+                    targets = frozenset([dataset_idx, dataset_jdx])
                 else:
-                    symm_diff = set(intervention_targets[idx]).symmetric_difference(
-                        set(intervention_targets[jdx])
+                    symm_diff = set(intervention_targets[dataset_idx]).symmetric_difference(
+                        set(intervention_targets[dataset_jdx])
                     )
                     targets = frozenset(symm_diff)
 
-                # get the S-node mapped to the obs data if there is observational data
-                if domain_obs[source] and domain_obs[target] and targets == frozenset():
-                    s_node = [
-                        key for key, val in node_domain_map.items() if set(val) == {source, target}
-                    ][0]
-                    sigma_map[s_node] = [idx, jdx]
-                    continue
-                elif targets == frozenset():
-                    # there is not interventions to compare
+                if targets == frozenset() and source == target:
+                    # the two interventional distributions are exactly the same
+                    logger.warn(
+                        f'Interventional distributions {dataset_idx} and {dataset_jdx} have the same interventions '
+                        f'within the same domain {source}.')
                     continue
 
                 # create the F-node
@@ -1600,13 +1608,13 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
 
                 # map each F-node to a set of domain(s)
                 node_domain_map[f_node] = [source, target]
-                sigma_map[f_node] = [idx, jdx]
+                sigma_map[f_node] = [dataset_idx, dataset_jdx]
                 symmetric_diff_map[f_node] = targets
 
                 k += 1
         augmented_nodes = set(s_nodes).union(set(f_nodes))
         return augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map
-
+    
     def fit(
         self,
         data: List[pd.DataFrame],
@@ -1678,11 +1686,12 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                 f_nodes.append(node)
 
         # provide multi-domain context
-        n_domains = len(np.unique(domain_indices))
         context.augmented_nodes = augmented_nodes
+        context.node_domain_map = node_domain_map
+        context.add_state_variable('node_domain_map', node_domain_map)
+        context.add_state_variable('augmented_nodes', augmented_nodes)
         context.symmetric_diff_map = symmetric_diff_map
         context.sigma_map = sigma_map
-        context.node_domain_map = node_domain_map
         context.s_nodes = s_nodes
         context.f_nodes = f_nodes
 
@@ -1718,7 +1727,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
 
         # loop through each domain pair to learn the F-node skeleton
         seen_domain_pairs = set()
-        for idx, source in enumerate(range(1, n_domains + 1)):
+        for idx, source in enumerate(domain_indices):
             # analyze F-nodes only within the 'source' domain
             source_fnodes = [
                 node for node in augmented_nodes if set(node_domain_map[node]) == {source}
@@ -1738,9 +1747,10 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                     cross_distribution_test=True,
                 )
 
-            for jdx, target in enumerate(range(1, n_domains + 1)):
-                # skip if source and target are the same domain
-                if idx == jdx:
+            for jdx, target in enumerate(domain_indices):
+                # skip if source and target are the same domain because we have
+                # already learned from these pairs of datasets
+                if source == target:
                     continue
                 # skip if we have already seen this domain pair
                 if frozenset([source, target]) in seen_domain_pairs:
@@ -1755,6 +1765,13 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                         s_node = node
                         break
                 if s_node is None:
+                    print(s_nodes)
+                    # print(context.state_variables)
+                    print(node_domain_map)
+                    print(source, target)
+                    # print(context)
+                    print('OKAY... \n\n')
+                    print(source, target)
                     raise RuntimeError("wtf")
 
                 # this is only possible if there is explicitly observational data between
@@ -1771,6 +1788,11 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                     print(this_s_nodes)
                     print(symmetric_diff_map)
                     print(sigma_map)
+                print('here... \n\n')
+                print(augmented_nodes)
+                print(source, target)
+                print(sigma_map)
+                print(symmetric_diff_map)
                 if this_s_nodes:
                     if debug:
                         print(

@@ -146,6 +146,7 @@ dot_graph.render(outfile="psi_pag.png", view=True, cleanup=True)
 # Looking at the supplemental figure 8b in :footcite:`Jaber2020causal`, we see that the
 # learned PAG matches quite well.
 
+# %%
 # References
 # ----------
 # .. footbibliography::
