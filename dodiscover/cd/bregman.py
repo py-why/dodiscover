@@ -75,8 +75,8 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
     def test(
         self,
         df: pd.DataFrame,
-        y_vars: Set[Column],
         group_col: Set[Column],
+        y_vars: Set[Column],
         x_vars: Set[Column],
     ) -> Tuple[float, float]:
         # check test input

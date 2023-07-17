@@ -54,7 +54,7 @@ def test_cd_tests_error(cd_func):
     sample_df = single_env_scm(n_samples=10)
     cd_estimator = cd_func()
     with pytest.raises(ValueError, match="The group col"):
-        cd_estimator.test(sample_df, {y}, group_col={"blah"}, x_vars={x})
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"blah"}, x_vars={x})
 
     with pytest.raises(ValueError, match="The x variables are not all"):
         cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={"blah"})
@@ -68,7 +68,7 @@ def test_cd_tests_error(cd_func):
     # all the group indicators have different values now from 0/1
     sample_df["group"] = sample_df["group"] + 3
     with pytest.raises(RuntimeError, match="Group indications in"):
-        cd_estimator.test(sample_df, {y}, group_col={"group"}, x_vars={x})
+        cd_estimator.test(sample_df, y_vars={y}, group_col={"group"}, x_vars={x})
 
     # test pre-fit propensity scores, or custom propensity model
     with pytest.raises(
@@ -117,19 +117,19 @@ def test_cd_simulation(cd_func, df, env_type, cd_kwargs):
     if env_type == "single":
         _, pvalue = cd_estimator.test(
             df,
-            {"x1"},
-            {group_col},
-            {"x"},
+            y_vars={"x1"},
+            group_col={group_col},
+            x_vars={"x"},
         )
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"z"}, group_col={group_col}, x_vars={"x"})
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"y"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"y"}, group_col={group_col}, x_vars={"x"})
         assert pvalue > alpha, f"Fails with {pvalue} not greater than {alpha}"
     elif env_type == "multi":
-        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"z"}, group_col={group_col}, x_vars={"x"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"y"}, {group_col}, {"x"})
+        _, pvalue = cd_estimator.test(df, y_vars={"y"}, group_col={group_col}, x_vars={"x"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"
-        _, pvalue = cd_estimator.test(df, {"z"}, {group_col}, {"x1"})
+        _, pvalue = cd_estimator.test(df, y_vars={"z"}, group_col={group_col}, x_vars={"x1"})
         assert pvalue < alpha, f"Fails with {pvalue} not less than {alpha}"

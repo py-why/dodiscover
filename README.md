@@ -62,7 +62,7 @@ In the future we plan on trying to integrate the two libraries.
 
 [pywhy-graphs](https://github.com/py-why/pywhy-graphs) is the home of graph data structures and graph algorithms in PyWhy.
 
-[py-indep](https://github.com/py-why/py-indep) serves as a repository for implementations of (un)conditional independence tests, which can be utilized in various tasks, such as causal discovery.
+[pywhy-stats](https://github.com/py-why/pywhy-stats) serves as a repository for implementations of (un)conditional independence tests, which can be utilized in various tasks, such as causal discovery.
 
 # dodiscover is moving to causal-learn eventually!
 
@@ -91,7 +91,6 @@ Minimally, dodiscover requires:
 We have removed support for Python 3.8 as we depend explicitly on networkx, which has deprecated Python 3.8 support. For explicit graph functionality for representing various causal graphs, such as ADMG, or CPDAGs, you will also need:
 
     * pywhy-graphs
-    * graphs  # this is a development version for PRable MixedEdgeGraph to networkx
 
 For explicitly representing causal graphs, we recommend using `pywhy-graphs` package, but if you have a graph library that adheres to the graph protocols we require, then you can in principle use those graphs.
 

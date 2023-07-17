@@ -63,11 +63,11 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
     def test(
         self,
         df: pd.DataFrame,
-        y_vars: Set[Column],
         group_col: Set[Column],
+        y_vars: Set[Column],
         x_vars: Set[Column],
     ) -> Tuple[float, float]:
-        """Abstract method for all conditional discrepancy tests.
+        """Compute conditional discrepancy test.
 
         Tests the null hypothesis: :math:`P(Y | X, group) = P(Y | X)`, where
         we are trying to determine if Y is (conditionally) independent from

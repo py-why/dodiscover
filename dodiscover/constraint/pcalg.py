@@ -99,6 +99,7 @@ class PC(BaseConstraintDiscovery):
         apply_orientations: bool = True,
         keep_sorted: bool = False,
         max_iter: int = 1000,
+        n_jobs: Optional[int] = None,
     ):
         super().__init__(
             ci_estimator,
@@ -109,6 +110,7 @@ class PC(BaseConstraintDiscovery):
             condsel_method=condsel_method,
             apply_orientations=apply_orientations,
             keep_sorted=keep_sorted,
+            n_jobs=n_jobs,
         )
         self.max_iter = max_iter
 
@@ -169,6 +171,7 @@ class PC(BaseConstraintDiscovery):
             max_combinations=self.max_combinations,
             condsel_method=self.condsel_method,
             keep_sorted=self.keep_sorted,
+            n_jobs=self.n_jobs,
         )
         skel_alg.fit(data, context)
 

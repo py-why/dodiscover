@@ -92,44 +92,10 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
     def test(
         self,
         df: pd.DataFrame,
-        y_vars: Set[Column],
         group_col: Set[Column],
+        y_vars: Set[Column],
         x_vars: Set[Column],
     ) -> Tuple[float, float]:
-        """Compute k-sample test statistic and pvalue.
-
-        Tests the null hypothesis::
-
-            H_0: P(Y|X) = P'(Y|X)
-
-        where the different distributions arise from the different datasets
-        collected denoted by the ``group_col`` parameter. It can also be written
-        as::
-
-            H_0: P(Y|X,T) = P(Y|X)
-
-        meaning that :math:`Y \\perp X | T`, where T is the group indicator.
-
-        Parameters
-        ----------
-        df : pd.DataFrame
-            The dataset containing the columns denoted by ``x_vars``, ``y_vars``,
-            and the ``group_col``.
-        y_vars : Set[Column]
-            Set of Y variables.
-        group_col : Column
-            The column denoting, which group (i.e. environment) each sample belongs to.
-            This is typically the F-node. Must be binary.
-        x_vars : Set[Column]
-            Set of X variables. Can be the empty set.
-
-        Returns
-        -------
-        stat : float
-            The computed test statistic.
-        pvalue : float
-            The computed p-value.
-        """
         # check test input
         self._check_test_input(df, y_vars, group_col, x_vars)
         group_col_var: Column = list(group_col)[0]

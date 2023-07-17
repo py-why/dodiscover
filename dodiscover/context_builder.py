@@ -1,7 +1,11 @@
 import types
-from typing import Any, Callable, Dict, Optional, Set, Tuple, cast
+from copy import copy
+from itertools import combinations
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Union, cast
+from warnings import warn
 
 import networkx as nx
+import numpy as np
 import pandas as pd
 
 from ._protocol import Graph
@@ -307,12 +311,206 @@ class ContextBuilder:
         return empty_graph
 
 
-def make_context(context: Optional[Context] = None, create_using=ContextBuilder) -> ContextBuilder:
+class InterventionalContextBuilder(ContextBuilder):
+    """A builder class for creating observational+interventional data Context objects.
+
+    The InterventionalContextBuilder is meant solely to build Context objects that work
+    with observational + interventional datasets.
+
+    The context builder provides a way to capture assumptions, domain knowledge,
+    and data. This should NOT be instantiated directly. One should instead use
+    :func:`dodiscover.make_context` to build a Context data structure.
+
+    Notes
+    -----
+    The number of distributions and/or interventional targets must be set in order
+    to build the :class:`~.context.Context` object here.
+    """
+
+    _intervention_targets: Optional[List[Tuple[Column]]] = None
+    _num_distributions: Optional[int] = None
+    _obs_distribution: bool = True
+
+    def obs_distribution(self, has_obs_distrib: bool):
+        """Whether or not we have access to the observational distribution.
+
+        By default, this is True and assumed to be the first distribution.
+        """
+        self._obs_distribution = has_obs_distrib
+        return self
+
+    def num_distributions(self, num_distribs: int):
+        """Set the number of data distributions we are expected to have access to.
+
+        Note this must include observational too if observational is assumed present.
+        To assume that we do not have access to observational data, use the
+        :meth:`InterventionalContextBuilder.obs_distribution` to turn off that assumption.
+
+        Parameters
+        ----------
+        num_distribs : int
+            Number of distributions we will have access to. Will set the number of
+            distributions to be ``num_distribs + 1`` if ``_obs_distribution is True`` (default).
+        """
+        self._num_distributions = num_distribs
+        return self
+
+    def intervention_targets(self, targets: List[Tuple[Column]]):
+        """Set known intervention targets of the data.
+
+        Will also automatically infer the F-nodes that will be present
+        in the graph. For more information on F-nodes see ``pywhy-graphs``.
+
+        Parameters
+        ----------
+        interventions : List of tuple
+            A list of tuples of nodes that are known intervention targets.
+            Assumes that the order of the interventions marked are those of the
+            passed in the data.
+
+            If intervention targets are unknown, then this is not necessary.
+        """
+        self._intervention_targets = targets
+        return self
+
+    def build(self) -> Context:
+        """Build the Context object.
+
+        Returns
+        -------
+        context : Context
+            The populated Context object.
+        """
+        if self._observed_variables is None:
+            raise ValueError("Could not infer variables from data or given arguments.")
+        if self._num_distributions is None:
+            warn(
+                "There is no intervention context set. Are you sure you are using "
+                "the right contextbuilder? If you only have observational data "
+                "use `ContextBuilder` instead of `InterventionContextBuilder`."
+            )
+
+        # infer intervention targets and number of distributions
+        if self._intervention_targets is None:
+            intervention_targets = []
+        else:
+            intervention_targets = self._intervention_targets
+        if self._num_distributions is None:
+            num_distributions = int(self._obs_distribution) + len(intervention_targets)
+        else:
+            num_distributions = self._num_distributions
+
+        # error-check if intervention targets was set that it matches the distributions
+        if len(intervention_targets) > 0:
+            if len(intervention_targets) + int(self._obs_distribution) != num_distributions:
+                raise RuntimeError(
+                    f"Setting the number of distributions {num_distributions} does not match the "
+                    f"number of intervention targets {len(intervention_targets)}."
+                )
+
+        # get F-nodes and sigma-map
+        f_nodes, sigma_map, symmetric_diff_map = self._create_augmented_nodes(
+            intervention_targets, num_distributions
+        )
+        graph_variables = set(self._observed_variables).union(set(f_nodes))
+
+        empty_graph = self._empty_graph_func(graph_variables)
+        return Context(
+            init_graph=self._interpolate_graph(graph_variables),
+            included_edges=self._included_edges or empty_graph(),
+            excluded_edges=self._excluded_edges or empty_graph(),
+            observed_variables=self._observed_variables,
+            latent_variables=self._latent_variables or set(),
+            state_variables=self._state_variables,
+            intervention_targets=intervention_targets,
+            f_nodes=f_nodes,
+            sigma_map=sigma_map,
+            symmetric_diff_map=symmetric_diff_map,
+            obs_distribution=self._obs_distribution,
+            num_distributions=num_distributions,
+        )
+
+    def _create_augmented_nodes(
+        self, intervention_targets, num_distributions
+    ) -> Tuple[List, Dict, Dict]:
+        """Create augmented nodes, sigma map and optionally a symmetric difference map.
+
+        Given a number of distributions attributed to interventions, one constructs
+        F-nodes to add to the causal graph via one of two procedures:
+
+        - (known targets): For all pairs of intervention targets, form the
+          symmetric difference and then assign this to a new F-node.
+          This is ``n_targets choose 2``
+        - (unknown targets): For all pairs of incoming distributions, form
+          a new F-node. This is ``n_distributions choose 2``
+
+        The difference is the additional information is encoded in the known
+        targets case. That is we know the symmetric difference mapping for each
+        F-node.
+
+        Returns
+        -------
+        Tuple[List, Dict[Any, Tuple], Dict[Any, FrozenSet]]
+            _description_
+        """
+        augmented_nodes = []
+        sigma_map = dict()
+        symmetric_diff_map = dict()
+
+        # add the empty intervention if there is assumed observational data
+        if self._obs_distribution:
+            distribution_targets_idx = [0]
+        else:
+            distribution_targets_idx = []
+
+        # now map all distribution targets to their indexed distribution
+        int_dist_idx = np.arange(int(self._obs_distribution), num_distributions).tolist()
+        distribution_targets_idx.extend(int_dist_idx)
+
+        # store known-targets, which are sets of nodes
+        targets = []
+        if len(intervention_targets) > 0:
+            if self._obs_distribution:
+                targets.append(())
+            targets.extend(copy(list(intervention_targets)))  # type: ignore
+
+        # create F-nodes, their symmetric difference mapping and sigma-mapping to
+        # intervention targets
+        for idx, (jdx, kdx) in enumerate(combinations(distribution_targets_idx, 2)):
+            f_node = ("F", idx)
+            augmented_nodes.append(f_node)
+            sigma_map[f_node] = (jdx, kdx)
+
+            # if we additionally know the intervention targets
+            if len(intervention_targets) > 0:
+                i_target: Set = set(targets[jdx])
+                j_target: Set = set(targets[kdx])
+
+                # form symmetric difference and store its frozenset
+                # (so that way order is not important)
+                f_node_targets = frozenset(i_target.symmetric_difference(j_target))
+                symmetric_diff_map[f_node] = f_node_targets
+        return augmented_nodes, sigma_map, symmetric_diff_map
+
+    def _interpolate_graph(self, graph_variables) -> nx.Graph:
+        init_graph = super()._interpolate_graph(graph_variables)
+
+        # do error-check
+        if not all(node in init_graph for node in graph_variables):
+            raise RuntimeError(
+                "Not all nodes (observational and f-nodes) are part of the init graph."
+            )
+        return init_graph
+
+
+def make_context(
+    context: Optional[Context] = None, create_using=ContextBuilder
+) -> Union[ContextBuilder, InterventionalContextBuilder]:
     """Create a new ContextBuilder instance.
 
     Returns
     -------
-    result : ContextBuilder
+    result : ContextBuilder, InterventionalContextBuilder
         The new ContextBuilder instance
 
     Examples
