@@ -46,7 +46,7 @@ class SFCI(PsiFCI):
             max_path_length,
             pds_condsel_method,
             n_jobs=n_jobs,
-            debug=debug
+            debug=debug,
         )
 
     def learn_skeleton(
@@ -195,7 +195,7 @@ class SFCI(PsiFCI):
                 added_arrows = True
 
         if added_arrows and self.debug:
-            self.debug_map[(a, c)] = 'rule 12'
+            self.debug_map[(a, c)] = "rule 12"
         return added_arrows
 
     def convert_skeleton_graph(self, graph: nx.Graph) -> EquivalenceClass:

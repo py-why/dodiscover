@@ -20,7 +20,7 @@ def power_divergence(
     X, Y, Z, data: pd.DataFrame, lambda_: str = "cressie-read"
 ) -> Tuple[float, float, int]:
     """Computes the Cressie-Read power divergence statistic [1].
-    
+
     The null hypothesis for the test is X is independent of Y given Z. A lot of the
     frequency comparison based statistics (eg. chi-square, G-test etc) belong to
     power divergence family, and are special cases of this test.

@@ -146,7 +146,6 @@ class FCI(BaseConstraintDiscovery):
                 ):
                     self._orient_collider(graph, v_i, u, v_j)
 
-
     def _orient_collider(
         self, graph: EquivalenceClass, v_i: Column, u: Column, v_j: Column
     ) -> None:

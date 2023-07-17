@@ -112,7 +112,7 @@ class PC(BaseConstraintDiscovery):
             apply_orientations=apply_orientations,
             keep_sorted=keep_sorted,
             n_jobs=n_jobs,
-            debug = debug,
+            debug=debug,
         )
         self.max_iter = max_iter
 

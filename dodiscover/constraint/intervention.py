@@ -86,6 +86,10 @@ class PsiFCI(FCI):
     known_intervention_targets : bool, optional
         If `True`, then will run the I-FCI algorithm. If `False`, will run the
         Psi-FCI algorithm. By default False.
+    n_jobs : int, optional
+        The number of parallel jobs to run. If -1, then the number of jobs is set to
+        the number of cores. If 1 is given, no parallel computing code is used at all,
+        By default None, which means 1.
 
     Notes
     -----
@@ -124,7 +128,7 @@ class PsiFCI(FCI):
             selection_bias=False,
             pds_condsel_method=pds_condsel_method,
             n_jobs=n_jobs,
-            debug=debug
+            debug=debug,
         )
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
@@ -176,7 +180,7 @@ class PsiFCI(FCI):
             The fitted learner.
         """
         if not isinstance(data, list):
-            raise RuntimeError("The input datasets must be in a Python list.")
+            raise TypeError("The input datasets must be in a Python list.")
 
         n_datasets = len(data)
         n_distributions = context.num_distributions
@@ -240,9 +244,10 @@ class PsiFCI(FCI):
     def _apply_rule12(
         self, graph: EquivalenceClass, u: Column, a: Column, c: Column, context: Context
     ) -> bool:
-        """Apply "Rule 9" of the I-FCI algorithm.
+        """Apply orientation rule of the I-FCI algorithm.
 
-        Checks for inducing paths where 'u' is the F-node, and 'a' and 'c' are connected:
+        In the I-FCI algorithm, this is called "Rule 9". Checks for inducing paths where
+        'u' is the F-node, and 'a' and 'c' are connected:
 
         'u' -> 'a' *-* 'c' with 'u' -> 'c', then orient 'a' -> 'c'.
 
@@ -294,7 +299,7 @@ class PsiFCI(FCI):
                 graph.add_edge(a, c, graph.directed_edge_name)
 
                 added_arrows = True
-        
+
         if added_arrows and self.debug:
             self.debug_map[(a, c)] = "Rule 12"
         return added_arrows

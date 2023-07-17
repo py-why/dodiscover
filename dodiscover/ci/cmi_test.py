@@ -214,7 +214,7 @@ class CMITest(BaseConditionalIndependenceTest, CMIMixin):
         columns = list(set(xz_cols).union(set(yz_cols)))
         data = data[columns]
 
-        tree_xyz = scipy.spatial.cKDTree(data.to_numpy())
+        tree_xyz = scipy.spatial.KDTree(data.to_numpy())
         epsarray = tree_xyz.query(
             data.to_numpy(), k=[knn + 1], p=np.inf, eps=0.0, workers=self.n_jobs
         )[0][:, 0].astype(np.float64)
@@ -223,23 +223,23 @@ class CMITest(BaseConditionalIndependenceTest, CMIMixin):
         epsarray = np.multiply(epsarray, 0.99999)
 
         # Find nearest neighbors in subspaces of X and Z
-        xz = data[xz_cols]
-        tree_xz = scipy.spatial.cKDTree(xz)
+        xz = data[xz_cols].to_numpy()
+        tree_xz = scipy.spatial.KDTree(xz)
         k_xz = tree_xz.query_ball_point(
             xz, r=epsarray, eps=0.0, p=np.inf, workers=self.n_jobs, return_length=True
         )
 
         # Find nearest neighbors in subspaces of Y and Z
-        yz = data[yz_cols]
-        tree_yz = scipy.spatial.cKDTree(yz)
+        yz = data[yz_cols].to_numpy()
+        tree_yz = scipy.spatial.KDTree(yz)
         k_yz = tree_yz.query_ball_point(
             yz, r=epsarray, eps=0.0, p=np.inf, workers=self.n_jobs, return_length=True
         )
 
         # Find nearest neighbors in subspaces of just the Z covariates
         if len(z_columns) > 0:
-            z = data[z_columns]
-            tree_z = scipy.spatial.cKDTree(z)
+            z = data[z_columns].to_numpy()
+            tree_z = scipy.spatial.KDTree(z)
             k_z = tree_z.query_ball_point(
                 z, r=epsarray, eps=0.0, p=np.inf, workers=self.n_jobs, return_length=True
             )
