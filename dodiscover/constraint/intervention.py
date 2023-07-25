@@ -151,7 +151,7 @@ class PsiFCI(FCI):
         )
         self.skeleton_learner_.fit(data, context)
 
-        self.context_ = self.skeleton_learner_.context_.copy()
+        self.context_ = self.sklearn_graph(on_learner_.context_.copy()
         skel_graph = self.skeleton_learner_.adj_graph_
         sep_set = self.skeleton_learner_.sep_set_
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests
@@ -159,7 +159,7 @@ class PsiFCI(FCI):
 
     def fit(self, data: List[pd.DataFrame], context: Context):
         """Learn the relevant causal graph equivalence class.
-
+learn_graph(
         From the pairs of datasets, we take all combinations and
         construct F-nodes corresponding to those.
 
@@ -192,7 +192,7 @@ class PsiFCI(FCI):
 
         return super().fit(data, context)
 
-    def _apply_rule11(self, graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
+    def _apply_rule11(slearn_graph( graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
         """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.
 
         This orients all edges out of F-nodes. So patterns of the form

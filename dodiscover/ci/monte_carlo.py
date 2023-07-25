@@ -32,7 +32,7 @@ def generate_knn_in_subspace(
         # compute the nearest neighbors in the space of "Z training" using ball-tree alg.
         nbrs = NearestNeighbors(
             n_neighbors=k + 1, algorithm="ball_tree", metric="l2", n_jobs=n_jobs
-        ).fit(z_arr)
+        ).learn_graph(z_arr)
         # then get the K nearest nbrs in the Z space
         _, indices = nbrs.kneighbors(z_arr)
     elif method == "kdtree":

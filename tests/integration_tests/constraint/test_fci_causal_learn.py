@@ -23,7 +23,7 @@ def simulate_gcm():
         def __init__(self, coefficient):
             self.coefficient = coefficient
 
-        def fit(self, X, Y):
+        def learn_graph(self, X, Y):
             # Nothing to fit here, since we know the ground truth.
             pass
 
@@ -80,7 +80,7 @@ def simulate_gcm():
     # get an inconsistency error if we would modify the graph afterwards without updating
     # the FCMs). Having an empty data set is a small workaround, since all models are
     # pre-defined.
-    gcm.fit(causal_model, pd.DataFrame(columns=G.nodes))
+    gcm.learn_graph(causal_model, pd.DataFrame(columns=G.nodes))
 
     return causal_model
 
@@ -103,7 +103,7 @@ def test_fci_against_causallearn():
     # obtain the PAG that we should get using an oracle
     oracle = Oracle(causal_model.graph)
     fci_alg = FCI(ci_estimator=oracle)
-    fci_alg.fit(data, context)
+    fci_alg.learn_graph(data, context)
     # true_pag = fci_alg.graph_
 
     ci_test = FisherZCITest()
@@ -115,7 +115,7 @@ def test_fci_against_causallearn():
 
     # Second run FCI
     fci_alg = FCI(ci_estimator=ci_test, alpha=alpha)
-    fci_alg.fit(data, context)
+    fci_alg.learn_graph(data, context)
     dodiscover_graph = fci_alg.graph_
 
     # first compare the adjacency structure

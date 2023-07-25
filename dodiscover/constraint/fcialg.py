@@ -859,3 +859,4 @@ class FCI(BaseConstraintDiscovery):
         # all left-over edges have a "circle" endpoint
         pag = pgraph.PAG(incoming_circle_edges=graph, name="PAG derived with FCI")
         return pag
+learn_graph(

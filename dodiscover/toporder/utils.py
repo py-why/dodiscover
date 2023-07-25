@@ -170,7 +170,7 @@ def pns(A: NDArray, X: NDArray, pns_threshold, pns_num_neighbors) -> NDArray:
         X_copy = np.copy(X)
         X_copy[:, node] = 0
         reg = ExtraTreesRegressor(n_estimators=500)
-        reg = reg.fit(X_copy, X[:, node])
+        reg = reg.learn_graph(X_copy, X[:, node])
         selected_reg = SelectFromModel(
             reg,
             threshold="{}*mean".format(pns_threshold),

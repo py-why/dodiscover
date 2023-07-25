@@ -175,7 +175,7 @@ class PC(BaseConstraintDiscovery):
         )
         skel_alg.fit(data, context)
 
-        skel_graph = skel_alg.adj_graph_
+        skel_graplearn_graph(skel_alg.adj_graph_
         sep_set = skel_alg.sep_set_
         self.n_ci_tests += skel_alg.n_ci_tests
 

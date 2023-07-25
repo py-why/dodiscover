@@ -187,7 +187,7 @@ class BaseConstraintDiscovery:
     def fit(self, data: pd.DataFrame, context: Context):
         """Fit constraint-based discovery algorithm on dataset 'X'.
 
-        Parameters
+        learn_graph(meters
         ----------
         X : Union[pd.DataFrame, Dict[Set, pd.DataFrame]]
             Either a pandas dataframe constituting the endogenous (observed) variables

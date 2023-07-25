@@ -111,7 +111,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest, ClassifierCIMixin):
         Y_test = Y_test.ravel()
 
         # fit the classifier on training data
-        self.clf.fit(X_train, Y_train)
+        self.clf.learn_graph(X_train, Y_train)
 
         # evaluate on test data and compute metric
         Y_pred = self.clf.predict(X_test)
@@ -130,7 +130,7 @@ class ClassifierCITest(BaseConditionalIndependenceTest, ClassifierCIMixin):
             X_test = X_test[:, n_dims_x:]
 
             # fit the classifier on training data
-            self.clf.fit(X_train, Y_train)
+            self.clf.learn_graph(X_train, Y_train)
 
             # evaluate on test data and compute metric
             Y_pred = self.clf.predict(X_test)

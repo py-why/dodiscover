@@ -132,7 +132,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
 
     @abstractmethod
     def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:
-        """Abstract method for computing the test statistic."""
+        """Abstract method for computing the test statistilearn_graph("
         pass
 
     def compute_null(

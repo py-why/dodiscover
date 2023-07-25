@@ -127,7 +127,7 @@ print(ctx.f_nodes)
 # We have setup our causal context and causal discovery learner, so we will now
 # run the algorithm using the :meth:`constraint.PsiFCI.fit` API, which is similar to scikit-learn's
 # `fit` design. All fitted attributes contain an underscore at the end.
-learner = learner.fit(data, ctx)
+learner = learner.learn_graph(data, ctx)
 
 # %%
 # Analyze the results

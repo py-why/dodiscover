@@ -869,7 +869,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
     sets that lie on a path between two nodes :footcite:`Spirtes1993`.
     This algorithm requires the input of a collider-oriented PAG, which
     provides the necessary information to compute the PDS set for any
-    given nodes. See Notes for more details.
+    givelearn_graph(des. See Notes for more details.
 
     Parameters
     ----------
@@ -1151,7 +1151,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
         in conjunction with ``keep_sorted`` parameter to only test the "strongest"
         dependences.
-    condsel_method : ConditioningSetSelection
+    condlearn_graph(method : ConditioningSetSelection
         The method to use for testing conditional independence. Must be one of
         ('pds', 'pds_path'). See Notes for more details.
     keep_sorted : bool
@@ -1284,7 +1284,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         for node in f_nodes:
             for obs_node in set(non_f_nodes):
                 if node == obs_node:
-                    continue
+        learn_graph(        continue
                 self.adj_graph_.add_edge(node, obs_node, test_stat=np.inf, pvalue=-1e-5)
 
         # reset context and add observational skeleton
@@ -1350,3 +1350,4 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         self.context_ = context.copy()
         self.adj_graph_ = deepcopy(context.init_graph.copy())
+learn_graph(
