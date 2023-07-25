@@ -845,7 +845,7 @@ class LearnSkeleton(BaseSkeletonLearner):
         nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
         return context
 
-    def fit(self, data: pd.DataFrame, context: Context, check_input: bool = True):
+    def learn_graph(self, data: pd.DataFrame, context: Context, check_input: bool = True):
         if check_input:
             # initialize learning parameters
             context = self._initialize_params(context)
@@ -1076,7 +1076,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return super()._initialize_params(context)
 
-    def fit(self, data: pd.DataFrame, context: Context, check_input: bool = True):
+    def learn_graph(self, data: pd.DataFrame, context: Context, check_input: bool = True):
         if check_input:
             context = self._initialize_params(context)
 
@@ -1213,7 +1213,9 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
 
-    def fit(self, data: List[pd.DataFrame], context: Context, check_input: bool = True) -> None:
+    def learn_graph(
+        self, data: List[pd.DataFrame], context: Context, check_input: bool = True
+    ) -> None:
         # ensure data is a list
         if isinstance(data, pd.DataFrame):
             data = [data]

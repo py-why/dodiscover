@@ -12,7 +12,7 @@ class SkorchModel(Protocol):
     the sklearn API.
     """
 
-    def fit(self, X, y=None):
+    def learn_graph(self, X, y=None):
         pass
 
     def predict(self, X):

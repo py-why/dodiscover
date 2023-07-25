@@ -184,7 +184,7 @@ class BaseConstraintDiscovery:
             "skeleton graph given a separating set."
         )
 
-    def fit(self, data: pd.DataFrame, context: Context):
+    def learn_graph(self, data: pd.DataFrame, context: Context):
         """Fit constraint-based discovery algorithm on dataset 'X'.
 
         Parameters

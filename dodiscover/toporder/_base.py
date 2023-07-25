@@ -470,7 +470,7 @@ class TopOrderInterface(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def fit(self, data: pd.DataFrame, context: Context) -> None:
+    def learn_graph(self, data: pd.DataFrame, context: Context) -> None:
         raise NotImplementedError()
 
     @abstractmethod
@@ -585,7 +585,7 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
                 k += 1
         return leaf
 
-    def fit(self, data_df: pd.DataFrame, context: Context) -> None:
+    def learn_graph(self, data_df: pd.DataFrame, context: Context) -> None:
         """
         Fit topological order based causal discovery algorithm on input data.
 
