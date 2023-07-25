@@ -134,7 +134,7 @@ class Test_IFCI(Test_FCI):
             .intervention_targets([("x",)])
             .build()
         )
-        learner.fit(data, context)
+        learner.learn_graph(data, context)
 
         # first check the observational skeleton
         skel_graph = learner.skeleton_learner_.adj_graph_
@@ -222,7 +222,7 @@ class Test_PsiFCI(Test_IFCI):
             .num_distributions(2)
             .build()
         )
-        learner.fit(data, context)
+        learner.learn_graph(data, context)
 
         # first check the observational skeleton
         skel_graph = learner.skeleton_learner_.adj_graph_
@@ -292,7 +292,7 @@ def test_psifci_withsachs():
         .obs_distribution(False)
         .build()
     )
-    learner.fit(data, ctx)
+    learner.learn_graph(data, ctx)
 
     # first try it with the oracle
     # the ground-truth dag

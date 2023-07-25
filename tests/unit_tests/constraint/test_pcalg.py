@@ -71,7 +71,7 @@ def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha, 
     data_df = pd.DataFrame(data_matrix)
     context = make_context().variables(data=data_df).build()
     alg = PC(ci_estimator=indep_test_func, alpha=alpha, **pc_kwargs)
-    alg.fit(data_df, context)
+    alg.learn_graph(data_df, context)
     graph = alg.graph_
 
     error_msg = "True edges should be: %s" % (g_answer.edges,)
@@ -97,7 +97,7 @@ def test_estimate_cpdag_testdata(indep_test_func, data_matrix, g_answer, alpha, 
     fixed_edges = nx.complete_graph(data_df.columns.values)
     context = make_context().variables(data=data_df).edges(include=fixed_edges).build()
     alg = PC(ci_estimator=indep_test_func, alpha=alpha)
-    alg.fit(data_df, context)
+    alg.learn_graph(data_df, context)
     complete_graph = alg.graph_
     assert nx.is_isomorphic(complete_graph.sub_undirected_graph(), fixed_edges)
     assert not nx.is_isomorphic(complete_graph.sub_directed_graph(), g_answer)
@@ -116,7 +116,7 @@ def test_common_cause_and_collider():
     df = dummy_sample(G)
     context = make_context().variables(data=df).build()
     pc = PC(ci_estimator=Oracle(G), apply_orientations=True)
-    pc.fit(df, context)
+    pc.learn_graph(df, context)
     cpdag = pc.graph_
 
     # compare with the expected CPDAG
@@ -137,7 +137,7 @@ def test_collider():
     pc = PC(ci_estimator=oracle)
     sample = dummy_sample(G)
     context = make_context().variables(data=sample).build()
-    pc.fit(sample, context)
+    pc.learn_graph(sample, context)
     graph = pc.graph_
 
     assert graph.has_edge("x", "y", graph.directed_edge_name)
@@ -245,7 +245,7 @@ class Test_PC:
         sample = dummy_sample(self.G)
         context = make_context().variables(data=sample).build()
         pc = PC(ci_estimator=self.ci_estimator, apply_orientations=False)
-        pc.fit(sample, context)
+        pc.learn_graph(sample, context)
         skel_graph = pc.graph_
         assert all(edge in skel_graph.undirected_edges for edge in {("x", "y"), ("y", "z")})
 
@@ -257,7 +257,7 @@ class Test_PC:
         sample = dummy_sample(self.G)
         context = make_context().variables(data=sample).build()
         pc = PC(ci_estimator=self.ci_estimator, apply_orientations=False)
-        pc.fit(sample, context)
+        pc.learn_graph(sample, context)
         skel_graph = pc.graph_
         sep_set = pc.separating_sets_
         self.alg.orient_unshielded_triples(skel_graph, sep_set)

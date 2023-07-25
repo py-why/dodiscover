@@ -78,7 +78,7 @@ causal_model.set_causal_mechanism(
 # get an inconsistency error if we would modify the graph afterwards without updating
 # the FCMs). Having an empty data set is a small workaround, since all models are
 # pre-defined.
-gcm.fit(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
+gcm.learn_graph(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
 
 # sample the observational data
 data = gcm.draw_samples(causal_model, num_samples=500)
@@ -103,7 +103,7 @@ context = make_context().variables(data=data).edges(include=included_edges).buil
 # Now we run inference with the SCORE algorithm. The output of the inference
 # must be a graph including (`z`, `y`) in the set of edges.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
-score.fit(data, context)
+score.learn_graph(data, context)
 
 # Verify that the output includes (`z`, `y`) in the set of edges.
 graph = score.graph_
@@ -124,7 +124,7 @@ context = make_context().variables(data=data).edges(exclude=excluded_edges).buil
 # Now we run inference with the SCORE algorithm. The edge (`z`, `w`)
 # must not appear in the output graph.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
-score.fit(data, context)
+score.learn_graph(data, context)
 
 # Verify that the output does not include (`z`, `w`) in the set of edges.
 graph = score.graph_

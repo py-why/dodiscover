@@ -443,7 +443,7 @@ class CAMPruning:
             List of splines terms for the GAM formula.
             Example: [s(0), s(1), s(2)] where s is a B-spline Term from pyGAM.
             The equivalent R formula would be "s(0) + s(1) + s(2)", while the y target
-            is provided directly at gam.fit() call.
+            is provided directly at gam.learn_graph() call.
 
         Returns
         -------

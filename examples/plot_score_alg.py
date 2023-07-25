@@ -126,7 +126,7 @@ causal_model.set_causal_mechanism(
 # get an inconsistency error if we would modify the graph afterwards without updating
 # the FCMs). Having an empty data set is a small workaround, since all models are
 # pre-defined.
-gcm.fit(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
+gcm.learn_graph(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
 
 # sample the observational data
 data = gcm.draw_samples(causal_model, num_samples=500)
@@ -183,7 +183,7 @@ context = make_context().variables(data=data).build()
 # triangular matrix `np.triu(np.ones((3, 3)), k=1)` with all ones above the
 # diagonal.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
-score.fit(data, context)
+score.learn_graph(data, context)
 
 # SCORE estimates a directed acyclic graph (DAG) and the topoological order
 # of the nodes in the graph. SCORE is consistent in the infinite samples

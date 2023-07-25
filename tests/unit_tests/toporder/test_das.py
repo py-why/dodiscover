@@ -18,7 +18,7 @@ def test_given_dataset_when_fitting_DAS_then_shd_larger_equal_dtop():
     G = dummy_groundtruth()
     model = DAS(min_parents=0)
     context = make_context().variables(observed=X.columns).build()
-    model.fit(X, context)
+    model.learn_graph(X, context)
     G_pred = model.graph_
     order_pred = model.order_
     shd = structure_hamming_dist(
@@ -35,9 +35,9 @@ def test_given_dag_and_dag_without_leaf_when_fitting_then_order_estimate_is_cons
     order_gt = [2, 1, 3, 0]
     model = DAS(min_parents=0)
     context = make_context().variables(observed=X.columns).build()
-    model.fit(X, context)
+    model.learn_graph(X, context)
     order_full = model.order_
-    model.fit(X[order_gt[:-1]], context)
+    model.learn_graph(X[order_gt[:-1]], context)
     order_noleaf = model.order_
     assert orders_consistency(order_full, order_noleaf)
 
@@ -47,10 +47,10 @@ def test_given_dataset_when_fitting_das_with_unit_pvalue_and_score_then_returns_
     context = make_context().variables(observed=X.columns).build()
     das = DAS(min_parents=0, das_cutoff=1)
     score = SCORE()
-    das.fit(X, context)
+    das.learn_graph(X, context)
     A_das = nx.to_numpy_array(das.graph_)
     order_das = das.order_
-    score.fit(X, context)
+    score.learn_graph(X, context)
     A_score = nx.to_numpy_array(score.graph_)
     order_score = score.order_
     assert order_das == order_score
@@ -61,7 +61,7 @@ def test_given_adjacency_when_fitting_then_returns_dag_with_context_included_edg
     X = dummy_sample(seed=seed)
     model = DAS(min_parents=0)
     context = make_context().variables(observed=X.columns).build()
-    model.fit(X, context)  # fit without context included edges
+    model.learn_graph(X, context)  # fit without context included edges
     A = nx.to_numpy_array(model.graph_)
     order = model.order_
     A_dense = full_dag(order)
@@ -74,7 +74,7 @@ def test_given_adjacency_when_fitting_then_returns_dag_with_context_included_edg
     included_edges = nx.empty_graph(len(X.columns), create_using=nx.DiGraph)
     included_edges.add_edges_from(edges)
     context = make_context(context).edges(include=included_edges).build()
-    model.fit(X, context)  # fit with context included edges
+    model.learn_graph(X, context)  # fit with context included edges
     A_included = nx.to_numpy_array(model.graph_)
     assert np.allclose(A_dense, A_included)
 
@@ -86,7 +86,7 @@ def test_given_custom_nodes_labels_when_fitting_then_input_output_labels_are_con
     # Inference with default labels
     context_builder = make_context()
     context = context_builder.variables(observed=X.columns).build()
-    model.fit(X, context)
+    model.learn_graph(X, context)
     A_default = nx.to_numpy_array(model.graph_)
 
     # Inference with custom labels
@@ -94,7 +94,7 @@ def test_given_custom_nodes_labels_when_fitting_then_input_output_labels_are_con
     X.columns = labels
     context_builder = make_context()
     context = context_builder.variables(observed=X.columns).build()
-    model.fit(X, context)
+    model.learn_graph(X, context)
     A_custom = nx.to_numpy_array(model.graph_)
 
     assert list(model.graph_.nodes()) == labels  # check nodes have custom labels
