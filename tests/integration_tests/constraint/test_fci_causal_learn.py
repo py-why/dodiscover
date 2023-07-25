@@ -80,7 +80,7 @@ def simulate_gcm():
     # get an inconsistency error if we would modify the graph afterwards without updating
     # the FCMs). Having an empty data set is a small workaround, since all models are
     # pre-defined.
-    gcm.learn_graph(causal_model, pd.DataFrame(columns=G.nodes))
+    gcm.fit(causal_model, pd.DataFrame(columns=G.nodes))
 
     return causal_model
 

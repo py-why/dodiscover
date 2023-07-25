@@ -78,7 +78,7 @@ causal_model.set_causal_mechanism(
 # get an inconsistency error if we would modify the graph afterwards without updating
 # the FCMs). Having an empty data set is a small workaround, since all models are
 # pre-defined.
-gcm.learn_graph(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
+gcm.fit(causal_model, pd.DataFrame(columns=["x", "y", "z", "w"]))
 
 # sample the observational data
 data = gcm.draw_samples(causal_model, num_samples=500)
