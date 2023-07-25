@@ -125,9 +125,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
             K = kwargs.get("K")
             # fit and then obtain the probabilities of treatment
             # for each sample (i.e. the propensity scores)
-            self.propensity_est_ = self.propensity_model_.learn_graph(K, group_ind).predict_proba(
-                K
-            )[:, 1]
+            self.propensity_est_ = self.propensity_model_.fit(K, group_ind).predict_proba(K)[:, 1]
         else:
             self.propensity_est_ = self.propensity_est[:, 1]
         return self.propensity_est_

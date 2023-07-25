@@ -262,7 +262,7 @@ class ClassifierCMITest(BaseConditionalIndependenceTest, ClassifierCIMixin, CMIM
         Y_test = Y_test.ravel()
 
         # fit the classifier on training data
-        self.clf.learn_graph(X_train, Y_train)
+        self.clf.fit(X_train, Y_train)
 
         # evaluate on test data and compute metric
         Y_pred = self.clf.predict(X_test)
