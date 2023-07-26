@@ -363,7 +363,7 @@
             <span class="n">max_path_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_path_length</span><span class="p">,</span>
             <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_learner_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_learner_</span><span class="o">.</span><span class="n">learn_graph</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">context_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_learner_</span><span class="o">.</span><span class="n">context_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">skel_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_learner_</span><span class="o">.</span><span class="n">adj_graph_</span>
@@ -371,7 +371,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_ci_tests</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skeleton_learner_</span><span class="o">.</span><span class="n">n_ci_tests</span>
         <span class="k">return</span> <span class="n">skel_graph</span><span class="p">,</span> <span class="n">sep_set</span></div>
 
-<div class="viewcode-block" id="PsiFCI.fit"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.PsiFCI.html#dodiscover.constraint.PsiFCI.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">):</span>
+<div class="viewcode-block" id="PsiFCI.learn_graph"><a class="viewcode-back" href="../../../generated/dodiscover.constraint.PsiFCI.html#dodiscover.constraint.PsiFCI.learn_graph">[docs]</a>    <span class="k">def</span> <span class="nf">learn_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Learn the relevant causal graph equivalence class.</span>
 
 <span class="sd">        From the pairs of datasets, we take all combinations and</span>
@@ -404,7 +404,7 @@
                 <span class="sa">f</span><span class="s2">&quot;&#39;context.num_distributions&#39;.&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">learn_graph</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_apply_rule11</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">EquivalenceClass</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply &quot;Rule 8&quot; in I-FCI algorithm, which we call Rule 11.</span>

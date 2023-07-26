@@ -454,10 +454,10 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#dodiscover.toporder.CAM.fit">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.CAM.learn_graph">
      <code class="docutils literal notranslate">
       <span class="pre">
-       CAM.fit()
+       CAM.learn_graph()
       </span>
      </code>
     </a>
@@ -542,7 +542,7 @@ encoded in the graph, node <code class="docutils literal notranslate"><span clas
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.CAM.fit" title="dodiscover.toporder.CAM.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(data_df, context)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.CAM.learn_graph" title="dodiscover.toporder.CAM.learn_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">learn_graph</span></code></a>(data_df, context)</p></td>
 <td><p>Fit topological order based causal discovery algorithm on input data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.toporder.CAM.prune" title="dodiscover.toporder.CAM.prune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prune</span></code></a>(X, A_dense, G_included, G_excluded)</p></td>
@@ -551,13 +551,13 @@ encoded in the graph, node <code class="docutils literal notranslate"><span clas
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.toporder.CAM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.toporder.CAM.fit" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dodiscover.toporder.CAM.learn_graph">
+<span class="sig-name descname"><span class="pre">learn_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.toporder.CAM.learn_graph" title="Permalink to this definition">#</a></dt>
 <dd><p>Fit topological order based causal discovery algorithm on input data.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1299.g317290a323)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
+<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1300.gedc087025f)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
 </dd>
 <dt><strong>context: Context</strong></dt><dd><p>The context of the causal discovery problem.</p>
 </dd>

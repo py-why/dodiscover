@@ -454,15 +454,6 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#dodiscover.toporder.DAS.fit">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       DAS.fit()
-      </span>
-     </code>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#dodiscover.toporder.DAS.hessian">
      <code class="docutils literal notranslate">
       <span class="pre">
@@ -476,6 +467,15 @@
      <code class="docutils literal notranslate">
       <span class="pre">
        DAS.hessian_diagonal()
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dodiscover.toporder.DAS.learn_graph">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       DAS.learn_graph()
       </span>
      </code>
     </a>
@@ -594,14 +594,14 @@ encoded in the graph, node <code class="docutils literal notranslate"><span clas
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.fit" title="dodiscover.toporder.DAS.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(data_df, context)</p></td>
-<td><p>Fit topological order based causal discovery algorithm on input data.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.hessian" title="dodiscover.toporder.DAS.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>(X, eta_G, eta_H)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.hessian" title="dodiscover.toporder.DAS.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>(X, eta_G, eta_H)</p></td>
 <td><p>Stein estimator of the Hessian of log p(x).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.hessian_diagonal" title="dodiscover.toporder.DAS.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(X, eta_G, eta_H)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.hessian_diagonal" title="dodiscover.toporder.DAS.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(X, eta_G, eta_H)</p></td>
 <td><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.learn_graph" title="dodiscover.toporder.DAS.learn_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">learn_graph</span></code></a>(data_df, context)</p></td>
+<td><p>Fit topological order based causal discovery algorithm on input data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dodiscover.toporder.DAS.prune" title="dodiscover.toporder.DAS.prune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prune</span></code></a>(X, A_dense, G_included, G_excluded)</p></td>
 <td><p>Prune the dense adjacency matrix <code class="docutils literal notranslate"><span class="pre">A_dense</span></code> from spurious edges.</p></td>
@@ -611,22 +611,6 @@ encoded in the graph, node <code class="docutils literal notranslate"><span clas
 </tr>
 </tbody>
 </table>
-<dl class="py method">
-<dt class="sig sig-object py" id="dodiscover.toporder.DAS.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.toporder.DAS.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Fit topological order based causal discovery algorithm on input data.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1299.g317290a323)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
-</dd>
-<dt><strong>context: Context</strong></dt><dd><p>The context of the causal discovery problem.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="dodiscover.toporder.DAS.hessian">
 <span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_H</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.toporder.DAS.hessian" title="Permalink to this definition">#</a></dt>
@@ -672,6 +656,22 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
 <dt><strong>H_diag</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dodiscover.toporder.DAS.learn_graph">
+<span class="sig-name descname"><span class="pre">learn_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dodiscover.toporder.DAS.learn_graph" title="Permalink to this definition">#</a></dt>
+<dd><p>Fit topological order based causal discovery algorithm on input data.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1300.gedc087025f)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
+</dd>
+<dt><strong>context: Context</strong></dt><dd><p>The context of the causal discovery problem.</p>
 </dd>
 </dl>
 </dd>

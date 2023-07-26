@@ -137,7 +137,7 @@ This will then induce a causal graph, which we can visualize.
 
  .. code-block:: none
 
-    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1911.06it/s]
+    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1820.84it/s]
        x  ...  w
     0  0  ...  1
     1  1  ...  2
@@ -190,7 +190,7 @@ must be a graph including (`z`, `y`) in the set of edges.
 .. code-block:: default
 
     score = SCORE()  # or DAS() or NoGAM() or CAM()
-    score.fit(data, context)
+    score.learn_graph(data, context)
 
     # Verify that the output includes (`z`, `y`) in the set of edges.
     graph = score.graph_
@@ -235,7 +235,7 @@ that excludes the edge (`z`, `w`) from the output DAG.
     # Now we run inference with the SCORE algorithm. The edge (`z`, `w`)
     # must not appear in the output graph.
     score = SCORE()  # or DAS() or NoGAM() or CAM()
-    score.fit(data, context)
+    score.learn_graph(data, context)
 
     # Verify that the output does not include (`z`, `w`) in the set of edges.
     graph = score.graph_
@@ -273,7 +273,7 @@ For a detailed example on order-based discovery approaches, see this
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.831 seconds)
+   **Total running time of the script:** ( 0 minutes  1.046 seconds)
 
 
 .. _sphx_glr_download_auto_examples_prior_know_score.py:
