@@ -1,0 +1,37 @@
+# YAML 1.2
+---
+# Metadata for citation of this software according to the CFF format (https://citation-file-format.github.io/)
+cff-version: 1.2.0
+title: 'Dodiscover: Causal discovery algorithms in Python.'
+abstract: 'Dodiscover is a Python library that leverages a simple API for performing causal discovery.'
+authors:
+    - given-names: Adam
+      family-names: Li
+      affiliation: 'Department of Computer Science, Columbia University, New York, NY, USA'
+      orcid: 'https://orcid.org/0000-0001-8421-365X'
+    - given-names: Jaron
+      family-names: Lee
+      affiliation: 'Johns Hopkins University'
+      email: 'jaron2005@gmail.com'
+    - given-names: Francesco  
+      family-names: Montagna
+      affiliation: 'Università di Genova'
+      email: 'francesco.montagna997@gmail.com'
+    - given-names: Chris
+      family-names: Trevino
+      affiliation: 'Microsoft'
+      email: 'chtrevin@microsoft.com'
+    - given-names: Robert
+      family-names: Ness
+      affiliation: 'Microsoft'
+      email: 'robertness@microsoft.com'
+type: software
+repository-code: 'https://github.com/py-why/dodiscover'
+license: MIT
+keywords:
+  - causality
+  - pywhy
+  - graphs
+  - causal discovery
+  - causal inference
+...
