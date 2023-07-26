@@ -114,7 +114,7 @@ def test_pc_against_causallearn(dataset, ci_estimator, clearn_test, col_names, c
     context = make_context().variables(data=df).build()
 
     pcalg = PC(ci_estimator=ci_estimator, alpha=alpha)
-    pcalg.fit(df, context)
+    pcalg.learn_graph(df, context)
     pywhy_graph = pcalg.graph_
 
     # now run causal-learn

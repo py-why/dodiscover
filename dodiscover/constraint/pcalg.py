@@ -173,7 +173,7 @@ class PC(BaseConstraintDiscovery):
             keep_sorted=self.keep_sorted,
             n_jobs=self.n_jobs,
         )
-        skel_alg.fit(data, context)
+        skel_alg.learn_graph(data, context)
 
         skel_graph = skel_alg.adj_graph_
         sep_set = skel_alg.sep_set_

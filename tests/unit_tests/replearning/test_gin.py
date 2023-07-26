@@ -45,7 +45,7 @@ def test_estimate_gin_testdata():
 
     context = make_context().variables(data=data).build()
     gin = GIN()
-    gin.fit(data, context)
+    gin.learn_graph(data, context)
     pdag = gin.graph
 
     assert nx.is_isomorphic(pdag.sub_undirected_graph(), g_answer.sub_undirected_graph())

@@ -149,7 +149,7 @@ class PsiFCI(FCI):
             max_path_length=self.max_path_length,
             n_jobs=self.n_jobs,
         )
-        self.skeleton_learner_.fit(data, context)
+        self.skeleton_learner_.learn_graph(data, context)
 
         self.context_ = self.skeleton_learner_.context_.copy()
         skel_graph = self.skeleton_learner_.adj_graph_
@@ -157,7 +157,7 @@ class PsiFCI(FCI):
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests
         return skel_graph, sep_set
 
-    def fit(self, data: List[pd.DataFrame], context: Context):
+    def learn_graph(self, data: List[pd.DataFrame], context: Context):
         """Learn the relevant causal graph equivalence class.
 
         From the pairs of datasets, we take all combinations and
@@ -190,7 +190,7 @@ class PsiFCI(FCI):
                 f"'context.num_distributions'."
             )
 
-        return super().fit(data, context)
+        return super().learn_graph(data, context)
 
     def _apply_rule11(self, graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
         """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.

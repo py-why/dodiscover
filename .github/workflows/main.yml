@@ -89,7 +89,7 @@ jobs:
       - name: Build package
         run: poetry build
       - name: Upload package distribution files
-        if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.10' }}
+        if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.11' }}
         uses: actions/upload-artifact@v3
         with:
           name: package

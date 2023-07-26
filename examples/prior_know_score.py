@@ -103,7 +103,7 @@ context = make_context().variables(data=data).edges(include=included_edges).buil
 # Now we run inference with the SCORE algorithm. The output of the inference
 # must be a graph including (`z`, `y`) in the set of edges.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
-score.fit(data, context)
+score.learn_graph(data, context)
 
 # Verify that the output includes (`z`, `y`) in the set of edges.
 graph = score.graph_
@@ -124,7 +124,7 @@ context = make_context().variables(data=data).edges(exclude=excluded_edges).buil
 # Now we run inference with the SCORE algorithm. The edge (`z`, `w`)
 # must not appear in the output graph.
 score = SCORE()  # or DAS() or NoGAM() or CAM()
-score.fit(data, context)
+score.learn_graph(data, context)
 
 # Verify that the output does not include (`z`, `w`) in the set of edges.
 graph = score.graph_
