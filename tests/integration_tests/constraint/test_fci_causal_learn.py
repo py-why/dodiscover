@@ -23,7 +23,7 @@ def simulate_gcm():
         def __init__(self, coefficient):
             self.coefficient = coefficient
 
-        def learn_graph(self, X, Y):
+        def fit(self, X, Y):
             # Nothing to fit here, since we know the ground truth.
             pass
 
