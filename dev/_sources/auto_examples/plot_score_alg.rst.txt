@@ -187,7 +187,7 @@ This will then induce a causal graph, which we can visualize.
 
  .. code-block:: none
 
-    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1919.59it/s]
+    Fitting causal models:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node x:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node y:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node z:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w:   0%|          | 0/4 [00:00<?, ?it/s]    Fitting causal mechanism of node w: 100%|##########| 4/4 [00:00<00:00, 1580.22it/s]
        x  ...  w
     0  0  ...  1
     1  1  ...  2
