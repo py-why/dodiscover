@@ -1,10 +1,9 @@
-from typing import FrozenSet, List, Optional, Tuple
+from typing import Callable, FrozenSet, List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
 
 from dodiscover._protocol import EquivalenceClass
-from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.typing import Column, SeparatingSet
@@ -18,7 +17,7 @@ class SFCI(PsiFCI):
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        cd_estimator: BaseConditionalDiscrepancyTest,
+        cd_estimator: Callable,
         alpha: float = 0.05,
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
@@ -67,7 +66,7 @@ class SFCI(PsiFCI):
             max_path_length=self.max_path_length,
             n_jobs=self.n_jobs,
         )
-        self.skeleton_learner_.fit(
+        self.skeleton_learner_.learn_graph(
             data, context, self.domain_indices, self.intervention_targets, debug=self.debug
         )
 
@@ -77,7 +76,9 @@ class SFCI(PsiFCI):
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests
         return skel_graph, sep_set
 
-    def fit(self, data: List[pd.DataFrame], context: Context, domain_indices, intervention_targets):
+    def learn_graph(
+        self, data: List[pd.DataFrame], context: Context, domain_indices, intervention_targets
+    ):
         """Learn the relevant causal graph equivalence class.
 
         From the pairs of datasets, we take all combinations and
@@ -112,7 +113,7 @@ class SFCI(PsiFCI):
         self.domain_indices = domain_indices
         self.intervention_targets = intervention_targets
 
-        return super().fit(data, context)
+        return super().learn_graph(data, context)
 
     def _apply_rule12(
         self,

@@ -49,7 +49,7 @@ def test_fnode_skeleton_known_targets():
         .intervention_targets([("x",)])
         .build()
     )
-    learner.fit(data, context)
+    learner.learn_graph(data, context)
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
@@ -110,7 +110,7 @@ def test_fnode_skeleton_unknown_targets():
         .num_distributions(2)
         .build()
     )
-    learner.fit(data, context)
+    learner.learn_graph(data, context)
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
@@ -156,7 +156,7 @@ def test_fnode_skeleton_errors():
     )
 
     with pytest.raises(RuntimeError, match="The number of datasets does not match"):
-        learner.fit(data, context)
+        learner.learn_graph(data, context)
 
 
 def test_basic_fnode_skeleton():
@@ -199,7 +199,7 @@ def test_basic_fnode_skeleton():
         .intervention_targets([("x", "z")])
         .build()
     )
-    learner.fit(data, context)
+    learner.learn_graph(data, context)
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_

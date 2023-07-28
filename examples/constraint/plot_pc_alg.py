@@ -161,7 +161,7 @@ context = make_context().variables(data=data).build()
 # an infinite amount of data.
 
 pc = PC(ci_estimator=oracle)
-pc.fit(data, context)
+pc.learn_graph(data, context)
 
 # The resulting completely partially directed acyclic graph (CPDAG) that is learned
 # is a "Markov equivalence class", which encodes all the conditional dependences that
@@ -176,7 +176,7 @@ dot_graph.render(outfile="oracle_cpdag.png", view=True)
 # to determine CI in the data. Due to finite data and the presence of noise, there is
 # always a possibility that the CI test makes a mistake.
 pc = PC(ci_estimator=ci_estimator)
-pc.fit(data, context)
+pc.learn_graph(data, context)
 
 # The resulting completely partially directed acyclic graph (CPDAG) that is learned
 # is a "Markov equivalence class", which encodes all the conditional dependences that

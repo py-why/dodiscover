@@ -113,9 +113,9 @@ ctx: Context = ctx_builder.variables(data=data[0]).num_distributions(len(data)).
 # Run the learning process
 # ------------------------
 # We have setup our causal context and causal discovery learner, so we will now
-# run the algorithm using the :meth:`constraint.PsiFCI.fit` API, which is similar to scikit-learn's
+# run the algorithm using the :meth:`constraint.PsiFCI.learn_graph` API, which is similar to scikit-learn's
 # `fit` design. All fitted attributes contain an underscore at the end.
-learner = learner.fit(
+learner = learner.learn_graph(
     data, ctx, domain_indices=domain_ids, intervention_targets=intervention_targets
 )
 

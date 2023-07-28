@@ -3,13 +3,13 @@ import math
 import networkx as nx
 import numpy as np
 import pywhy_graphs as pgraphs
+from pywhy_graphs.functional import sample_from_graph
 
 from dodiscover import ContextBuilder, InterventionalContextBuilder, make_context
 from dodiscover.cd import KernelCDTest
 from dodiscover.ci import FisherZCITest, Oracle
 from dodiscover.constraint.skeleton import LearnMultiDomainSkeleton
 from dodiscover.constraint.utils import dummy_sample
-from dodiscover.datasets import sample_from_graph
 
 
 def basic_multidomain_augmented_graph():

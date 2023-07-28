@@ -575,7 +575,7 @@ class Test_FCI:
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator)
-        fci.fit(sample, context)
+        fci.learn_graph(sample, context)
         pag = fci.graph_
 
         expected_pag = PAG()
@@ -608,7 +608,7 @@ class Test_FCI:
         alg = FCI(ci_estimator=Oracle(graph))
         sample = dummy_sample(graph)
         context = self.context_func().variables(data=sample).build()
-        alg.fit(sample, context)
+        alg.learn_graph(sample, context)
         pag = alg.graph_
 
         # generate the expected PAG
@@ -679,7 +679,7 @@ class Test_FCI:
             pds_condsel_method=pds_condsel_method,
             selection_bias=selection_bias,
         )
-        fci.fit(sample, context)
+        fci.learn_graph(sample, context)
         pag = fci.graph_
 
         # double check the m-separation statement and PDS
@@ -731,7 +731,7 @@ class Test_FCI:
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=False)
-        fci.fit(sample, context)
+        fci.learn_graph(sample, context)
         pag = fci.graph_
 
         expected_G = PAG()
@@ -774,7 +774,7 @@ class Test_FCI:
         oracle = Oracle(G)
         ci_estimator = oracle
         fci = FCI(ci_estimator=ci_estimator, max_iter=np.inf, selection_bias=True)
-        fci.fit(sample, context)
+        fci.learn_graph(sample, context)
         pag = fci.graph_
 
         expected_pag = PAG()

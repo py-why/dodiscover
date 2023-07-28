@@ -72,7 +72,7 @@ class GIN:
         # go in a base class too.
         self.causal_learn_graph_ = None
 
-    def fit(self, data: DataFrame, context: DataFrame):
+    def learn_graph(self, data: DataFrame, context: DataFrame):
         """Fit the GIN model to data.
         Currently the context object is not used.
 

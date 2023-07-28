@@ -1,4 +1,3 @@
-from . import cd  # noqa: F401
 from . import ci  # noqa: F401
 from . import metrics  # noqa: F401
 from . import toporder

@@ -93,7 +93,7 @@ def test_learn_skeleton_with_data(indep_test_func, data_matrix, g_answer):
     data_df = pd.DataFrame(data_matrix)
     alg = LearnSkeleton(ci_estimator=indep_test_func)
     context = make_context().variables(data=data_df).build()
-    alg.fit(data_df, context)
+    alg.learn_graph(data_df, context)
 
     # obtain the fitted skeleton graph
     skel_graph = alg.adj_graph_
@@ -112,7 +112,7 @@ def test_learn_skeleton_oracle(G, skel_method):
     alpha = 0.05
     alg = skel_method(ci_estimator=oracle, alpha=alpha)
     context = make_context().variables(data=df).build()
-    alg.fit(df, context)
+    alg.learn_graph(df, context)
 
     # obtain the fitted skeleton graph
     skel_graph = alg.adj_graph_
@@ -136,7 +136,7 @@ def test_method_does_not_change_context(skel_method):
 
     # after the first stage, we learn a skeleton as in Figure 16
     firstalg = skel_method(ci_estimator=ci_estimator)
-    firstalg.fit(sample, context)
+    firstalg.learn_graph(sample, context)
 
     # context should not change as a copy is made internally
     # assert context == context_copy
@@ -164,7 +164,7 @@ def test_learn_pds_skeleton():
 
     # after the first stage, we learn a skeleton as in Figure 16
     firstalg = LearnSkeleton(ci_estimator=ci_estimator)
-    firstalg.fit(sample, context)
+    firstalg.learn_graph(sample, context)
     pag_graph = pywhy_graphs.PAG(incoming_circle_edges=firstalg.adj_graph_)
 
     # generate the expected PAG
@@ -212,7 +212,7 @@ def test_learn_pds_skeleton():
 
     # learn the skeleton of the graph now with the first stage skeleton
     alg = LearnSemiMarkovianSkeleton(ci_estimator=ci_estimator)
-    alg.fit(sample, context)
+    alg.learn_graph(sample, context)
 
     # the first stage PAG should be equal to what we learned
     first_stage_pag = alg.context_.state_variable("PAG")
@@ -283,6 +283,6 @@ def test_learn_skeleton_pds_disabled_first_stage():
     alg = LearnSemiMarkovianSkeleton(
         ci_estimator=ci_estimator, second_stage_condsel_method=None, n_jobs=1
     )
-    alg.fit(sample, context)
+    alg.learn_graph(sample, context)
     assert alg.context_.state_variable("PAG", on_missing="ignore") is None
     assert nx.is_isomorphic(expected_skel, alg.adj_graph_)

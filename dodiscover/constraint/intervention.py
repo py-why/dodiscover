@@ -1,12 +1,11 @@
 import logging
 from itertools import permutations
-from typing import FrozenSet, List, Optional, Tuple
+from typing import Callable, FrozenSet, List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
 
 from dodiscover._protocol import EquivalenceClass
-from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.context import Context
 from dodiscover.typing import Column, SeparatingSet
@@ -40,7 +39,7 @@ class PsiFCI(FCI):
         The conditional independence test function. The arguments of the estimator should
         be data, node, node to compare, conditioning set of nodes, and any additional
         keyword arguments.
-    cd_estimator : BaseConditionalDiscrepancyTest
+    cd_estimator : Callable
         The conditional discrepancy test function.
     alpha : float, optional
         The significance level for the conditional independence test, by default 0.05.
@@ -99,7 +98,7 @@ class PsiFCI(FCI):
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        cd_estimator: BaseConditionalDiscrepancyTest,
+        cd_estimator: Callable,
         alpha: float = 0.05,
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
@@ -151,7 +150,7 @@ class PsiFCI(FCI):
             max_path_length=self.max_path_length,
             n_jobs=self.n_jobs,
         )
-        self.skeleton_learner_.fit(data, context)
+        self.skeleton_learner_.learn_graph(data, context)
 
         self.context_ = self.skeleton_learner_.context_.copy()
         skel_graph = self.skeleton_learner_.adj_graph_
@@ -159,7 +158,7 @@ class PsiFCI(FCI):
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests
         return skel_graph, sep_set
 
-    def fit(self, data: List[pd.DataFrame], context: Context):
+    def learn_graph(self, data: List[pd.DataFrame], context: Context):
         """Learn the relevant causal graph equivalence class.
 
         From the pairs of datasets, we take all combinations and
@@ -192,7 +191,7 @@ class PsiFCI(FCI):
                 f"'context.num_distributions'."
             )
 
-        return super().fit(data, context)
+        return super().learn_graph(data, context)
 
     def _apply_rule11(self, graph: EquivalenceClass, context: Context) -> Tuple[bool, List]:
         """Apply "Rule 8" in I-FCI algorithm, which we call Rule 11.

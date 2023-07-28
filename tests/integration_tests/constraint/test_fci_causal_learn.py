@@ -103,7 +103,7 @@ def test_fci_against_causallearn():
     # obtain the PAG that we should get using an oracle
     oracle = Oracle(causal_model.graph)
     fci_alg = FCI(ci_estimator=oracle)
-    fci_alg.fit(data, context)
+    fci_alg.learn_graph(data, context)
     # true_pag = fci_alg.graph_
 
     ci_test = FisherZCITest()
@@ -115,7 +115,7 @@ def test_fci_against_causallearn():
 
     # Second run FCI
     fci_alg = FCI(ci_estimator=ci_test, alpha=alpha)
-    fci_alg.fit(data, context)
+    fci_alg.learn_graph(data, context)
     dodiscover_graph = fci_alg.graph_
 
     # first compare the adjacency structure
