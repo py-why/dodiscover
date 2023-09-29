@@ -223,7 +223,7 @@ class PsiFCI(FCI):
         augmented_nodes = context.get_augmented_nodes()
 
         oriented_edges = []
-        added_arrows = True
+        added_arrows = False
         for node in augmented_nodes:
             for nbr in graph.neighbors(node):
                 if nbr in augmented_nodes:
@@ -234,6 +234,8 @@ class PsiFCI(FCI):
                 graph.remove_edge(nbr, node)
                 graph.add_edge(node, nbr, graph.directed_edge_name)
                 oriented_edges.append((node, nbr))
+
+                added_arrows = True
 
         if added_arrows and self.debug:
             self.debug_map[(node, nbr)] = "Rule 11"

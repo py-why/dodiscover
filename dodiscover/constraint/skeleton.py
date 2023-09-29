@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, Generator, Iterable, List, Optional, Set
 import networkx as nx
 import numpy as np
 import pandas as pd
+import pywhy_graphs as pg
 from joblib import Parallel, delayed
 
 from dodiscover.ci import BaseConditionalIndependenceTest, Oracle
@@ -67,7 +68,7 @@ def _test_xy_edges(
         Whether to perform cross-distribution tests. If True, then the ``context``
         object must contain a ``sigma_map`` attribute that maps each X-node
         to the corresponding distribution indices of interest.
-        
+
     Returns
     -------
     test_stat : float
@@ -122,10 +123,15 @@ def _test_xy_edges(
                 test_stat = np.inf
                 pvalue = 0.0
             else:
+                import traceback
+
+                print("\n\ninside error message...")
                 print(x_var, y_var, cond_set)
                 print(this_data.columns)
                 print(this_data.head())
                 print(this_data[x_var])
+                print(context.init_graph.nodes)
+                traceback.print_exc()
                 raise Exception(e)
 
         # if any "independence" is found through inability to reject
@@ -1121,8 +1127,6 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         # if there is no second stage skeleton method to be run, then we
         # will stop with the skeleton here
-        print(self.second_stage_condsel_method)
-        print(context)
         if self.second_stage_condsel_method is None:
             self.context_ = deepcopy(context.copy())
             self.adj_graph_ = deepcopy(context.init_graph.copy())
@@ -1269,12 +1273,12 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         # R9 allows us to leverage F-nodes being not in separating sets to
         # augment all separating sets that have non-empty sets with all
         # F-nodes to keep consistency with the algorithm
-        for x_var, y_vars in self.sep_set_.items():
-            for y_var in y_vars:
-                sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
-                if len(sep_sets) > 0:
-                    for idx in range(len(sep_sets)):
-                        self.sep_set_[x_var][y_var][idx].update(context.get_augmented_nodes())
+        # for x_var, y_vars in self.sep_set_.items():
+        #     for y_var in y_vars:
+        #         sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+        #         if len(sep_sets) > 0:
+        #             for idx in range(len(sep_sets)):
+        #                 self.sep_set_[x_var][y_var][idx].update(context.get_augmented_nodes())
 
         return super()._prep_second_stage_skeleton(context)
 
@@ -1488,97 +1492,97 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
 
         self.known_intervention_targets = known_intervention_targets
 
-    def _create_augmented_nodes(
-        self, domain_ids: List[int], intervention_targets: List[Optional[Set]]
-    ) -> Tuple[List, Dict, Dict, Dict]:
-        """Create augmented nodes, sigma map and optionally a symmetric difference map.
+    # def _create_augmented_nodes(
+    #     self, domain_ids: List[int], intervention_targets: List[Optional[Set]]
+    # ) -> Tuple[List, Dict, Dict, Dict]:
+    #     """Create augmented nodes, sigma map and optionally a symmetric difference map.
 
-        Given a number of distributions attributed to interventions, one constructs
-        F-nodes to add to the causal graph by:
+    #     Given a number of distributions attributed to interventions, one constructs
+    #     F-nodes to add to the causal graph by:
 
-        - For all pairs of incoming distributions, form a new F-node for every
-          pair of distributions. Update ``node_domain_map`` to map the F-node to
-          a specific domain.
-        - If the pairs are from two known target-interventions (i.e. not `None`
-          value), then also add the symmetric difference mapping to
-          ``symmetric_diff_map``, which maps the F-node to the intervention target.
+    #     - For all pairs of incoming distributions, form a new F-node for every
+    #       pair of distributions. Update ``node_domain_map`` to map the F-node to
+    #       a specific domain.
+    #     - If the pairs are from two known target-interventions (i.e. not `None`
+    #       value), then also add the symmetric difference mapping to
+    #       ``symmetric_diff_map``, which maps the F-node to the intervention target.
 
-        where ``targets`` is a set of either nodes, or set of indices corresponding
-        to the input data distributions and ``domains`` is a set of domains, either
-        a single domain for F-nodes within domain, or a set of two domains for
-        F-nodes across domains.
+    #     where ``targets`` is a set of either nodes, or set of indices corresponding
+    #     to the input data distributions and ``domains`` is a set of domains, either
+    #     a single domain for F-nodes within domain, or a set of two domains for
+    #     F-nodes across domains.
 
-        Parameters
-        ----------
-        domain_ids : List[int]
-            A list of domain ids for each input distribution.
-        intervention_targets : List[Set]
-            A list of known intervention targets for each input distribution with ``None``
-            representing unknown targets. If the distribution is observational, then
-            the empty set is used.
+    #     Parameters
+    #     ----------
+    #     domain_ids : List[int]
+    #         A list of domain ids for each input distribution.
+    #     intervention_targets : List[Set]
+    #         A list of known intervention targets for each input distribution with ``None``
+    #         representing unknown targets. If the distribution is observational, then
+    #         the empty set is used.
 
-        Returns
-        -------
-        augmented_nodes : List
-            Set of augmented nodes (i.e. F and S nodes).
-        symmetric_diff_map : Dict[Any, FrozenSet]
-            Mapping of augmented nodes to intervention targets, or distribution indices represented
-            by the node.
-        sigma_map : Dict[Any, FrozenSet]
-            Mapping of augmented nodes to distribution indices represented by the node.
-        node_domain_map : Dict[Any, FrozenSet]
-            Mapping of augmented nodes to domains.
-        """
-        # map augmented nodes to domains
-        node_domain_map = dict()
-        symmetric_diff_map = dict()
-        sigma_map = dict()
-        f_nodes = []
+    #     Returns
+    #     -------
+    #     augmented_nodes : List
+    #         Set of augmented nodes (i.e. F and S nodes).
+    #     symmetric_diff_map : Dict[Any, FrozenSet]
+    #         Mapping of augmented nodes to intervention targets, or distribution indices represented
+    #         by the node.
+    #     sigma_map : Dict[Any, FrozenSet]
+    #         Mapping of augmented nodes to distribution indices represented by the node.
+    #     node_domain_map : Dict[Any, FrozenSet]
+    #         Mapping of augmented nodes to domains.
+    #     """
+    #     # map augmented nodes to domains
+    #     node_domain_map = dict()
+    #     symmetric_diff_map = dict()
+    #     sigma_map = dict()
+    #     f_nodes = []
 
-        # create F-nodes, which is now all combinations of distributions choose 2
-        k = 0
-        seen_domain_pairs = dict()
-        seen_distr_pairs = dict()
+    #     # create F-nodes, which is now all combinations of distributions choose 2
+    #     k = 0
+    #     seen_domain_pairs = dict()
+    #     seen_distr_pairs = dict()
 
-        # compare every pair of distributions to now add interventions if necessary
-        for dataset_idx, source in enumerate(domain_ids):
-            for dataset_jdx, target in enumerate(domain_ids):
-                # perform memoization to avoid duplicate augmented nodes
-                domain_memo_key = frozenset([source, target])
-                distr_memo_key = frozenset([dataset_idx, dataset_jdx])
-                if dataset_jdx <= dataset_idx:
-                    continue
-                if domain_memo_key in seen_domain_pairs and distr_memo_key in seen_distr_pairs:
-                    continue
-                seen_domain_pairs[domain_memo_key] = None
-                seen_distr_pairs[distr_memo_key] = None
+    #     # compare every pair of distributions to now add interventions if necessary
+    #     for dataset_idx, source in enumerate(domain_ids):
+    #         for dataset_jdx, target in enumerate(domain_ids):
+    #             # perform memoization to avoid duplicate augmented nodes
+    #             domain_memo_key = frozenset([source, target])
+    #             distr_memo_key = frozenset([dataset_idx, dataset_jdx])
+    #             if dataset_jdx <= dataset_idx:
+    #                 continue
+    #             if domain_memo_key in seen_domain_pairs and distr_memo_key in seen_distr_pairs:
+    #                 continue
+    #             seen_domain_pairs[domain_memo_key] = None
+    #             seen_distr_pairs[distr_memo_key] = None
 
-                # map each augmented-node to a tuple of distribution indices, or to a set of nodes
-                # representing the intervention targets
-                if (
-                    intervention_targets[dataset_idx] is not None
-                    and intervention_targets[dataset_jdx] is not None
-                    and source == target
-                ):
-                    symm_diff = set(intervention_targets[dataset_idx]).symmetric_difference(
-                        set(intervention_targets[dataset_jdx])
-                    )
-                    targets = frozenset(symm_diff)
-                else:
-                    targets = None
+    #             # map each augmented-node to a tuple of distribution indices, or to a set of nodes
+    #             # representing the intervention targets
+    #             if (
+    #                 intervention_targets[dataset_idx] is not None
+    #                 and intervention_targets[dataset_jdx] is not None
+    #                 and source == target
+    #             ):
+    #                 symm_diff = set(intervention_targets[dataset_idx]).symmetric_difference(
+    #                     set(intervention_targets[dataset_jdx])
+    #                 )
+    #                 targets = frozenset(symm_diff)
+    #             else:
+    #                 targets = None
 
-                # create the F-node
-                f_node = ("F", k)
-                f_nodes.append(f_node)
+    #             # create the F-node
+    #             f_node = ("F", k)
+    #             f_nodes.append(f_node)
 
-                # map each F-node to a set of domain(s)
-                node_domain_map[f_node] = [source, target]
-                sigma_map[f_node] = [dataset_idx, dataset_jdx]
-                symmetric_diff_map[f_node] = targets
+    #             # map each F-node to a set of domain(s)
+    #             node_domain_map[f_node] = [source, target]
+    #             sigma_map[f_node] = [dataset_idx, dataset_jdx]
+    #             symmetric_diff_map[f_node] = targets
 
-                k += 1
-        augmented_nodes = set(f_nodes)
-        return augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map
+    #             k += 1
+    #     augmented_nodes = set(f_nodes)
+    #     return augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map
 
     def learn_graph(
         self,
@@ -1626,9 +1630,8 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
             symmetric_diff_map,
             sigma_map,
             node_domain_map,
-        ) = self._create_augmented_nodes(
-            domain_ids=domain_indices,
-            intervention_targets=intervention_targets
+        ) = pg.classes.compute_augmented_nodes(
+            intervention_targets=intervention_targets, domain_ids=domain_indices
         )
 
         # initialize the augmented graph to be fully connected to observed casual variables
@@ -1644,7 +1647,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
 
         # extract F and S-nodes
         f_nodes = augmented_nodes
-        
+
         # skeleton discovery should not condition on augmented nodes
         skip_nodes = augmented_nodes
 
@@ -1677,17 +1680,17 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         # R9 allows us to leverage F-nodes being not in separating sets to
         # augment all separating sets that have non-empty sets with all
         # F-nodes to keep consistency with the algorithm
-        for x_var, y_vars in self.sep_set_.items():
-            for y_var in y_vars:
-                sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
-                if len(sep_sets) > 0:
-                    for idx in range(len(sep_sets)):
-                        self.sep_set_[x_var][y_var][idx].update(context.f_nodes)
+        # for x_var, y_vars in self.sep_set_.items():
+        #     for y_var in y_vars:
+        #         sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+        #         if len(sep_sets) > 0:
+        #             for idx in range(len(sep_sets)):
+        #                 self.sep_set_[x_var][y_var][idx].update(context.f_nodes)
 
-        # loop through each domain pair to learn the F-node skeleton
+        # loop through each pair of datasets to learn the augmented F-node skeleton
         seen_domain_pairs = set()
         for idx, source in enumerate(domain_indices):
-            # analyze F-nodes only within the 'source' domain
+            # analyze F-nodes only within the 'source' single domain
             source_fnodes = [
                 node for node in augmented_nodes if set(node_domain_map[node]) == {source}
             ]
@@ -1706,7 +1709,13 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                     cross_distribution_test=True,
                 )
 
+        # now compute skeleton among all possible F-nodes representing domain pairs
+        for idx, source in enumerate(domain_indices):
             for jdx, target in enumerate(domain_indices):
+                # skip the same dataset
+                if idx == jdx:
+                    continue
+
                 # skip if source and target are the same domain because we have
                 # already learned from these pairs of datasets
                 if source == target:
@@ -1737,8 +1746,7 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
                     skipped_z_nodes=skip_nodes,
                     cross_distribution_test=True,
                     # debug=debug,
-                    )
-                
+                )
 
         # prepare the context object for the second stage of learning
         # all separating sets are either:

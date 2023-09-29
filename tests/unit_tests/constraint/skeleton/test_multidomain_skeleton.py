@@ -72,7 +72,7 @@ def test_fnode_multidomain_skeleton_known_targets():
     )
     domain_indices = [1, 1]
     intervention_targets = [{}, {"x"}]
-    learner.fit(
+    learner.learn_graph(
         data, context, domain_indices=domain_indices, intervention_targets=intervention_targets
     )
 
@@ -89,78 +89,6 @@ def test_fnode_multidomain_skeleton_known_targets():
             print("missing edge: ", edge)
     assert nx.is_isomorphic(obs_expected_skeleton, obs_skel_graph, edge_match=None)
     assert nx.is_isomorphic(expected_skeleton, skel_graph)
-
-
-def test_number_augmented_nodes_created():
-    """Test learning the skeleton for Figure 3 in :footcite:`Kocaoglu2019characterization`.
-
-    However, this time, we have an S-node pointing to y.
-    """
-    # first create the oracle
-    directed_edges = [
-        ("x", "w"),
-        ("w", "y"),
-        ("z", "y"),
-    ]
-    bidirected_edges = [("x", "z"), ("z", "y")]
-    graph = pgraphs.AugmentedGraph(
-        incoming_directed_edges=directed_edges, incoming_bidirected_edges=bidirected_edges
-    )
-    non_f_graph = graph.copy()
-    graph.add_f_node({"x"}, domain=1)
-    graph.add_s_node((1, 2), {"y"})
-    oracle = Oracle(graph)
-
-    # define the expected graph we will learn
-    edges = [
-        (("F", 0), "x"),
-        (("F", 0), "y"),
-        (("S", 0), "y"),
-        (("S", 0), "x"),
-        ("x", "w"),
-        ("x", "z"),
-        ("x", "y"),
-        ("z", "y"),
-        ("w", "y"),
-    ]
-    expected_skeleton = nx.Graph(edges)
-    obs_expected_skeleton = expected_skeleton.copy()
-    obs_expected_skeleton.remove_node(("F", 0))
-
-    # define the learner and the context
-    learner = LearnMultiDomainSkeleton(
-        ci_estimator=oracle, cd_estimator=oracle, known_intervention_targets=True
-    )
-    data = [dummy_sample(non_f_graph), dummy_sample(non_f_graph), dummy_sample(non_f_graph)]
-    context = (
-        make_context(create_using=InterventionalContextBuilder).variables(data=data[0]).build()
-    )
-    domain_indices = [1, 2, 2]
-    intervention_targets = [{}, {}, {"x"}]
-
-    # test augmented nodes
-    (
-        augmented_nodes,
-        symmetric_diff_map,
-        sigma_map,
-        node_domain_map,
-    ) = learner._create_augmented_nodes(domain_indices, intervention_targets)
-    assert len(augmented_nodes) == math.comb(len(domain_indices), 2)
-    assert symmetric_diff_map == {("F", 0): frozenset({"x"}), ("F", 1): frozenset({"x"})}
-    assert sigma_map == {("F", 0): [0, 2], ("F", 1): [1, 2], ("S", 0): [0, 1]}
-    assert node_domain_map == {("F", 0): [1, 2], ("F", 1): [2, 2], ("S", 0): [1, 2]}
-
-    domain_indices = [1, 2, 2, 2, 2]
-    intervention_targets = [{}, {}, {3}, {2}, {3}]
-
-    # test augmented nodes
-    (
-        augmented_nodes,
-        symmetric_diff_map,
-        sigma_map,
-        node_domain_map,
-    ) = learner._create_augmented_nodes(domain_indices, intervention_targets)
-    assert len(augmented_nodes) == math.comb(len(domain_indices), 2) - 1
 
 
 def test_fnode_multidomain_skeleton_known_targets_with_snode():
@@ -190,7 +118,7 @@ def test_fnode_multidomain_skeleton_known_targets_with_snode():
         (("F", 0), "y"),
         (("F", 1), "x"),
         (("F", 1), "y"),
-        (("S", 0), "y"),
+        (("F", 2), "y"),
         ("x", "w"),
         ("x", "z"),
         ("x", "y"),
@@ -212,16 +140,7 @@ def test_fnode_multidomain_skeleton_known_targets_with_snode():
     domain_indices = [1, 2, 2]
     intervention_targets = [{}, {}, {"x"}]
 
-    # test augmented nodes
-    (
-        augmented_nodes,
-        symmetric_diff_map,
-        sigma_map,
-        node_domain_map,
-    ) = learner._create_augmented_nodes(domain_indices, intervention_targets)
-    assert len(augmented_nodes) == math.comb(len(domain_indices), 2)
-
-    learner.fit(
+    learner.learn_graph(
         data, context, domain_indices=domain_indices, intervention_targets=intervention_targets
     )
 
@@ -253,7 +172,7 @@ def test_basic_multidomain_fsnode_skeleton():
         (("F", 0), "y"),
         (("F", 1), "x"),
         (("F", 1), "y"),
-        (("S", 0), "y"),
+        (("F", 2), "y"),  # correspondence with the S-node
         ("x", "y"),
         ("y", "z"),
     ]
@@ -272,7 +191,7 @@ def test_basic_multidomain_fsnode_skeleton():
         # .intervention_targets([("x")])
         .build()
     )
-    learner.fit(data, context, domain_indices, intervention_targets)
+    learner.learn_graph(data, context, domain_indices, intervention_targets)
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_
@@ -283,7 +202,11 @@ def test_basic_multidomain_fsnode_skeleton():
     sep_set = learner.sep_set_
 
     # check the separating sets
-    assert sep_set["x"]["z"] == [{"y", ("F", 0), ("S", 0), ("F", 1)}]
+    # XXX: the edge is tested twice
+    assert sep_set["x"]["z"] == [
+        {"y", ("F", 0), ("F", 2), ("F", 1)},
+        {"y", ("F", 0), ("F", 2), ("F", 1)},
+    ]
 
     # check the skeleton after obs data
     print(obs_expected_skeleton.edges())
@@ -296,6 +219,8 @@ def test_basic_multidomain_fsnode_skeleton():
     assert nx.is_isomorphic(expected_skeleton, skel_graph)
 
 
+# import pytest
+# @pytest.mark.skip()
 def test_basic_multidomain_fsnode_skeleton_with_lindata():
     seed = 1234
     n_samples = 1000
@@ -316,7 +241,7 @@ def test_basic_multidomain_fsnode_skeleton_with_lindata():
     obs_expected_skeleton = expected_skeleton.copy()
 
     # define functional relationships of the causal diagram
-    graph = pgraphs.functional.make_graph_linear_gaussian(graph, random_state=seed)
+    graph = pgraphs.functional.make_random_linear_gaussian_graph(graph, random_state=seed)
 
     datasets = []
     domain_ids = []
@@ -330,6 +255,7 @@ def test_basic_multidomain_fsnode_skeleton_with_lindata():
             graph.copy(), targets, random_state=seed
         )
 
+        print(new_graph.nodes(data=True))
         # generate dataset
         data = sample_from_graph(new_graph, n_samples=n_samples, random_state=seed)
 
@@ -358,7 +284,7 @@ def test_basic_multidomain_fsnode_skeleton_with_lindata():
     learner = LearnMultiDomainSkeleton(ci_estimator=FisherZCITest(), cd_estimator=KernelCDTest())
 
     context = make_context(create_using=ContextBuilder).variables(data=datasets[0]).build()
-    learner.fit(datasets, context, domain_ids, intervention_sets)
+    learner.learn_graph(datasets, context, domain_ids, intervention_sets)
 
     # first check the observational skeleton
     skel_graph = learner.adj_graph_

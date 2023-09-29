@@ -859,6 +859,74 @@ class FCI(BaseConstraintDiscovery):
                 break
             idx += 1
 
+    def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):
+        idx = 0
+        finished = False
+        while idx < self.max_iter and not finished:
+            change_flag = False
+            logger.info(f"Running R1-10 for iteration {idx}")
+
+            # if self.stable:
+            #     pass
+            # else:
+            for u in graph.nodes:
+                for (a, c) in permutations(graph.neighbors(u), 2):
+                    logger.debug(f"Check {u} {a} {c}")
+
+                    # apply R1-3 to orient triples and arrowheads
+                    r1_add = self._apply_rule1(graph, u, a, c)
+                    r2_add = self._apply_rule2(graph, u, a, c)
+                    r3_add = self._apply_rule3(graph, u, a, c)
+
+                    # apply R4, orienting discriminating paths
+                    r4_add, _ = self._apply_rule4(graph, u, a, c, sep_set)
+
+                    # apply R5-7 to handle cases where selection bias is present
+                    if self.selection_bias:
+                        r5_add = self._apply_rule5(graph, u, a)
+                        r6_add = self._apply_rule6(graph, u, a, c)
+                        r7_add = self._apply_rule7(graph, u, a, c)
+                    else:
+                        r5_add = False
+                        r6_add = False
+                        r7_add = False
+
+                    # apply R8 to orient more tails
+                    r8_add = self._apply_rule8(graph, u, a, c)
+
+                    # apply R9-10 to orient uncovered potentially directed paths
+                    r9_add, _ = self._apply_rule9(graph, a, u, c)
+
+                    # a and c are neighbors of u, so u is the endpoint desired
+                    r10_add, _, _ = self._apply_rule10(graph, a, c, u)
+
+                    # see if there was a change flag
+                    all_flags = [
+                        r1_add,
+                        r2_add,
+                        r3_add,
+                        r4_add,
+                        r5_add,
+                        r6_add,
+                        r7_add,
+                        r8_add,
+                        r9_add,
+                        r10_add,
+                    ]
+                    if any(all_flags) and not change_flag:
+                        logger.info(f"{change_flag} with " f"{all_flags}")
+                        change_flag = True
+
+            # check if we should continue or not
+            if not change_flag:
+                finished = True
+                if not self.selection_bias:
+                    logger.info(f"Finished applying R1-4, and R8-10 with {idx} iterations")
+                if self.selection_bias:
+                    logger.info(f"Finished applying R1-10 with {idx} iterations")
+                break
+            idx += 1
+
     def learn_skeleton(
         self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
     ) -> Tuple[nx.Graph, SeparatingSet]:
