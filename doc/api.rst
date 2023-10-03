@@ -54,6 +54,16 @@ Constraint-based structure learning
    PsiFCI
 
 
+Continuous optimization-based structure learning
+===================================
+
+.. currentmodule:: dodiscover.continuous
+.. autosummary::
+   :toctree: generated/
+
+   GranDAG
+
+
 Order-based structure learning
 ===================================
 

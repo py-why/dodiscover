@@ -49,6 +49,7 @@ importlib-resources = { version = "*", python = "<3.10" }
 pywhy-graphs = { git = "https://github.com/py-why/pywhy-graphs.git", branch = 'main', optional = true }
 pygraphviz = { version = "^1.11", optional = true }
 pygam = "^0.9.0"
+torch = "^2.0.1"
 
 [tool.poetry.group.style]
 optional = true
