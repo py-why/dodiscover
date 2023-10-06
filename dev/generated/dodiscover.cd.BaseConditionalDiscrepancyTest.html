@@ -527,9 +527,9 @@ a function for CD testing into a class, which has a specific API.</p>
 </dd>
 <dt><strong>Y</strong><span class="classifier">Array-Like of shape (n_samples, n_features_y)</span></dt><dd><p>The Y (outcomes) array.</p>
 </dd>
-<dt><strong>null_reps</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Number of times to sample null, by default 1000.</p>
+<dt><strong>null_reps</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Number of times to sample null, by default 1000.</p>
 </dd>
-<dt><strong>random_state</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Random generator, or random seed, by default None.</p>
+<dt><strong>random_state</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Random generator, or random seed, by default None.</p>
 </dd>
 </dl>
 </dd>
@@ -555,20 +555,20 @@ or environments denoted by the group_col.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataframe containing the dataset.</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataframe containing the dataset.</p>
 </dd>
-<dt><strong>y_vars</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
+<dt><strong>y_vars</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
 </dd>
-<dt><strong>group_col</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code> that indicates which group of distribution
+<dt><strong>group_col</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code> that indicates which group of distribution
 each sample belongs to with a ‘0’, or ‘1’.</p>
 </dd>
-<dt><strong>x_vars</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a>, optional</span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
+<dt><strong>x_vars</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code> of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a>, optional</span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>]</dt><dd><p>Test statistic and pvalue.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>]</dt><dd><p>Test statistic and pvalue.</p>
 </dd>
 </dl>
 </dd>

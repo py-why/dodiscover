@@ -529,22 +529,22 @@ as the Markov property for graphs
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a> of shape (n_samples, n_variables)</span></dt><dd><p>The data matrix. Passed in for API consistency, but not
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a> of shape (n_samples, n_variables)</span></dt><dd><p>The data matrix. Passed in for API consistency, but not
 used.</p>
 </dd>
 <dt><strong>x_vars</strong><span class="classifier">node</span></dt><dd><p>A node in the dataset.</p>
 </dd>
 <dt><strong>y_vars</strong><span class="classifier">node</span></dt><dd><p>A node in the dataset.</p>
 </dd>
-<dt><strong>z_covariates</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The set of variables to check that separates x_vars and y_vars.</p>
+<dt><strong>z_covariates</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The set of variables to check that separates x_vars and y_vars.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>statistic</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></span></dt><dd><p>A return argument for the statistic.</p>
+<dt><strong>statistic</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></span></dt><dd><p>A return argument for the statistic.</p>
 </dd>
-<dt><strong>pvalue</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The pvalue. Return ‘1.0’ if not independent and ‘0.0’
+<dt><strong>pvalue</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The pvalue. Return ‘1.0’ if not independent and ‘0.0’
 if they are.</p>
 </dd>
 </dl>

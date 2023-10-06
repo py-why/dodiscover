@@ -540,27 +540,27 @@ respect to SCORE.</p>
 <dd class="field-odd"><dl>
 <dt><strong>eta_G: float, optional</strong></dt><dd><p>Regularization parameter for Stein gradient estimator, default is 0.001.</p>
 </dd>
-<dt><strong>eta_H</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Regularization parameter for Stein Hessian estimator, default is 0.001.</p>
+<dt><strong>eta_H</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Regularization parameter for Stein Hessian estimator, default is 0.001.</p>
 </dd>
-<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Alpha cutoff value for variable selection with hypothesis testing over regression
+<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Alpha cutoff value for variable selection with hypothesis testing over regression
 coefficients, default is 0.05.</p>
 </dd>
-<dt><strong>prune</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True (default), apply CAM-pruning after finding the topological order.
+<dt><strong>prune</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True (default), apply CAM-pruning after finding the topological order.
 If False, DAS is equivalent to SCORE.</p>
 </dd>
-<dt><strong>das_cutoff</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Alpha value for hypothesis testing in preliminary DAS pruning.
+<dt><strong>das_cutoff</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Alpha value for hypothesis testing in preliminary DAS pruning.
 If None (default), it is set equal to <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
 </dd>
-<dt><strong>n_splines</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Number of splines to use for the feature function, default is 10.
+<dt><strong>n_splines</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Number of splines to use for the feature function, default is 10.
 Automatically decreased in case of insufficient samples</p>
 </dd>
 <dt><strong>splines_degree: int, optional</strong></dt><dd><p>Order of spline to use for the feature function, default is 3.</p>
 </dd>
-<dt><strong>min_parents</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Minimum number of edges retained by DAS preliminary pruning step, default is 5.
+<dt><strong>min_parents</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Minimum number of edges retained by DAS preliminary pruning step, default is 5.
 min_parents &lt;= 5 doesn’t significantly affects execution time, while increasing the
 accuracy.</p>
 </dd>
-<dt><strong>max_parents</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of parents allowed for a single node, default is 20.
+<dt><strong>max_parents</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of parents allowed for a single node, default is 20.
 Given that CAM pruning is inefficient for &gt; ~20 nodes, larger values are not advised.
 The value of max_parents should be decrease under the assumption of sparse graphs.</p>
 </dd>
@@ -669,7 +669,7 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
+<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
 </dd>
 <dt><strong>context: Context</strong></dt><dd><p>The context of the causal discovery problem.</p>
 </dd>

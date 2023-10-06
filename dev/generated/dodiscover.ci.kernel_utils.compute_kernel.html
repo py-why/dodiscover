@@ -486,21 +486,21 @@
 </dd>
 <dt><strong>Y</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v1.26)"><span class="xref std std-term">array_like</span></a> of shape (n_samples_Y, n_features_Y), optional</span></dt><dd><p>The Y array, by default None.</p>
 </dd>
-<dt><strong>metric</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The metric to compute the kernel function, by default ‘rbf’.
+<dt><strong>metric</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The metric to compute the kernel function, by default ‘rbf’.
 Can be any string as defined in
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.pairwise_kernels.html#sklearn.metrics.pairwise.pairwise_kernels" title="(in scikit-learn v1.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.pairwise.pairwise_kernels()</span></code></a>. Note ‘rbf’
 and ‘gaussian’ are the same metric.</p>
 </dd>
-<dt><strong>distance_metric</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The distance metric to compute distances among samples within
+<dt><strong>distance_metric</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The distance metric to compute distances among samples within
 each data matrix, by default ‘euclidean’. Can be any valid string
 as defined in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise_distances.html#sklearn.metrics.pairwise_distances" title="(in scikit-learn v1.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.pairwise_distances()</span></code></a>.</p>
 </dd>
-<dt><strong>kwidth</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The kernel width, by default None, which will then be estimated as the
+<dt><strong>kwidth</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The kernel width, by default None, which will then be estimated as the
 median L2 distance between the X features.</p>
 </dd>
-<dt><strong>centered</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to center the kernel matrix or not, by default True.</p>
+<dt><strong>centered</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to center the kernel matrix or not, by default True.</p>
 </dd>
-<dt><strong>n_jobs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The number of jobs to run computations in parallel, by default None.</p>
+<dt><strong>n_jobs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The number of jobs to run computations in parallel, by default None.</p>
 </dd>
 </dl>
 </dd>
@@ -508,7 +508,7 @@ median L2 distance between the X features.</p>
 <dd class="field-even"><dl>
 <dt><strong>kernel</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v1.26)"><span class="xref std std-term">array_like</span></a> of shape (n_samples_X, n_samples_X) or (n_samples_X, n_samples_Y)</span></dt><dd><p>The kernel matrix.</p>
 </dd>
-<dt><strong>med</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The estimated kernel width.</p>
+<dt><strong>med</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The estimated kernel width.</p>
 </dd>
 </dl>
 </dd>

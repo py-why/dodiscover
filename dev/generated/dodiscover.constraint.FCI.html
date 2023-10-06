@@ -535,15 +535,15 @@ may exist latent confounders, and optionally selection bias.</p>
 be data, node, node to compare, conditioning set of nodes, and any additional
 keyword arguments.</p>
 </dd>
-<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The significance level for the conditional independence test, by default 0.05.</p>
+<dt><strong>alpha</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The significance level for the conditional independence test, by default 0.05.</p>
 </dd>
-<dt><strong>min_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Minimum size of the conditioning set, by default None, which will be set to ‘0’.
+<dt><strong>min_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Minimum size of the conditioning set, by default None, which will be set to ‘0’.
 Used to constrain the computation spent on the algorithm.</p>
 </dd>
-<dt><strong>max_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum size of the conditioning set, by default None. Used to limit
+<dt><strong>max_cond_set_size</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum size of the conditioning set, by default None. Used to limit
 the computation spent on the algorithm.</p>
 </dd>
-<dt><strong>max_combinations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum number of conditional independence tests to run from the set
+<dt><strong>max_combinations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum number of conditional independence tests to run from the set
 of possible conditioning sets. By default None, which means the algorithm will
 check all possible conditioning sets. If <code class="docutils literal notranslate"><span class="pre">max_combinations=n</span></code> is set, then
 for every conditioning set size, ‘p’, there will be at most ‘n’ CI tests run
@@ -555,12 +555,12 @@ dependences.</p>
 <dt><strong>condsel_method</strong><span class="classifier"><a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a></span></dt><dd><p>The method to use for selecting the conditioning sets. Must be one of
 (‘neighbors’, ‘complete’, ‘neighbors_path’). See Notes for more details.</p>
 </dd>
-<dt><strong>apply_orientations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to apply orientation rules given the learned skeleton graph
+<dt><strong>apply_orientations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to apply orientation rules given the learned skeleton graph
 and separating set per pair of variables. If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), will
 apply Zhang’s orientation rules R0-10, orienting colliders and certain
 arrowheads and tails <a class="footnote-reference brackets" href="#footcite-zhang2008" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </dd>
-<dt><strong>keep_sorted</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to keep the considered conditioning set variables in sorted
+<dt><strong>keep_sorted</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to keep the considered conditioning set variables in sorted
 dependency order. If True (default) will sort the existing dependencies of each variable
 by its dependencies from strongest to weakest (i.e. largest CI test statistic value
 to lowest). The conditioning set is chosen lexographically
@@ -568,12 +568,12 @@ based on the sorted test statistic values of ‘ith Pa(X) -&gt; X’, for each p
 parent node of ‘X’. This can be used in conjunction with <code class="docutils literal notranslate"><span class="pre">max_combinations</span></code> parameter
 to only test the “strongest” dependences.</p>
 </dd>
-<dt><strong>max_iter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></span></dt><dd><p>The maximum number of iterations through the graph to apply
+<dt><strong>max_iter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></span></dt><dd><p>The maximum number of iterations through the graph to apply
 orientation rules.</p>
 </dd>
-<dt><strong>max_path_length</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum length of any discriminating path, or None if unlimited.</p>
+<dt><strong>max_path_length</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The maximum length of any discriminating path, or None if unlimited.</p>
 </dd>
-<dt><strong>selection_bias</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to account for selection bias within the causal PAG.
+<dt><strong>selection_bias</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether or not to account for selection bias within the causal PAG.
 See <a class="footnote-reference brackets" href="#footcite-zhang2008" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </dd>
 <dt><strong>pds_condsel_method</strong><span class="classifier"><a class="reference internal" href="dodiscover.constraint.ConditioningSetSelection.html#dodiscover.constraint.ConditioningSetSelection" title="dodiscover.constraint.ConditioningSetSelection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditioningSetSelection</span></code></a></span></dt><dd><p>The method to use for selecting the conditioning sets using PDS. Must be one of
@@ -629,21 +629,21 @@ independence tests it must run.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset</p>
 </dd>
-<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
 </dd>
-<dt><strong>Y</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+<dt><strong>Y</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.columns.html#pandas.DataFrame.columns" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">column</span></code></a></span></dt><dd><p>A column in <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
 </dd>
-<dt><strong>Z</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>, optional</span></dt><dd><p>A list of columns in <code class="docutils literal notranslate"><span class="pre">data</span></code>, by default None.</p>
+<dt><strong>Z</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>, optional</span></dt><dd><p>A list of columns in <code class="docutils literal notranslate"><span class="pre">data</span></code>, by default None.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>test_stat</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Test statistic.</p>
+<dt><strong>test_stat</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Test statistic.</p>
 </dd>
-<dt><strong>pvalue</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The pvalue.</p>
+<dt><strong>pvalue</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>The pvalue.</p>
 </dd>
 </dl>
 </dd>
@@ -657,7 +657,7 @@ independence tests it must run.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>X</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code>, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a>]]</span></dt><dd><p>Either a pandas dataframe constituting the endogenous (observed) variables
+<dt><strong>X</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code>, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a>]]</span></dt><dd><p>Either a pandas dataframe constituting the endogenous (observed) variables
 as columns and samples as rows, or a dictionary of different sampled
 distributions with keys as the distribution names and values as the dataset
 as a pandas dataframe.</p>
@@ -668,7 +668,7 @@ as a pandas dataframe.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If ‘X’ is a dictionary, then all datasets should have the same set of column
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If ‘X’ is a dictionary, then all datasets should have the same set of column
 names (nodes).</p>
 </dd>
 </dl>
@@ -687,11 +687,11 @@ constructor.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+312.g1c1bb854cc)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.0dev0+329.g40f219ccf7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>The dataset.</p>
 </dd>
 <dt><strong>context</strong><span class="classifier"><a class="reference internal" href="dodiscover.context.Context.html#dodiscover.context.Context" title="dodiscover.context.Context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Context</span></code></a></span></dt><dd><p>A context object.</p>
 </dd>
-<dt><strong>sep_set</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The separating set.</p>
+<dt><strong>sep_set</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The separating set.</p>
 </dd>
 </dl>
 </dd>
@@ -699,7 +699,7 @@ constructor.</p>
 <dd class="field-even"><dl>
 <dt><strong>skel_graph</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.2rc0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.Graph</span></code></a></span></dt><dd><p>The undirected graph of the causal graph’s skeleton.</p>
 </dd>
-<dt><strong>sep_set</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The separating set per pairs of variables.</p>
+<dt><strong>sep_set</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a></span></dt><dd><p>The separating set per pairs of variables.</p>
 </dd>
 </dl>
 </dd>
@@ -723,7 +723,7 @@ compares exhaustively pairs of adjacent variables.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotImplementedError</span></code></a></dt><dd><p>All constraint-based discovery algorithms must implement this.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotImplementedError</span></code></a></dt><dd><p>All constraint-based discovery algorithms must implement this.</p>
 </dd>
 </dl>
 </dd>
