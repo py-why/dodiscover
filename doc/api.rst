@@ -131,20 +131,6 @@ learning.
    ClassifierCMITest
    CategoricalCITest
 
-Conditional k-sample testing
-============================
-
-Testing for conditional discrepancy among variables is a core part
-of many causal inference procedures, such as constraint-based structure
-learning.
-
-.. currentmodule:: dodiscover.cd
-.. autosummary::
-   :toctree: generated/
-
-   BaseConditionalDiscrepancyTest
-   KernelCDTest
-   BregmanCDTest
 
 Utilities
 =========
