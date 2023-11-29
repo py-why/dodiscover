@@ -12,3 +12,7 @@ def is_clique(G, nodelist):
     H = G.subgraph(nodelist)
     n = len(nodelist)
     return H.size() == n * (n - 1) / 2
+
+
+def undir_nbrs(G, node, undirected_edge_name="undirected"):
+    return set(G.get_graphs(undirected_edge_name).neighbors(node))
