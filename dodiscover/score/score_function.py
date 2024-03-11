@@ -1,13 +1,18 @@
-from typing import Callable, Dict
+# Adapted from: https://github.com/juangamella/ges/
+# BSD 3-Clause License
+
+from typing import Callable, Union, Dict
 
 import numpy as np
 import pandas as pd
 
 
 class ScoreFunction:
-    def __init__(self, score: Callable) -> None:
+    def __init__(self, score: Union[Callable, str]='bic') -> None:
         self._cache: Dict = dict()
-        self.score_func = score
+
+        if score == 'bic':
+            self.score_func = bic_score
 
     def local_score(self, data: pd.DataFrame, source, source_parents) -> float:
         """Compute the local score of an edge.
@@ -76,3 +81,126 @@ class ScoreFunction:
         l0_term = self.lmbda * (np.sum(A != 0) + 1 * self.p)
         score = -0.5 * likelihood - l0_term
         return score
+
+
+def _mle(data, source, source_parents):
+    """Compute the maximum likelihood estimates of the parameters of a linear Gaussian model.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        The dataset.
+    source : Node
+        The origin node.
+    source_parents : list of Node
+        The parents of the source.
+
+    Returns
+    -------
+    beta : np.array
+        The MLE of the coefficients.
+    sigma : float
+        The MLE of the noise term variance.
+    """
+    _, n_features = data.shape
+    beta = np.zeros(n_features)
+
+    # compute the MLE of the coefficients
+    # using leaset squares regression
+    Y = data[source].to_numpy()
+
+    if len(source_parents) > 0:
+        X = data[source_parents].to_numpy()
+        parents_coef = np.linalg.lstsq(X, Y, rcond=None)[0]
+        parents_idx = [data.columns.get_loc(p) for p in source_parents]
+        beta[parents_idx] = parents_coef
+
+        # compute the estimate of the noise-term variance
+        sigma = np.var(Y - X @ parents_coef)
+    
+    # XXX: it is possible to compute things using the empirical covariance matrix
+    # beta = (\Sigma_{source, Pa(source)} @ \Sigma_{Pa(source), Pa(source)})^{-1}
+
+    if sigma < 0:
+        sigma = 1e-5
+
+    return beta, sigma
+
+
+def bic_score(data, source, source_parents):
+    """Compute the Bayesian Information Criterion (BIC) score of an edge.
+
+    Implements the BIC score described in :footcite:`koller2009probabilistic`.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Dataset.
+    source : Node
+        Variable to score.
+    source_parents : list of Node
+        The parents of the source.
+    """
+    n_samples = len(data)
+
+    # compute MLE
+    _, sigma = _mle(data, source, source_parents)
+
+    # compute log-likelihood
+    likelihood = -0.5 * n_samples * (1 + np.log(sigma))
+
+    # penalty term
+    l0_term = 0.5 * np.log(n_samples) * (len(source_parents) + 1)
+    return likelihood - l0_term
+
+
+def bdeu_score(data, source, source_parents):
+    """Compute the Bayesian Dirichlet equivalent uniform (BDeu) score of an edge.
+
+    Implements the BDeu score described in :footcite:`koller2009probabilistic`
+    and :footcite:`heckerman2013learning`.
+
+    Parameters
+    ----------
+    data : _type_
+        _description_
+    source : _type_
+        _description_
+    source_parents : _type_
+        _description_
+    """
+    pass
+
+
+def bds_score(data, source, source_parents):
+    """Compute the Bayesian Dirichlet sparse (BDs) score of an edge.
+
+    Implements the score described in :footcite:`koller2009probabilistic`.
+
+    Parameters
+    ----------
+    data : _type_
+        _description_
+    source : _type_
+        _description_
+    source_parents : _type_
+        _description_
+    """
+    pass
+
+
+def k2_score(data, source, source_parents):
+    """Compute the K2 score of an edge.
+
+    Implements the score described in :footcite:`scutari2016empirical`.
+
+    Parameters
+    ----------
+    data : _type_
+        _description_
+    source : _type_
+        _description_
+    source_parents : _type_
+        _description_
+    """
+    pass
