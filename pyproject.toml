@@ -79,6 +79,7 @@ joblib = { version = "^1.1.0" }               # needed in dowhy's package
 tqdm = { version = "^4.64.0" }                # needed in dowhy's package
 pre-commit = "^3.0.4"
 pooch = "^1.7.0"
+sempler = "^0.2.13"
 
 [tool.poetry.group.docs]
 optional = true
