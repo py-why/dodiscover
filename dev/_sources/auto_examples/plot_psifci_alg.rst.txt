@@ -347,7 +347,7 @@ Visualize the graph without the F-nodes
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  34.910 seconds)
+   **Total running time of the script:** ( 1 minutes  26.021 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_psifci_alg.py:
