@@ -620,7 +620,7 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
 </dd>
 <dt><strong>eta_G: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein gradient estimator.</p>
 </dd>
@@ -630,7 +630,7 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>H</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the Hessian matrix of log p(x).</p>
+<dt><strong>H</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the Hessian matrix of log p(x).</p>
 </dd>
 </dl>
 </dd>
@@ -645,7 +645,7 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
 </dd>
 <dt><strong>eta_G: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein gradient estimator.</p>
 </dd>
@@ -655,7 +655,7 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>H_diag</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p>
+<dt><strong>H_diag</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the diagonal of the Hessian matrix of log p(x).</p>
 </dd>
 </dl>
 </dd>
@@ -669,7 +669,7 @@ Implements <a class="footnote-reference brackets" href="#footcite-rolland2022" i
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1113.gdd87dd3ef6)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
+<dt><strong>data_df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1119.gee05885328)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></a></span></dt><dd><p>Datafame of the input data.</p>
 </dd>
 <dt><strong>context: Context</strong></dt><dd><p>The context of the causal discovery problem.</p>
 </dd>
@@ -687,9 +687,9 @@ edges in the dense (potentially fully connected) adjacency matrix <code class="d
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>Matrix of the data.</p>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>Matrix of the data.</p>
 </dd>
-<dt><strong>A_dense</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_nodes, n_nodes)</span></dt><dd><p>Dense adjacency matrix to be pruned.</p>
+<dt><strong>A_dense</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_nodes, n_nodes)</span></dt><dd><p>Dense adjacency matrix to be pruned.</p>
 </dd>
 <dt><strong>G_included</strong><span class="classifier"><a class="reference external" href="https://networkx.org/documentation/latest/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v3.4rc0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nx.DiGraph</span></code></a></span></dt><dd><p>Graph with edges that are required to be included in the output.
 It encodes assumptions and prior knowledge about the causal graph.</p>
@@ -701,7 +701,7 @@ It encodes assumptions and prior knowledge about the causal graph.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>A</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>The pruned adjacency matrix output of the causal discovery algorithm.</p>
+<dt><strong>A</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>The pruned adjacency matrix output of the causal discovery algorithm.</p>
 </dd>
 </dl>
 </dd>
@@ -717,21 +717,21 @@ for efficient estimate of the score function.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
+<dt><strong>X</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_nodes)</span></dt><dd><p>I.i.d. samples from p(X) joint distribution.</p>
 </dd>
 <dt><strong>eta_G: float</strong></dt><dd><p>regularization parameter for ridge regression in Stein gradient estimator.</p>
 </dd>
-<dt><strong>K</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_samples)</span></dt><dd><p>Gaussian kernel evaluated at X, by default None. If <code class="docutils literal notranslate"><span class="pre">K</span></code> is None, it is
+<dt><strong>K</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, n_samples)</span></dt><dd><p>Gaussian kernel evaluated at X, by default None. If <code class="docutils literal notranslate"><span class="pre">K</span></code> is None, it is
 computed inside of the method.</p>
 </dd>
-<dt><strong>nablaK</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, )</span></dt><dd><p>&lt;nabla, K&gt; evaluated dot product, by default None. If <code class="docutils literal notranslate"><span class="pre">nablaK</span></code> is None, it is
+<dt><strong>nablaK</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a> of shape (n_samples, )</span></dt><dd><p>&lt;nabla, K&gt; evaluated dot product, by default None. If <code class="docutils literal notranslate"><span class="pre">nablaK</span></code> is None, it is
 computed inside of the method.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>G</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the score function.</p>
+<dt><strong>G</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.ndarray</span></code></a></span></dt><dd><p>Stein estimator of the score function.</p>
 </dd>
 </dl>
 </dd>
