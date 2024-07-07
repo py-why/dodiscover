@@ -1,0 +1,14 @@
+mypy
+black
+isort
+flake8
+bandit
+pydocstyle
+codespell
+toml
+cython-lint
+pre-commit
+yamllint
+toml-sort
+ruff
+rstcheck
