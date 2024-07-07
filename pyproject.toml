@@ -85,6 +85,7 @@ test = [
     'pytest-cov',
     'flaky',
     'tqdm',
+    'pooch',
     'causal-learn',
     'statsmodels',
     'pywhy-graphs',
