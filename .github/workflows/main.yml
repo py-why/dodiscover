@@ -133,6 +133,7 @@ jobs:
           pip install numpy scipy networkx statsmodels
       
       - name: Install package
+        run: |
           pip install .[test]
           pip install .
 
