@@ -97,6 +97,9 @@ test = [
 [tool.setuptools]
 include-package-data = false
 
+[tool.setuptools.package-data]
+'dodiscover.export' = ['dodiscover/testdata/*']
+
 [tool.setuptools.packages.find]
 include = ['dodiscover*']
 exclude = ['*tests', '*testdata']
