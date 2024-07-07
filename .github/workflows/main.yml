@@ -131,7 +131,11 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install numpy scipy networkx statsmodels
+      
+      - name: Install package
           pip install .[test]
+          pip install .
+
       - name: Install Networkx (main)
         if: "matrix.networkx == 'main'"
         run: |
