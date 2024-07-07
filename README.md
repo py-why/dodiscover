@@ -82,7 +82,7 @@ Installation is best done via `pip` or `conda`. For developers, they can also in
 
 Minimally, dodiscover requires:
 
-    * Python (>=3.9)
+    * Python (>=3.10)
     * numpy
     * scipy
     * networkx

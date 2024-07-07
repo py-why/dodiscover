@@ -81,7 +81,7 @@ When you're ready to contribute code to address an open issue, please follow the
 
     Then you can create and activate a new Python environment by running:
 
-        conda create -n dodiscover python=3.9
+        conda create -n dodiscover python=3.10
         conda activate dodiscover
 
     Next, you'll need poetry installed, which is a software dependency manager written in Python. Follow the [official instructions to install poetry](https://python-poetry.org/docs/#installation). Once your virtual environment is activated, you can install your local clone with ``poetry``.

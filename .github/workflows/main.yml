@@ -20,48 +20,38 @@ jobs:
   style:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        poetry-version: [1.5.1]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v4
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
           architecture: "x64"
-
-      - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.3.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
+      - name: Install packages for Ubuntu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libopenblas-dev libatlas-base-dev liblapack-dev
 
       - name: Install dependencies
-        run: poetry install --only style
+        run: |
+          pip install --upgrade pip
+          pip install -r style_requirements.txt
 
       # check formatting of the code style
       - name: Check code formatting
-        run: poetry run poe format_check
-
-      # this applies various linting
-      - name: Lint codebase
-        run: poetry run poe lint
-
-      - name: Type check
-        run: poetry run poe type_check
+        run: make pre-commit
 
   build:
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu, macos, windows]
-        python-version: [3.9, "3.10", "3.11"]
-        poetry-version: [1.5.1]
+        # upgrade to macos-latest when 3.10 is removed
+        os: ["ubuntu-latest", "macos-13", "windows-latest"]
+        python-version: ["3.10", "3.11", "3.12"]
     name: build ${{ matrix.os }} - py${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
@@ -69,25 +59,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: "x64"
-      - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.3.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
-      - name: Install from source
+      - name: Install and setup package
         run: |
-          poetry install
+          python -m pip install --progress-bar off .[build]
       - name: Test package install
-        run: poetry run python -c "import dodiscover; print(dodiscover.__version__)"
+        run: |
+          python -c "import dodiscover; print(dodiscover.__version__)"
       - name: Remove package install
-        run: python -m pip uninstall -yq dodiscover
-      - name: Check poetry lock file
-        run: poetry update --dry-run
+        run: |
+          python -m pip uninstall -yq dodiscover
       - name: Build package
-        run: poetry build
+        run: python -m build
       - name: Upload package distribution files
         if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.11' }}
         uses: actions/upload-artifact@v3
@@ -120,12 +106,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu, macos, windows]
-        python-version: [3.9, "3.11"] # oldest and newest supported versions
-        poetry-version: [1.5.1]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        # oldest and newest supported versions
+        python-version: ["3.10", "3.11"] # TODO: update to 3.12 when statsmodels supports
         networkx: [stable, main]
+        exclude:
+          - { python-version: "3.10", os: "macos-latest" }
+        include:
+          - { python-version: "3.10", os: "macos-13" }
     name: Unit-test ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
@@ -133,24 +123,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: "x64"
-      - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.3.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
-      - name: Install packages via poetry
+      - name: Install packages via pip
         run: |
-          poetry install --with test --extras graph_func
+          pip install --upgrade pip
+          pip install numpy scipy networkx statsmodels
+      
+      - name: Install package
+        run: |
+          pip install .[test]
+          pip install .
+
       - name: Install Networkx (main)
         if: "matrix.networkx == 'main'"
         run: |
           pip uninstall -yq networkx
           pip install --progress-bar off git+https://github.com/networkx/networkx
       - name: Run pytest
-        run: poetry run poe unit_test
+        run: |
+          pytest --cov dodiscover ./tests/unit_tests/
       - name: Upload coverage stats to codecov
         if: ${{ matrix.os == 'ubuntu' && matrix.python-version == '3.10' && matrix.networkx == 'stable' }}
         uses: codecov/codecov-action@v3
@@ -164,12 +158,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu]
-        python-version: ["3.10"] # oldest and newest supported versions
-        poetry-version: [1.5.1]
+        os: [ubuntu-latest]
+        python-version: ["3.11"]
         networkx: [main]
     name: Integration test ${{ matrix.os }} - py${{ matrix.python-version }} - Networkx ${{ matrix.networkx }}
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
@@ -177,31 +170,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: "x64"
-      - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.3.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
 
       - name: Install packages for Ubuntu
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz optipng libxft2 graphviz-dev
-      
+
       - name: Setup torch
         run: |
           sudo apt-get install nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
 
-      - name: Install Poetry Dynamic Versioning Plugin
-        run: pip install poetry-dynamic-versioning
-      - name: Install packages via poetry
+      - name: Install packages via pip
         run: |
-          poetry install --with test,docs --extras graph_func
+          pip install --upgrade pip
+          pip install numpy scipy networkx statsmodels
+          pip install .[test,doc]
       - name: Run pytest # headless via Xvfb on linux
-        run: poetry run poe integration_test
+        run: |
+          pytest tests/integration_tests
 
   # release is ran when a release is made on Github
   release:
@@ -213,34 +203,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: "3.10"
           architecture: "x64"
-      - name: Install Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2.3.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
-      - name: Install Poetry Dynamic Versioning Plugin
-        run: pip install poetry-dynamic-versioning
+      - name: Install dependencies
+        run: |
+          python -m pip install --progress-bar off --upgrade pip setuptools wheel
+          python -m pip install --progress-bar off build twine
       - name: Prepare environment
         run: |
           echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
           echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      - name: Build the release artifact
-        run: |
-          poetry-dynamic-versioning
-          poetry build
       - name: Download package distribution files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: package
           path: dist
+      # TODO: refactor scripts to generate release notes from `whats_new.rst` file instead
+      # - name: Generate release notes
+      #   run: |
+      #     python scripts/release_notes.py > ${{ github.workspace }}-RELEASE_NOTES.md
       - name: Publish package to PyPI
-        run: poetry publish --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }}
-
+        run: |
+          twine upload -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }} dist/*
       - name: Publish GitHub release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
