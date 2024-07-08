@@ -706,7 +706,7 @@ class FCI(BaseConstraintDiscovery):
                     # that:
                     # i) begin the uncovered pd path and
                     # ii) are distinct (done by construction) here
-                    for (m, w) in combinations(graph.neighbors(a), 2):  # type: ignore
+                    for m, w in combinations(graph.neighbors(a), 2):  # type: ignore
                         if m == c or w == c:
                             continue
 
@@ -763,7 +763,7 @@ class FCI(BaseConstraintDiscovery):
             logger.info(f"Running R1-10 for iteration {idx}")
 
             for u in graph.nodes:
-                for (a, c) in permutations(graph.neighbors(u), 2):
+                for a, c in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")
 
                     # apply R1-3 to orient triples and arrowheads

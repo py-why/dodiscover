@@ -307,7 +307,7 @@ class PsiFCI(FCI):
             logger.info(f"Running R1-10 for iteration {idx}")
 
             for u in graph.nodes:
-                for (a, c) in permutations(graph.neighbors(u), 2):
+                for a, c in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")
 
                     # apply R1-3 to orient triples and arrowheads

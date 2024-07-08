@@ -53,6 +53,7 @@ The four methods differ as follow:
 
 .. currentmodule:: dodiscover
 """
+
 # %%
 # Authors: Francesco Montagna <francesco.montagna997@gmail.com>
 #

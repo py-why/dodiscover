@@ -1040,7 +1040,7 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         # Update the Context:
         # add the corresponding intermediate PAG now to the context
         # new initialization graph
-        for (_, _, d) in new_init_graph.edges(data=True):
+        for _, _, d in new_init_graph.edges(data=True):
             if "test_stat" in d:
                 d.pop("test_stat")
             if "pvalue" in d:

@@ -132,7 +132,7 @@ class BaseConstraintDiscovery:
         sep_set: SeparatingSet = defaultdict(lambda: defaultdict(list))
 
         # since we are not starting from a complete graph, find the separating sets
-        for (node_i, node_j) in itertools.combinations(init_graph.nodes, 2):
+        for node_i, node_j in itertools.combinations(init_graph.nodes, 2):
             if not init_graph.has_edge(node_i, node_j):
                 sep_set[node_i][node_j] = []
                 sep_set[node_j][node_i] = []

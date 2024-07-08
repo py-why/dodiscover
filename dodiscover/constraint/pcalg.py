@@ -347,7 +347,7 @@ class PC(BaseConstraintDiscovery):
         if graph.has_edge(i, j, graph.undirected_edge_name):
             # For all the pairs of nodes adjacent to i,
             # look for (k, l), such that j -> l and k -> l
-            for (k, l) in combinations(graph.neighbors(i), 2):
+            for k, l in combinations(graph.neighbors(i), 2):
                 # Skip if k and l are adjacent.
                 if l in graph.neighbors(k):
                     continue
