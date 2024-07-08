@@ -6,6 +6,7 @@ import sempler
 
 from dodiscover.score.score_function import ScoreFunction
 
+
 def titanic_data():
     df = pd.DataFrame(data={"A": [0, 0, 1], "B": [0, 1, 0], "C": [1, 1, 0], "D": ["X", "Y", "Z"]})
     m1 = BayesianNetwork([("A", "C"), ("B", "C"), ("D", "B")])
@@ -129,13 +130,12 @@ class TestK2Score(unittest.TestCase):
 seed = 1234
 rng = np.random.default_rng(seed)
 
+
 def sample_data(n, p, scm):
 
-    true_A = np.array([[0, 0, 1, 0, 0],
-                        [0, 0, 1, 0, 0],
-                        [0, 0, 0, 1, 1],
-                        [0, 0, 0, 0, 1],
-                        [0, 0, 0, 0, 0]])
+    true_A = np.array(
+        [[0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]]
+    )
     factorization = [(4, (2, 3)), (3, (2,)), (2, (0, 1)), (0, ()), (1, ())]
     true_B = true_A * rng.uniform(1, 2, size=true_A.shape)
     scm = sempler.LGANM(true_B, (0, 0), (0.3, 0.4))
@@ -146,11 +146,12 @@ def sample_data(n, p, scm):
 
 
 def test_bic_score_with_true_graph_is_better_than_empty():
-    scorer = ScoreFunction(score='bic')
-    true_score =scorer.full_score(true_A)
+    scorer = ScoreFunction(score="bic")
+    true_score = scorer.full_score(true_A)
 
     empty_score = scorer.full_score(np.zeros_like(true_A))
     assert true_score > empty_score
+
 
 def test_bic_score_preserves_decomposability():
     pass

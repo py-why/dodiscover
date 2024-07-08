@@ -1,17 +1,17 @@
 # Adapted from: https://github.com/juangamella/ges/
 # BSD 3-Clause License
 
-from typing import Callable, Union, Dict
+from typing import Callable, Dict, Union
 
 import numpy as np
 import pandas as pd
 
 
 class ScoreFunction:
-    def __init__(self, score: Union[Callable, str]='bic') -> None:
+    def __init__(self, score: Union[Callable, str] = "bic") -> None:
         self._cache: Dict = dict()
 
-        if score == 'bic':
+        if score == "bic":
             self.score_func = bic_score
 
     def local_score(self, data: pd.DataFrame, source, source_parents) -> float:
@@ -117,7 +117,7 @@ def _mle(data, source, source_parents):
 
         # compute the estimate of the noise-term variance
         sigma = np.var(Y - X @ parents_coef)
-    
+
     # XXX: it is possible to compute things using the empirical covariance matrix
     # beta = (\Sigma_{source, Pa(source)} @ \Sigma_{Pa(source), Pa(source)})^{-1}
 
