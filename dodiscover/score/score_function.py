@@ -47,19 +47,19 @@ class ScoreFunction:
         >>> K2Score(data).score(BayesianNetwork([['A','B'], ['B','C']]))
         -16273.793897051042
         """
-        if self.score_func == 'full-mle':
+        if self.score_func == "full-mle":
             return full_score(data, graph)
-        
+
         score = 0
         for node in graph.nodes():
             score += self.local_score(data, node, graph.predecessors(node))
         score += self.structure_prior(graph)
         return score
-    
+
     def structure_prior(self, graph):
         """A (log) prior distribution over models. Currently unused (= uniform)."""
-        return 0.
-    
+        return 0.0
+
     def local_score(self, data: pd.DataFrame, source, source_parents) -> float:
         """Compute the local score of an edge.
 
@@ -86,8 +86,9 @@ class ScoreFunction:
             score = self.score_func(data, source, source_parents)
             self._cache[key] = score
         return score
-    
- # XXX: this is only for Likelihood score for Gaussian data
+
+
+# XXX: this is only for Likelihood score for Gaussian data
 def full_score(data: pd.DataFrame, A):
     """Full score of a DAG.
 
@@ -109,7 +110,7 @@ def full_score(data: pd.DataFrame, A):
     """
     if self.score_func != "likelihood":
         raise ValueError("full_score is only implemented for the likelihood score")
-    
+
     # Compute MLE
     B, omegas = self._mle_full(A)
     # Compute log-likelihood (without log(2π) term)
@@ -221,9 +222,9 @@ def bdeu_score(data, source, source_parents):
     score = 0.0
 
     source_states = data[source]
-    
+
     score += np.sum(log_gamma_counts) + gamma_counts_adj
-    score -= (np.sum(log_gamma_cond) + gamma_cond_adj)
+    score -= np.sum(log_gamma_cond) + gamma_cond_adj
     score += num_parent_states * lgamma(alpha)
     score -= counts_size * lgamma(beta)
 
