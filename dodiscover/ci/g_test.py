@@ -18,7 +18,7 @@ def _calculate_contingency_tble(
     data: NDArray,
     nlevels_x: int,
     nlevels_y: int,
-    levels: NDArray = None,
+    levels: Optional[NDArray] = None,
 ) -> NDArray:
     """Calculate log term for binary G^2 statistic in CI test.
 

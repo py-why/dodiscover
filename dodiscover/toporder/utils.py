@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import networkx as nx
 import numpy as np
@@ -83,7 +83,7 @@ def orders_consistency(order_full: List[int], order_noleaf: List[int]) -> bool:
     return True
 
 
-def dummy_sample(G: nx.DiGraph = None, seed: int = 42, n_samples=100) -> pd.DataFrame:
+def dummy_sample(G: Optional[nx.DiGraph] = None, seed: int = 42, n_samples=100) -> pd.DataFrame:
     """Generate data from an additive noise model.
 
     Data are generated from a Structural Causal Model consistent with the input graph G.

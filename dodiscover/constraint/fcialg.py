@@ -823,7 +823,7 @@ class FCI(BaseConstraintDiscovery):
     def learn_skeleton(
         self,
         data: pd.DataFrame,
-        context: Context = None,
+        context: Optional[Context] = None,
         sep_set: Optional[SeparatingSet] = None,
         **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:

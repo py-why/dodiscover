@@ -187,7 +187,7 @@ class BaseConstraintDiscovery:
     def learn_graph(
         self,
         data: pd.DataFrame,
-        context: Context = None,
+        context: Optional[Context] = None,
     ):
         """Fit constraint-based discovery algorithm on dataset 'X'.
 
@@ -273,7 +273,7 @@ class BaseConstraintDiscovery:
     def learn_skeleton(
         self,
         data: pd.DataFrame,
-        context: Context = None,
+        context: Optional[Context] = None,
         sep_set: Optional[SeparatingSet] = None,
         **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:

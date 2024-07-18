@@ -2,6 +2,8 @@
 Wrapper for the GIN latent variable causal discovery algorithm in causal-learn
 """
 
+from typing import Optional
+
 from pandas import DataFrame
 from pywhy_graphs.export import clearn_to_graph
 
@@ -72,7 +74,7 @@ class GIN:
         # go in a base class too.
         self.causal_learn_graph_ = None
 
-    def learn_graph(self, data: DataFrame, context: DataFrame = None):
+    def learn_graph(self, data: DataFrame, context: Optional[DataFrame] = None):
         """Fit the GIN model to data.
         Currently the context object is not used.
 

@@ -134,7 +134,7 @@ class PsiFCI(FCI):
     def learn_skeleton(
         self,
         data: pd.DataFrame,
-        context: Context = None,
+        context: Optional[Context] = None,
         sep_set: Optional[SeparatingSet] = None,
         **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
@@ -168,7 +168,7 @@ class PsiFCI(FCI):
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests
         return skel_graph, sep_set
 
-    def learn_graph(self, data: List[pd.DataFrame], context: Context = None):
+    def learn_graph(self, data: List[pd.DataFrame], context: Optional[Context] = None):
         """Learn the relevant causal graph equivalence class.
 
         From the pairs of datasets, we take all combinations and

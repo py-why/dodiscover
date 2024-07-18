@@ -845,7 +845,9 @@ class LearnSkeleton(BaseSkeletonLearner):
         nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
         return context
 
-    def learn_graph(self, data: pd.DataFrame, context: Context = None, check_input: bool = True):
+    def learn_graph(
+        self, data: pd.DataFrame, context: Optional[Context] = None, check_input: bool = True
+    ):
         if context is None:
             # make a private Context object to store causal context used in this algorithm
             # store the context
@@ -1083,7 +1085,9 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return super()._initialize_params(context)
 
-    def learn_graph(self, data: pd.DataFrame, context: Context = None, check_input: bool = True):
+    def learn_graph(
+        self, data: pd.DataFrame, context: Optional[Context] = None, check_input: bool = True
+    ):
         if context is None:
             # make a private Context object to store causal context used in this algorithm
             # store the context
@@ -1228,7 +1232,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self.known_intervention_targets = known_intervention_targets
 
     def learn_graph(
-        self, data: List[pd.DataFrame], context: Context = None, check_input: bool = True
+        self, data: List[pd.DataFrame], context: Optional[Context] = None, check_input: bool = True
     ) -> None:
         if context is None:
             # make a private Context object to store causal context used in this algorithm
