@@ -470,7 +470,7 @@ class TopOrderInterface(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def learn_graph(self, data: pd.DataFrame, context: Context) -> None:
+    def learn_graph(self, data: pd.DataFrame, context: Context = None) -> None:
         raise NotImplementedError()
 
     @abstractmethod
@@ -585,7 +585,7 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
                 k += 1
         return leaf
 
-    def learn_graph(self, data_df: pd.DataFrame, context: Context) -> None:
+    def learn_graph(self, data_df: pd.DataFrame, context: Context = None) -> None:
         """
         Fit topological order based causal discovery algorithm on input data.
 
@@ -596,6 +596,13 @@ class BaseTopOrder(CAMPruning, TopOrderInterface):
         context: Context
             The context of the causal discovery problem.
         """
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         X = data_df.to_numpy()
         self.context = context
 

@@ -9,8 +9,6 @@ algorithms and data structures of ``networkx``.
 We encourage you to use the package for your causal inference research and also build on top
 with relevant Pull Requests.
 
-See our examples for walk-throughs of how to use the package, or 
-
 Please refer to our :ref:`user_guide` for details on all the tools that we
 provide. You can also find an exhaustive list of the public API in the
 :ref:`api_ref`. You can also look at our numerous :ref:`examples <general_examples>`

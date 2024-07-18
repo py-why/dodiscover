@@ -821,8 +821,19 @@ class FCI(BaseConstraintDiscovery):
             idx += 1
 
     def learn_skeleton(
-        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+        self,
+        data: pd.DataFrame,
+        context: Context = None,
+        sep_set: Optional[SeparatingSet] = None,
+        **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(
             self.ci_estimator,

@@ -16,28 +16,6 @@ for classes (``CamelCase`` names) and functions
 stage.
 
 
-Context for causal discovery
-============================
-
-Rather than just data, in many cases structure learning
-has additional "context", in the form of apriori knowledge of
-the structure, or additional datasets from different environments.
-All structure learning algorithms in ``dodiscover`` pass in a ``Context``
-object rather than just data. One should use our builder ``make_context``
-API for construction of the Context class. 
-
-See docs for ``Context`` and ``make_context`` for more information.
-
-.. currentmodule:: dodiscover
-.. autosummary::
-   :toctree: generated/
-
-   make_context
-   ContextBuilder
-   InterventionalContextBuilder
-   context.Context
-
-
 Constraint-based structure learning
 ===================================
 
@@ -173,3 +151,26 @@ independence.
 
    generate_knn_in_subspace
    restricted_nbr_permutation
+
+**The following API is for internal development and is completely experimental.**
+
+Context for causal discovery
+============================
+
+Rather than just data, in many cases structure learning
+has additional "context", in the form of apriori knowledge of
+the structure, or additional datasets from different environments.
+All structure learning algorithms in ``dodiscover`` pass in a ``Context``
+object rather than just data. One should use our builder ``make_context``
+API for construction of the Context class. 
+
+See docs for ``Context`` and ``make_context`` for more information.
+
+.. currentmodule:: dodiscover
+.. autosummary::
+   :toctree: generated/
+
+   make_context
+   ContextBuilder
+   InterventionalContextBuilder
+   context.Context
