@@ -111,7 +111,10 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1.0 + np.sum(null_dist >= conditional_div)) / (1 + self.null_reps)
         return conditional_div, pvalue
 
-    def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:
+    def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:  # type: ignore
+        # def _statistic(
+        #     self, Y: ArrayLike, group_ind: ArrayLike, X: Optional[ArrayLike] = None
+        # ) -> float:
         first_group = group_ind == 0
         second_group = group_ind == 1
         X1 = X[first_group, :]

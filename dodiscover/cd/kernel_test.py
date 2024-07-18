@@ -1,4 +1,4 @@
-from typing import Set, Tuple
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
@@ -151,7 +151,9 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1 + np.sum(null_dist >= stat)) / (1 + self.null_reps)
         return stat, pvalue
 
-    def _statistic(self, L: ArrayLike, group_ind: ArrayLike, K: ArrayLike = None) -> float:
+    def _statistic(
+        self, L: ArrayLike, group_ind: ArrayLike, K: Optional[ArrayLike] = None
+    ) -> float:
         n_samples = len(L)
 
         # compute L kernels

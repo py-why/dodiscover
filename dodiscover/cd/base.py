@@ -138,7 +138,9 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         return self.propensity_est_
 
     @abstractmethod
-    def _statistic(self, Y: ArrayLike, group_ind: ArrayLike, X: ArrayLike = None) -> float:
+    def _statistic(
+        self, Y: ArrayLike, group_ind: ArrayLike, X: Optional[ArrayLike] = None
+    ) -> float:
         """Abstract method for computing the test statistic."""
         pass
 
@@ -146,7 +148,7 @@ class BaseConditionalDiscrepancyTest(metaclass=ABCMeta):
         self,
         e_hat: ArrayLike,
         Y: ArrayLike,
-        X: ArrayLike = None,
+        X: Optional[ArrayLike] = None,
         null_reps: int = 1000,
         random_state=None,
     ) -> ArrayLike:

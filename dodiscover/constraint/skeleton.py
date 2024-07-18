@@ -1612,11 +1612,12 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
     def learn_graph(
         self,
         data: List[pd.DataFrame],
-        context: Context,
-        domain_indices: List[int],
-        intervention_targets: List[Optional[Set]],
+        context: Optional[Context] = None,
+        domain_indices: Optional[List[int]] = None,
+        intervention_targets: Optional[List[Optional[Set]]] = None,
         check_input: bool = True,
         debug: bool = False,
+        **params,
     ) -> None:
         """Fit data and context.
 
@@ -1635,6 +1636,13 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
             The intervention targets of each dataframe in ``data``. Is ``None`` if
             ``data`` is observational, or ``unknown`` if target is unknown.
         """
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         # ensure data is a list
         if isinstance(data, pd.DataFrame):
             data = [data]
@@ -1677,8 +1685,9 @@ class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
         skip_nodes = augmented_nodes
 
         # provide multi-domain context
-        context.augmented_nodes = augmented_nodes
-        context.node_domain_map = node_domain_map
+        # XXX: Do I need to do assignment?
+        # context.augmented_nodes = augmented_nodes
+        # context.node_domain_map = node_domain_map
         context.add_state_variable("node_domain_map", node_domain_map)
         context.add_state_variable("augmented_nodes", augmented_nodes)
         context.symmetric_diff_map = symmetric_diff_map
