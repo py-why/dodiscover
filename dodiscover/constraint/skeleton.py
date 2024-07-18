@@ -845,7 +845,14 @@ class LearnSkeleton(BaseSkeletonLearner):
         nx.set_edge_attributes(context.init_graph, -1e-5, "pvalue")
         return context
 
-    def learn_graph(self, data: pd.DataFrame, context: Context, check_input: bool = True):
+    def learn_graph(self, data: pd.DataFrame, context: Context = None, check_input: bool = True):
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         if check_input:
             # initialize learning parameters
             context = self._initialize_params(context)
@@ -1076,7 +1083,14 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return super()._initialize_params(context)
 
-    def learn_graph(self, data: pd.DataFrame, context: Context, check_input: bool = True):
+    def learn_graph(self, data: pd.DataFrame, context: Context = None, check_input: bool = True):
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         if check_input:
             context = self._initialize_params(context)
 
@@ -1214,8 +1228,15 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
         self.known_intervention_targets = known_intervention_targets
 
     def learn_graph(
-        self, data: List[pd.DataFrame], context: Context, check_input: bool = True
+        self, data: List[pd.DataFrame], context: Context = None, check_input: bool = True
     ) -> None:
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         # ensure data is a list
         if isinstance(data, pd.DataFrame):
             data = [data]

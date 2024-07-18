@@ -58,15 +58,11 @@ Please consider contributing to [causal-learn](https://github.com/py-why/causal-
 
 In the future we plan on trying to integrate the two libraries.
 
-## What is the relationship with pywhy-graphs and py-indep?
+## What is the relationship with pywhy-graphs and pywhy-stats?
 
 [pywhy-graphs](https://github.com/py-why/pywhy-graphs) is the home of graph data structures and graph algorithms in PyWhy.
 
 [pywhy-stats](https://github.com/py-why/pywhy-stats) serves as a repository for implementations of (un)conditional independence tests, which can be utilized in various tasks, such as causal discovery.
-
-# dodiscover is moving to causal-learn eventually!
-
-We are excited to welcome [causal-learn](https://github.com/py-why/causal-learn) to the PyWhy community.  We are currently incorporating do-discover innovations into causal-learn and integrating causal-learn with other PyWhy libraries. This will occur over the course of many release cycles though. In the meantime, feel free to open up issues/PRs related to API and algorithm issues you find. 
 
 # Documentation
 
@@ -101,15 +97,9 @@ If you already have a working installation of numpy, scipy and networkx, the eas
     # doesn't work until we make an official release :p
     pip install -U dodiscover
 
-To install the package from github, clone the repository and then `cd` into the directory. You can then use `poetry` to install:
+To install the package from github, clone the repository and then `cd` into the directory. You can then use `pip` to install:
 
-    poetry install
-
-    # for graph functionality
-    poetry install --extras graph_func
-
-    # to load datasets used in tutorials
-    poetry install --extras data
-
-    # if you would like an editable install of dodiscover for dev purposes
     pip install -e .
+
+    # for extra functionality for documentation, building, style checking and unit-testing
+    pip install .[doc, build, style, test]
