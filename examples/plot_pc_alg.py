@@ -21,6 +21,7 @@ dodiscover for causal discovery:
 
 .. currentmodule:: dodiscover
 """
+
 # %%
 # Authors: Adam Li <adam2392@gmail.com>
 #
