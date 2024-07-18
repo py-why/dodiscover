@@ -32,7 +32,8 @@ project = "dodiscover"
 copyright = f"{datetime.today().year}, Adam Li"
 author = "Adam Li"
 version = dodiscover.__version__
-
+# The full version, including alpha/beta/rc tags.
+release = version
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -248,6 +249,7 @@ html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
 html_favicon = "_static/favicon.ico"
 
+switcher_version_match = "dev" if "dev" in release else version
 html_theme_options = {
     "icon_links": [
         dict(
@@ -259,7 +261,11 @@ html_theme_options = {
     "use_edit_page_button": False,
     "navigation_with_keys": False,
     "show_toc_level": 1,
-    "navbar_end": ["version-switcher", "navbar-icon-links"],
+    "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
+    "switcher": {
+        "json_url": "https://raw.githubusercontent.com/py-why/dodiscover/main/doc/_static/versions.json",  # noqa: E501
+        "version_match": switcher_version_match,
+    },
 }
 
 scrapers = ("matplotlib",)
