@@ -13,7 +13,6 @@ from observational and interventional data.
 .. currentmodule:: dodiscover
 """
 
-
 # %%
 # Authors: Adam Li <adam2392@gmail.com>
 #

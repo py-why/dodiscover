@@ -742,7 +742,7 @@ class FCI(BaseConstraintDiscovery):
                     # that:
                     # i) begin the uncovered pd path and
                     # ii) are distinct (done by construction) here
-                    for (m, w) in combinations(graph.neighbors(a), 2):  # type: ignore
+                    for m, w in combinations(graph.neighbors(a), 2):  # type: ignore
                         if m == c or w == c:
                             continue
 
@@ -802,7 +802,7 @@ class FCI(BaseConstraintDiscovery):
             logger.info(f"Running R1-10 for iteration {idx}")
 
             for u in graph.nodes:
-                for (a, c) in permutations(graph.neighbors(u), 2):
+                for a, c in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")
 
                     # apply R1-3 to orient triples and arrowheads
@@ -870,7 +870,7 @@ class FCI(BaseConstraintDiscovery):
             #     pass
             # else:
             for u in graph.nodes:
-                for (a, c) in permutations(graph.neighbors(u), 2):
+                for a, c in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")
 
                     # apply R1-3 to orient triples and arrowheads
@@ -928,8 +928,19 @@ class FCI(BaseConstraintDiscovery):
             idx += 1
 
     def learn_skeleton(
-        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+        self,
+        data: pd.DataFrame,
+        context: Optional[Context] = None,
+        sep_set: Optional[SeparatingSet] = None,
+        **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         # now compute all possibly d-separating sets and learn a better skeleton
         skel_alg = LearnSemiMarkovianSkeleton(
             self.ci_estimator,

@@ -133,8 +133,19 @@ class PsiFCI(FCI):
         self.known_intervention_targets = known_intervention_targets
 
     def learn_skeleton(
-        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+        self,
+        data: pd.DataFrame,
+        context: Optional[Context] = None,
+        sep_set: Optional[SeparatingSet] = None,
+        **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         # now compute all possibly d-separating sets and learn a better skeleton
         self.skeleton_learner_ = LearnInterventionSkeleton(
             self.ci_estimator,
@@ -158,7 +169,7 @@ class PsiFCI(FCI):
         self.n_ci_tests += self.skeleton_learner_.n_ci_tests
         return skel_graph, sep_set
 
-    def learn_graph(self, data: List[pd.DataFrame], context: Context):
+    def learn_graph(self, data: List[pd.DataFrame], context: Optional[Context] = None):
         """Learn the relevant causal graph equivalence class.
 
         From the pairs of datasets, we take all combinations and
@@ -178,6 +189,13 @@ class PsiFCI(FCI):
         self : PsiFCI
             The fitted learner.
         """
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         if not isinstance(data, list):
             raise TypeError("The input datasets must be in a Python list.")
 
@@ -317,7 +335,7 @@ class PsiFCI(FCI):
             logger.info(f"Running R1-10 for iteration {idx}")
 
             for u in graph.nodes:
-                for (a, c) in permutations(graph.neighbors(u), 2):
+                for a, c in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")
 
                     # apply R1-3 to orient triples and arrowheads

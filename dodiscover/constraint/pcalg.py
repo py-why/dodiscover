@@ -138,7 +138,11 @@ class PC(BaseConstraintDiscovery):
         return graph
 
     def learn_skeleton(
-        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+        self,
+        data: pd.DataFrame,
+        context: Optional[Context] = None,
+        sep_set: Optional[SeparatingSet] = None,
+        **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
         """Learns the skeleton of a causal DAG using pairwise (conditional) independence testing.
 
@@ -164,6 +168,13 @@ class PC(BaseConstraintDiscovery):
         to determine which variables are (in)dependent. This specific algorithm
         compares exhaustively pairs of adjacent variables.
         """
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
         skel_alg = LearnSkeleton(
             self.ci_estimator,
             sep_set=sep_set,
@@ -361,7 +372,7 @@ class PC(BaseConstraintDiscovery):
         if graph.has_edge(i, j, graph.undirected_edge_name):
             # For all the pairs of nodes adjacent to i,
             # look for (k, l), such that j -> l and k -> l
-            for (k, l) in combinations(graph.neighbors(i), 2):
+            for k, l in combinations(graph.neighbors(i), 2):
                 # Skip if k and l are adjacent.
                 if l in graph.neighbors(k):
                     continue

@@ -49,7 +49,7 @@ class SFCI(PsiFCI):
         )
 
     def learn_skeleton(
-        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None
+        self, data: pd.DataFrame, context: Context, sep_set: Optional[SeparatingSet] = None, **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
         # now compute all possibly d-separating sets and learn a better skeleton
         self.skeleton_learner_ = LearnMultiDomainSkeleton(

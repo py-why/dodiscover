@@ -22,7 +22,6 @@ There are a total of 6 experimental conditions represented by the ``INT`` column
 .. currentmodule:: dodiscover
 """
 
-
 # %%
 # Authors: Adam Li <adam2392@gmail.com>
 #

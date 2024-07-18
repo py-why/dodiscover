@@ -1,16 +1,13 @@
 Installation
 ============
 
-**dodiscover** supports Python >= 3.8.
+**dodiscover** supports Python >= 3.10.
 
-## Installing with ``pip``, or ``poetry``.
+## Installing with ``pip``.
 
 **dodiscover** is available [on PyPI](https://pypi.org/project/dodiscover/). Just run
 
     pip install dodiscover
-
-    # or via poetry (recommended)
-    poetry add dodiscover
 
 ## Installing from source
 
@@ -19,10 +16,6 @@ To install **dodiscover** from source, first clone [the repository](https://gith
     git clone https://github.com/py-why/dodiscover.git
     cd dodiscover
 
-Then run installation via poetry (recommended)
-
-    poetry install
-
-or via pip
+Then run installation via pip
 
     pip install -e .

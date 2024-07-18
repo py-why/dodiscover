@@ -1,39 +1,34 @@
 version: 2.1
 
-jobs:
-  build_doc:
-    docker:
-      - image: cimg/python:3.9
-
+commands:
+  check-skip:
     steps:
-      - checkout
-
-      - run:
-          name: Complete checkout
-          command: |
-            if ! git remote -v | grep upstream; then
-              git remote add upstream https://github.com/py-why/dodiscover.git
-            fi
-            git remote set-url upstream https://github.com/py-why/dodiscover.git
-            git fetch upstream
-      - save_cache:
-          name: Save .git
-          key: source-cache-graphs
-          paths:
-            - ".git"
       - run:
           name: Check-skip
           command: |
-            set -e
-            export COMMIT_MESSAGE=$(git log --format=oneline -n 1);
-            if [[ -v CIRCLE_PULL_REQUEST ]] && ([[ "$COMMIT_MESSAGE" == *"[skip circle]"* ]] || [[ "$COMMIT_MESSAGE" == *"[circle skip]"* ]]); then
+            if [ ! -d "sktree" ]; then
+              echo "Build was not run due to skip, exiting job ${CIRCLE_JOB} for PR ${CIRCLE_PULL_REQUEST}."
+              circleci-agent step halt;
+            fi
+            export git_log=$(git log --max-count=1 --pretty=format:"%B" | tr "\n" " ")
+            echo "Got commit message:"
+            echo "${git_log}"
+            if [[ -v CIRCLE_PULL_REQUEST ]] && ([[ "$git_log" == *"[skip circle]"* ]] || [[ "$git_log" == *"[circle skip]"* ]]); then
               echo "Skip detected, exiting job ${CIRCLE_JOB} for PR ${CIRCLE_PULL_REQUEST}."
               circleci-agent step halt;
             fi
-      - restore_cache:
-          keys:
-            - poetry-v1-{{ checksum "poetry.lock" }}
-            - poetry-v1-
+  apt-install:
+    steps:
+      - run:
+          name: Install apt packages
+          command: |
+            sudo apt-get update
+            sudo apt-get install libopenblas-dev gfortran libgmp-dev libmpfr-dev ccache
+            # make sure pandoc is on the system
+            sudo apt-get update && sudo apt-get install -y pandoc optipng
+
+            # install pysal dependencies
+            sudo apt install libspatialindex-dev xdg-utils
 
       - run:
           name: Set BASH_ENV
@@ -49,6 +44,7 @@ jobs:
             echo 'export DISPLAY=:99' >> $BASH_ENV
             echo 'BASH_ENV:'
             cat $BASH_ENV
+      
       - run:
           name: Install fonts needed for diagrams
           command: |
@@ -56,6 +52,7 @@ jobs:
             curl https://codeload.github.com/adobe-fonts/source-code-pro/tar.gz/2.038R-ro/1.058R-it/1.018R-VAR | tar xz -C $HOME/.fonts
             curl https://codeload.github.com/adobe-fonts/source-sans-pro/tar.gz/3.028R | tar xz -C $HOME/.fonts
             fc-cache -f
+
       - run:
           name: Install pysal dependencies
           command: |
@@ -68,31 +65,61 @@ jobs:
       - run:
           name: Setup torch
           command: sudo apt-get install nvidia-cuda-toolkit nvidia-cuda-toolkit-gcc
-      - run:
-          name: Install Poetry
-          command: |
-            curl -sSL https://install.python-poetry.org | python -
-            export PATH='$HOME/.poetry/bin:$PATH'
 
+  merge:
+    steps:
       - run:
-          name: Install Dependencies
+          name: merge with upstream
           command: |
-            poetry install --no-interaction --no-ansi  --with docs --extras viz --extras graph_func
+            echo $(git log -1 --pretty=%B) | tee gitlog.txt
+            echo ${CI_PULL_REQUEST//*pull\//} | tee merge.txt
+            if [[ $(cat merge.txt) != "" ]]; then
+              echo "Merging $(cat merge.txt)";
+              git remote add upstream https://github.com/neurodata/scikit-tree.git;
+              git pull --ff-only upstream "refs/pull/$(cat merge.txt)/merge";
+              git fetch upstream main;
+            fi
 
-      - run:
-          name: Show installed versions
-          command: |
-            poetry show
+jobs:
+  build_doc:
+    docker:
+      - image: cimg/python:3.10
+
+    steps:
+      - checkout
+      - check-skip
+      - merge
+      - apt-install
+
+      - restore_cache:
+          name: Restore .git
+          keys:
+            - source-cache-graphs
 
       - save_cache:
+          name: Save .git
+          key: source-cache-graphs
           paths:
-            - $HOME/.poetry
-          key: poetry-v1-{{ checksum "poetry.lock" }}
+            - ".git"
+            
+      - run:
+          name: setup Python venv
+          command: |
+            pip install --upgrade pip
+            pip install .[build,doc]
+      
+      - run:
+          name: Check installation
+          command: |
+            python -c "import pywhy_graphs;"
+            python -c "import dodiscover;"
+            python -c "import numpy; numpy.show_config()"
+            LIBGL_DEBUG=verbose python -c "import matplotlib.pyplot as plt; plt.figure()"
 
       - run:
-          name: Build Documentation
+          name: Build documentation
           command: |
-            poetry run poe build_docs
+            make -C doc html
           no_output_timeout: 20m
 
       # Save the example test results
