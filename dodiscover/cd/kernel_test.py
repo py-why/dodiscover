@@ -1,4 +1,4 @@
-from typing import Set, Tuple
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
@@ -109,13 +109,6 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         # compute kernel for the X and Y data
         X = df[x_cols].to_numpy()
         Y = df[y_cols].to_numpy()
-        K, sigma_x = compute_kernel(
-            X,
-            distance_metric=self.distance_metric,
-            metric=self.metric,
-            kwidth=self.kwidth_x,
-            n_jobs=self.n_jobs,
-        )
         L, sigma_y = compute_kernel(
             Y,
             distance_metric=self.distance_metric,
@@ -123,20 +116,34 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
             kwidth=self.kwidth_y,
             n_jobs=self.n_jobs,
         )
-
         # store fitted attributes
-        self.kwidth_x_ = sigma_x
         self.kwidth_y_ = sigma_y
 
+        if len(x_vars) != 0:
+            K, sigma_x = compute_kernel(
+                X,
+                distance_metric=self.distance_metric,
+                metric=self.metric,
+                kwidth=self.kwidth_x,
+                n_jobs=self.n_jobs,
+            )
+        else:
+            K = None
+            sigma_x = None
+        self.kwidth_x_ = sigma_x
+
         # compute the statistic
-        stat = self._statistic(K, L, group_ind)
+        stat = self._statistic(L, group_ind, K=K)
 
         # compute propensity scores
-        e_hat = self._compute_propensity_scores(group_ind, K=K)
+        if K is None:
+            e_hat = self._compute_propensity_scores(group_ind)
+        else:
+            e_hat = self._compute_propensity_scores(group_ind, K=K)
 
         # now compute null distribution
         null_dist = self.compute_null(
-            e_hat, K, L, null_reps=self.null_reps, random_state=self.random_state
+            e_hat, L, X=K, null_reps=self.null_reps, random_state=self.random_state
         )
         self.null_dist_ = null_dist
 
@@ -144,11 +151,10 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1 + np.sum(null_dist >= stat)) / (1 + self.null_reps)
         return stat, pvalue
 
-    def _statistic(self, K: ArrayLike, L: ArrayLike, group_ind: ArrayLike) -> float:
-        n_samples = len(K)
-
-        # compute W matrices from K and z
-        W0, W1 = self._compute_inverse_kernel(K, group_ind)
+    def _statistic(
+        self, L: ArrayLike, group_ind: ArrayLike, K: Optional[ArrayLike] = None
+    ) -> float:
+        n_samples = len(L)
 
         # compute L kernels
         first_mask = np.array(1 - group_ind, dtype=bool)
@@ -157,16 +163,25 @@ class KernelCDTest(BaseConditionalDiscrepancyTest):
         L1 = L[np.ix_(second_mask, second_mask)]
         L01 = L[np.ix_(first_mask, second_mask)]
 
-        # compute the final test statistic
-        K0 = K[:, first_mask]
-        K1 = K[:, second_mask]
-        KW0 = K0 @ W0
-        KW1 = K1 @ W1
+        if K is not None:
+            # compute W matrices from K and z
+            W0, W1 = self._compute_inverse_kernel(K, group_ind)
 
-        # compute the three terms in Lemma 4.4
-        first_term = np.trace(KW0.T @ KW0 @ L0)
-        second_term = np.trace(KW1.T @ KW0 @ L01)
-        third_term = np.trace(KW1.T @ KW1 @ L1)
+            # compute the final test statistic
+            K0 = K[:, first_mask]
+            K1 = K[:, second_mask]
+            KW0 = K0 @ W0
+            KW1 = K1 @ W1
+
+            # compute the three terms in Lemma 4.4
+            first_term = np.trace(KW0.T @ KW0 @ L0)
+            second_term = np.trace(KW1.T @ KW0 @ L01)
+            third_term = np.trace(KW1.T @ KW1 @ L1)
+        else:
+            # compute the three terms in Lemma 4.4
+            first_term = np.trace(L0)
+            second_term = np.trace(L01)
+            third_term = np.trace(L1)
 
         # compute final statistic
         stat = (first_term - 2 * second_term + third_term) / n_samples

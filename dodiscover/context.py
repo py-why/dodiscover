@@ -45,7 +45,11 @@ class Context(BasePyWhy):
     intervention_targets : list of tuple
         List of intervention targets (known, or unknown), which correspond to
         the nodes in the graph (known), or indices of datasets that contain
-        interventions (unknown).
+        interventions (unknown). If the value of an element is `None`, then
+        it means the distribution corresponding to the element's index has
+        an unknown intervention target. If the value is an empty set, then it
+        implies this is an observational distribution. If the value is a non-empty
+        set, then it informs us of the intervention targets.
 
     Raises
     ------

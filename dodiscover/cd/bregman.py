@@ -111,13 +111,20 @@ class BregmanCDTest(BaseConditionalDiscrepancyTest):
         pvalue = (1.0 + np.sum(null_dist >= conditional_div)) / (1 + self.null_reps)
         return conditional_div, pvalue
 
-    def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:
+    def _statistic(self, X: ArrayLike, Y: ArrayLike, group_ind: ArrayLike) -> float:  # type: ignore
+        # def _statistic(
+        #     self, Y: ArrayLike, group_ind: ArrayLike, X: Optional[ArrayLike] = None
+        # ) -> float:
         first_group = group_ind == 0
         second_group = group_ind == 1
         X1 = X[first_group, :]
         X2 = X[second_group, :]
         Y1 = Y[first_group, :]
         Y2 = Y[second_group, :]
+
+        print("dodiscover")
+        print(X1.shape, X2.shape, Y1.shape, Y2.shape)
+        print(X1[:2], X2[:2], Y1[:2], Y2[:2])
 
         # first compute the centered correntropy matrices, C_xy^1
         Cx1y1 = corrent_matrix(np.hstack((X1, Y1)), kwidth=self.kwidth)

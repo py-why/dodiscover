@@ -100,6 +100,7 @@ class PC(BaseConstraintDiscovery):
         keep_sorted: bool = False,
         max_iter: int = 1000,
         n_jobs: Optional[int] = None,
+        debug: bool = False,
     ):
         super().__init__(
             ci_estimator,
@@ -111,6 +112,7 @@ class PC(BaseConstraintDiscovery):
             apply_orientations=apply_orientations,
             keep_sorted=keep_sorted,
             n_jobs=n_jobs,
+            debug=debug,
         )
         self.max_iter = max_iter
 
@@ -274,10 +276,16 @@ class PC(BaseConstraintDiscovery):
             f"orienting collider: {v_i} -> {u} and {v_j} -> {u} to make {v_i} -> {u} <- {v_j}."
         )
 
+        # XXX: this should be a base method that is common to all constraint-based causal discovery
+        # We can integrate this with FCI probably
         if graph.has_edge(v_i, u, graph.undirected_edge_name):
             graph.orient_uncertain_edge(v_i, u)
+            if self.debug:
+                self.debug_map[(v_i, u)] = "collider"
         if graph.has_edge(v_j, u, graph.undirected_edge_name):
             graph.orient_uncertain_edge(v_j, u)
+            if self.debug:
+                self.debug_map[(v_j, u)] = "collider"
 
     def _apply_meek_rule1(self, graph: EquivalenceClass, i: Column, j: Column) -> bool:
         """Apply rule 1 of Meek's rules.
@@ -305,6 +313,9 @@ class PC(BaseConstraintDiscovery):
 
                 added_arrows = True
                 break
+
+        if added_arrows and self.debug:
+            self.debug_map[(i, j)] = "rule1"
         return added_arrows
 
     def _apply_meek_rule2(self, graph: EquivalenceClass, i: Column, j: Column) -> bool:
@@ -344,6 +355,9 @@ class PC(BaseConstraintDiscovery):
                 logger.info(f"R2: Removing edge {i}-{j} to form {i}->{j}.")
                 graph.orient_uncertain_edge(i, j)
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(i, j)] = "rule2"
         return added_arrows
 
     def _apply_meek_rule3(self, graph: EquivalenceClass, i: Column, j: Column) -> bool:
@@ -386,4 +400,7 @@ class PC(BaseConstraintDiscovery):
                     graph.orient_uncertain_edge(i, j)
                     added_arrows = True
                     break
+
+        if added_arrows and self.debug:
+            self.debug_map[(i, j)] = "rule3"
         return added_arrows
