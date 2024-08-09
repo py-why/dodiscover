@@ -1,4 +1,4 @@
-from typing import Callable, Tuple
+from typing import Callable, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,7 +13,7 @@ def nonlinear_additive_gaussian(
     dims_z: int = 1,
     std: float = 0.5,
     freq: float = 1.0,
-    cause_var: NDArray = None,
+    cause_var: Optional[NDArray] = None,
     nonlinear_func: Callable = np.cos,
     random_state=None,
 ) -> Tuple[NDArray, NDArray, NDArray]:

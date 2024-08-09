@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 from numpy.typing import NDArray
 from scipy.stats import ttest_ind
@@ -69,7 +71,7 @@ class DAS(SCORE):
         eta_H: float = 0.001,
         alpha: float = 0.05,
         prune: bool = True,
-        das_cutoff: float = None,
+        das_cutoff: Optional[float] = None,
         n_splines: int = 10,
         splines_degree: int = 3,
         min_parents: int = 5,

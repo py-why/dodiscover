@@ -1,0 +1,12 @@
+[
+    {
+        "name": "0.2 (devel)",
+        "version": "dev",
+        "url": "https://www.pywhy.org/dodiscover/dev/index.html"
+    },
+    {
+        "name": "0.1",
+        "version": "stable",
+        "url": "https://www.pywhy.org/dodiscover/stable/index.html"
+    }
+]

@@ -162,9 +162,9 @@ class CAM(BaseTopOrder):
         directed_paths : np.ndarray
             Existing directed paths in the graph.
         """
-        directed_paths[
-            parent, child
-        ] = 1  # directed_paths[i,j]=1 if there is a directed path from i to j
+        directed_paths[parent, child] = (
+            1  # directed_paths[i,j]=1 if there is a directed path from i to j
+        )
         child_descendants = np.argwhere(directed_paths[child, :])
         parent_ancestors = np.argwhere(directed_paths[:, parent])
         for p in parent_ancestors:  # add path from every ancestor to every descendant
@@ -240,9 +240,9 @@ class CAM(BaseTopOrder):
 
         # Initialize matrix of score gains and vector of initial scores
         score_gains = np.zeros((d, d))
-        score_gains[
-            np.transpose(directed_paths == 1, (1, 0))
-        ] = self.inf  # avoid cycles setting entries to -Inf according to current directed_paths
+        score_gains[np.transpose(directed_paths == 1, (1, 0))] = (
+            self.inf
+        )  # avoid cycles setting entries to -Inf according to current directed_paths
         nodes_variance = np.var(X, axis=0)
         init_score = -np.log(nodes_variance)
 

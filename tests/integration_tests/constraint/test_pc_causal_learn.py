@@ -1,4 +1,6 @@
 import bnlearn
+import numpy as np
+import pandas as pd
 import networkx as nx
 import pytest
 from causallearn.search.ConstraintBased.PC import pc_alg
@@ -95,7 +97,10 @@ from dodiscover.metrics import structure_hamming_dist
     ],
 )
 def test_pc_against_causallearn(dataset, ci_estimator, clearn_test, col_names, categorical_cols):
-    df = bnlearn.import_example(dataset, n=1000, verbose=False)
+    if dataset == "random":
+        df = pd.DataFrame(np.random.randint(0, 2, (1000, len(col_names))), columns=col_names)
+    else:
+        df = bnlearn.import_example(dataset, n=1000, verbose=False)
 
     # only keep non-nan rows
     print(df.columns)

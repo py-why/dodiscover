@@ -84,16 +84,7 @@ When you're ready to contribute code to address an open issue, please follow the
         conda create -n dodiscover python=3.10
         conda activate dodiscover
 
-    Next, you'll need poetry installed, which is a software dependency manager written in Python. Follow the [official instructions to install poetry](https://python-poetry.org/docs/#installation). Once your virtual environment is activated, you can install your local clone with ``poetry``.
-
-        # the output should show a version of at least 1.2.2 (e.g. "Poetry (version 1.2.2)")
-        poetry --version
-
-        # next install dodiscover using poetry
-        pip install -U pip setuptools wheel
-        poetry install --with docs,test,style --extras graph_func
-
-        # or you can try installing in editable mode with pip
+        # you can try installing in editable mode with pip
         pip install -e .
 
     The "editable mode" comes from the `-e` argument to `pip`, and essential just creates a symbolic link from the site-packages directory of your virtual environment to the source code in your local clone. That way any changes you make will be immediately reflected in your virtual environment.
@@ -130,7 +121,7 @@ When you're ready to contribute code to address an open issue, please follow the
 
     <details><summary>Expand details 👇</summary><br/>
 
-    Our continuous integration (CI) testing runs [a number of checks](https://github.com/py-why/dodiscover/actions) for each pull request on [GitHub Actions](https://github.com/features/actions). You can run most of these tests locally, which is something you should do *before* opening a PR to help speed up the review process and make it easier for us. Please see our [development guide](https://github.com/py-why/dodiscover/blob/main/DEVELOPING.md) for a comprehensive overview of useful commands leveraging [poetry](https://python-poetry.org). This will cover aspects of code style checking, unit testing, integration testing, and building the documentation. We try to make it as easy as possible with copy/paste commands leveraging poetry which will guide your development process!
+    Our continuous integration (CI) testing runs [a number of checks](https://github.com/py-why/dodiscover/actions) for each pull request on [GitHub Actions](https://github.com/features/actions). You can run most of these tests locally, which is something you should do *before* opening a PR to help speed up the review process and make it easier for us. Please see our [development guide](https://github.com/py-why/dodiscover/blob/main/DEVELOPING.md). This will cover aspects of code style checking, unit testing, integration testing, and building the documentation.
 
     And finally, please update the CHANGELOG file in the [changelog folder](https://github.com/py-why/dodiscover/docs/whats_new/) with notes on your contribution in the latest version file.
 
@@ -146,44 +137,16 @@ When you're ready to contribute code to address an open issue, please follow the
 We use [Sphinx](https://www.sphinx-doc.org/en/master/index.html) to build our API docs, which automatically parses all docstrings
 of public classes and methods. All docstrings should adhere to the [Numpy styling convention](https://www.sphinx-doc.org/en/master/usage/extensions/example_numpy.html).
 
-### Testing Changes Locally With Poetry
-With poetry installed, we have included a few convenience functions to check your code. These checks must pass and will be checked by the PR's continuous integration services. You can install the various different developer dependencies with poetry:
+### Testing Changes Locally
+With pre-commit, we run various linters.
 
-    poetry install --with style, docs, test
-
-You can verify that your code will pass certain style, formatting and lint checks by running:
-
-    poetry run poe verify
-
-``verify`` runs a sequence of tests that can also be run individually. For example, you can check code formatting with black:
-
-    poetry run poe format_check
-
-If you would like to automatically black format your changes:
-
-    poetry run poe format
-
-You can then check for code style and general linting:
-
-    poetry run poe lint
-
-Finally, you should run some mypy type checks:
-
-    poetry run poe type_check
+    make pre-commit
 
 ### Documentation
 
 If you need to build the documentation locally and check for doc errors:
 
-    poetry run poe build_docs
-
-### Dependency Changes
-
-If you need to add new, or remove old dependencies, then you need to modify the ``pyproject.toml`` file and then also update the ``poetry.lock`` file, which version-controls all necessary dependencies. If you alter any dependency in the ``pyproject.toml`` file, you must run:
-
-    poetry update
-
-To update the lock file.
+    make -C doc html
 
 ---
 

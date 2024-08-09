@@ -16,11 +16,12 @@ independent.
 In this example, we will introduce the main abstractions and concepts used in
 dodiscover for causal discovery:
 
-- learner: Any causal discovery algorithm that has a similar scikit-learn API.
-- context: Causal assumptions.
+- learner: Any causal discovery algorithm that has a similar scikit-learn API,
+    but uses the ``learn_graph`` API to apply an algorithm to data.
 
 .. currentmodule:: dodiscover
 """
+
 # %%
 # Authors: Adam Li <adam2392@gmail.com>
 #
@@ -177,6 +178,11 @@ dot_graph.render(outfile="oracle_cpdag.png", view=True)
 # always a possibility that the CI test makes a mistake.
 pc = PC(ci_estimator=ci_estimator)
 pc.learn_graph(data, context)
+
+# .. note:: You can also just neglect to pass in a ``context`` object, and the
+#   algorithm will infer the context from the data. This is not recommended
+#   as it is always better to specify the context apriori before running a
+#   causal discovery algorithm.
 
 # The resulting completely partially directed acyclic graph (CPDAG) that is learned
 # is a "Markov equivalence class", which encodes all the conditional dependences that

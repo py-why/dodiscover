@@ -132,7 +132,7 @@ class BaseConstraintDiscovery:
         sep_set: SeparatingSet = defaultdict(lambda: defaultdict(list))
 
         # since we are not starting from a complete graph, find the separating sets
-        for (node_i, node_j) in itertools.combinations(init_graph.nodes, 2):
+        for node_i, node_j in itertools.combinations(init_graph.nodes, 2):
             if not init_graph.has_edge(node_i, node_j):
                 sep_set[node_i][node_j] = []
                 sep_set[node_j][node_i] = []
@@ -184,7 +184,11 @@ class BaseConstraintDiscovery:
             "skeleton graph given a separating set."
         )
 
-    def learn_graph(self, data: pd.DataFrame, context: Context):
+    def learn_graph(
+        self,
+        data: pd.DataFrame,
+        context: Optional[Context] = None,
+    ):
         """Fit constraint-based discovery algorithm on dataset 'X'.
 
         Parameters
@@ -208,6 +212,12 @@ class BaseConstraintDiscovery:
         Control over the constraints imposed by the algorithm can be passed into the class
         constructor.
         """
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
         self.context_ = context.copy()
 
         # initialize graph object to apply learning
@@ -263,8 +273,9 @@ class BaseConstraintDiscovery:
     def learn_skeleton(
         self,
         data: pd.DataFrame,
-        context: Context,
+        context: Optional[Context] = None,
         sep_set: Optional[SeparatingSet] = None,
+        **params,
     ) -> Tuple[nx.Graph, SeparatingSet]:
         """Learns the skeleton of a causal DAG using pairwise (conditional) independence testing.
 
@@ -274,10 +285,10 @@ class BaseConstraintDiscovery:
         ----------
         data : pd.DataFrame
             The dataset.
-        context : Context
-            A context object.
         sep_set : dict of dict of list of set
             The separating set.
+        params : dict
+            Additional parameters to pass to the method.
 
         Returns
         -------

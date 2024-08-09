@@ -3,25 +3,25 @@
 
 repos:
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 24.8.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
         name: isort (python)
         args: ["--profile", "black", "--filter-files", "--skip", "__init__.py"]
         files: ^dodiscover/
   - repo: https://github.com/pre-commit/mirrors-mypy 
-    rev: "v0.971"
+    rev: "v1.11.1"
     hooks:
       - id: mypy
         name: mypy (dodiscover)
         args: ["--config-file", "pyproject.toml"]
         files: ^dodiscover/
   - repo: https://github.com/pre-commit/mirrors-mypy 
-    rev: "v0.971"
+    rev: "v1.11.1"
     hooks:
       - id: mypy
         name: mypy (tests)
