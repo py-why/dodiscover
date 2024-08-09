@@ -91,6 +91,7 @@ test = [
     'pywhy-graphs',
     'dowhy',
     'bnlearn',
+    'sempler>=0.2.13',
     'ananke-causal<0.4.0', # XXX: API changed to include "Vertices", which has not refactored here yet
 ]
 
