@@ -162,7 +162,7 @@ def test_bic_score_preserves_decomposability():
         print("Testing %s" % score_fun)
         full_score = score_fun.full_score(self.true_A)
         acc = 0
-        for (j, pa) in self.factorization:
+        for j, pa in self.factorization:
             local_score = score_fun.local_score(j, pa)
             print("  ", j, pa, local_score)
             acc += local_score
