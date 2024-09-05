@@ -20,7 +20,7 @@ def kernel_width(X: NDArray):
     """
     X_diff = np.expand_dims(X, axis=1) - X  # Gram matrix of the data
     D = np.linalg.norm(X_diff, axis=2)
-    s = np.median(D.flatten())
+    s = np.median(D.flatten()[D.flatten() > 0])  # removes zero elements
     return s
 
 
