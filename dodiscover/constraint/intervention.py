@@ -1,12 +1,11 @@
 import logging
 from itertools import permutations
-from typing import FrozenSet, List, Optional, Tuple
+from typing import Callable, FrozenSet, List, Optional, Tuple
 
 import networkx as nx
 import pandas as pd
 
 from dodiscover._protocol import EquivalenceClass
-from dodiscover.cd import BaseConditionalDiscrepancyTest
 from dodiscover.ci import BaseConditionalIndependenceTest
 from dodiscover.context import Context
 from dodiscover.typing import Column, SeparatingSet
@@ -40,7 +39,7 @@ class PsiFCI(FCI):
         The conditional independence test function. The arguments of the estimator should
         be data, node, node to compare, conditioning set of nodes, and any additional
         keyword arguments.
-    cd_estimator : BaseConditionalDiscrepancyTest
+    cd_estimator : Callable
         The conditional discrepancy test function.
     alpha : float, optional
         The significance level for the conditional independence test, by default 0.05.
@@ -99,7 +98,7 @@ class PsiFCI(FCI):
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        cd_estimator: BaseConditionalDiscrepancyTest,
+        cd_estimator: Callable,
         alpha: float = 0.05,
         min_cond_set_size: Optional[int] = None,
         max_cond_set_size: Optional[int] = None,
@@ -112,6 +111,7 @@ class PsiFCI(FCI):
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         known_intervention_targets: bool = False,
         n_jobs: Optional[int] = None,
+        debug: bool = False,
     ):
         super().__init__(
             ci_estimator,
@@ -127,6 +127,7 @@ class PsiFCI(FCI):
             selection_bias=False,
             pds_condsel_method=pds_condsel_method,
             n_jobs=n_jobs,
+            debug=debug,
         )
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
@@ -240,7 +241,7 @@ class PsiFCI(FCI):
         augmented_nodes = context.get_augmented_nodes()
 
         oriented_edges = []
-        added_arrows = True
+        added_arrows = False
         for node in augmented_nodes:
             for nbr in graph.neighbors(node):
                 if nbr in augmented_nodes:
@@ -251,6 +252,12 @@ class PsiFCI(FCI):
                 graph.remove_edge(nbr, node)
                 graph.add_edge(node, nbr, graph.directed_edge_name)
                 oriented_edges.append((node, nbr))
+
+                added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(node, nbr)] = "Rule 11"
+
         return added_arrows, oriented_edges
 
     def _apply_rule12(
@@ -311,6 +318,9 @@ class PsiFCI(FCI):
                 graph.add_edge(a, c, graph.directed_edge_name)
 
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(a, c)] = "Rule 12"
         return added_arrows
 
     def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):

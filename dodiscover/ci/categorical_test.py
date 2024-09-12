@@ -8,21 +8,21 @@ from typing import Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
-from numpy.typing import ArrayLike
 from scipy import stats
 
 from dodiscover.ci.base import BaseConditionalIndependenceTest
 from dodiscover.typing import Column
 
 
+# This is a modified function taken from pgmpy: License MIT
 def power_divergence(
-    X: ArrayLike, Y: ArrayLike, Z: ArrayLike, data: pd.DataFrame, lambda_: str = "cressie-read"
+    X, Y, Z, data: pd.DataFrame, lambda_: str = "cressie-read"
 ) -> Tuple[float, float, int]:
-    """
-    Computes the Cressie-Read power divergence statistic [1]. The null hypothesis
-    for the test is X is independent of Y given Z. A lot of the frequency comparison
-    based statistics (eg. chi-square, G-test etc) belong to power divergence family,
-    and are special cases of this test.
+    """Computes the Cressie-Read power divergence statistic [1].
+
+    The null hypothesis for the test is X is independent of Y given Z. A lot of the
+    frequency comparison based statistics (eg. chi-square, G-test etc) belong to
+    power divergence family, and are special cases of this test.
 
     Parameters
     ----------
@@ -100,7 +100,7 @@ def power_divergence(
     else:
         chi = 0
         dof = 0
-        for z_state, df in data.groupby(Z):
+        for idx, (z_state, df) in enumerate(data.groupby(Z[0] if len(Z) == 1 else Z)):
             try:
                 # Note: The fill value is set to 1e-7 to avoid the following error:
                 # where there are not enough samples in the data, which results in a nan pvalue
@@ -112,7 +112,7 @@ def power_divergence(
                 # If one of the values is 0 in the 2x2 table.
                 if isinstance(z_state, str):
                     logging.info(
-                        f"Skipping the test {X} \u27C2 {Y} | {Z[0]}={z_state}. Not enough samples"
+                        f"Skipping the test {X} \u27C2 {Y} | {Z[idx]}={z_state}. Not enough samples"
                     )
                 else:
                     z_str = ", ".join([f"{var}={state}" for var, state in zip(Z, z_state)])
@@ -170,6 +170,9 @@ class CategoricalCITest(BaseConditionalIndependenceTest):
     ) -> Tuple[float, float]:
         x_vars = reduce(lambda x: x, x_vars)  # type: ignore
         y_vars = reduce(lambda x: x, y_vars)  # type: ignore
+
+        if z_covariates is not None and len(z_covariates) > 0:
+            z_covariates = list(z_covariates)
         stat, pvalue, dof = power_divergence(
             x_vars, y_vars, z_covariates, data=df, lambda_=self.lambda_
         )

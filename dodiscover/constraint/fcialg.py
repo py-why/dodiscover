@@ -105,6 +105,7 @@ class FCI(BaseConstraintDiscovery):
         selection_bias: bool = True,
         pds_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
         n_jobs: Optional[int] = None,
+        debug: bool = False,
     ):
         super().__init__(
             ci_estimator,
@@ -116,6 +117,7 @@ class FCI(BaseConstraintDiscovery):
             keep_sorted=keep_sorted,
             apply_orientations=apply_orientations,
             n_jobs=n_jobs,
+            debug=debug,
         )
         self.max_iter = max_iter
         self.max_path_length = max_path_length
@@ -152,8 +154,12 @@ class FCI(BaseConstraintDiscovery):
         )
         if graph.has_edge(v_i, u, graph.circle_edge_name):
             graph.orient_uncertain_edge(v_i, u)
+            if self.debug:
+                self.debug_map[(v_i, u)] = "collider"
         if graph.has_edge(v_j, u, graph.circle_edge_name):
             graph.orient_uncertain_edge(v_j, u)
+            if self.debug:
+                self.debug_map[(v_j, u)] = "collider"
 
     def _apply_rule1(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
         """Apply rule 1 of the FCI algorithm.
@@ -196,6 +202,10 @@ class FCI(BaseConstraintDiscovery):
                 if graph.has_edge(c, u, graph.circle_edge_name):
                     graph.remove_edge(c, u, graph.circle_edge_name)
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = f"rule 1: {a} *-> {u} o-* {c}"
+            self.debug_map[(c, u)] = f"rule 1: {a} *-> {u} o-* {c}"
 
         return added_arrows
 
@@ -257,6 +267,10 @@ class FCI(BaseConstraintDiscovery):
                 # orient a *-> c
                 graph.orient_uncertain_edge(a, c)
                 added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(a, c)] = "rule2"
+
         return added_arrows
 
     def _apply_rule3(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -316,6 +330,9 @@ class FCI(BaseConstraintDiscovery):
                     logger.info(f"Rule 3: Orienting {v} -> {u}.")
                     graph.orient_uncertain_edge(v, u)
                     added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(v, u)] = "rule3"
         return added_arrows
 
     def _apply_rule4(
@@ -404,6 +421,12 @@ class FCI(BaseConstraintDiscovery):
                 logger.info(disc_path_str)
             added_arrows = True
 
+        if added_arrows and self.debug:
+            if last_node not in sep_set:
+                self.debug_map[(u, c)] = "rule4"
+                self.debug_map[(c, u)] = "rule4"
+            else:
+                self.debug_map[(u, c)] = "rule4"
         return added_arrows, explored_nodes
 
     def _apply_rule5(self, graph: EquivalenceClass, u: Column, a: Column) -> bool:
@@ -451,6 +474,9 @@ class FCI(BaseConstraintDiscovery):
                     graph.remove_edge(y, x, graph.circle_edge_name)
                     graph.add_edge(x, y, graph.undirected_edge_name)
 
+        if added_tails and self.debug:
+            self.debug_map[(a, u)] = "rule5"
+            self.debug_map[(u, a)] = "rule5"
         return added_tails
 
     def _apply_rule6(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -489,6 +515,8 @@ class FCI(BaseConstraintDiscovery):
                 ):
                     graph.add_edge(c, u, graph.undirected_edge_name)
 
+        if added_tails and self.debug:
+            self.debug_map[(u, c)] = "rule6"
         return added_tails
 
     def _apply_rule7(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -528,6 +556,8 @@ class FCI(BaseConstraintDiscovery):
                 ):
                     graph.add_edge(c, u, graph.undirected_edge_name)
 
+        if added_tails and self.debug:
+            self.debug_map[(u, c)] = "rule7"
         return added_tails
 
     def _apply_rule8(self, graph: EquivalenceClass, u: Column, a: Column, c: Column) -> bool:
@@ -589,6 +619,10 @@ class FCI(BaseConstraintDiscovery):
                 if graph.has_edge(c, a, graph.circle_edge_name):
                     graph.remove_edge(c, a, graph.circle_edge_name)
                     added_arrows = True
+
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = "rule8"
+
         return added_arrows
 
     def _apply_rule9(
@@ -640,6 +674,8 @@ class FCI(BaseConstraintDiscovery):
                     graph.remove_edge(c, a, graph.circle_edge_name)
                     added_arrows = True
 
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = "rule9"
         return added_arrows, uncov_path
 
     def _apply_rule10(
@@ -753,6 +789,9 @@ class FCI(BaseConstraintDiscovery):
                             graph.remove_edge(c, a, graph.circle_edge_name)
                             added_arrows = True
 
+        if added_arrows and self.debug:
+            self.debug_map[(u, c)] = "rule10"
+
         return added_arrows, a_to_u_path, a_to_v_path
 
     def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):
@@ -762,6 +801,74 @@ class FCI(BaseConstraintDiscovery):
             change_flag = False
             logger.info(f"Running R1-10 for iteration {idx}")
 
+            for u in graph.nodes:
+                for a, c in permutations(graph.neighbors(u), 2):
+                    logger.debug(f"Check {u} {a} {c}")
+
+                    # apply R1-3 to orient triples and arrowheads
+                    r1_add = self._apply_rule1(graph, u, a, c)
+                    r2_add = self._apply_rule2(graph, u, a, c)
+                    r3_add = self._apply_rule3(graph, u, a, c)
+
+                    # apply R4, orienting discriminating paths
+                    r4_add, _ = self._apply_rule4(graph, u, a, c, sep_set)
+
+                    # apply R5-7 to handle cases where selection bias is present
+                    if self.selection_bias:
+                        r5_add = self._apply_rule5(graph, u, a)
+                        r6_add = self._apply_rule6(graph, u, a, c)
+                        r7_add = self._apply_rule7(graph, u, a, c)
+                    else:
+                        r5_add = False
+                        r6_add = False
+                        r7_add = False
+
+                    # apply R8 to orient more tails
+                    r8_add = self._apply_rule8(graph, u, a, c)
+
+                    # apply R9-10 to orient uncovered potentially directed paths
+                    r9_add, _ = self._apply_rule9(graph, a, u, c)
+
+                    # a and c are neighbors of u, so u is the endpoint desired
+                    r10_add, _, _ = self._apply_rule10(graph, a, c, u)
+
+                    # see if there was a change flag
+                    all_flags = [
+                        r1_add,
+                        r2_add,
+                        r3_add,
+                        r4_add,
+                        r5_add,
+                        r6_add,
+                        r7_add,
+                        r8_add,
+                        r9_add,
+                        r10_add,
+                    ]
+                    if any(all_flags) and not change_flag:
+                        logger.info(f"{change_flag} with " f"{all_flags}")
+                        change_flag = True
+
+            # check if we should continue or not
+            if not change_flag:
+                finished = True
+                if not self.selection_bias:
+                    logger.info(f"Finished applying R1-4, and R8-10 with {idx} iterations")
+                if self.selection_bias:
+                    logger.info(f"Finished applying R1-10 with {idx} iterations")
+                break
+            idx += 1
+
+    def _apply_orientation_rules(self, graph: EquivalenceClass, sep_set: SeparatingSet):
+        idx = 0
+        finished = False
+        while idx < self.max_iter and not finished:
+            change_flag = False
+            logger.info(f"Running R1-10 for iteration {idx}")
+
+            # if self.stable:
+            #     pass
+            # else:
             for u in graph.nodes:
                 for a, c in permutations(graph.neighbors(u), 2):
                     logger.debug(f"Check {u} {a} {c}")

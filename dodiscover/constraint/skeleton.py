@@ -7,10 +7,10 @@ from typing import Any, Callable, Dict, Generator, Iterable, List, Optional, Set
 import networkx as nx
 import numpy as np
 import pandas as pd
+import pywhy_graphs as pg
 from joblib import Parallel, delayed
 
-from dodiscover.cd import BaseConditionalDiscrepancyTest
-from dodiscover.ci import BaseConditionalIndependenceTest
+from dodiscover.ci import BaseConditionalIndependenceTest, Oracle
 from dodiscover.constraint.config import ConditioningSetSelection
 from dodiscover.constraint.utils import is_in_sep_set
 from dodiscover.typing import Column, SeparatingSet
@@ -62,6 +62,12 @@ def _test_xy_edges(
         A set of variables that are candidates for the conditioning set.
     data : pandas.Dataframe
         The dataset with variables as columns and samples as rows.
+    context : Context
+        The causal context.
+    cross_distribution_test : bool, optional
+        Whether to perform cross-distribution tests. If True, then the ``context``
+        object must contain a ``sigma_map`` attribute that maps each X-node
+        to the corresponding distribution indices of interest.
 
     Returns
     -------
@@ -94,6 +100,8 @@ def _test_xy_edges(
             # get the sigma-map for this F-node
             distribution_idx = context.sigma_map[x_var]
 
+            # print(f'Got distribution indices for {x_var} as {distribution_idx}')
+
             # get the distributions across the two distributions
             data_i = data[distribution_idx[0]].copy()
             data_j = data[distribution_idx[1]].copy()
@@ -105,6 +113,7 @@ def _test_xy_edges(
 
         try:
             # compute conditional independence test
+            # print(s_node, x_var, y_var, conditional_test_func, parallel_fun)
             test_stat, pvalue = parallel_fun(
                 this_data, conditional_test_func, x_var, y_var, set(cond_set)
             )
@@ -114,6 +123,15 @@ def _test_xy_edges(
                 test_stat = np.inf
                 pvalue = 0.0
             else:
+                import traceback
+
+                print("\n\ninside error message...")
+                print(x_var, y_var, cond_set)
+                print(this_data.columns)
+                print(this_data.head())
+                print(this_data[x_var])
+                print(context.init_graph.nodes)
+                traceback.print_exc()
                 raise Exception(e)
 
         # if any "independence" is found through inability to reject
@@ -643,6 +661,7 @@ class BaseSkeletonLearner:
         X: Column,
         Y: Column,
         Z: Optional[Set[Column]] = None,
+        **kwargs,
     ) -> Tuple[float, float]:
         """Test any specific edge for X || Y | Z.
 
@@ -656,6 +675,9 @@ class BaseSkeletonLearner:
             A column in ``data``.
         Z : set, optional
             A list of columns in ``data``, by default None.
+        **kwargs
+            Keyword arguments to be passed to the conditional independence test.
+            Allows S-nodes for example to be passed in.
 
         Returns
         -------
@@ -666,7 +688,9 @@ class BaseSkeletonLearner:
         """
         if Z is None:
             Z = set()
-        test_stat, pvalue = conditional_test_func.test(data, set({X}), set({Y}), Z)
+        if not isinstance(conditional_test_func, Oracle):
+            kwargs = dict()
+        test_stat, pvalue = conditional_test_func.test(data, set({X}), set({Y}), Z, **kwargs)
         self.n_ci_tests += 1
         return test_stat, pvalue
 
@@ -1085,6 +1109,55 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
 
         return super()._initialize_params(context)
 
+    def _fit_single_distribution(
+        self,
+        data,
+        context: Context,
+        possible_x_nodes,
+        skipped_y_nodes,
+        skipped_z_nodes,
+        cross_distribution_test,
+    ):
+        # initially learn the skeleton without using PDS information
+        # apply algorithm to learn skeleton
+        self._learn_skeleton(
+            data,
+            context=context,
+            condsel_method=self.condsel_method,
+            conditional_test_func=self.ci_estimator,
+            possible_x_nodes=possible_x_nodes,
+            skipped_y_nodes=skipped_y_nodes,
+            skipped_z_nodes=skipped_z_nodes,
+            cross_distribution_test=cross_distribution_test,
+        )
+
+        # reset context and add observational skeleton
+        context.add_state_variable("obs_skel_graph", context.init_graph.copy())
+
+        # if there is no second stage skeleton method to be run, then we
+        # will stop with the skeleton here
+        if self.second_stage_condsel_method is None:
+            self.context_ = deepcopy(context.copy())
+            self.adj_graph_ = deepcopy(context.init_graph.copy())
+            return context
+
+        # setup context for the second round-of learning
+        context = self._prep_second_stage_skeleton(context)
+
+        # now compute all possibly d-separating sets and learn a better skeleton
+        # Note: we do not check input on the second pass because it was already done
+        self._learn_skeleton(
+            data,
+            context=context,
+            condsel_method=self.second_stage_condsel_method,
+            conditional_test_func=self.ci_estimator,
+            possible_x_nodes=possible_x_nodes,
+            skipped_y_nodes=skipped_y_nodes,
+            skipped_z_nodes=skipped_z_nodes,
+            cross_distribution_test=cross_distribution_test,
+        )
+        return context
+
     def learn_graph(
         self, data: pd.DataFrame, context: Optional[Context] = None, check_input: bool = True
     ):
@@ -1098,35 +1171,14 @@ class LearnSemiMarkovianSkeleton(LearnSkeleton):
         if check_input:
             context = self._initialize_params(context)
 
-        # initially learn the skeleton without using PDS information
-        # apply algorithm to learn skeleton
-        self._learn_skeleton(
+        # fit the distribution
+        context = self._fit_single_distribution(
             data,
-            context=context,
-            condsel_method=self.condsel_method,
-            conditional_test_func=self.ci_estimator,
-        )
-
-        # if there is no second stage skeleton method to be run, then we
-        # will stop with the skeleton here
-        print(self.second_stage_condsel_method)
-        print(context)
-        if self.second_stage_condsel_method is None:
-            self.context_ = deepcopy(context.copy())
-            self.adj_graph_ = deepcopy(context.init_graph.copy())
-            print("Shuldnt run second stage...")
-            return self
-
-        # setup context for the second round-of learning
-        context = self._prep_second_stage_skeleton(context)
-
-        # now compute all possibly d-separating sets and learn a better skeleton
-        # Note: we do not check input on the second pass because it was already done
-        self._learn_skeleton(
-            data,
-            context=context,
-            condsel_method=self.second_stage_condsel_method,
-            conditional_test_func=self.ci_estimator,
+            context,
+            possible_x_nodes=None,
+            skipped_y_nodes=None,
+            skipped_z_nodes=None,
+            cross_distribution_test=False,
         )
 
         self.context_ = deepcopy(context.copy())
@@ -1146,7 +1198,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
     ----------
     ci_estimator : BaseConditionalIndependenceTest
         The conditional independence test function.
-    cd_estimator : BaseConditionalDiscrepancyTest
+    cd_estimator : Callable
         The conditional discrepancy test function.
     sep_set : dictionary of dictionary of list of set
         Mapping node to other nodes to separating sets of variables.
@@ -1201,7 +1253,7 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
     def __init__(
         self,
         ci_estimator: BaseConditionalIndependenceTest,
-        cd_estimator: BaseConditionalDiscrepancyTest,
+        cd_estimator: Callable,
         sep_set: Optional[SeparatingSet] = None,
         alpha: float = 0.05,
         min_cond_set_size: int = 0,
@@ -1230,6 +1282,23 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         self.cd_estimator = cd_estimator
         self.known_intervention_targets = known_intervention_targets
+
+    def _prep_second_stage_skeleton(self, context: Context) -> Context:
+        # prepare the context object for the second stage of learning
+        # all separating sets are either:
+        # i) augmented with all F-nodes, or
+        # ii) augmented with all F-nodes except intervention index 'i'
+        # R9 allows us to leverage F-nodes being not in separating sets to
+        # augment all separating sets that have non-empty sets with all
+        # F-nodes to keep consistency with the algorithm
+        # for x_var, y_vars in self.sep_set_.items():
+        #     for y_var in y_vars:
+        #         sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+        #         if len(sep_sets) > 0:
+        #             for idx in range(len(sep_sets)):
+        #                 self.sep_set_[x_var][y_var][idx].update(context.get_augmented_nodes())
+
+        return super()._prep_second_stage_skeleton(context)
 
     def learn_graph(
         self, data: List[pd.DataFrame], context: Optional[Context] = None, check_input: bool = True
@@ -1273,20 +1342,29 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
 
         self.context_ = context.copy()
 
-        # first learn the skeleton using only "observational data"
-        self._learn_skeleton(
+        # learn skeleton
+        context = self._fit_single_distribution(
             data=obs_data,
             context=context,
-            condsel_method=self.condsel_method,
-            conditional_test_func=self.ci_estimator,
             possible_x_nodes=list(context.get_non_augmented_nodes()),
             skipped_y_nodes=context.f_nodes,
             skipped_z_nodes=context.f_nodes,
             cross_distribution_test=False,
         )
 
-        # keep track of the observational skeleton graph
-        obs_skel_graph = self.adj_graph_.copy()
+        context = self._prep_second_stage_skeleton(context)
+
+        # secibd learn the skeleton using only "PDS data"
+        self._learn_skeleton(
+            data=obs_data,
+            context=context,
+            condsel_method=self.second_stage_condsel_method,
+            conditional_test_func=self.ci_estimator,
+            possible_x_nodes=list(context.get_non_augmented_nodes()),
+            skipped_y_nodes=context.get_augmented_nodes(),
+            skipped_z_nodes=context.get_augmented_nodes(),
+            cross_distribution_test=False,
+        )
 
         # prepare the context object for the second stage of learning
         # all separating sets are either:
@@ -1300,47 +1378,15 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                 sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
                 if len(sep_sets) > 0:
                     for idx in range(len(sep_sets)):
-                        self.sep_set_[x_var][y_var][idx].update(f_nodes)
+                        self.sep_set_[x_var][y_var][idx].update(context.get_augmented_nodes())
 
-        # index all datasets, where the first one may be observational
-        non_f_nodes = context.get_non_augmented_nodes()
-
-        # reset the init graph and this time learn the skeleton using
-        # interventional distributions
-        # create a complete subgraph of F-nodes with all other nodes
-        for node in f_nodes:
-            for obs_node in set(non_f_nodes):
-                if node == obs_node:
+        # remove all edges between F-nodes
+        for x_var in context.get_augmented_nodes():
+            for y_var in context.get_augmented_nodes():
+                if x_var == y_var:
                     continue
-                self.adj_graph_.add_edge(node, obs_node, test_stat=np.inf, pvalue=-1e-5)
-
-        # reset context and add observational skeleton
-        context.add_state_variable("obs_skel_graph", obs_skel_graph)
-
-        # convert the undirected skeleton graph to a PAG, where
-        # all left-over edges have a "circle" endpoint
-        sep_set = self.sep_set_
-        import pywhy_graphs
-
-        pag = pywhy_graphs.PAG(incoming_circle_edges=obs_skel_graph, name="PAG derived with FCI")
-
-        # orient colliders
-        self._orient_unshielded_triples(pag, sep_set)
-
-        context.add_state_variable("PAG", pag)
-        context.add_state_variable("max_path_length", self.max_path_length_)
-
-        # secibd learn the skeleton using only "PDS data"
-        self._learn_skeleton(
-            data=obs_data,
-            context=context,
-            condsel_method=self.second_stage_condsel_method,
-            conditional_test_func=self.ci_estimator,
-            possible_x_nodes=list(context.get_non_augmented_nodes()),
-            skipped_y_nodes=context.f_nodes,
-            skipped_z_nodes=context.f_nodes,
-            cross_distribution_test=False,
-        )
+                if context.init_graph.has_edge(x_var, y_var):
+                    context.init_graph.remove_edge(x_var, y_var)
 
         # now, we'll fit the data using interventional data by looping over all
         # combinations of F-nodes and their neighbors
@@ -1351,8 +1397,8 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
             condsel_method=self.second_stage_condsel_method,
             conditional_test_func=self.cd_estimator,
             possible_x_nodes=list(self.context_.f_nodes),
-            skipped_y_nodes=context.f_nodes,
-            skipped_z_nodes=context.f_nodes,
+            skipped_y_nodes=context.get_augmented_nodes(),
+            skipped_z_nodes=context.get_augmented_nodes(),
             cross_distribution_test=True,
         )
 
@@ -1374,6 +1420,390 @@ class LearnInterventionSkeleton(LearnSemiMarkovianSkeleton):
                             self.sep_set_[x_var][y_var][idx].update(f_nodes.difference({y_var}))
                         else:
                             self.sep_set_[x_var][y_var][idx].update(f_nodes)
+
+        self.context_ = context.copy()
+        self.adj_graph_ = deepcopy(context.init_graph.copy())
+
+
+class LearnMultiDomainSkeleton(LearnInterventionSkeleton):
+    """Learn skeleton of a augmented selection diagram.
+
+    Parameters
+    ----------
+    ci_estimator : BaseConditionalIndependenceTest
+        The conditional independence test function.
+    cd_estimator : Callable
+        The conditional discrepancy test function.
+    sep_set : dictionary of dictionary of list of set
+        Mapping node to other nodes to separating sets of variables.
+        If ``None``, then an empty dictionary of dictionary of list of sets
+        will be initialized.
+    alpha : float, optional
+        The significance level for the conditional independence test, by default 0.05.
+    min_cond_set_size : int
+        The minimum size of the conditioning set, by default 0. The number of variables
+        used in the conditioning set.
+    max_cond_set_size : int, optional
+        Maximum size of the conditioning set, by default None. Used to limit
+        the computation spent on the algorithm.
+    max_combinations : int, optional
+        The maximum number of conditional independence tests to run from the set
+        of possible conditioning sets. By default None, which means the algorithm will
+        check all possible conditioning sets. If ``max_combinations=n`` is set, then
+        for every conditioning set size, 'p', there will be at most 'n' CI tests run
+        before the conditioning set size 'p' is incremented. For controlling the size
+        of 'p', see ``min_cond_set_size`` and ``max_cond_set_size``. This can be used
+        in conjunction with ``keep_sorted`` parameter to only test the "strongest"
+        dependences.
+    condsel_method : ConditioningSetSelection
+        The method to use for testing conditional independence. Must be one of
+        ('pds', 'pds_path'). See Notes for more details.
+    keep_sorted : bool
+        Whether or not to keep the considered conditioning set variables in sorted
+        dependency order. If True (default) will sort the existing dependencies of each variable
+        by its dependencies from strongest to weakest (i.e. largest CI test statistic value
+        to lowest). This can be used in conjunction with ``max_combinations`` parameter
+        to only test the "strongest" dependences.
+    max_path_length : int, optional
+        The maximum length of any discriminating path, or None if unlimited.
+    n_jobs : int, optional
+        Number of CPUs to use, by default None.
+
+    Notes
+    -----
+    With interventional data, one may either know the interventional targets from each
+    experimental distribution dataset, or one may not know the explicit targets. If the
+    interventional targets are known, then the skeleton discovery algorithm of
+    :footcite:`Kocaoglu2019characterization` is used. That is we learn the skeleton of a
+    AugmentedPAG. Otherwise, we will not know the intervention targets, and use the skeleton
+    discovery algorithm described in :footcite:`Jaber2020causal`. To define intervention
+    targets, one must use the :class:`dodiscover.InterventionalContextBuilder`.
+
+    References
+    ----------
+    .. footbibliography::
+    """
+
+    def __init__(
+        self,
+        ci_estimator: BaseConditionalIndependenceTest,
+        cd_estimator: Callable,
+        sep_set: Optional[SeparatingSet] = None,
+        alpha: float = 0.05,
+        min_cond_set_size: int = 0,
+        max_cond_set_size: Optional[int] = None,
+        max_combinations: Optional[int] = None,
+        condsel_method: ConditioningSetSelection = ConditioningSetSelection.NBRS,
+        second_stage_condsel_method: ConditioningSetSelection = ConditioningSetSelection.PDS,
+        keep_sorted: bool = False,
+        max_path_length: Optional[int] = None,
+        known_intervention_targets: bool = False,
+        n_jobs: Optional[int] = None,
+    ) -> None:
+        super().__init__(
+            ci_estimator=ci_estimator,
+            cd_estimator=cd_estimator,
+            sep_set=sep_set,
+            alpha=alpha,
+            min_cond_set_size=min_cond_set_size,
+            max_cond_set_size=max_cond_set_size,
+            max_combinations=max_combinations,
+            condsel_method=condsel_method,
+            second_stage_condsel_method=second_stage_condsel_method,
+            keep_sorted=keep_sorted,
+            max_path_length=max_path_length,
+            n_jobs=n_jobs,
+        )
+
+        self.known_intervention_targets = known_intervention_targets
+
+    # def _create_augmented_nodes(
+    #     self, domain_ids: List[int], intervention_targets: List[Optional[Set]]
+    # ) -> Tuple[List, Dict, Dict, Dict]:
+    #     """Create augmented nodes, sigma map and optionally a symmetric difference map.
+
+    #     Given a number of distributions attributed to interventions, one constructs
+    #     F-nodes to add to the causal graph by:
+
+    #     - For all pairs of incoming distributions, form a new F-node for every
+    #       pair of distributions. Update ``node_domain_map`` to map the F-node to
+    #       a specific domain.
+    #     - If the pairs are from two known target-interventions (i.e. not `None`
+    #       value), then also add the symmetric difference mapping to
+    #       ``symmetric_diff_map``, which maps the F-node to the intervention target.
+
+    #     where ``targets`` is a set of either nodes, or set of indices corresponding
+    #     to the input data distributions and ``domains`` is a set of domains, either
+    #     a single domain for F-nodes within domain, or a set of two domains for
+    #     F-nodes across domains.
+
+    #     Parameters
+    #     ----------
+    #     domain_ids : List[int]
+    #         A list of domain ids for each input distribution.
+    #     intervention_targets : List[Set]
+    #         A list of known intervention targets for each input distribution with ``None``
+    #         representing unknown targets. If the distribution is observational, then
+    #         the empty set is used.
+
+    #     Returns
+    #     -------
+    #     augmented_nodes : List
+    #         Set of augmented nodes (i.e. F and S nodes).
+    #     symmetric_diff_map : Dict[Any, FrozenSet]
+    #         Mapping of augmented nodes to intervention targets, or distribution indices represented
+    #         by the node.
+    #     sigma_map : Dict[Any, FrozenSet]
+    #         Mapping of augmented nodes to distribution indices represented by the node.
+    #     node_domain_map : Dict[Any, FrozenSet]
+    #         Mapping of augmented nodes to domains.
+    #     """
+    #     # map augmented nodes to domains
+    #     node_domain_map = dict()
+    #     symmetric_diff_map = dict()
+    #     sigma_map = dict()
+    #     f_nodes = []
+
+    #     # create F-nodes, which is now all combinations of distributions choose 2
+    #     k = 0
+    #     seen_domain_pairs = dict()
+    #     seen_distr_pairs = dict()
+
+    #     # compare every pair of distributions to now add interventions if necessary
+    #     for dataset_idx, source in enumerate(domain_ids):
+    #         for dataset_jdx, target in enumerate(domain_ids):
+    #             # perform memoization to avoid duplicate augmented nodes
+    #             domain_memo_key = frozenset([source, target])
+    #             distr_memo_key = frozenset([dataset_idx, dataset_jdx])
+    #             if dataset_jdx <= dataset_idx:
+    #                 continue
+    #             if domain_memo_key in seen_domain_pairs and distr_memo_key in seen_distr_pairs:
+    #                 continue
+    #             seen_domain_pairs[domain_memo_key] = None
+    #             seen_distr_pairs[distr_memo_key] = None
+
+    #             # map each augmented-node to a tuple of distribution indices, or to a set of nodes
+    #             # representing the intervention targets
+    #             if (
+    #                 intervention_targets[dataset_idx] is not None
+    #                 and intervention_targets[dataset_jdx] is not None
+    #                 and source == target
+    #             ):
+    #                 symm_diff = set(intervention_targets[dataset_idx]).symmetric_difference(
+    #                     set(intervention_targets[dataset_jdx])
+    #                 )
+    #                 targets = frozenset(symm_diff)
+    #             else:
+    #                 targets = None
+
+    #             # create the F-node
+    #             f_node = ("F", k)
+    #             f_nodes.append(f_node)
+
+    #             # map each F-node to a set of domain(s)
+    #             node_domain_map[f_node] = [source, target]
+    #             sigma_map[f_node] = [dataset_idx, dataset_jdx]
+    #             symmetric_diff_map[f_node] = targets
+
+    #             k += 1
+    #     augmented_nodes = set(f_nodes)
+    #     return augmented_nodes, symmetric_diff_map, sigma_map, node_domain_map
+
+    def learn_graph(
+        self,
+        data: List[pd.DataFrame],
+        context: Optional[Context] = None,
+        domain_indices: Optional[List[int]] = None,
+        intervention_targets: Optional[List[Optional[Set]]] = None,
+        check_input: bool = True,
+        debug: bool = False,
+        **params,
+    ) -> None:
+        """Fit data and context.
+
+        Each dataframe in ``data`` corresponds to a different distribution of data
+        from a domain and specific intervention target.
+
+        Parameters
+        ----------
+        data : List[pd.DataFrame]
+            List of dataframes corresponding to different distributions of data.
+        context : Context
+            Context object.
+        domain_indices : List[int]
+            The domain indices of each dataframe in ``data``.
+        intervention_targets : List[Column]
+            The intervention targets of each dataframe in ``data``. Is ``None`` if
+            ``data`` is observational, or ``unknown`` if target is unknown.
+        """
+        if context is None:
+            # make a private Context object to store causal context used in this algorithm
+            # store the context
+            from dodiscover.context_builder import make_context
+
+            context = make_context().build()
+
+        # ensure data is a list
+        if isinstance(data, pd.DataFrame):
+            data = [data]
+
+        # pick a domain and distribution with the largest amount of data
+        largest_data_idx = np.argmax([len(df) for df in data])
+        obs_data = data[largest_data_idx]
+        print("Using data from distribution ", largest_data_idx, " for learning the skeleton.")
+        self.context_ = context.copy()
+
+        # initialize learning parameters
+        if check_input:
+            context = self._initialize_params(context)
+
+        # create augmented nodes
+        (
+            augmented_nodes,
+            symmetric_diff_map,
+            sigma_map,
+            node_domain_map,
+        ) = pg.classes.compute_augmented_nodes(
+            intervention_targets=intervention_targets, domain_ids=domain_indices
+        )
+
+        # initialize the augmented graph to be fully connected to observed casual variables
+        causal_nodes = set(context.observed_variables)
+
+        # XXX: contextbuilder creates an augmented graph, whereas we want to control that.
+        for node in set(context.init_graph.nodes):
+            if node not in causal_nodes:
+                context.init_graph.remove_node(node)
+        for augmented_node in augmented_nodes:
+            for node in causal_nodes:
+                context.init_graph.add_edge(augmented_node, node)
+
+        # extract F and S-nodes
+        f_nodes = augmented_nodes
+
+        # skeleton discovery should not condition on augmented nodes
+        skip_nodes = augmented_nodes
+
+        # provide multi-domain context
+        # XXX: Do I need to do assignment?
+        # context.augmented_nodes = augmented_nodes
+        # context.node_domain_map = node_domain_map
+        context.add_state_variable("node_domain_map", node_domain_map)
+        context.add_state_variable("augmented_nodes", augmented_nodes)
+        context.symmetric_diff_map = symmetric_diff_map
+        context.sigma_map = sigma_map
+        context.f_nodes = f_nodes
+
+        # first learn the skeleton using only "observational data"
+        # initially learn the skeleton without using PDS information
+        # apply algorithm to learn skeleton
+        # first learn the skeleton using only "observational data"
+        self._fit_single_distribution(
+            data=obs_data,
+            context=context,
+            possible_x_nodes=causal_nodes,
+            skipped_y_nodes=skip_nodes,
+            skipped_z_nodes=skip_nodes,
+            cross_distribution_test=False,
+        )
+
+        # prepare the context object for the second stage of learning
+        # all separating sets are either:
+        # i) augmented with all F-nodes, or
+        # ii) augmented with all F-nodes except intervention index 'i'
+        # R9 allows us to leverage F-nodes being not in separating sets to
+        # augment all separating sets that have non-empty sets with all
+        # F-nodes to keep consistency with the algorithm
+        # for x_var, y_vars in self.sep_set_.items():
+        #     for y_var in y_vars:
+        #         sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+        #         if len(sep_sets) > 0:
+        #             for idx in range(len(sep_sets)):
+        #                 self.sep_set_[x_var][y_var][idx].update(context.f_nodes)
+
+        # loop through each pair of datasets to learn the augmented F-node skeleton
+        seen_domain_pairs = set()
+        for idx, source in enumerate(domain_indices):
+            # analyze F-nodes only within the 'source' single domain
+            source_fnodes = [
+                node for node in augmented_nodes if set(node_domain_map[node]) == {source}
+            ]
+            if debug:
+                print(f"Trying to learn skeleton for {source} to remove F-nodes: {source_fnodes}")
+            if source_fnodes:
+                # apply algorithm to learn skeleton among the F-node subgraph within a single domain
+                self._learn_skeleton(
+                    data=data,
+                    context=context,
+                    condsel_method=self.second_stage_condsel_method,
+                    conditional_test_func=self.cd_estimator,
+                    possible_x_nodes=source_fnodes,
+                    skipped_y_nodes=skip_nodes,
+                    skipped_z_nodes=skip_nodes,
+                    cross_distribution_test=True,
+                )
+
+        # now compute skeleton among all possible F-nodes representing domain pairs
+        for idx, source in enumerate(domain_indices):
+            for jdx, target in enumerate(domain_indices):
+                # skip the same dataset
+                if idx == jdx:
+                    continue
+
+                # skip if source and target are the same domain because we have
+                # already learned from these pairs of datasets
+                if source == target:
+                    continue
+                # skip if we have already seen this domain pair
+                if frozenset([source, target]) in seen_domain_pairs:
+                    continue
+                seen_domain_pairs.add(frozenset([source, target]))
+
+                # now learn across interventions
+                this_f_nodes = [
+                    node
+                    for node in f_nodes
+                    if set(node_domain_map[node]) == {source, target} and node in symmetric_diff_map
+                ]
+                if debug:
+                    print(
+                        f"Trying to learn skeleton for {source} and {target} to remove F-nodes: "
+                        f"{this_f_nodes}"
+                    )
+                self._learn_skeleton(
+                    data=data,
+                    context=context,
+                    condsel_method=self.second_stage_condsel_method,
+                    conditional_test_func=self.cd_estimator,
+                    possible_x_nodes=this_f_nodes,
+                    skipped_y_nodes=skip_nodes,
+                    skipped_z_nodes=skip_nodes,
+                    cross_distribution_test=True,
+                    # debug=debug,
+                )
+
+        # prepare the context object for the second stage of learning
+        # all separating sets are either:
+        # i) augmented with all F-nodes, or
+        # ii) augmented with all F-nodes except intervention index 'i'
+        # R9 allows us to leverage F-nodes being not in separating sets to
+        # augment all separating sets that have non-empty sets with all
+        # F-nodes to keep consistency with the algorithm
+        for x_var, y_vars in self.sep_set_.items():
+            for y_var in y_vars:
+                sep_sets: List = self.sep_set_.get(x_var).get(y_var)  # type: ignore
+                if len(sep_sets) > 0:
+                    for idx in range(len(sep_sets)):
+                        if x_var in augmented_nodes:
+                            self.sep_set_[x_var][y_var][idx].update(
+                                augmented_nodes.difference({x_var})
+                            )
+                        elif y_var in augmented_nodes:
+                            self.sep_set_[x_var][y_var][idx].update(
+                                augmented_nodes.difference({y_var})
+                            )
+                        else:
+                            self.sep_set_[x_var][y_var][idx].update(augmented_nodes)
 
         self.context_ = context.copy()
         self.adj_graph_ = deepcopy(context.init_graph.copy())
