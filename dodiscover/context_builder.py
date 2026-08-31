@@ -198,7 +198,7 @@ class ContextBuilder:
         self._latent_variables = latents
 
         if data is not None:
-            (observed, latents) = self._interpolate_variables(data, observed, latents)
+            observed, latents = self._interpolate_variables(data, observed, latents)
             self._observed_variables = observed
             self._latent_variables = latents
 
