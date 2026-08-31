@@ -2,26 +2,26 @@
 # pre-commit install
 
 repos:
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 26.5.1
     hooks:
       - id: black
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 9.0.1
     hooks:
       - id: isort
         name: isort (python)
         args: ["--profile", "black", "--filter-files", "--skip", "__init__.py"]
         files: ^dodiscover/
   - repo: https://github.com/pre-commit/mirrors-mypy 
-    rev: "v1.13.0"
+    rev: "v2.3.1"
     hooks:
       - id: mypy
         name: mypy (dodiscover)
         args: ["--config-file", "pyproject.toml"]
         files: ^dodiscover/
   - repo: https://github.com/pre-commit/mirrors-mypy 
-    rev: "v1.13.0"
+    rev: "v2.3.1"
     hooks:
       - id: mypy
         name: mypy (tests)
