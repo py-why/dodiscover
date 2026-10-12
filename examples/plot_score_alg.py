@@ -69,7 +69,6 @@ from dodiscover.toporder.score import SCORE
 from dowhy import gcm
 from dowhy.gcm.util.general import set_random_seed
 
-
 # %%
 # Simulate some data
 # ------------------
